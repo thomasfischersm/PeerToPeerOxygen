@@ -1,12 +1,13 @@
 package com.playposse.peertopeeroxygen.android.admin;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.playposse.peertopeeroxygen.R;
+import com.playposse.peertopeeroxygen.android.R;
+
 
 /**
  * Activity that shows the top navigation for the administration activities.

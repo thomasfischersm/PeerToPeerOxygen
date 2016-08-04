@@ -3,7 +3,7 @@ package com.playposse.peertopeeroxygen.android.admin;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.playposse.peertopeeroxygen.R;
+import com.playposse.peertopeeroxygen.android.R;
 
 public class AdminShowMissionTreesActivity extends AppCompatActivity {
 

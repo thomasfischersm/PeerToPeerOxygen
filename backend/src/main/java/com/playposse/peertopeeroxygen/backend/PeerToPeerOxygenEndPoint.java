@@ -9,6 +9,7 @@ package com.playposse.peertopeeroxygen.backend;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
+import com.playposse.peertopeeroxygen.backend.beans.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
 import com.playposse.peertopeeroxygen.backend.schema.MissionBoss;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
@@ -33,14 +34,14 @@ public class PeerToPeerOxygenEndPoint {
     /**
      * Retrieves all the mission related data from the server.
      */
-    @ApiMethod(name = "sayHi")
-    public MissionDataBean getMissionData() {
+    @ApiMethod(name = "getMissionData")
+    public CompleteMissionDataBean getMissionData() {
         List<MissionLadder> missionLadders = ofy().load()
                 .group(MissionTree.class, Mission.class, MissionBoss.class)
                 .type(MissionLadder.class)
                 .list();
 
-        return new MissionDataBean();
+        return new CompleteMissionDataBean(missionLadders);
     }
 
 }

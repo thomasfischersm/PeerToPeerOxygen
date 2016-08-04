@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">PeerToPeerOxygen</string>
     <string name="show_mission_ladders_link">Show mission ladders</string>
+
+    <!-- Error messages -->
+    <string name="network_error">Failed to retrieve data from the server.</string>
 </resources>
