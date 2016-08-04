@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PeerToPeerOxygen</string>
+    <string name="show_mission_ladders_link">Show mission ladders</string>
 </resources>
