@@ -42,6 +42,15 @@ public class MissionLadder {
     }
 
     /**
+     * Constructor for converting bean to entity.
+     */
+    public MissionLadder(Long id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
+
+    /**
      * Sorts the {@link MissionTree}s when the entity is loaded by level.
      */
     @OnLoad

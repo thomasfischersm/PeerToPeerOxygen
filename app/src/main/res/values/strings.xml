@@ -2,6 +2,14 @@
     <string name="app_name">PeerToPeerOxygen</string>
     <string name="show_mission_ladders_link">Show mission ladders</string>
 
+    <!-- Show mission ladders -->
+    <string name="new_mission_ladders_link">Create new mission ladder</string>
+
+    <!-- Reusable strings -->
+    <string name="nameFormLabel">Name</string>
+    <string name="descriptionFormLabel">Description</string>
+    <string name="deleteLink">delete</string>
+
     <!-- Error messages -->
     <string name="network_error">Failed to retrieve data from the server.</string>
 </resources>

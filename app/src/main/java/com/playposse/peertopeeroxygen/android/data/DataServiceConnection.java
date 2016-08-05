@@ -5,11 +5,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.util.Log;
 
 /**
  * A simple implementation of {@link ServiceConnection}.
  */
 public class DataServiceConnection implements ServiceConnection {
+
+    private static final String LOG_CAT = DataServiceConnection.class.getSimpleName();
 
     private final DataService.DataReceivedCallback dataReceivedCallback;
 
@@ -25,6 +28,7 @@ public class DataServiceConnection implements ServiceConnection {
         bound = true;
         localBinder = (DataService.LocalBinder) iBinder;
         localBinder.registerDataReceivedCallback(dataReceivedCallback);
+        Log.i(LOG_CAT, "The service is now connected.");
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -12,6 +13,7 @@ import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxygenApi;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,6 +27,8 @@ import java.util.List;
  * it to retrieve data.
  */
 public class DataService extends Service {
+
+    private static final String LOG_CAT = DataService.class.getSimpleName();
 
     private static PeerToPeerOxygenApi peerToPeerOxygenApi;
 
@@ -42,7 +46,7 @@ public class DataService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return new LocalBinder();
     }
 
     private void createApiIfNeeded() {
@@ -53,6 +57,17 @@ public class DataService extends Service {
                 .setApplicationName("PeerToPeerOxygen")
                 .setRootUrl("https://peertopeeroxygen.appspot.com/_ah/api/")
                 .build();
+    }
+
+    private void showNetworkErrorToast() {
+        String errorMsg = getString(R.string.network_error);
+        Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_SHORT).show();
+    }
+
+    private void makeDataReceivedCallbacks() {
+        for (DataReceivedCallback callback : dataReceivedCallbacks) {
+            callback.receiveData(completeMissionDataBean);
+        }
     }
 
     /**
@@ -67,13 +82,18 @@ public class DataService extends Service {
             try {
                 completeMissionDataBean = peerToPeerOxygenApi.getMissionData().execute();
 
-                for (DataReceivedCallback callback : dataReceivedCallbacks) {
-                    callback.receiveData(completeMissionDataBean);
+                if (completeMissionDataBean.getMissionLadderBeans() == null) {
+                    completeMissionDataBean.setMissionLadderBeans(
+                            new ArrayList<MissionLadderBean>());
                 }
+
+                makeDataReceivedCallbacks();
+                Log.i(LOG_CAT, "The data has been loaded.");
+//                String msg = "Data has been loaded";
+//                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
             } catch (IOException ex) {
                 ex.printStackTrace();
-                String errorMsg = getString(R.string.network_error);
-                Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_SHORT).show();
+                showNetworkErrorToast();
             }
         }
     }
@@ -93,6 +113,42 @@ public class DataService extends Service {
             if (completeMissionDataBean != null) {
                 callback.receiveData(completeMissionDataBean);
             }
+        }
+
+        public MissionLadderBean getMissionLadderBean(Long id) {
+            for (MissionLadderBean missionLadderBean : completeMissionDataBean.getMissionLadderBeans()) {
+                if (missionLadderBean.getId().equals(id)) {
+                    return missionLadderBean;
+                }
+            }
+            return null;
+        }
+
+        public void save(final MissionLadderBean missionLadderBean) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        boolean create = missionLadderBean.getId() == null;
+                        MissionLadderBean result =
+                                peerToPeerOxygenApi.saveMissionLadder(missionLadderBean).execute();
+                        missionLadderBean.setId(result.getId()); // Save id for new entities.
+
+                        // Update local data to avoid reloading data from the server.
+                        if (create) {
+                            completeMissionDataBean.getMissionLadderBeans().add(missionLadderBean);
+                        }
+
+                        makeDataReceivedCallbacks();
+
+                        Log.i(LOG_CAT, "Mission ladder has been saved.");
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        showNetworkErrorToast();
+                    }
+                }
+            }).start();
         }
     }
 

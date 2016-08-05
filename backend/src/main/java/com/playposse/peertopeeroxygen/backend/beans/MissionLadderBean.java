@@ -2,6 +2,7 @@ package com.playposse.peertopeeroxygen.backend.beans;
 
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Load;
+import com.playposse.peertopeeroxygen.backend.schema.Mission;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 
@@ -17,6 +18,9 @@ public class MissionLadderBean {
     private String name;
     private String description;
 //    private List<MissionTree> missionTrees = new ArrayList<>();
+
+    public MissionLadderBean() {
+    }
 
     public MissionLadderBean(MissionLadder missionLadder) {
         this.id = missionLadder.getId();
@@ -46,5 +50,9 @@ public class MissionLadderBean {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public MissionLadder toEntity() {
+        return new MissionLadder(id, name, description);
     }
 }
