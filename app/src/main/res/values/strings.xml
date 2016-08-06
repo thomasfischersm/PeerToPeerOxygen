@@ -3,12 +3,19 @@
     <string name="show_mission_ladders_link">Show mission ladders</string>
 
     <!-- Show mission ladders -->
-    <string name="new_mission_ladders_link">Create new mission ladder</string>
+    <string name="new_mission_ladder_link">Create new mission ladder</string>
+
+    <!-- Edit mission ladder -->
+    <string name="mission_trees_label">Mission trees</string>
+    <string name="new_mission_tree_link">Create new mission tree</string>
+
+    <!-- Edit mission trees -->
+    <string name="missions_label">Missions</string>
 
     <!-- Reusable strings -->
-    <string name="nameFormLabel">Name</string>
-    <string name="descriptionFormLabel">Description</string>
-    <string name="deleteLink">delete</string>
+    <string name="name_form_label">Name</string>
+    <string name="description_form_label">Description</string>
+    <string name="delete_link">delete</string>
 
     <!-- Error messages -->
     <string name="network_error">Failed to retrieve data from the server.</string>

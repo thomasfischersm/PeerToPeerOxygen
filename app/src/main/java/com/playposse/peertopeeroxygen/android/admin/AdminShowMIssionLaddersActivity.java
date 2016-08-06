@@ -101,7 +101,9 @@ public class AdminShowMissionLaddersActivity
                     Intent intent = new Intent(
                             getApplicationContext(),
                             AdminEditMissionLadderActivity.class);
-                    intent.putExtra(Intent.EXTRA_INDEX, new Long(getItem(position).getId()));
+                    intent.putExtra(
+                            ExtraConstants.EXTRA_MISSION_LADDER_ID,
+                            new Long(getItem(position).getId()));
                     startActivity(intent);
                 }
             });

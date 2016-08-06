@@ -29,6 +29,6 @@
         android:id="@+id/createMissionLadderLink"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/new_mission_ladders_link" />
+        android:text="@string/new_mission_ladder_link" />
 
 </LinearLayout>

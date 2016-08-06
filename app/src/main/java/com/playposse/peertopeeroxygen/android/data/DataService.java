@@ -14,6 +14,7 @@ import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxygenApi;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -87,6 +88,12 @@ public class DataService extends Service {
                             new ArrayList<MissionLadderBean>());
                 }
 
+                for (MissionLadderBean missionLadderBean : completeMissionDataBean.getMissionLadderBeans()) {
+                    if (missionLadderBean.getMissionTreeBeans() == null) {
+                        missionLadderBean.setMissionTreeBeans(new ArrayList<MissionTreeBean>());
+                    }
+                }
+
                 makeDataReceivedCallbacks();
                 Log.i(LOG_CAT, "The data has been loaded.");
 //                String msg = "Data has been loaded";
@@ -124,6 +131,15 @@ public class DataService extends Service {
             return null;
         }
 
+        public MissionTreeBean getMissionTreeBean(Long missionLadderId, Long missionTreeId) {
+            for (MissionTreeBean missionTreeBean : getMissionLadderBean(missionLadderId).getMissionTreeBeans()) {
+                if (missionTreeBean.getId().equals(missionTreeId)) {
+                    return missionTreeBean;
+                }
+            }
+            return null;
+        }
+
         public void save(final MissionLadderBean missionLadderBean) {
             new Thread(new Runnable() {
                 @Override
@@ -143,6 +159,34 @@ public class DataService extends Service {
                         makeDataReceivedCallbacks();
 
                         Log.i(LOG_CAT, "Mission ladder has been saved.");
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        showNetworkErrorToast();
+                    }
+                }
+            }).start();
+        }
+
+        public void save(final Long missionLadderId, final MissionTreeBean missionTreeBean) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        boolean create = missionTreeBean.getId() == null;
+                        MissionTreeBean result =
+                                peerToPeerOxygenApi.saveMissionTree(missionTreeBean).execute();
+                        missionTreeBean.setId(result.getId()); // Save id for new entities.
+
+                        // Update local data to avoid reloading data from the server.
+                        if (create) {
+                            MissionLadderBean missionLadderBean = getMissionLadderBean(missionLadderId);
+                            missionLadderBean.getMissionTreeBeans().add(missionTreeBean);
+                        }
+
+                        makeDataReceivedCallbacks();
+
+                        Log.i(LOG_CAT, "Mission tree has been saved.");
                     } catch (IOException ex) {
                         ex.printStackTrace();
                         showNetworkErrorToast();

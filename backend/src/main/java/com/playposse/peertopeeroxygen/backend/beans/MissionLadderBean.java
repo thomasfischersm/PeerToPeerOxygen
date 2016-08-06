@@ -1,8 +1,5 @@
 package com.playposse.peertopeeroxygen.backend.beans;
 
-import com.googlecode.objectify.annotation.Id;
-import com.googlecode.objectify.annotation.Load;
-import com.playposse.peertopeeroxygen.backend.schema.Mission;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 
@@ -17,7 +14,7 @@ public class MissionLadderBean {
     private Long id;
     private String name;
     private String description;
-//    private List<MissionTree> missionTrees = new ArrayList<>();
+    private List<MissionTreeBean> missionTreeBeans = new ArrayList<>();
 
     public MissionLadderBean() {
     }
@@ -26,6 +23,10 @@ public class MissionLadderBean {
         this.id = missionLadder.getId();
         this.name = missionLadder.getName();
         this.description = missionLadder.getDescription();
+
+        for (MissionTree missionTree : missionLadder.getMissionTrees()) {
+            missionTreeBeans.add(new MissionTreeBean(missionTree));
+        }
     }
 
     public String getDescription() {
@@ -52,7 +53,19 @@ public class MissionLadderBean {
         this.name = name;
     }
 
+    public List<MissionTreeBean> getMissionTreeBeans() {
+        return missionTreeBeans;
+    }
+
+    public void setMissionTreeBeans(List<MissionTreeBean> missionTreeBeans) {
+        this.missionTreeBeans = missionTreeBeans;
+    }
+
     public MissionLadder toEntity() {
-        return new MissionLadder(id, name, description);
+        MissionLadder missionLadder = new MissionLadder(id, name, description);
+        for (MissionTreeBean missionTreeBean : missionTreeBeans) {
+            missionLadder.getMissionTrees().add(missionTreeBean.toEntity());
+        }
+        return missionLadder;
     }
 }

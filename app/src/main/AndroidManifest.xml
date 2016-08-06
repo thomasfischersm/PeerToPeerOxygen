@@ -22,12 +22,14 @@
             android:name=".admin.AdminShowMissionLaddersActivity"
             android:parentActivityName=".admin.AdminMainActivity" />
 
-        <service
-            android:name=".data.DataService" />
+        <service android:name=".data.DataService" />
 
         <activity
             android:name=".admin.AdminEditMissionLadderActivity"
-            android:parentActivityName=".admin.AdminShowMissionLaddersActivity"/>
+            android:parentActivityName=".admin.AdminShowMissionLaddersActivity" />
+        <activity
+            android:name=".admin.AdminEditMissionTreeActivity"
+            android:parentActivityName=".admin.AdminEditMissionLadderActivity" />
     </application>
 
 </manifest>

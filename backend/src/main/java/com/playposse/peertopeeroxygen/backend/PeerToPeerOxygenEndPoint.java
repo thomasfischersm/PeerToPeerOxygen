@@ -11,6 +11,7 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.playposse.peertopeeroxygen.backend.beans.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionLadderBean;
+import com.playposse.peertopeeroxygen.backend.beans.MissionTreeBean;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
 import com.playposse.peertopeeroxygen.backend.schema.MissionBoss;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
@@ -50,5 +51,12 @@ public class PeerToPeerOxygenEndPoint {
         MissionLadder missionLadder = missionLadderBean.toEntity();
         ofy().save().entity(missionLadder).now();
         return new MissionLadderBean(missionLadder);
+    }
+
+    @ApiMethod(name = "saveMissionTree")
+    public MissionTreeBean saveMissionTree(MissionTreeBean missionTreeBean) {
+        MissionTree missionTree = missionTreeBean.toEntity();
+        ofy().save().entity(missionTree).now();
+        return new MissionTreeBean(missionTree);
     }
 }

@@ -45,6 +45,13 @@ public class MissionTree {
         this.name = name;
     }
 
+    public MissionTree(Long id, String name, String description, int level) {
+        this.description = description;
+        this.id = id;
+        this.level = level;
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }
