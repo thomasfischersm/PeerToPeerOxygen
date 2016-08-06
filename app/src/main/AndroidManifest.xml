@@ -10,7 +10,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".admin.AdminMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,12 +18,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".admin.AdminShowMissionLaddersActivity" />
+        <activity
+            android:name=".admin.AdminShowMissionLaddersActivity"
+            android:parentActivityName=".admin.AdminMainActivity" />
 
         <service
             android:name=".data.DataService" />
 
-        <activity android:name=".admin.AdminEditMissionLadderActivity"></activity>
+        <activity
+            android:name=".admin.AdminEditMissionLadderActivity"
+            android:parentActivityName=".admin.AdminShowMissionLaddersActivity"/>
     </application>
 
 </manifest>
