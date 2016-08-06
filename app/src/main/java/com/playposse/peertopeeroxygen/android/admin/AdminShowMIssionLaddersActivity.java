@@ -36,6 +36,8 @@ public class AdminShowMissionLaddersActivity
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        setTitle(R.string.show_mission_ladders_title);
+
         TextView createMissionLadderLink = (TextView) findViewById(R.id.createMissionLadderLink);
         createMissionLadderLink.setOnClickListener(new View.OnClickListener() {
             @Override

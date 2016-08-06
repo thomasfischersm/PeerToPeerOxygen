@@ -25,6 +25,8 @@ public class AdminMainActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        setTitle(R.string.admin_home_title);
+
         TextView openMissionLaddersTextView = (TextView) findViewById(R.id.openMissionLaddersLink);
         openMissionLaddersTextView.setOnClickListener(new View.OnClickListener() {
             @Override

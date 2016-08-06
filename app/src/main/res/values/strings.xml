@@ -2,20 +2,27 @@
     <string name="app_name">PeerToPeerOxygen</string>
     <string name="show_mission_ladders_link">Show mission ladders</string>
 
+    <!-- Admin home -->
+    <string name="admin_home_title">Admin home</string>
+
     <!-- Show mission ladders -->
+    <string name="show_mission_ladders_title">Show mission ladders</string>
     <string name="new_mission_ladder_link">Create new mission ladder</string>
 
     <!-- Edit mission ladder -->
+    <string name="edit_mission_ladder_title">Mission ladder: %1$s</string>
     <string name="mission_trees_label">Mission trees</string>
     <string name="new_mission_tree_link">Create new mission tree</string>
 
     <!-- Edit mission trees -->
+    <string name="edit_mission_tree_title">Mission tree: %1$s</string>
     <string name="missions_label">Missions</string>
 
     <!-- Reusable strings -->
     <string name="name_form_label">Name</string>
     <string name="description_form_label">Description</string>
     <string name="delete_link">delete</string>
+    <string name="new_entity">new</string>
 
     <!-- Error messages -->
     <string name="network_error">Failed to retrieve data from the server.</string>

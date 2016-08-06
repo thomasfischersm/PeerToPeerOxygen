@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/mission_trees_label" />
 
-            <ListView
+            <com.playposse.peertopeeroxygen.android.widgets.ListViewNoScroll
                 android:id="@+id/missionTreesListView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

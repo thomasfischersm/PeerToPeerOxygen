@@ -71,6 +71,24 @@ public class DataService extends Service {
         }
     }
 
+    private void debugDump() {
+        Log.i(LOG_CAT, "Dumping complete mission data bean:");
+        for (MissionLadderBean missionLadderBean : completeMissionDataBean.getMissionLadderBeans()) {
+            Log.i(LOG_CAT, "- ladder (id: " + missionLadderBean.getId()
+                    + ", name: " + missionLadderBean.getName()
+                    + ", description: " + missionLadderBean.getDescription());
+            if (missionLadderBean.getMissionTreeBeans() == null) {
+                Log.i(LOG_CAT, "-- mission: null");
+            } else {
+                for (MissionTreeBean missionTreeBean : missionLadderBean.getMissionTreeBeans()) {
+                    Log.i(LOG_CAT, "-- mission (id: " + missionTreeBean.getId()
+                            + ", name: " + missionTreeBean.getName()
+                            + ", description: " + missionTreeBean.getDescription());
+                }
+            }
+        }
+    }
+
     /**
      * A {@link Runnable} that retrieves the mission data from the cloud.
      */
@@ -83,6 +101,9 @@ public class DataService extends Service {
             try {
                 completeMissionDataBean = peerToPeerOxygenApi.getMissionData().execute();
 
+                Log.i(LOG_CAT, "BEFORE FIX");
+                debugDump();
+
                 if (completeMissionDataBean.getMissionLadderBeans() == null) {
                     completeMissionDataBean.setMissionLadderBeans(
                             new ArrayList<MissionLadderBean>());
@@ -93,6 +114,9 @@ public class DataService extends Service {
                         missionLadderBean.setMissionTreeBeans(new ArrayList<MissionTreeBean>());
                     }
                 }
+
+                Log.i(LOG_CAT, "AFTER FIX");
+                debugDump();
 
                 makeDataReceivedCallbacks();
                 Log.i(LOG_CAT, "The data has been loaded.");
@@ -175,12 +199,15 @@ public class DataService extends Service {
                     try {
                         boolean create = missionTreeBean.getId() == null;
                         MissionTreeBean result =
-                                peerToPeerOxygenApi.saveMissionTree(missionTreeBean).execute();
+                                peerToPeerOxygenApi
+                                        .saveMissionTree(missionLadderId, missionTreeBean)
+                                        .execute();
                         missionTreeBean.setId(result.getId()); // Save id for new entities.
 
                         // Update local data to avoid reloading data from the server.
                         if (create) {
-                            MissionLadderBean missionLadderBean = getMissionLadderBean(missionLadderId);
+                            MissionLadderBean missionLadderBean =
+                                    getMissionLadderBean(missionLadderId);
                             missionLadderBean.getMissionTreeBeans().add(missionTreeBean);
                         }
 

@@ -98,6 +98,10 @@ public class AdminEditMissionTreeActivity
                     // new mission ladder
                     nameEditText.setText("");
                     descriptionEditText.setText("");
+
+                    setTitle(String.format(
+                            getString(R.string.edit_mission_tree_title),
+                            getString(R.string.new_entity)));
                 } else {
                     // existing mission ladder
                     missionTreeBean = dataServiceConnection.getLocalBinder().getMissionTreeBean(
@@ -105,6 +109,10 @@ public class AdminEditMissionTreeActivity
                             missionTreeId);
                     nameEditText.setText(missionTreeBean.getName());
                     descriptionEditText.setText(missionTreeBean.getDescription());
+
+                    setTitle(String.format(
+                            getString(R.string.edit_mission_tree_title),
+                            missionTreeBean.getName()));
                 }
 
 //                ListView missionLaddersListView =
