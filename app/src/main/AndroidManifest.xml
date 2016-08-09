@@ -27,11 +27,13 @@
         <activity
             android:name=".admin.AdminEditMissionLadderActivity"
             android:parentActivityName=".admin.AdminShowMissionLaddersActivity"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".admin.AdminEditMissionTreeActivity"
             android:parentActivityName=".admin.AdminEditMissionLadderActivity"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
     </application>
 
 </manifest>
