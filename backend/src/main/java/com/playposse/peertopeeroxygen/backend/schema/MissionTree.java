@@ -56,6 +56,10 @@ public class MissionTree {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public List<Mission> getMissions() {
         return missions;
     }

@@ -2,8 +2,8 @@ package com.playposse.peertopeeroxygen.android.admin;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +15,11 @@ import android.widget.TextView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
+import com.playposse.peertopeeroxygen.android.widgets.ConfirmationDialogBuilder;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdminShowMissionLaddersActivity
@@ -45,7 +47,6 @@ public class AdminShowMissionLaddersActivity
                 Intent intent = new Intent(
                         getApplicationContext(),
                         AdminEditMissionLadderActivity.class);
-//                intent.putExtra(Intent.EXTRA_INDEX, new Long(getItem(position).getId()));
                 startActivity(intent);
             }
         });
@@ -75,8 +76,9 @@ public class AdminShowMissionLaddersActivity
                 ListView missionLaddersListView =
                         (ListView) findViewById(R.id.missionLaddersListView);
                 MissionLadderBeanArrayAdapter adapter = new MissionLadderBeanArrayAdapter(
-                        completeMissionDataBean.getMissionLadderBeans());
+                        new ArrayList<>(completeMissionDataBean.getMissionLadderBeans()));
                 missionLaddersListView.setAdapter(adapter);
+                missionLaddersListView.refreshDrawableState();
             }
         });
     }
@@ -94,9 +96,10 @@ public class AdminShowMissionLaddersActivity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(R.layout.list_item_mission_ladder, parent, false);
 
+            final MissionLadderBean missionLadderBean = getItem(position);
             TextView missionLadderNameLink =
                     (TextView) rowView.findViewById(R.id.missionLadderNameLink);
-            missionLadderNameLink.setText(getItem(position).getName());
+            missionLadderNameLink.setText(missionLadderBean.getName());
             missionLadderNameLink.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -105,14 +108,31 @@ public class AdminShowMissionLaddersActivity
                             AdminEditMissionLadderActivity.class);
                     intent.putExtra(
                             ExtraConstants.EXTRA_MISSION_LADDER_ID,
-                            new Long(getItem(position).getId()));
+                            new Long(missionLadderBean.getId()));
                     startActivity(intent);
                 }
             });
 
             TextView missionLadderDeleteLink =
                     (TextView) rowView.findViewById(R.id.missionLadderDeleteLink);
-            // TODO: onClick
+            missionLadderDeleteLink.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String deleteMessage = String.format(
+                            getString(R.string.confirm_delete_mission_ladder_message),
+                            missionLadderBean.getName());
+                    ConfirmationDialogBuilder.show(
+                            AdminShowMissionLaddersActivity.this,
+                            deleteMessage,
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    dataServiceConnection.getLocalBinder()
+                                            .deleteMissionLadder(missionLadderBean.getId());
+                                }
+                            });
+                }
+            });
 
             return rowView;
         }

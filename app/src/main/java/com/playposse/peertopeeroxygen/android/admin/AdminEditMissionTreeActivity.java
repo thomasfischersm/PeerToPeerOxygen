@@ -12,6 +12,7 @@ import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
 /**
@@ -25,6 +26,7 @@ public class AdminEditMissionTreeActivity
     private DataServiceConnection dataServiceConnection;
     private Long missionLadderId;
     private Long missionTreeId;
+    private MissionLadderBean missionLadderBean;
     private MissionTreeBean missionTreeBean;
 
     @Override
@@ -62,6 +64,7 @@ public class AdminEditMissionTreeActivity
             // Check if any data has been entered in the name field.
             if (nameEditText.getText().length() > 0) {
                 missionTreeBean = new MissionTreeBean();
+                missionTreeBean.setLevel(determineNextLevel());
                 shouldSave = true;
             }
         } else {
@@ -115,6 +118,10 @@ public class AdminEditMissionTreeActivity
                             missionTreeBean.getName()));
                 }
 
+                missionLadderBean = dataServiceConnection
+                        .getLocalBinder()
+                        .getMissionLadderBean(missionLadderId);
+
 //                ListView missionLaddersListView =
 //                        (ListView) findViewById(R.id.missionTreesListView);
 //                MissionTreeBeanArrayAdapter adapter = new MissionTreeBeanArrayAdapter(
@@ -122,5 +129,16 @@ public class AdminEditMissionTreeActivity
 //                missionLaddersListView.setAdapter(adapter);
             }
         });
+    }
+
+    /**
+     * Checks the current levels an determines what the next level would be.
+     */
+    private int determineNextLevel() {
+        int level = 1;
+        for (MissionTreeBean missionTreeBean : missionLadderBean.getMissionTreeBeans()) {
+            level = Math.max(level, missionTreeBean.getLevel() + 1);
+        }
+        return level;
     }
 }

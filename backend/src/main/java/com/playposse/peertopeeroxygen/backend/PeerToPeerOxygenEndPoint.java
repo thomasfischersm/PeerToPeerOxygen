@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 import sun.rmi.runtime.Log;
 
+import static com.googlecode.objectify.ObjectifyService.factory;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /** An endpoint class we are exposing */
@@ -59,6 +60,12 @@ public class PeerToPeerOxygenEndPoint {
         return new MissionLadderBean(missionLadder);
     }
 
+    @ApiMethod(name = "deleteMissionLadder")
+    public void deleteMissionLadder(@Named("missionLadderId") Long missionLadderId) {
+        ofy().delete().type(MissionLadder.class).id(missionLadderId).now();
+        log.info("Just deleted mission ladder: " + missionLadderId);
+    }
+
     @ApiMethod(name = "saveMissionTree")
     public MissionTreeBean saveMissionTree(
             @Named("missionLadderId") Long missionLadderId,
@@ -68,7 +75,11 @@ public class PeerToPeerOxygenEndPoint {
                 + ", tree id: " + missionTreeBean.getId() + ")");
 
         MissionTree missionTree = missionTreeBean.toEntity();
-        ofy().save().entity(missionTree).now();
+//        ofy().save().entity(missionTree).now();
+
+        if (missionTree.getId() == null) {
+            missionTree.setId(factory().allocateId(MissionTree.class).getId());
+        }
 
         MissionLadder missionLadder = ofy().load()
                 .group(MissionTree.class)

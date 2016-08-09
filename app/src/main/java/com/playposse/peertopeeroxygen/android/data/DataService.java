@@ -221,6 +221,44 @@ public class DataService extends Service {
                 }
             }).start();
         }
+
+        public void deleteMissionLadder(final Long missionLadderId) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        peerToPeerOxygenApi.deleteMissionLadder(missionLadderId).execute();
+                        MissionLadderBean missionLadderBean = getMissionLadderBean(missionLadderId);
+                        completeMissionDataBean.getMissionLadderBeans().remove(missionLadderBean);
+
+                        makeDataReceivedCallbacks();
+                        Log.i(LOG_CAT, "Completed deleting mission ladder: " + missionLadderId);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        showNetworkErrorToast();
+                    }
+                }
+            }).start();
+        }
+
+        public void deleteMissionTree(final Long missionLadderId, final Long missionTreeId) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        MissionLadderBean missionLadderBean = getMissionLadderBean(missionLadderId);
+                        MissionTreeBean missionTreeBean = getMissionTreeBean(missionLadderId, missionTreeId);
+                        missionLadderBean.getMissionTreeBeans().remove(missionTreeBean);
+                        peerToPeerOxygenApi.saveMissionLadder(missionLadderBean).execute();
+
+                        makeDataReceivedCallbacks();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        showNetworkErrorToast();
+                    }
+                }
+            }).start();
+        }
     }
 
     /**

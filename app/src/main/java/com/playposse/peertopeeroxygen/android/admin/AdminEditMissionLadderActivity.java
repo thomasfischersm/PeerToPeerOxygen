@@ -11,12 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
+import com.playposse.peertopeeroxygen.android.widgets.ConfirmationDialogBuilder;
 import com.playposse.peertopeeroxygen.android.widgets.ListViewNoScroll;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
@@ -171,15 +171,20 @@ public class AdminEditMissionLadderActivity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(R.layout.list_item_mission_tree, parent, false);
 
+            final MissionTreeBean missionTreeBean = getItem(position);
+            final String missionTreeNameLabel = String.format(
+                    getString(R.string.mission_tree_label),
+                    missionTreeBean.getLevel(),
+                    missionTreeBean.getName());
             TextView missionTreeNameLink =
                     (TextView) rowView.findViewById(R.id.missionTreeNameLink);
-            missionTreeNameLink.setText(getItem(position).getName());
+            missionTreeNameLink.setText(missionTreeNameLabel);
             missionTreeNameLink.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     saveIfNecessary();
 
-                    Long missionTreeId = new Long(getItem(position).getId());
+                    Long missionTreeId = new Long(missionTreeBean.getId());
                     Intent intent = new Intent(
                             getApplicationContext(),
                             AdminEditMissionTreeActivity.class);
@@ -191,7 +196,22 @@ public class AdminEditMissionLadderActivity
 
             TextView missionTreeDeleteLink =
                     (TextView) rowView.findViewById(R.id.missionTreeDeleteLink);
-            // TODO: onClick
+            missionTreeDeleteLink.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String deleteMessage = String.format(
+                            getString(R.string.confirm_delete_mission_tree_message),
+                            missionTreeNameLabel);
+                    ConfirmationDialogBuilder.show(AdminEditMissionLadderActivity.this, deleteMessage, new Runnable() {
+                        @Override
+                        public void run() {
+                            dataServiceConnection.getLocalBinder().deleteMissionTree(
+                                    missionLadderBean.getId(),
+                                    missionTreeBean.getId());
+                        }
+                    });
+                }
+            });
 
             return rowView;
         }
