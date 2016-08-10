@@ -39,6 +39,12 @@ public class AdminEditMissionTreeActivity
     private MissionLadderBean missionLadderBean;
     private MissionTreeBean missionTreeBean;
 
+    private TextView createMissionLink;
+    private EditText nameEditText;
+    private EditText descriptionEditText;
+    private TextView editMissionBossLink;
+    private ListViewNoScroll missionsListView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,10 +58,31 @@ public class AdminEditMissionTreeActivity
         missionLadderId = getIntent().getLongExtra(ExtraConstants.EXTRA_MISSION_LADDER_ID, -1);
         missionTreeId = getIntent().getLongExtra(ExtraConstants.EXTRA_MISSION_TREE_ID, -1);
 
-        TextView createMissionLink = (TextView) findViewById(R.id.createMissionLink);
+        createMissionLink = (TextView) findViewById(R.id.createMissionLink);
+        nameEditText = (EditText) findViewById(R.id.missionTreeNameEditText);
+        descriptionEditText = (EditText) findViewById(R.id.missionTreeDescriptionEditText);
+        editMissionBossLink = (TextView) findViewById(R.id.editMissionBossLink);
+        missionsListView = (ListViewNoScroll) findViewById(R.id.missionsListView);
+
+        editMissionBossLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveIfNecessary();
+
+                Intent intent = new Intent(
+                        getApplicationContext(),
+                        AdminEditMissionBossActivity.class);
+                intent.putExtra(ExtraConstants.EXTRA_MISSION_LADDER_ID, missionLadderId);
+                intent.putExtra(ExtraConstants.EXTRA_MISSION_TREE_ID, missionTreeId);
+                startActivity(intent);
+            }
+        });
+
         createMissionLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                 saveIfNecessary();
+
                 Intent intent = new Intent(
                         getApplicationContext(),
                         AdminEditMissionActivity.class);
@@ -85,9 +112,6 @@ public class AdminEditMissionTreeActivity
 
     private void saveIfNecessary() {
         // TODO: Use that helper class to save references to views.
-        EditText nameEditText = (EditText) findViewById(R.id.missionTreeNameEditText);
-        EditText descriptionEditText =
-                (EditText) findViewById(R.id.missionTreeDescriptionEditText);
 
         // Determine if the data should be saved.
         boolean shouldSave = false;
@@ -124,10 +148,6 @@ public class AdminEditMissionTreeActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                EditText nameEditText = (EditText) findViewById(R.id.missionTreeNameEditText);
-                EditText descriptionEditText =
-                        (EditText) findViewById(R.id.missionTreeDescriptionEditText);
-
                 if (missionTreeId == -1) {
                     // new mission ladder
                     nameEditText.setText("");
@@ -148,8 +168,6 @@ public class AdminEditMissionTreeActivity
                             getString(R.string.edit_mission_tree_title),
                             missionTreeBean.getName()));
 
-                    ListViewNoScroll missionsListView =
-                            (ListViewNoScroll) findViewById(R.id.missionsListView);
                     MissionBeanArrayAdapter adapter = new MissionBeanArrayAdapter(
                             missionTreeBean.getMissionBeans());
                     missionsListView.setAdapter(adapter);

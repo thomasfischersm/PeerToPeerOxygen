@@ -64,6 +64,12 @@
                     android:lines="7" />
 
                 <TextView
+                    android:id="@+id/editMissionBossLink"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/edit_mission_boss_link"/>
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/missions_label" />

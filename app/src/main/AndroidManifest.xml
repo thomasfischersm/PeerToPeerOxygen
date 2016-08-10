@@ -34,9 +34,15 @@
             android:launchMode="singleTop"
             android:parentActivityName=".admin.AdminEditMissionLadderActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".admin.AdminEditMissionActivity"
-            android:parentActivityName=".admin.AdminEditMissionTreeActivity"
+        <activity
+            android:name=".admin.AdminEditMissionActivity"
             android:launchMode="singleTop"
+            android:parentActivityName=".admin.AdminEditMissionTreeActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".admin.AdminEditMissionBossActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".admin.AdminEditMissionTreeActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
     </application>
 

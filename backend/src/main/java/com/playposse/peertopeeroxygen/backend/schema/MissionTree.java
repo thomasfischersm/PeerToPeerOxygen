@@ -20,7 +20,7 @@ public class MissionTree {
     private String name;
     private String description;
     private int level;
-    @Load private Ref<MissionBoss> missionBoss;
+    @Load private MissionBoss missionBoss;
     @Load private List<Ref<Mission>> missions = new ArrayList<>();
 
     /**
@@ -35,11 +35,18 @@ public class MissionTree {
     public MissionTree() {
     }
 
-    public MissionTree(Long id, String name, String description, int level) {
+    public MissionTree(
+            Long id,
+            String name,
+            String description,
+            int level,
+            MissionBoss missionBoss) {
+
         this.description = description;
         this.id = id;
         this.level = level;
         this.name = name;
+        this.missionBoss = missionBoss;
     }
 
     public Long getId() {
@@ -74,11 +81,11 @@ public class MissionTree {
         this.level = level;
     }
 
-    public Ref<MissionBoss> getMissionBoss() {
+    public MissionBoss getMissionBoss() {
         return missionBoss;
     }
 
-    public void setMissionBoss(Ref<MissionBoss> missionBoss) {
+    public void setMissionBoss(MissionBoss missionBoss) {
         this.missionBoss = missionBoss;
     }
 

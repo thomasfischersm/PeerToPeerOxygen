@@ -19,15 +19,21 @@
 
     <!-- Edit mission trees -->
     <string name="edit_mission_tree_title">Mission tree: %1$s</string>
+    <string name="edit_mission_boss_link">Edit mission boss</string>
     <string name="missions_label">Missions</string>
     <string name="new_mission_link">Create new mission</string>
+
+    <!-- Edit mission boss -->
+    <string name="mission_boss_checks_label">Checks</string>
+    <string name="edit_mission_boss_title">Mission boss: %1$s</string>
+    <string name="confirm_delete_mission_boss_check_message">Do you want to delete the check: %1$s?</string>
 
     <!-- Edit mission -->
     <string name="edit_mission_title">Mission: %1$s</string>
     <string name="student_instructions_label">Student instructions</string>
     <string name="buddy_instructions_label">Buddy instructions</string>
     <string name="required_missions_label">Prerequisite missions</string>
-    <string name="confirm_delete_mission_message">Do you want to delte mission: %1$s?</string>
+    <string name="confirm_delete_mission_message">Do you want to delete mission: %1$s?</string>
 
     <!-- Reusable strings -->
     <string name="name_form_label">Name</string>

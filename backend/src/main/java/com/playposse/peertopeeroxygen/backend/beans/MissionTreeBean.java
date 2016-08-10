@@ -3,6 +3,7 @@ package com.playposse.peertopeeroxygen.backend.beans;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
+import com.playposse.peertopeeroxygen.backend.schema.MissionBoss;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class MissionTreeBean {
     private String name;
     private String description;
     private int level;
-//    private MissionBoss missionBoss;
+    private MissionBossBean missionBossBean;
     private List<MissionBean> missionBeans = new ArrayList<>();
 
     public MissionTreeBean() {
@@ -28,6 +29,10 @@ public class MissionTreeBean {
         this.name = missionTree.getName();
         this.description = missionTree.getDescription();
         this.level = missionTree.getLevel();
+
+        if (missionTree.getMissionBoss() != null) {
+            this.missionBossBean = new MissionBossBean(missionTree.getMissionBoss());
+        }
 
         for (Ref<Mission> missionRef : missionTree.getMissions()) {
             Mission mission = missionRef.get();
@@ -69,16 +74,27 @@ public class MissionTreeBean {
         this.name = name;
     }
 
+    public MissionBossBean getMissionBossBean() {
+        return missionBossBean;
+    }
+
+    public void setMissionBossBean(MissionBossBean missionBossBean) {
+        this.missionBossBean = missionBossBean;
+    }
+
     public List<MissionBean> getMissionBeans() {
         return missionBeans;
     }
 
     public MissionTree toEntity() {
-        MissionTree missionTree = new MissionTree(id, name, description, level);
+        MissionBoss missionBoss = (missionBossBean != null) ? missionBossBean.toEntity() : null;
+        MissionTree missionTree = new MissionTree(id, name, description, level, missionBoss);
+
         for (MissionBean missionBean : missionBeans) {
             Key<Mission> missionKey = Key.create(Mission.class, missionBean.getId());
             missionTree.getMissions().add(Ref.create(missionKey));
         }
+
         return missionTree;
     }
 }

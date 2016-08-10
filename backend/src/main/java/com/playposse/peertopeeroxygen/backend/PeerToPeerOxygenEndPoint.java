@@ -24,8 +24,6 @@ import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 import java.util.List;
 import java.util.logging.Logger;
 
-import sun.rmi.runtime.Log;
-
 import static com.googlecode.objectify.ObjectifyService.factory;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -84,8 +82,13 @@ public class PeerToPeerOxygenEndPoint {
             missionTree.setId(factory().allocateId(MissionTree.class).getId());
         }
 
+        if ((missionTree.getMissionBoss() != null)
+                && (missionTree.getMissionBoss().getId() == null)) {
+            missionTree.getMissionBoss().setId(factory().allocateId(MissionBoss.class).getId());
+        }
+
         MissionLadder missionLadder = ofy().load()
-                .group(MissionTree.class)
+                .group(MissionTree.class, MissionBoss.class)
                 .type(MissionLadder.class)
                 .id(missionLadderId)
                 .now();

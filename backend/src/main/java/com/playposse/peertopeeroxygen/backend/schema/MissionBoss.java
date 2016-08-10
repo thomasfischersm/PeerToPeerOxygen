@@ -25,9 +25,14 @@ public class MissionBoss {
     /**
      * Default constructor to create a new mission boss.
      */
-    public MissionBoss(List<String> checks, String description) {
+    public MissionBoss(Long id, String description, List<String> checks) {
+        this.id = id;
         this.checks = checks;
         this.description = description;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getId() {
