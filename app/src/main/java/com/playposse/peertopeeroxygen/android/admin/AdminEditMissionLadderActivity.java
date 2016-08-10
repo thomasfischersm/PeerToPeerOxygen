@@ -2,8 +2,8 @@ package com.playposse.peertopeeroxygen.android.admin;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,6 +37,11 @@ public class AdminEditMissionLadderActivity
     private MissionLadderBean missionLadderBean;
     private Long missionLadderId;
 
+    private EditText nameEditText;
+    private EditText descriptionEditText;
+    private ListViewNoScroll missionLaddersListView;
+    private TextView createMissionTreeLink;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +57,11 @@ public class AdminEditMissionLadderActivity
 
         Log.i(LOG_CAT, "Edit mission ladder called with ladder id: " + missionLadderId);
 
-        TextView createMissionTreeLink = (TextView) findViewById(R.id.createMissionTreeLink);
+        createMissionTreeLink = (TextView) findViewById(R.id.createMissionTreeLink);
+        nameEditText = (EditText) findViewById(R.id.missionLadderNameEditText);
+        descriptionEditText = (EditText) findViewById(R.id.missionLadderDescriptionEditText);
+        missionLaddersListView = (ListViewNoScroll) findViewById(R.id.missionTreesListView);
+
         createMissionTreeLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,11 +92,6 @@ public class AdminEditMissionLadderActivity
     }
 
     private void saveIfNecessary() {
-        // TODO: Use that helper class to save references to views.
-        EditText nameEditText = (EditText) findViewById(R.id.missionLadderNameEditText);
-        EditText descriptionEditText =
-                (EditText) findViewById(R.id.missionLadderDescriptionEditText);
-
         // Determine if the data should be saved.
         boolean shouldSave = false;
         if (missionLadderBean == null) {
@@ -98,7 +102,7 @@ public class AdminEditMissionLadderActivity
             }
         } else {
             // Check if changes have been made.
-            shouldSave =  !nameEditText.getText().toString().equals(missionLadderBean.getName())
+            shouldSave = !nameEditText.getText().toString().equals(missionLadderBean.getName())
                     || !descriptionEditText.getText().toString().equals(missionLadderBean.getDescription());
         }
 
@@ -123,10 +127,6 @@ public class AdminEditMissionLadderActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                EditText nameEditText = (EditText) findViewById(R.id.missionLadderNameEditText);
-                EditText descriptionEditText =
-                        (EditText) findViewById(R.id.missionLadderDescriptionEditText);
-
                 if (missionLadderId == -1) {
                     // new mission ladder
                     nameEditText.setText("");
@@ -143,8 +143,6 @@ public class AdminEditMissionLadderActivity
                     nameEditText.setText(missionLadderBean.getName());
                     descriptionEditText.setText(missionLadderBean.getDescription());
 
-                    ListViewNoScroll missionLaddersListView =
-                            (ListViewNoScroll) findViewById(R.id.missionTreesListView);
                     MissionTreeBeanArrayAdapter adapter = new MissionTreeBeanArrayAdapter(
                             missionLadderBean.getMissionTreeBeans());
                     missionLaddersListView.setAdapter(adapter);
@@ -201,14 +199,16 @@ public class AdminEditMissionLadderActivity
                     String deleteMessage = String.format(
                             getString(R.string.confirm_delete_mission_tree_message),
                             missionTreeNameLabel);
-                    ConfirmationDialogBuilder.show(AdminEditMissionLadderActivity.this, deleteMessage, new Runnable() {
-                        @Override
-                        public void run() {
-                            dataServiceConnection.getLocalBinder().deleteMissionTree(
-                                    missionLadderBean.getId(),
-                                    missionTreeBean.getId());
-                        }
-                    });
+                    ConfirmationDialogBuilder.show(
+                            AdminEditMissionLadderActivity.this, deleteMessage,
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    dataServiceConnection.getLocalBinder().deleteMissionTree(
+                                            missionLadderBean.getId(),
+                                            missionTreeBean.getId());
+                                }
+                            });
                 }
             });
 

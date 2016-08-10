@@ -27,6 +27,10 @@ public class AdminEditMissionActivity
     private Long missionId;
     private MissionBean missionBean;
 
+    EditText nameEditText;
+    EditText studentInstructionEditText;
+    EditText buddyInstructionEditText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,13 +38,16 @@ public class AdminEditMissionActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         missionLadderId = intent.getLongExtra(ExtraConstants.EXTRA_MISSION_LADDER_ID, -1);
         missionTreeId = intent.getLongExtra(ExtraConstants.EXTRA_MISSION_TREE_ID, -1);
         missionId = intent.getLongExtra(ExtraConstants.EXTRA_MISSION_ID, -1);
+
+        nameEditText = (EditText) findViewById(R.id.missionNameEditText);
+        studentInstructionEditText = (EditText) findViewById(R.id.studentInstructionsEditText);
+        buddyInstructionEditText = (EditText) findViewById(R.id.buddyInstructionsEditText);
     }
 
     @Override
@@ -72,12 +79,6 @@ public class AdminEditMissionActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                EditText nameEditText = (EditText) findViewById(R.id.missionNameEditText);
-                EditText studentInstructionEditText =
-                        (EditText) findViewById(R.id.studentInstructionsEditText);
-                EditText buddyInstructionEditText =
-                        (EditText) findViewById(R.id.buddyInstructionsEditText);
-
                 if (missionId == -1) {
                     // new mission ladder
                     nameEditText.setText("");
@@ -107,12 +108,6 @@ public class AdminEditMissionActivity
     }
 
     private void saveIfNecessary() {
-        EditText nameEditText = (EditText) findViewById(R.id.missionNameEditText);
-        EditText studentInstructionEditText =
-                (EditText) findViewById(R.id.studentInstructionsEditText);
-        EditText buddyInstructionEditText =
-                (EditText) findViewById(R.id.buddyInstructionsEditText);
-
         // Determine if data should be saved.
         boolean shouldSave = false;
         if (missionBean == null) {

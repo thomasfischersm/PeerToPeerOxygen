@@ -15,6 +15,8 @@ import com.playposse.peertopeeroxygen.android.R;
  */
 public class AdminMainActivity extends AppCompatActivity {
 
+    private TextView openMissionLaddersTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +29,7 @@ public class AdminMainActivity extends AppCompatActivity {
 
         setTitle(R.string.admin_home_title);
 
-        TextView openMissionLaddersTextView = (TextView) findViewById(R.id.openMissionLaddersLink);
+        openMissionLaddersTextView = (TextView) findViewById(R.id.openMissionLaddersLink);
         openMissionLaddersTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
