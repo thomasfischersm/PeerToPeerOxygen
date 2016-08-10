@@ -21,28 +21,18 @@ public class MissionTree {
     private String description;
     private int level;
     @Load private Ref<MissionBoss> missionBoss;
-    @Load private List<Mission> missions = new ArrayList<>();
+    @Load private List<Ref<Mission>> missions = new ArrayList<>();
 
     /**
      * List of missions that are required to be completed before attempting to beat the mission
      * boss.
      */
-    @Load private List<Mission> requiredMissions = new ArrayList<>();
+    @Load private List<Ref<Mission>> requiredMissions = new ArrayList<>();
 
     /**
      * Default constructor for objectify.
      */
     public MissionTree() {
-    }
-
-
-    /**
-     * Constructor for creating a new mission tree.
-     */
-    public MissionTree(String description, int level, String name) {
-        this.description = description;
-        this.level = level;
-        this.name = name;
     }
 
     public MissionTree(Long id, String name, String description, int level) {
@@ -60,11 +50,11 @@ public class MissionTree {
         this.id = id;
     }
 
-    public List<Mission> getMissions() {
+    public List<Ref<Mission>> getMissions() {
         return missions;
     }
 
-    public List<Mission> getRequiredMissions() {
+    public List<Ref<Mission>> getRequiredMissions() {
         return requiredMissions;
     }
 

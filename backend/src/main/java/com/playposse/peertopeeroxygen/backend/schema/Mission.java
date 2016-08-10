@@ -1,7 +1,12 @@
 package com.playposse.peertopeeroxygen.backend.schema;
 
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Load;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Objectify entity that describes a mission.
@@ -13,6 +18,7 @@ public class Mission {
     private String name;
     private String studentInstruction;
     private String buddyInstruction;
+    @Load private List<Ref<Mission>> requiredMissions = new ArrayList<>();
 //    private byte[] icon;
 
     /**
@@ -24,7 +30,8 @@ public class Mission {
     /**
      * Default constructor to create a new mission.
      */
-    public Mission(String name, String studentInstruction, String buddyInstruction) {
+    public Mission(Long id, String name, String studentInstruction, String buddyInstruction) {
+        this.id = id;
         this.buddyInstruction = buddyInstruction;
         this.name = name;
         this.studentInstruction = studentInstruction;
@@ -56,5 +63,9 @@ public class Mission {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Ref<Mission>> getRequiredMissions() {
+        return requiredMissions;
     }
 }

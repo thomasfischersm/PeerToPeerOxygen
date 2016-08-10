@@ -5,15 +5,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
+import com.playposse.peertopeeroxygen.android.widgets.ConfirmationDialogBuilder;
+import com.playposse.peertopeeroxygen.android.widgets.ListViewNoScroll;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
+
+import java.util.List;
 
 /**
  * {@link android.app.Activity} that shows, edits, and creates a specific mission tree.
@@ -42,17 +52,38 @@ public class AdminEditMissionTreeActivity
         missionLadderId = getIntent().getLongExtra(ExtraConstants.EXTRA_MISSION_LADDER_ID, -1);
         missionTreeId = getIntent().getLongExtra(ExtraConstants.EXTRA_MISSION_TREE_ID, -1);
 
+        TextView createMissionLink = (TextView) findViewById(R.id.createMissionLink);
+        createMissionLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(
+                        getApplicationContext(),
+                        AdminEditMissionActivity.class);
+                intent.putExtra(ExtraConstants.EXTRA_MISSION_LADDER_ID, missionLadderId);
+                intent.putExtra(ExtraConstants.EXTRA_MISSION_TREE_ID, missionTreeId);
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
         missionTreeBean = null;
         Intent intent = new Intent(this, DataService.class);
         dataServiceConnection = new DataServiceConnection(this);
         bindService(intent, dataServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-
     @Override
     protected void onPause() {
         super.onPause();
 
+        saveIfNecessary();
+    }
+
+    private void saveIfNecessary() {
         // TODO: Use that helper class to save references to views.
         EditText nameEditText = (EditText) findViewById(R.id.missionTreeNameEditText);
         EditText descriptionEditText =
@@ -116,17 +147,17 @@ public class AdminEditMissionTreeActivity
                     setTitle(String.format(
                             getString(R.string.edit_mission_tree_title),
                             missionTreeBean.getName()));
+
+                    ListViewNoScroll missionsListView =
+                            (ListViewNoScroll) findViewById(R.id.missionsListView);
+                    MissionBeanArrayAdapter adapter = new MissionBeanArrayAdapter(
+                            missionTreeBean.getMissionBeans());
+                    missionsListView.setAdapter(adapter);
                 }
 
                 missionLadderBean = dataServiceConnection
                         .getLocalBinder()
                         .getMissionLadderBean(missionLadderId);
-
-//                ListView missionLaddersListView =
-//                        (ListView) findViewById(R.id.missionTreesListView);
-//                MissionTreeBeanArrayAdapter adapter = new MissionTreeBeanArrayAdapter(
-//                        missionLadderBean.getMissionTreeBeans());
-//                missionLaddersListView.setAdapter(adapter);
             }
         });
     }
@@ -140,5 +171,61 @@ public class AdminEditMissionTreeActivity
             level = Math.max(level, missionTreeBean.getLevel() + 1);
         }
         return level;
+    }
+
+    private final class MissionBeanArrayAdapter
+            extends ArrayAdapter<MissionBean> {
+
+        public MissionBeanArrayAdapter(List<MissionBean> objects) {
+            super(getApplicationContext(), R.layout.list_item_mission, objects);
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = (LayoutInflater) AdminEditMissionTreeActivity.this
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View rowView = inflater.inflate(R.layout.list_item_mission, parent, false);
+
+            final MissionBean missionBean = getItem(position);
+            TextView missionNameLink = (TextView) rowView.findViewById(R.id.missionNameLink);
+            missionNameLink.setText(missionBean.getName());
+            missionNameLink.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    saveIfNecessary();
+
+                    Long missionId = new Long(missionBean.getId());
+                    Intent intent = new Intent(
+                            getApplicationContext(),
+                            AdminEditMissionActivity.class);
+                    intent.putExtra(ExtraConstants.EXTRA_MISSION_LADDER_ID, missionLadderId);
+                    intent.putExtra(ExtraConstants.EXTRA_MISSION_TREE_ID, missionTreeId);
+                    intent.putExtra(ExtraConstants.EXTRA_MISSION_ID, missionId);
+                    startActivity(intent);
+                }
+            });
+
+            TextView missionDeleteLink =
+                    (TextView) rowView.findViewById(R.id.missionDeleteLink);
+            missionDeleteLink.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String deleteMessage = String.format(
+                            getString(R.string.confirm_delete_mission_message),
+                            missionBean.getName());
+                    ConfirmationDialogBuilder.show(AdminEditMissionTreeActivity.this, deleteMessage, new Runnable() {
+                        @Override
+                        public void run() {
+                            dataServiceConnection.getLocalBinder().deleteMission(
+                                    missionLadderBean.getId(),
+                                    missionTreeBean.getId(),
+                                    missionBean.getId());
+                        }
+                    });
+                }
+            });
+
+            return rowView;
+        }
     }
 }

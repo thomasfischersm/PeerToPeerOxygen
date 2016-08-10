@@ -10,7 +10,10 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.config.Named;
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.beans.CompleteMissionDataBean;
+import com.playposse.peertopeeroxygen.backend.beans.MissionBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionTreeBean;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
@@ -93,6 +96,7 @@ public class PeerToPeerOxygenEndPoint {
             for (int i = 0; i < missionLadder.getMissionTrees().size(); i++) {
                 if (missionLadder.getMissionTrees().get(i).getId().equals(missionTreeBean.getId())) {
                     missionLadder.getMissionTrees().set(i, missionTree);
+                    break;
                 }
             }
         }
@@ -100,5 +104,65 @@ public class PeerToPeerOxygenEndPoint {
         ofy().save().entity(missionLadder).now();
 
         return new MissionTreeBean(missionTree);
+    }
+
+    @ApiMethod(name = "saveMission")
+    public MissionBean saveMission(
+            @Named("missionLadderId") Long missionLadderId,
+            @Named("missionTreeId") Long missionTreeId,
+            MissionBean missionBean) {
+
+        Mission mission = missionBean.toEntity();
+
+        MissionLadder missionLadder = ofy().load()
+                .group(MissionTree.class, Mission.class)
+                .type(MissionLadder.class)
+                .id(missionLadderId)
+                .now();
+
+        MissionTree missionTree = findMissionTree(missionLadder, missionTreeId);
+
+        ofy().save().entity(mission).now();
+
+        if (missionBean.getId() == null) {
+            missionTree.getMissions().add(Ref.create(Key.create(Mission.class, mission.getId())));
+            ofy().save().entity(missionLadder).now();
+        }
+
+        return new MissionBean(mission);
+    }
+
+    private MissionTree findMissionTree(MissionLadder missionLadder, Long missionTreeId) {
+        for (MissionTree missionTree : missionLadder.getMissionTrees()) {
+            if (missionTree.getId().equals(missionTreeId)) {
+                return missionTree;
+            }
+        }
+        return null;
+    }
+
+    @ApiMethod(name = "deleteMission")
+    public void deleteMission(
+            @Named("missionLadderId") Long missionLadderId,
+            @Named("missionTreeId") Long missionTreeId,
+            @Named("missionId") Long missionId) {
+
+        MissionLadder missionLadder = ofy().load()
+                .group(MissionTree.class)
+                .type(MissionLadder.class)
+                .id(missionLadderId)
+                .now();
+        MissionTree missionTree = findMissionTree(missionLadder, missionTreeId);
+        Key<Mission> missionKey = Key.create(Mission.class, missionId);
+
+        for (Ref<Mission> otherMissionRef : missionTree.getMissions()) {
+            if (missionId == otherMissionRef.getKey().getId()) {
+                missionTree.getMissions().remove(otherMissionRef);
+                ofy().save().entity(missionTree).now();
+                break;
+            }
+        }
+
+        ofy().delete().key(missionKey).now();
     }
 }

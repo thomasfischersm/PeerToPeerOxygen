@@ -13,6 +13,7 @@ import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxygenApi;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
@@ -23,7 +24,7 @@ import java.util.List;
 /**
  * A {@link Service} that retrieves the data from AppEngine and locally cashes it. (The second
  * part has to still be built.
- * <p/>
+ * <p>
  * <p>Currently, the service should be started when the app starts up. Each activity should bind to
  * it to retrieve data.
  */
@@ -73,17 +74,33 @@ public class DataService extends Service {
 
     private void debugDump() {
         Log.i(LOG_CAT, "Dumping complete mission data bean:");
-        for (MissionLadderBean missionLadderBean : completeMissionDataBean.getMissionLadderBeans()) {
-            Log.i(LOG_CAT, "- ladder (id: " + missionLadderBean.getId()
-                    + ", name: " + missionLadderBean.getName()
-                    + ", description: " + missionLadderBean.getDescription());
-            if (missionLadderBean.getMissionTreeBeans() == null) {
-                Log.i(LOG_CAT, "-- mission: null");
-            } else {
-                for (MissionTreeBean missionTreeBean : missionLadderBean.getMissionTreeBeans()) {
-                    Log.i(LOG_CAT, "-- mission (id: " + missionTreeBean.getId()
-                            + ", name: " + missionTreeBean.getName()
-                            + ", description: " + missionTreeBean.getDescription());
+        if (completeMissionDataBean.getMissionLadderBeans() != null) {
+            for (MissionLadderBean missionLadderBean : completeMissionDataBean.getMissionLadderBeans()) {
+                Log.i(LOG_CAT, "- ladder (id: " + missionLadderBean.getId()
+                        + ", name: " + missionLadderBean.getName()
+                        + ", description: " + missionLadderBean.getDescription());
+                if (missionLadderBean.getMissionTreeBeans() == null) {
+                    Log.i(LOG_CAT, "-- mission tree: null");
+                } else {
+                    if (missionLadderBean.getMissionTreeBeans() != null) {
+                        for (MissionTreeBean missionTreeBean : missionLadderBean.getMissionTreeBeans()) {
+                            Log.i(LOG_CAT, "-- mission tree (id: " + missionTreeBean.getId()
+                                    + ", name: " + missionTreeBean.getName()
+                                    + ", description: " + missionTreeBean.getDescription());
+                            if (missionTreeBean.getMissionBeans() == null) {
+                                Log.i(LOG_CAT, "--- mission: null");
+                            } else {
+                                if (missionTreeBean.getMissionBeans() != null) {
+                                    for (MissionBean missionBean : missionTreeBean.getMissionBeans()) {
+                                        Log.i(LOG_CAT, "--- mission: (id: " + missionBean.getId()
+                                                + ", name: " + missionBean.getName()
+                                                + ", student instruction: " + missionBean.getStudentInstruction()
+                                                + ", buddy instruction: " + missionBean.getBuddyInstruction());
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -104,16 +121,7 @@ public class DataService extends Service {
                 Log.i(LOG_CAT, "BEFORE FIX");
                 debugDump();
 
-                if (completeMissionDataBean.getMissionLadderBeans() == null) {
-                    completeMissionDataBean.setMissionLadderBeans(
-                            new ArrayList<MissionLadderBean>());
-                }
-
-                for (MissionLadderBean missionLadderBean : completeMissionDataBean.getMissionLadderBeans()) {
-                    if (missionLadderBean.getMissionTreeBeans() == null) {
-                        missionLadderBean.setMissionTreeBeans(new ArrayList<MissionTreeBean>());
-                    }
-                }
+                fixNullLists();
 
                 Log.i(LOG_CAT, "AFTER FIX");
                 debugDump();
@@ -125,6 +133,31 @@ public class DataService extends Service {
             } catch (IOException ex) {
                 ex.printStackTrace();
                 showNetworkErrorToast();
+            }
+        }
+
+        /**
+         * Replaces null lists with an empty list.
+         *
+         * <p>Somehow, empty lists turn into null during transport. (JSON probably doesn't
+         * differentiate.) To make things easier, all null lists are initialized with an empty list.
+         */
+        private void fixNullLists() {
+            if (completeMissionDataBean.getMissionLadderBeans() == null) {
+                completeMissionDataBean.setMissionLadderBeans(
+                        new ArrayList<MissionLadderBean>());
+            }
+
+            for (MissionLadderBean missionLadderBean : completeMissionDataBean.getMissionLadderBeans()) {
+                if (missionLadderBean.getMissionTreeBeans() == null) {
+                    missionLadderBean.setMissionTreeBeans(new ArrayList<MissionTreeBean>());
+                }
+
+                for (MissionTreeBean missionTreeBean : missionLadderBean.getMissionTreeBeans()) {
+                    if (missionTreeBean.getMissionBeans() == null) {
+                        missionTreeBean.setMissionBeans(new ArrayList<MissionBean>());
+                    }
+                }
             }
         }
     }
@@ -164,6 +197,19 @@ public class DataService extends Service {
             return null;
         }
 
+        public MissionBean getMissionBean(
+                Long missionLadderId,
+                Long missionTreeId,
+                Long missionId) {
+
+            for (MissionBean missionBean : getMissionTreeBean(missionLadderId, missionTreeId).getMissionBeans()) {
+                if (missionBean.getId().equals(missionId)) {
+                    return missionBean;
+                }
+            }
+            return null;
+        }
+
         public void save(final MissionLadderBean missionLadderBean) {
             new Thread(new Runnable() {
                 @Override
@@ -177,6 +223,7 @@ public class DataService extends Service {
 
                         // Update local data to avoid reloading data from the server.
                         if (create) {
+                            missionLadderBean.setMissionTreeBeans(new ArrayList<MissionTreeBean>());
                             completeMissionDataBean.getMissionLadderBeans().add(missionLadderBean);
                         }
 
@@ -195,7 +242,6 @@ public class DataService extends Service {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-
                     try {
                         boolean create = missionTreeBean.getId() == null;
                         MissionTreeBean result =
@@ -208,12 +254,48 @@ public class DataService extends Service {
                         if (create) {
                             MissionLadderBean missionLadderBean =
                                     getMissionLadderBean(missionLadderId);
+                            missionTreeBean.setMissionBeans(new ArrayList<MissionBean>());
                             missionLadderBean.getMissionTreeBeans().add(missionTreeBean);
                         }
 
                         makeDataReceivedCallbacks();
 
                         Log.i(LOG_CAT, "Mission tree has been saved.");
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        showNetworkErrorToast();
+                    }
+                }
+            }).start();
+        }
+
+        public void save(
+                final Long missionLadderId,
+                final Long missionTreeId,
+                final MissionBean missionBean) {
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        boolean create = missionBean.getId() == null;
+
+                        MissionBean result = peerToPeerOxygenApi.saveMission(
+                                missionLadderId,
+                                missionTreeId,
+                                missionBean)
+                                .execute();
+                        missionBean.setId(result.getId());
+
+                        if (create) {
+                            MissionTreeBean missionTreeBean =
+                                    getMissionTreeBean(missionLadderId, missionTreeId);
+                            missionTreeBean.getMissionBeans().add(missionBean);
+                        }
+
+                        makeDataReceivedCallbacks();
+
+                        Log.i(LOG_CAT, "Mission has been saved.");
                     } catch (IOException ex) {
                         ex.printStackTrace();
                         showNetworkErrorToast();
@@ -259,6 +341,34 @@ public class DataService extends Service {
                 }
             }).start();
         }
+
+
+        public void deleteMission(
+                final Long missionLadderId,
+                final Long missionTreeId,
+                final Long missionId) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        MissionTreeBean missionTreeBean =
+                                getMissionTreeBean(missionLadderId, missionTreeId);
+                        MissionBean missionBean =
+                                getMissionBean(missionLadderId, missionTreeId, missionId);
+                        missionTreeBean.getMissionBeans().remove(missionBean);
+
+                        peerToPeerOxygenApi
+                                .deleteMission(missionLadderId, missionTreeId, missionId)
+                                .execute();
+
+                        makeDataReceivedCallbacks();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        showNetworkErrorToast();
+                    }
+                }
+            }).start();
+        }
     }
 
     /**
@@ -270,6 +380,7 @@ public class DataService extends Service {
 
         /**
          * Called when data is available. It's the job of this method to switch to the UI thread.
+         *
          * @param completeMissionDataBean
          */
         void receiveData(CompleteMissionDataBean completeMissionDataBean);

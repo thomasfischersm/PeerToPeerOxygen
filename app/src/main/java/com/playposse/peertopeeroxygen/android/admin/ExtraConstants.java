@@ -9,4 +9,6 @@ public final class ExtraConstants {
             "com.playposse.peertopeeroxygen.android.missionLadderId";
     public static final String EXTRA_MISSION_TREE_ID =
             "com.playposse.peertopeeroxygen.android.missionTreeId";
+    public static final String EXTRA_MISSION_ID =
+            "com.playposse.peertopeeroxygen.android.missionId";
 }

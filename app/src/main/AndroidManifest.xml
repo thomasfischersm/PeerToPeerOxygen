@@ -26,12 +26,16 @@
 
         <activity
             android:name=".admin.AdminEditMissionLadderActivity"
-            android:parentActivityName=".admin.AdminShowMissionLaddersActivity"
             android:launchMode="singleTop"
+            android:parentActivityName=".admin.AdminShowMissionLaddersActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".admin.AdminEditMissionTreeActivity"
+            android:launchMode="singleTop"
             android:parentActivityName=".admin.AdminEditMissionLadderActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".admin.AdminEditMissionActivity"
+            android:parentActivityName=".admin.AdminEditMissionTreeActivity"
             android:launchMode="singleTop"
             android:windowSoftInputMode="stateHidden|adjustResize" />
     </application>

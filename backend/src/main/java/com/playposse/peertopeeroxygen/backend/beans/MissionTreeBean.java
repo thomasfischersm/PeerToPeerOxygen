@@ -1,10 +1,8 @@
 package com.playposse.peertopeeroxygen.backend.beans;
 
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
-import com.googlecode.objectify.annotation.Id;
-import com.googlecode.objectify.annotation.Load;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
-import com.playposse.peertopeeroxygen.backend.schema.MissionBoss;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 
 import java.util.ArrayList;
@@ -20,7 +18,7 @@ public class MissionTreeBean {
     private String description;
     private int level;
 //    private MissionBoss missionBoss;
-//    private List<Mission> missions = new ArrayList<>();
+    private List<MissionBean> missionBeans = new ArrayList<>();
 
     public MissionTreeBean() {
     }
@@ -30,6 +28,13 @@ public class MissionTreeBean {
         this.name = missionTree.getName();
         this.description = missionTree.getDescription();
         this.level = missionTree.getLevel();
+
+        for (Ref<Mission> missionRef : missionTree.getMissions()) {
+            Mission mission = missionRef.get();
+            if (mission != null) {
+                missionBeans.add(new MissionBean(mission));
+            }
+        }
     }
 
     public String getDescription() {
@@ -64,7 +69,16 @@ public class MissionTreeBean {
         this.name = name;
     }
 
+    public List<MissionBean> getMissionBeans() {
+        return missionBeans;
+    }
+
     public MissionTree toEntity() {
-        return new MissionTree(id, name, description, level);
+        MissionTree missionTree = new MissionTree(id, name, description, level);
+        for (MissionBean missionBean : missionBeans) {
+            Key<Mission> missionKey = Key.create(Mission.class, missionBean.getId());
+            missionTree.getMissions().add(Ref.create(missionKey));
+        }
+        return missionTree;
     }
 }

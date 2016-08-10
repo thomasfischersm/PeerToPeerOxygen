@@ -66,8 +66,8 @@ public class AdminEditMissionLadderActivity
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
 
         missionLadderBean = null;
         Intent intent = new Intent(this, DataService.class);
@@ -80,7 +80,6 @@ public class AdminEditMissionLadderActivity
         super.onPause();
 
         saveIfNecessary();
-
     }
 
     private void saveIfNecessary() {
