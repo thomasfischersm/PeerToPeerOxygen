@@ -51,7 +51,7 @@ public class ListViewNoScroll extends LinearLayout {
         });
     }
 
-    private void rebuild() {
+    protected void rebuild() {
         removeAllViews();
 
         for (int i = 0; i < adapter.getCount(); i++) {

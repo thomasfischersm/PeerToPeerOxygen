@@ -28,6 +28,9 @@ public class AdminShowMissionLaddersActivity
 
     private DataServiceConnection dataServiceConnection;
 
+    private TextView createMissionLadderLink;
+    private ListView missionLaddersListView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +43,9 @@ public class AdminShowMissionLaddersActivity
 
         setTitle(R.string.show_mission_ladders_title);
 
-        TextView createMissionLadderLink = (TextView) findViewById(R.id.createMissionLadderLink);
+        createMissionLadderLink = (TextView) findViewById(R.id.createMissionLadderLink);
+        missionLaddersListView = (ListView) findViewById(R.id.missionLaddersListView);
+
         createMissionLadderLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,8 +78,6 @@ public class AdminShowMissionLaddersActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ListView missionLaddersListView =
-                        (ListView) findViewById(R.id.missionLaddersListView);
                 MissionLadderBeanArrayAdapter adapter = new MissionLadderBeanArrayAdapter(
                         new ArrayList<>(completeMissionDataBean.getMissionLadderBeans()));
                 missionLaddersListView.setAdapter(adapter);

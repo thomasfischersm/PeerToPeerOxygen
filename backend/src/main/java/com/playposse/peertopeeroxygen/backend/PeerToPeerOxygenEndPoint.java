@@ -73,7 +73,10 @@ public class PeerToPeerOxygenEndPoint {
             MissionTreeBean missionTreeBean) {
 
         log.info("saveMissionTree is called (ladder id: " + missionLadderId
-                + ", tree id: " + missionTreeBean.getId() + ")");
+                + ", tree id: " + missionTreeBean.getId()
+                + ", mission count: " + missionTreeBean.getMissionBeans().size()
+                + ", required mission count: " + missionTreeBean.getRequiredMissionIds().size()
+                + ")");
 
         MissionTree missionTree = missionTreeBean.toEntity();
 //        ofy().save().entity(missionTree).now();
@@ -88,7 +91,7 @@ public class PeerToPeerOxygenEndPoint {
         }
 
         MissionLadder missionLadder = ofy().load()
-                .group(MissionTree.class, MissionBoss.class)
+                .group(MissionTree.class, MissionBoss.class, Mission.class)
                 .type(MissionLadder.class)
                 .id(missionLadderId)
                 .now();
@@ -104,6 +107,7 @@ public class PeerToPeerOxygenEndPoint {
             }
         }
 
+        log.info("Saving required mission count: " + missionTree.getRequiredMissions().size());
         ofy().save().entity(missionLadder).now();
 
         return new MissionTreeBean(missionTree);

@@ -30,7 +30,9 @@ public class MissionBean {
         this.buddyInstruction = mission.getBuddyInstruction();
 
         for (Ref<Mission> requiredMissionRef : mission.getRequiredMissions()) {
-            requiredMissionIds.add(requiredMissionRef.get().getId());
+            if (requiredMissionRef.get() != null) {
+                requiredMissionIds.add(requiredMissionRef.getKey().getId());
+            }
         }
     }
 

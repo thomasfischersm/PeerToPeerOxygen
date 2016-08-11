@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
@@ -18,6 +17,7 @@ import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
 import com.playposse.peertopeeroxygen.android.widgets.ConfirmationDialogBuilder;
 import com.playposse.peertopeeroxygen.android.widgets.ListViewNoScroll;
+import com.playposse.peertopeeroxygen.android.widgets.RequiredMissionListView;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
@@ -44,6 +44,7 @@ public class AdminEditMissionTreeActivity
     private EditText descriptionEditText;
     private TextView editMissionBossLink;
     private ListViewNoScroll missionsListView;
+    private RequiredMissionListView requiredMissionsListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,8 @@ public class AdminEditMissionTreeActivity
         descriptionEditText = (EditText) findViewById(R.id.missionTreeDescriptionEditText);
         editMissionBossLink = (TextView) findViewById(R.id.editMissionBossLink);
         missionsListView = (ListViewNoScroll) findViewById(R.id.missionsListView);
+        requiredMissionsListView =
+                (RequiredMissionListView) findViewById(R.id.requiredMissionsListView);
 
         editMissionBossLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +84,7 @@ public class AdminEditMissionTreeActivity
         createMissionLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                 saveIfNecessary();
+                saveIfNecessary();
 
                 Intent intent = new Intent(
                         getApplicationContext(),
@@ -111,8 +114,6 @@ public class AdminEditMissionTreeActivity
     }
 
     private void saveIfNecessary() {
-        // TODO: Use that helper class to save references to views.
-
         // Determine if the data should be saved.
         boolean shouldSave = false;
         if (missionTreeBean == null) {
@@ -125,13 +126,15 @@ public class AdminEditMissionTreeActivity
         } else {
             // Check if changes have been made.
             shouldSave = !nameEditText.getText().toString().equals(missionTreeBean.getName())
-                    || !descriptionEditText.getText().toString().equals(missionTreeBean.getDescription());
+                    || !descriptionEditText.getText().toString().equals(missionTreeBean.getDescription())
+                    || requiredMissionsListView.isDirty();
         }
 
         // Save if necessary.
         if (shouldSave) {
             missionTreeBean.setName(nameEditText.getText().toString());
             missionTreeBean.setDescription(descriptionEditText.getText().toString());
+            missionTreeBean.setRequiredMissionIds(requiredMissionsListView.getRequiredMissionIds());
             dataServiceConnection.getLocalBinder().save(missionLadderId, missionTreeBean);
         }
     }
@@ -171,6 +174,11 @@ public class AdminEditMissionTreeActivity
                     MissionBeanArrayAdapter adapter = new MissionBeanArrayAdapter(
                             missionTreeBean.getMissionBeans());
                     missionsListView.setAdapter(adapter);
+
+                    requiredMissionsListView.setAdapter(
+                            missionTreeBean.getMissionBeans(),
+                            missionTreeBean.getRequiredMissionIds(),
+                            null);
                 }
 
                 missionLadderBean = dataServiceConnection

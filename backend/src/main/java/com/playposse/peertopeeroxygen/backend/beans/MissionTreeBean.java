@@ -20,6 +20,7 @@ public class MissionTreeBean {
     private int level;
     private MissionBossBean missionBossBean;
     private List<MissionBean> missionBeans = new ArrayList<>();
+    private List<Long> requiredMissionIds = new ArrayList<>();
 
     public MissionTreeBean() {
     }
@@ -38,6 +39,12 @@ public class MissionTreeBean {
             Mission mission = missionRef.get();
             if (mission != null) {
                 missionBeans.add(new MissionBean(mission));
+            }
+        }
+
+        for (Ref<Mission> requiredMissionRef : missionTree.getRequiredMissions()) {
+            if (requiredMissionRef.get() != null) {
+                requiredMissionIds.add(requiredMissionRef.getKey().getId());
             }
         }
     }
@@ -86,6 +93,14 @@ public class MissionTreeBean {
         return missionBeans;
     }
 
+    public List<Long> getRequiredMissionIds() {
+        return requiredMissionIds;
+    }
+
+    public void setRequiredMissionIds(List<Long> requiredMissionIds) {
+        this.requiredMissionIds = requiredMissionIds;
+    }
+
     public MissionTree toEntity() {
         MissionBoss missionBoss = (missionBossBean != null) ? missionBossBean.toEntity() : null;
         MissionTree missionTree = new MissionTree(id, name, description, level, missionBoss);
@@ -95,6 +110,10 @@ public class MissionTreeBean {
             missionTree.getMissions().add(Ref.create(missionKey));
         }
 
+        for (Long requiredMissionId : requiredMissionIds) {
+            Key<Mission> requiredMissionKey = Key.create(Mission.class, requiredMissionId);
+            missionTree.getRequiredMissions().add(Ref.create(requiredMissionKey));
+        }
         return missionTree;
     }
 }
