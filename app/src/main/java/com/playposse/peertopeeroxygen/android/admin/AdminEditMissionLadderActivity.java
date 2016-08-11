@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -27,13 +28,10 @@ import java.util.List;
 /**
  * {@link android.app.Activity} that shows, edits, and creates a specific mission ladder.
  */
-public class AdminEditMissionLadderActivity
-        extends AppCompatActivity
-        implements DataService.DataReceivedCallback {
+public class AdminEditMissionLadderActivity extends AdminParentActivity {
 
     public static final String LOG_CAT = AdminEditMissionLadderActivity.class.getSimpleName();
 
-    private DataServiceConnection dataServiceConnection;
     private MissionLadderBean missionLadderBean;
     private Long missionLadderId;
 
@@ -42,18 +40,15 @@ public class AdminEditMissionLadderActivity
     private ListViewNoScroll missionLaddersListView;
     private TextView createMissionTreeLink;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_edit_mission_ladder);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        super.onCreate(savedInstanceState);
 
         missionLadderId =
                 getIntent().getLongExtra(ExtraConstants.EXTRA_MISSION_LADDER_ID, -1);
+        missionLadderBean = null;
 
         Log.i(LOG_CAT, "Edit mission ladder called with ladder id: " + missionLadderId);
 
@@ -72,16 +67,6 @@ public class AdminEditMissionLadderActivity
                 startActivity(intent);
             }
         });
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        missionLadderBean = null;
-        Intent intent = new Intent(this, DataService.class);
-        dataServiceConnection = new DataServiceConnection(this);
-        bindService(intent, dataServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -113,13 +98,6 @@ public class AdminEditMissionLadderActivity
             dataServiceConnection.getLocalBinder().save(missionLadderBean);
             // TODO: Update ID and local bean.
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        unbindService(dataServiceConnection);
     }
 
     @Override

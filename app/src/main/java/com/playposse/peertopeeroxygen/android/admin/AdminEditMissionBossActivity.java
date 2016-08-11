@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -25,13 +26,10 @@ import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionT
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminEditMissionBossActivity
-        extends AppCompatActivity
-        implements DataService.DataReceivedCallback {
+public class AdminEditMissionBossActivity extends AdminParentActivity {
 
     private static final String LOG_CAT = AdminEditMissionBossActivity.class.getSimpleName();
 
-    private DataServiceConnection dataServiceConnection;
     private Long missionLadderId;
     private Long missionTreeId;
     private MissionTreeBean missionTreeBean;
@@ -43,29 +41,15 @@ public class AdminEditMissionBossActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_edit_mission_boss);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        super.onCreate(savedInstanceState);
 
         missionLadderId = getIntent().getLongExtra(ExtraConstants.EXTRA_MISSION_LADDER_ID, -1);
         missionTreeId = getIntent().getLongExtra(ExtraConstants.EXTRA_MISSION_TREE_ID, -1);
+        missionTreeBean = null;
 
         descriptionEditText = (EditText) findViewById(R.id.missionBossDescriptionEditText);
         checksListView = (ListViewNoScroll) findViewById(R.id.missionBossChecksListView);
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        missionTreeBean = null;
-        Intent intent = new Intent(this, DataService.class);
-        dataServiceConnection = new DataServiceConnection(this);
-        bindService(intent, dataServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -73,14 +57,6 @@ public class AdminEditMissionBossActivity
         super.onPause();
 
         saveIfNecessary();
-    }
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        unbindService(dataServiceConnection);
     }
 
     @Override

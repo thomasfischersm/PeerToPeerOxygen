@@ -24,6 +24,8 @@ import javax.annotation.Nullable;
 /**
  * A P@link ListView} that shows required missions and allows the user to update the required
  * missions with a spinner.
+ *
+ * TODO(tfischer): Detect and prevent cycles in dependencies.
  */
 public class RequiredMissionListView extends ListViewNoScroll {
 

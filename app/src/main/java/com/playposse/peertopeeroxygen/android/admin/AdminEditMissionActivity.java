@@ -5,66 +5,51 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
 import com.playposse.peertopeeroxygen.android.widgets.ListViewNoScroll;
+import com.playposse.peertopeeroxygen.android.widgets.RequiredMissionListView;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
 /**
  * {@link android.app.Activity} that shows, edits, and creates a specific mission.
  */
-public class AdminEditMissionActivity
-        extends AppCompatActivity
-        implements DataService.DataReceivedCallback {
+public class AdminEditMissionActivity extends AdminParentActivity {
 
-    private DataServiceConnection dataServiceConnection;
     private Long missionLadderId;
     private Long missionTreeId;
     private Long missionId;
     private MissionBean missionBean;
+    private MissionTreeBean missionTreeBean;
 
     EditText nameEditText;
     EditText studentInstructionEditText;
     EditText buddyInstructionEditText;
+    private RequiredMissionListView requiredMissionsListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_edit_mission);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
         missionLadderId = intent.getLongExtra(ExtraConstants.EXTRA_MISSION_LADDER_ID, -1);
         missionTreeId = intent.getLongExtra(ExtraConstants.EXTRA_MISSION_TREE_ID, -1);
         missionId = intent.getLongExtra(ExtraConstants.EXTRA_MISSION_ID, -1);
+        missionBean = null;
 
         nameEditText = (EditText) findViewById(R.id.missionNameEditText);
         studentInstructionEditText = (EditText) findViewById(R.id.studentInstructionsEditText);
         buddyInstructionEditText = (EditText) findViewById(R.id.buddyInstructionsEditText);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        missionBean = null;
-        Intent intent = new Intent(this, DataService.class);
-        dataServiceConnection = new DataServiceConnection(this);
-        bindService(intent, dataServiceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        unbindService(dataServiceConnection);
+        requiredMissionsListView =
+                (RequiredMissionListView) findViewById(R.id.requiredMissionsListView);
     }
 
     @Override
@@ -95,9 +80,18 @@ public class AdminEditMissionActivity
                                     missionLadderId,
                                     missionTreeId,
                                     missionId);
+                    missionTreeBean = dataServiceConnection.getLocalBinder().getMissionTreeBean(
+                            missionLadderId,
+                            missionTreeId);
+
                     nameEditText.setText(missionBean.getName());
                     studentInstructionEditText.setText(missionBean.getStudentInstruction());
                     buddyInstructionEditText.setText(missionBean.getBuddyInstruction());
+
+                    requiredMissionsListView.setAdapter(
+                            missionTreeBean.getMissionBeans(),
+                            missionBean.getRequiredMissionIds(),
+                            missionBean);
 
                     setTitle(String.format(
                             getString(R.string.edit_mission_title),
@@ -119,7 +113,8 @@ public class AdminEditMissionActivity
             shouldSave =
                     !nameEditText.getText().toString().equals(missionBean.getName())
                     || !studentInstructionEditText.getText().toString().equals(missionBean.getStudentInstruction())
-                    || !buddyInstructionEditText.getText().toString().equals(missionBean.getBuddyInstruction());
+                    || !buddyInstructionEditText.getText().toString().equals(missionBean.getBuddyInstruction())
+                    || requiredMissionsListView.isDirty();
         }
 
         // Save mission.
@@ -127,6 +122,8 @@ public class AdminEditMissionActivity
             missionBean.setName(nameEditText.getText().toString());
             missionBean.setStudentInstruction(studentInstructionEditText.getText().toString());
             missionBean.setBuddyInstruction(buddyInstructionEditText.getText().toString());
+            missionBean.setRequiredMissionIds(requiredMissionsListView.getRequiredMissionIds());
+
             dataServiceConnection
                     .getLocalBinder()
                     .save(missionLadderId, missionTreeId, missionBean);

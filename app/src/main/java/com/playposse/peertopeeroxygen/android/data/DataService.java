@@ -369,6 +369,10 @@ public class DataService extends Service {
                 }
             }).start();
         }
+
+        public void reload() {
+            new Thread(new MissionDataRetrieverRunnable()).start();
+        }
     }
 
     /**

@@ -70,10 +70,16 @@
                 android:layout_height="wrap_content"
                 android:lines="7" />
 
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/required_missions_label" />
+
+            <com.playposse.peertopeeroxygen.android.widgets.RequiredMissionListView
+                android:id="@+id/requiredMissionsListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </ScrollView>
 
