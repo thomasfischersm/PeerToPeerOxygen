@@ -1,22 +1,17 @@
 package com.playposse.peertopeeroxygen.android.admin;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.playposse.peertopeeroxygen.android.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.R;
-import com.playposse.peertopeeroxygen.android.data.DataService;
-import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
 import com.playposse.peertopeeroxygen.android.widgets.ConfirmationDialogBuilder;
 import com.playposse.peertopeeroxygen.android.widgets.ListViewNoScroll;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;

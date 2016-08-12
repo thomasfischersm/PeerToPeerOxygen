@@ -1,4 +1,4 @@
-package com.playposse.peertopeeroxygen.android.admin;
+package com.playposse.peertopeeroxygen.android;
 
 /**
  * Helper class that defines constants for passing in intents.

@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.playposse.peertopeeroxygen.android.student.StudentMainActivity">
+    tools:context="com.playposse.peertopeeroxygen.android.student.StudentMissionTreeActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -20,11 +20,13 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <GridView
-        android:id="@+id/studentHomeGridView"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnWidth="200dp"
-        android:numColumns="3"/>
+        android:layout_height="match_parent">
 
+        <com.playposse.peertopeeroxygen.android.widgets.MissionTreeWidget
+            android:id="@+id/missionTreeWidget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </ScrollView>
 </LinearLayout>

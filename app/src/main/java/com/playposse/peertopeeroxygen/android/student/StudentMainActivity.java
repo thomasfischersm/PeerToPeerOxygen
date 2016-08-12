@@ -1,6 +1,7 @@
 package com.playposse.peertopeeroxygen.android.student;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.playposse.peertopeeroxygen.android.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
@@ -61,13 +63,21 @@ public class StudentMainActivity extends StudentParentActivity {
 
             TextView missionLadderNameLink =
                     (TextView) rowView.findViewById(R.id.missionLadderNameLink);
-            MissionLadderBean missionLadderBean = getItem(position);
+            final MissionLadderBean missionLadderBean = getItem(position);
             missionLadderNameLink.setText(missionLadderBean.getName());
 
             missionLadderNameLink.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // TODO: start intent
+                    Intent intent =
+                            new Intent(getApplicationContext(), StudentMissionTreeActivity.class);
+                    intent.putExtra(
+                            ExtraConstants.EXTRA_MISSION_LADDER_ID,
+                            missionLadderBean.getId());
+                    intent.putExtra(
+                            ExtraConstants.EXTRA_MISSION_TREE_ID,
+                            missionLadderBean.getMissionTreeBeans().get(0).getId());
+                    startActivity(intent);
                 }
             });
             return rowView;

@@ -34,7 +34,10 @@
     <string name="buddy_instructions_label">Buddy instructions</string>
     <string name="confirm_delete_mission_message">Do you want to delete mission: %1$s?</string>
 
-    <!-- Admin menu -->
+    <!-- Mission tree view -->
+    <string name="boss_label">Boss: %1$s</string>
+
+    <!-- Admin and student menu -->
     <string name="admin_home_menu_title">Admin home</string>
     <string name="student_home_menu_title">Student home</string>
     <string name="refresh_menu_title">Refresh</string>

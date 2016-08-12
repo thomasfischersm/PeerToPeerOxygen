@@ -11,9 +11,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".admin.AdminMainActivity">
-
-        </activity>
+        <activity android:name=".admin.AdminMainActivity"></activity>
         <activity
             android:name=".admin.AdminShowMissionLaddersActivity"
             android:parentActivityName=".admin.AdminMainActivity" />
@@ -47,6 +45,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".student.StudentMissionTreeActivity"></activity>
     </application>
 
 </manifest>
