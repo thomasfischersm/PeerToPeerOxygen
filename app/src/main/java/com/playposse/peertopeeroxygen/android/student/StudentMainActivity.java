@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +27,16 @@ import java.util.List;
  */
 public class StudentMainActivity extends StudentParentActivity {
 
+    public static final String LOG_TAG = StudentMainActivity.class.getSimpleName();
+
     private GridView studentHomeGridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_student_main);
         super.onCreate(savedInstanceState);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         studentHomeGridView = (GridView) findViewById(R.id.studentHomeGridView);
     }
@@ -69,6 +74,11 @@ public class StudentMainActivity extends StudentParentActivity {
             missionLadderNameLink.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (missionLadderBean.getMissionTreeBeans().size() == 0) {
+                        Log.i(LOG_TAG, "The mission ladder doesn't have a mission tree yet.");
+                        return;
+                    }
+
                     Intent intent =
                             new Intent(getApplicationContext(), StudentMissionTreeActivity.class);
                     intent.putExtra(

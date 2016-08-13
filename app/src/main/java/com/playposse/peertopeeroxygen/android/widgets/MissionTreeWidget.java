@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.playposse.peertopeeroxygen.android.R;
@@ -21,9 +22,13 @@ import java.util.List;
  */
 public class MissionTreeWidget extends View {
 
+    public static final String LOG_CAT = MissionTreeWidget.class.getSimpleName();
+
     private MissionTreeBean missionTreeBean;
     private Bitmap drawingCache;
     private boolean asyncTaskStarted = false;
+    private int desiredWidth;
+    private int desiredHeight;
 
     public MissionTreeWidget(Context context) {
         super(context);
@@ -44,7 +49,7 @@ public class MissionTreeWidget extends View {
             @Override
             public void run() {
                 MissionTreeBean[] missionTreeBeans = {missionTreeBean};
-                new DrawAsyncTask(getWidth(), getHeight()).execute(missionTreeBeans);
+                new DrawAsyncTask().execute(missionTreeBeans);
             }
         });
 
@@ -52,16 +57,19 @@ public class MissionTreeWidget extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        Log.i(LOG_CAT, "onDraw is called " + (drawingCache != null));
         if (drawingCache != null) {
             canvas.drawBitmap(drawingCache, 0, 0, null);
         }
     }
 
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-//        resolveSizeAndState()
-//    }
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        Log.i(LOG_CAT, "Measure is called with desiredHeight " + desiredHeight);
+        int w = resolveSizeAndState(desiredWidth, widthMeasureSpec, 1);
+        int h = resolveSizeAndState(desiredHeight, heightMeasureSpec, 1);
+        setMeasuredDimension(w, h);
+    }
 
     /**
      * {@link AsyncTask} that renders the missions. Because this could take a while, it's done in an
@@ -70,30 +78,30 @@ public class MissionTreeWidget extends View {
      */
     private final class DrawAsyncTask extends AsyncTask<MissionTreeBean, Void, Bitmap> {
 
-        public static final int BOX_WIDTH = 300;
-        public static final int BOX_HEIGHT = 200;
-        public static final int MARGIN = 20;
+        public static final int BOX_WIDTH = 200;
+        public static final int BOX_HEIGHT = 150;
+        public static final int MARGIN = 40;
         public static final int COLUMN_WIDTH = BOX_WIDTH + MARGIN;
         public static final int ROW_HEIGHT = BOX_HEIGHT + MARGIN;
         public static final int TEXT_PADDING = 5;
-
-        private int width;
-        private int height;
-
-        public DrawAsyncTask(int width, int height) {
-            this.height = height;
-            this.width = width;
-        }
+        public static final int ARROW_ANGLE = 40;
+        public static final int ARROW_LENGTH = 10;
 
         @Override
         protected Bitmap doInBackground(MissionTreeBean[] missionTreeBeans) {
             List<List<MissionPlaceHolder>> rows =
                     MissionTreeUntangler.untangle(missionTreeBeans[0]);
-            // TODO: Get max column width
-            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            MissionTreeUntangler.debugDump(rows);
+
+            desiredWidth = MissionTreeUntangler.getMaxColumns(rows) * COLUMN_WIDTH;
+            desiredHeight = rows.size() * ROW_HEIGHT;
+
+            Bitmap bitmap =
+                    Bitmap.createBitmap(desiredWidth, desiredHeight, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
             Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
             paint.setColor(Color.BLACK);
+            paint.setStyle(Paint.Style.STROKE);
 
             // TODO: set dimensions on the view.
             drawArrows(canvas, paint, rows);
@@ -103,7 +111,33 @@ public class MissionTreeWidget extends View {
         }
 
         private void drawArrows(Canvas canvas, Paint paint, List<List<MissionPlaceHolder>> rows) {
+            for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
+                List<MissionPlaceHolder> row = rows.get(rowIndex);
+                for (int columnIndex = 0; columnIndex < row.size(); columnIndex++) {
+                    MissionPlaceHolder holder = row.get(columnIndex);
 
+                    int fromX = columnIndex * COLUMN_WIDTH + (MARGIN / 2) + BOX_WIDTH / 2;
+                    int fromY = rowIndex * ROW_HEIGHT + (MARGIN / 2);
+
+                    for (MissionPlaceHolder parent : holder.getParents()) {
+                        int toX = parent.getColumn() * COLUMN_WIDTH + (MARGIN / 2) + BOX_WIDTH / 2;
+                        int toY = parent.getRow() * ROW_HEIGHT + (MARGIN / 2) + BOX_HEIGHT;
+
+                        double lineAngle = Math.atan2(toY - fromY, toX - fromX);
+                        double angleDelta = Math.toRadians(ARROW_ANGLE / 2);
+
+                        float arrowAX = toX - (float) (ARROW_LENGTH * Math.cos(lineAngle + angleDelta));
+                        float arrowAY = toY - (float) (ARROW_LENGTH * Math.sin(lineAngle + angleDelta));
+
+                        float arrowBX = toX - (float) (ARROW_LENGTH * Math.cos(lineAngle - angleDelta));
+                        float arrowBY = toY - (float) (ARROW_LENGTH * Math.sin(lineAngle - angleDelta));
+
+                        canvas.drawLine(fromX, fromY, toX, toY, paint);
+                        canvas.drawLine(toX, toY, arrowAX, arrowAY, paint);
+                        canvas.drawLine(toX, toY, arrowBX, arrowBY, paint);
+                    }
+                }
+            }
         }
 
         private void drawBoxes(Canvas canvas, Paint paint, List<List<MissionPlaceHolder>> rows) {
@@ -114,8 +148,8 @@ public class MissionTreeWidget extends View {
             for (List<MissionPlaceHolder> row : rows) {
                 int columnIndex = 0;
                 for (MissionPlaceHolder holder : row) {
-                    int upperLeftX = 0 + columnIndex * COLUMN_WIDTH + (MARGIN / 2);
-                    int upperLeftY = height - rowIndex * ROW_HEIGHT - (MARGIN / 2);
+                    int upperLeftX = columnIndex * COLUMN_WIDTH + (MARGIN / 2);
+                    int upperLeftY = rowIndex * ROW_HEIGHT + (MARGIN / 2);
                     int lowerRightX = upperLeftX + BOX_WIDTH;
                     int lowerRightY = upperLeftY + BOX_HEIGHT;
                     canvas.drawRect(upperLeftX, upperLeftY, lowerRightX, lowerRightY, paint);
@@ -130,7 +164,7 @@ public class MissionTreeWidget extends View {
                     }
 
                     int textX = upperLeftX + TEXT_PADDING;
-                    int textY = upperLeftY - (BOX_HEIGHT / 2) + TEXT_PADDING;
+                    int textY = upperLeftY + (BOX_HEIGHT / 2) + TEXT_PADDING;
                     canvas.drawText(txt, textX, textY, paint);
 
                     columnIndex++;
@@ -143,7 +177,15 @@ public class MissionTreeWidget extends View {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             drawingCache = bitmap;
+            Log.i(LOG_CAT, "DrawAsyncTask is done.");
+            forceLayout();
+            ((View) getParent().getParent().getParent()).invalidate();
+            requestLayout();
             invalidate();
+            ((View) getParent().getParent().getParent().getParent().getParent()).invalidate();
+            ((View) getParent().getParent().getParent().getParent().getParent()).forceLayout();
+            ((View) getParent().getParent().getParent().getParent().getParent()).requestLayout();
+            ((View) getParent().getParent().getParent().getParent().getParent()).invalidate();
         }
     }
 }

@@ -45,7 +45,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".student.StudentMissionTreeActivity"></activity>
+        <activity
+            android:name=".student.StudentMissionTreeActivity"
+            android:parentActivityName=".student.StudentMainActivity" />
     </application>
 
 </manifest>
