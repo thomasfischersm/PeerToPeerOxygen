@@ -1,14 +1,12 @@
 package com.playposse.peertopeeroxygen.android.student;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.playposse.peertopeeroxygen.android.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.widgets.MissionTreeWidget;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
-import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
 /**
@@ -43,6 +41,7 @@ public class StudentMissionTreeActivity extends StudentParentActivity {
                         .getLocalBinder()
                         .getMissionTreeBean(missionLadderId, missionTreeId);
                 missionTreeWidget.setMissionTreeBean(missionLadderId, missionTreeBean);
+                setTitle("" + missionTreeBean.getName());
             }
         });
     }

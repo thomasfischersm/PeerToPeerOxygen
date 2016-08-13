@@ -44,6 +44,7 @@ public class StudentMissionActivity extends StudentParentActivity {
 
                 missionNameTextView.setText(missionBean.getName());
                 missionInstructionsTextView.setText(missionBean.getStudentInstruction());
+                setTitle("" + missionBean.getName());
             }
         });
 
