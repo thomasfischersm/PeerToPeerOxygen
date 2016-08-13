@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.playposse.peertopeeroxygen.android.student.StudentMainActivity">
+    tools:context="com.playposse.peertopeeroxygen.android.student.StudentMissionActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -20,11 +20,15 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <GridView
-        android:id="@+id/studentHomeGridView"
+    <TextView
+        android:id="@+id/missionNameTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:columnWidth="200dp"
-        android:numColumns="3" />
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/missionInstructionsTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

@@ -1,37 +1,36 @@
 package com.playposse.peertopeeroxygen.android.student;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.R;
-import com.playposse.peertopeeroxygen.android.widgets.MissionTreeWidget;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
-import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
-import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 
-/**
- * Activity that shows the student the {@link MissionTreeBean}.
- */
-public class StudentMissionTreeActivity extends StudentParentActivity {
+public class StudentMissionActivity extends StudentParentActivity {
 
     private Long missionLadderId;
     private Long missionTreeId;
-    private MissionTreeBean missionTreeBean;
+    private Long missionId;
+    private MissionBean missionBean;
 
-    private MissionTreeWidget missionTreeWidget;
+    private TextView missionNameTextView;
+    private TextView missionInstructionsTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_student_mission_tree);
+        setContentView(R.layout.activity_student_mission);
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
         missionLadderId = intent.getLongExtra(ExtraConstants.EXTRA_MISSION_LADDER_ID, -1);
         missionTreeId = intent.getLongExtra(ExtraConstants.EXTRA_MISSION_TREE_ID, -1);
+        missionId = intent.getLongExtra(ExtraConstants.EXTRA_MISSION_ID, -1);
 
-        missionTreeWidget = (MissionTreeWidget) findViewById(R.id.missionTreeWidget);
+        missionNameTextView = (TextView) findViewById(R.id.missionNameTextView);
+        missionInstructionsTextView = (TextView) findViewById(R.id.missionInstructionsTextView);
     }
 
     @Override
@@ -39,11 +38,14 @@ public class StudentMissionTreeActivity extends StudentParentActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                missionTreeBean = dataServiceConnection
+                missionBean = dataServiceConnection
                         .getLocalBinder()
-                        .getMissionTreeBean(missionLadderId, missionTreeId);
-                missionTreeWidget.setMissionTreeBean(missionLadderId, missionTreeBean);
+                        .getMissionBean(missionLadderId, missionTreeId, missionId);
+
+                missionNameTextView.setText(missionBean.getName());
+                missionInstructionsTextView.setText(missionBean.getStudentInstruction());
             }
         });
+
     }
 }

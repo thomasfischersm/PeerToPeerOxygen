@@ -1,6 +1,7 @@
 package com.playposse.peertopeeroxygen.android.widgets;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -8,11 +9,14 @@ import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
+import com.playposse.peertopeeroxygen.android.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.missiondependencies.MissionPlaceHolder;
 import com.playposse.peertopeeroxygen.android.missiondependencies.MissionTreeUntangler;
+import com.playposse.peertopeeroxygen.android.student.StudentMissionActivity;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
 import java.util.List;
@@ -24,11 +28,23 @@ public class MissionTreeWidget extends View {
 
     public static final String LOG_CAT = MissionTreeWidget.class.getSimpleName();
 
+    public static final int BOX_WIDTH = 200;
+    public static final int BOX_HEIGHT = 150;
+    public static final int MARGIN = 40;
+    public static final int COLUMN_WIDTH = BOX_WIDTH + MARGIN;
+    public static final int ROW_HEIGHT = BOX_HEIGHT + MARGIN;
+    public static final int TEXT_PADDING = 5;
+    public static final int ARROW_ANGLE = 40;
+    public static final int ARROW_LENGTH = 10;
+
+    private Long missionLadderId;
+    private Long missionTreeId;
     private MissionTreeBean missionTreeBean;
     private Bitmap drawingCache;
     private boolean asyncTaskStarted = false;
     private int desiredWidth;
     private int desiredHeight;
+    private List<List<MissionPlaceHolder>> rows;
 
     public MissionTreeWidget(Context context) {
         super(context);
@@ -42,7 +58,9 @@ public class MissionTreeWidget extends View {
         super(context, attrs, defStyleAttr);
     }
 
-    public void setMissionTreeBean(final MissionTreeBean missionTreeBean) {
+    public void setMissionTreeBean(Long missionLadderId, final MissionTreeBean missionTreeBean) {
+        this.missionLadderId = missionLadderId;
+        this.missionTreeId = missionTreeBean.getId();
         this.missionTreeBean = missionTreeBean;
 
         post(new Runnable() {
@@ -71,6 +89,37 @@ public class MissionTreeWidget extends View {
         setMeasuredDimension(w, h);
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (rows == null) {
+            return false;
+        }
+
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            float x = event.getX();
+            float y = event.getY();
+            int column = (int) x / COLUMN_WIDTH;
+            int row = (int) y / ROW_HEIGHT;
+
+            if ((rows.size() > row) && (rows.get(row).size() > column)) {
+                MissionPlaceHolder holder = rows.get(row).get(column);
+                if (holder.getMissionBean() != null) {
+                    Long missionId = holder.getMissionBean().getId();
+                    Intent intent = new Intent(getContext(), StudentMissionActivity.class);
+                    intent.putExtra(ExtraConstants.EXTRA_MISSION_LADDER_ID, missionLadderId);
+                    intent.putExtra(ExtraConstants.EXTRA_MISSION_TREE_ID, missionTreeId);
+                    intent.putExtra(ExtraConstants.EXTRA_MISSION_ID, missionId);
+                    getContext().startActivity(intent);
+                    return true;
+                }
+
+                // TODO: Show mission boss.
+            }
+        }
+
+        return false;
+    }
+
     /**
      * {@link AsyncTask} that renders the missions. Because this could take a while, it's done in an
      * {@link AsyncTask}. Once it has been drawn, the Bitmap can be redrawn each time the
@@ -78,19 +127,9 @@ public class MissionTreeWidget extends View {
      */
     private final class DrawAsyncTask extends AsyncTask<MissionTreeBean, Void, Bitmap> {
 
-        public static final int BOX_WIDTH = 200;
-        public static final int BOX_HEIGHT = 150;
-        public static final int MARGIN = 40;
-        public static final int COLUMN_WIDTH = BOX_WIDTH + MARGIN;
-        public static final int ROW_HEIGHT = BOX_HEIGHT + MARGIN;
-        public static final int TEXT_PADDING = 5;
-        public static final int ARROW_ANGLE = 40;
-        public static final int ARROW_LENGTH = 10;
-
         @Override
         protected Bitmap doInBackground(MissionTreeBean[] missionTreeBeans) {
-            List<List<MissionPlaceHolder>> rows =
-                    MissionTreeUntangler.untangle(missionTreeBeans[0]);
+            rows = MissionTreeUntangler.untangle(missionTreeBeans[0]);
             MissionTreeUntangler.debugDump(rows);
 
             desiredWidth = MissionTreeUntangler.getMaxColumns(rows) * COLUMN_WIDTH;
