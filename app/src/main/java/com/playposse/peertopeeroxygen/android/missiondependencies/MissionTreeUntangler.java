@@ -144,4 +144,8 @@ public class MissionTreeUntangler {
             return holder.getMissionBean().getName();
         }
     }
+
+    // TODO: Move missions up if possible to compact
+    // TODO: Make the widest column narrower if needed by moving missions down.
+    // TODO: Move parentless missions down if possible without increasing the number of rows.
 }

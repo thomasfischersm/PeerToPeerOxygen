@@ -108,9 +108,11 @@ public class RequiredMissionListView extends ListViewNoScroll {
 
     public List<Long> getRequiredMissionIds() {
         List<Long> ids = new ArrayList<>();
-        for (MissionBean missionBean : requiredMissions) {
-            if (!missionBean.getId().equals(BLANK_MISSION_ID)) {
-                ids.add(missionBean.getId());
+        if (requiredMissions != null) {
+            for (MissionBean missionBean : requiredMissions) {
+                if (!missionBean.getId().equals(BLANK_MISSION_ID)) {
+                    ids.add(missionBean.getId());
+                }
             }
         }
         return ids;
