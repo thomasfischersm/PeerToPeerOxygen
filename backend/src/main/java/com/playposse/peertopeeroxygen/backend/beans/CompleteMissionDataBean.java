@@ -12,8 +12,11 @@ import java.util.List;
 public class CompleteMissionDataBean {
 
     private final List<MissionLadderBean> missionLadderBeans = new ArrayList<>();
+    private UserBean userBean;
 
-    public CompleteMissionDataBean(List<MissionLadder> missionLadders) {
+    public CompleteMissionDataBean(UserBean userBean, List<MissionLadder> missionLadders) {
+        this.userBean = userBean;
+
         for (MissionLadder missionLadder : missionLadders) {
             missionLadderBeans.add(new MissionLadderBean(missionLadder));
         }

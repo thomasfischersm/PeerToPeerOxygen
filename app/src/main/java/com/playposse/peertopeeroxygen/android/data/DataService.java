@@ -1,6 +1,7 @@
 package com.playposse.peertopeeroxygen.android.data;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
@@ -11,11 +12,13 @@ import android.widget.Toast;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.student.StudentLoginActivity;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxygenApi;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,13 +40,6 @@ public class DataService extends Service {
     private final List<DataReceivedCallback> dataReceivedCallbacks = new ArrayList<>();
 
     private CompleteMissionDataBean completeMissionDataBean;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        new Thread(new MissionDataRetrieverRunnable()).start();
-    }
 
     @Nullable
     @Override
@@ -116,7 +112,11 @@ public class DataService extends Service {
             createApiIfNeeded();
 
             try {
-                completeMissionDataBean = peerToPeerOxygenApi.getMissionData().execute();
+                Long sessionId = OxygenSharedPreferences.getSessionId(getApplicationContext());
+                if (sessionId == -1) {
+                    redirectToLoginActivity();
+                }
+                completeMissionDataBean = peerToPeerOxygenApi.getMissionData(sessionId).execute();
 
                 Log.i(LOG_CAT, "BEFORE FIX");
                 debugDump();
@@ -132,7 +132,7 @@ public class DataService extends Service {
 //                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
             } catch (IOException ex) {
                 ex.printStackTrace();
-                showNetworkErrorToast();
+                redirectToLoginActivity();
             }
         }
 
@@ -162,6 +162,11 @@ public class DataService extends Service {
         }
     }
 
+    public void redirectToLoginActivity() {
+        Context context = getApplicationContext();
+        context.startActivity(new Intent(context, StudentLoginActivity.class));
+    }
+
     /**
      * {@link IBinder} that returns a reference to this.
      */
@@ -177,6 +182,30 @@ public class DataService extends Service {
             if (completeMissionDataBean != null) {
                 callback.receiveData(completeMissionDataBean);
             }
+        }
+
+        public void init() {
+            new Thread(new MissionDataRetrieverRunnable()).start();
+        }
+
+        public void registerOrLogin(
+                final String accessToken,
+                final SignInSuccessCallback signInSuccessCallback) {
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        UserBean userBean = peerToPeerOxygenApi.registerOrLogin(accessToken).execute();
+                        OxygenSharedPreferences.setSessionId(
+                                getApplicationContext(),
+                                userBean.getSessionId());
+                        signInSuccessCallback.onSuccess();
+                    } catch (IOException ex) {
+                        Log.e(LOG_CAT, "Failed to registerOrLogin.", ex);
+                    }
+                }
+            }).start();
         }
 
         public MissionLadderBean getMissionLadderBean(Long id) {
@@ -388,5 +417,13 @@ public class DataService extends Service {
          * @param completeMissionDataBean
          */
         void receiveData(CompleteMissionDataBean completeMissionDataBean);
+    }
+
+    /**
+     * A callback interface to inform that the user has been signed in successfully. The session id
+     * can be found in the shared preferences.
+     */
+    public interface SignInSuccessCallback {
+        void onSuccess();
     }
 }

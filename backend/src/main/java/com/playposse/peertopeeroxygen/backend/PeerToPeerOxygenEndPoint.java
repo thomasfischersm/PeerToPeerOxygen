@@ -10,18 +10,27 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.config.Named;
+import com.google.api.server.spi.response.UnauthorizedException;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.beans.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionTreeBean;
+import com.playposse.peertopeeroxygen.backend.beans.UserBean;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
 import com.playposse.peertopeeroxygen.backend.schema.MissionBoss;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
+import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
+import com.restfb.DefaultFacebookClient;
+import com.restfb.FacebookClient;
+import com.restfb.Parameter;
+import com.restfb.Version;
+import com.restfb.types.User;
 
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Logger;
 
 import static com.googlecode.objectify.ObjectifyService.factory;
@@ -45,13 +54,25 @@ public class PeerToPeerOxygenEndPoint {
      * Retrieves all the mission related data from the server.
      */
     @ApiMethod(name = "getMissionData")
-    public CompleteMissionDataBean getMissionData() {
+    public CompleteMissionDataBean getMissionData(@Named("sessionId") Long sessionId)
+            throws UnauthorizedException {
+
+        List<OxygenUser> oxygenUsers = ofy()
+                .load()
+                .type(OxygenUser.class)
+                .filter("sessionId", sessionId)
+                .list();
+        if (oxygenUsers.size() == 0) {
+            throw new UnauthorizedException("SessionId is not found: " + sessionId);
+        }
+        UserBean userBean = new UserBean(oxygenUsers.get(0));
+
         List<MissionLadder> missionLadders = ofy().load()
                 .group(MissionTree.class, Mission.class, MissionBoss.class)
                 .type(MissionLadder.class)
                 .list();
 
-        return new CompleteMissionDataBean(missionLadders);
+        return new CompleteMissionDataBean(userBean, missionLadders);
     }
 
     @ApiMethod(name = "saveMissionLadder")
@@ -171,5 +192,53 @@ public class PeerToPeerOxygenEndPoint {
         }
 
         ofy().delete().key(missionKey).now();
+    }
+
+    @ApiMethod(name = "registerOrLogin")
+    public UserBean registerOrLogin(@Named("accessToken") String accessToken) {
+        Long sessionId = new Random().nextLong();
+
+        // Retrieve user data.
+        User fbUser = fetchUserFromFaceBook(accessToken);
+        List<OxygenUser> oxygenUsers = ofy()
+                .load()
+                .type(OxygenUser.class)
+                .filter("fbProfileId", fbUser.getId())
+                .list();
+
+        // Register if necessary.
+        OxygenUser oxygenUser;
+        if (oxygenUsers.size() == 0) {
+            oxygenUser = new OxygenUser(
+                    sessionId,
+                    fbUser.getId(),
+                    fbUser.getName(),
+                    fbUser.getFirstName(),
+                    fbUser.getLastName(),
+                    fbUser.getPicture().getUrl(),
+                    System.currentTimeMillis(),
+                    false);
+            Key<OxygenUser> oxygenUserKey = ofy().save().entity(oxygenUser).now();
+            oxygenUser.setId(oxygenUser.getId());
+        } else {
+            oxygenUser = oxygenUsers.get(0);
+            if (oxygenUsers.size() > 1) {
+                log.info("Found more than one OxygenUser entries for fbProfileId: "
+                        + fbUser.getId());
+            }
+            oxygenUser.setSessionId(sessionId);
+            oxygenUser.setLastLogin(System.currentTimeMillis());
+            ofy().save().entity(oxygenUser).now();
+        }
+
+        return new UserBean(oxygenUser);
+    }
+
+    private static User fetchUserFromFaceBook(String accessToken) {
+        FacebookClient facebookClient = new DefaultFacebookClient(accessToken, Version.VERSION_2_7);
+        return facebookClient.fetchObject(
+                "me",
+                User.class,
+                Parameter.with("fields", "id,name,link,first_name, last_name,cover,picture.type(large)"));
     }
 }

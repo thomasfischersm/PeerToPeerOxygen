@@ -11,6 +11,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
         <activity android:name=".admin.AdminMainActivity" />
         <activity
             android:name=".admin.AdminShowMissionLaddersActivity"
@@ -38,13 +43,7 @@
             android:launchMode="singleTop"
             android:parentActivityName=".admin.AdminEditMissionTreeActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".student.StudentMainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".student.StudentMainActivity" />
         <activity
             android:name=".student.StudentMissionTreeActivity"
             android:launchMode="singleTop"
@@ -53,6 +52,18 @@
             android:name=".student.StudentMissionActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".student.StudentMissionTreeActivity" />
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".student.StudentLoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

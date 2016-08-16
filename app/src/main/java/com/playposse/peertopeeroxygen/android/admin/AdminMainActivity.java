@@ -1,9 +1,12 @@
 package com.playposse.peertopeeroxygen.android.admin;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
@@ -11,11 +14,16 @@ import android.widget.TextView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 
 /**
  * Activity that shows the top navigation for the administration activities.
  */
 public class AdminMainActivity extends AdminParentActivity {
+
+    public static final String LOG_TAG = AdminMainActivity.class.getSimpleName();
 
     private TextView openMissionLaddersTextView;
 
@@ -41,11 +49,31 @@ public class AdminMainActivity extends AdminParentActivity {
                 startActivity(intent);
             }
         });
+
+        // TODO: Remove for release
+        printHashKey();
     }
 
     @Override
     public void receiveData(CompleteMissionDataBean completeMissionDataBean) {
         // Nothing to do. Yet, calling the service ensures that the data is already there for other
         // activities.
+    }
+
+    public void printHashKey() {
+        try {
+            PackageManager pm = getPackageManager();
+            PackageInfo info = pm.getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String hashKey = new String(Base64.encode(md.digest(), 0));
+                Log.i(LOG_TAG, "printHashKey() Hash Key: " + hashKey);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            Log.e(LOG_TAG, "printHashKey()", e);
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "printHashKey()", e);
+        }
     }
 }

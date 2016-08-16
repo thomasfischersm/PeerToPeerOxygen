@@ -1,9 +1,11 @@
 <resources>
+    <!-- Technical app strings -->
+    <string name="facebook_app_id">1584198245207052</string>
     <string name="app_name">PeerToPeerOxygen</string>
-    <string name="show_mission_ladders_link">Show mission ladders</string>
 
     <!-- Admin home -->
     <string name="admin_home_title">Admin home</string>
+    <string name="show_mission_ladders_link">Show mission ladders</string>
 
     <!-- Show mission ladders -->
     <string name="show_mission_ladders_title">Show mission ladders</string>
@@ -56,4 +58,7 @@
 
     <!-- Error messages -->
     <string name="network_error">Failed to retrieve data from the server.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -1,8 +1,6 @@
 package com.playposse.peertopeeroxygen.android.data;
 
-import android.app.Activity;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
@@ -18,9 +16,14 @@ public class DataServiceConnection implements ServiceConnection {
 
     private boolean bound = false;
     private DataService.LocalBinder localBinder;
+    private boolean shouldAutoInit;
 
-    public DataServiceConnection(DataService.DataReceivedCallback dataReceivedCallback) {
+    public DataServiceConnection(
+            DataService.DataReceivedCallback dataReceivedCallback,
+            boolean shouldAutoInit) {
+
         this.dataReceivedCallback = dataReceivedCallback;
+        this.shouldAutoInit = shouldAutoInit;
     }
 
     @Override
@@ -28,6 +31,11 @@ public class DataServiceConnection implements ServiceConnection {
         bound = true;
         localBinder = (DataService.LocalBinder) iBinder;
         localBinder.registerDataReceivedCallback(dataReceivedCallback);
+
+        if (shouldAutoInit) {
+            localBinder.init();
+        }
+
         Log.i(LOG_CAT, "The service is now connected.");
     }
 
