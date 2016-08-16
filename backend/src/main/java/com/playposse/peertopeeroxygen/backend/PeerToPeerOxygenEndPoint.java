@@ -36,18 +36,19 @@ import java.util.logging.Logger;
 import static com.googlecode.objectify.ObjectifyService.factory;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
-/** An endpoint class we are exposing */
+/**
+ * An endpoint class we are exposing
+ */
 @Api(
-  name = "peerToPeerOxygenApi",
-  version = "v1",
-  namespace = @ApiNamespace(
-    ownerDomain = "backend.peertopeeroxygen.playposse.com",
-    ownerName = "backend.peertopeeroxygen.playposse.com",
-    packagePath=""
-  )
+        name = "peerToPeerOxygenApi",
+        version = "v1",
+        namespace = @ApiNamespace(
+                ownerDomain = "backend.peertopeeroxygen.playposse.com",
+                ownerName = "backend.peertopeeroxygen.playposse.com",
+                packagePath = ""
+        )
 )
 public class PeerToPeerOxygenEndPoint {
-    // TODO(tfischer): Protect all service methods with a check of session id.
 
     private static final Logger log = Logger.getLogger(PeerToPeerOxygenEndPoint.class.getName());
 
@@ -77,22 +78,35 @@ public class PeerToPeerOxygenEndPoint {
     }
 
     @ApiMethod(name = "saveMissionLadder")
-    public MissionLadderBean saveMissionLadder(MissionLadderBean missionLadderBean) {
+    public MissionLadderBean saveMissionLadder(
+            @Named("sessionId") Long sessionId,
+            MissionLadderBean missionLadderBean) throws UnauthorizedException {
+
+        protectByAdminCheck(sessionId);
+
         MissionLadder missionLadder = missionLadderBean.toEntity();
         ofy().save().entity(missionLadder).now();
         return new MissionLadderBean(missionLadder);
     }
 
     @ApiMethod(name = "deleteMissionLadder")
-    public void deleteMissionLadder(@Named("missionLadderId") Long missionLadderId) {
+    public void deleteMissionLadder(
+            @Named("sessionId") Long sessionId,
+            @Named("missionLadderId") Long missionLadderId) throws UnauthorizedException {
+
+        protectByAdminCheck(sessionId);
+
         ofy().delete().type(MissionLadder.class).id(missionLadderId).now();
         log.info("Just deleted mission ladder: " + missionLadderId);
     }
 
     @ApiMethod(name = "saveMissionTree")
     public MissionTreeBean saveMissionTree(
+            @Named("sessionId") Long sessionId,
             @Named("missionLadderId") Long missionLadderId,
-            MissionTreeBean missionTreeBean) {
+            MissionTreeBean missionTreeBean) throws UnauthorizedException {
+
+        protectByAdminCheck(sessionId);
 
         log.info("saveMissionTree is called (ladder id: " + missionLadderId
                 + ", tree id: " + missionTreeBean.getId()
@@ -137,9 +151,13 @@ public class PeerToPeerOxygenEndPoint {
 
     @ApiMethod(name = "saveMission")
     public MissionBean saveMission(
+            @Named("sessionId") Long sessionId,
             @Named("missionLadderId") Long missionLadderId,
             @Named("missionTreeId") Long missionTreeId,
-            MissionBean missionBean) {
+            MissionBean missionBean)
+            throws UnauthorizedException {
+
+        protectByAdminCheck(sessionId);
 
         Mission mission = missionBean.toEntity();
 
@@ -172,9 +190,13 @@ public class PeerToPeerOxygenEndPoint {
 
     @ApiMethod(name = "deleteMission")
     public void deleteMission(
+            @Named("sessionId") Long sessionId,
             @Named("missionLadderId") Long missionLadderId,
             @Named("missionTreeId") Long missionTreeId,
-            @Named("missionId") Long missionId) {
+            @Named("missionId") Long missionId)
+            throws UnauthorizedException {
+
+        protectByAdminCheck(sessionId);
 
         MissionLadder missionLadder = ofy().load()
                 .group(MissionTree.class)
@@ -193,6 +215,20 @@ public class PeerToPeerOxygenEndPoint {
         }
 
         ofy().delete().key(missionKey).now();
+    }
+
+    private void protectByAdminCheck(Long sessionId) throws UnauthorizedException {
+        List<OxygenUser> oxygenUsers = ofy()
+                .load()
+                .type(OxygenUser.class)
+                .filter("sessionId", sessionId)
+                .list();
+        if (oxygenUsers.size() == 0) {
+            throw new UnauthorizedException("SessionId is not found: " + sessionId);
+        } else if (!oxygenUsers.get(0).isAdmin()) {
+            throw new UnauthorizedException(
+                    "The user is NOT an admin: " + oxygenUsers.get(0).getId());
+        }
     }
 
     @ApiMethod(name = "registerOrLogin")

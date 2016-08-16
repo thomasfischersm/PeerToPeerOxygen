@@ -68,6 +68,10 @@ public class DataService extends Service {
         }
     }
 
+    private Long getSessionId() {
+        return OxygenSharedPreferences.getSessionId(getApplicationContext());
+    }
+
     private void debugDump() {
         Log.i(LOG_CAT, "Dumping user info");
         if (completeMissionDataBean.getUserBean() == null) {
@@ -260,7 +264,9 @@ public class DataService extends Service {
                     try {
                         boolean create = missionLadderBean.getId() == null;
                         MissionLadderBean result =
-                                peerToPeerOxygenApi.saveMissionLadder(missionLadderBean).execute();
+                                peerToPeerOxygenApi
+                                        .saveMissionLadder(getSessionId(), missionLadderBean)
+                                        .execute();
                         missionLadderBean.setId(result.getId()); // Save id for new entities.
 
                         // Update local data to avoid reloading data from the server.
@@ -274,7 +280,7 @@ public class DataService extends Service {
                         Log.i(LOG_CAT, "Mission ladder has been saved.");
                     } catch (IOException ex) {
                         ex.printStackTrace();
-                        showNetworkErrorToast();
+                        redirectToLoginActivity();
                     }
                 }
             }).start();
@@ -288,7 +294,10 @@ public class DataService extends Service {
                         boolean create = missionTreeBean.getId() == null;
                         MissionTreeBean result =
                                 peerToPeerOxygenApi
-                                        .saveMissionTree(missionLadderId, missionTreeBean)
+                                        .saveMissionTree(
+                                                getSessionId(),
+                                                missionLadderId,
+                                                missionTreeBean)
                                         .execute();
                         missionTreeBean.setId(result.getId()); // Save id for new entities.
 
@@ -304,8 +313,8 @@ public class DataService extends Service {
 
                         Log.i(LOG_CAT, "Mission tree has been saved.");
                     } catch (IOException ex) {
-                        ex.printStackTrace();
-                        showNetworkErrorToast();
+                        Log.e(LOG_CAT, "Failed to create new mission tree.", ex);
+                        redirectToLoginActivity();
                     }
                 }
             }).start();
@@ -323,6 +332,7 @@ public class DataService extends Service {
                         boolean create = missionBean.getId() == null;
 
                         MissionBean result = peerToPeerOxygenApi.saveMission(
+                                getSessionId(),
                                 missionLadderId,
                                 missionTreeId,
                                 missionBean)
@@ -339,8 +349,8 @@ public class DataService extends Service {
 
                         Log.i(LOG_CAT, "Mission has been saved.");
                     } catch (IOException ex) {
-                        ex.printStackTrace();
-                        showNetworkErrorToast();
+                        Log.e(LOG_CAT, "Failed to save mission bean.", ex);
+                        redirectToLoginActivity();
                     }
                 }
             }).start();
@@ -351,15 +361,17 @@ public class DataService extends Service {
                 @Override
                 public void run() {
                     try {
-                        peerToPeerOxygenApi.deleteMissionLadder(missionLadderId).execute();
+                        peerToPeerOxygenApi
+                                .deleteMissionLadder(getSessionId(), missionLadderId)
+                                .execute();
                         MissionLadderBean missionLadderBean = getMissionLadderBean(missionLadderId);
                         completeMissionDataBean.getMissionLadderBeans().remove(missionLadderBean);
 
                         makeDataReceivedCallbacks();
                         Log.i(LOG_CAT, "Completed deleting mission ladder: " + missionLadderId);
                     } catch (IOException ex) {
-                        ex.printStackTrace();
-                        showNetworkErrorToast();
+                        Log.e(LOG_CAT, "Failed to delete mission ladder.", ex);
+                        redirectToLoginActivity();
                     }
                 }
             }).start();
@@ -373,12 +385,14 @@ public class DataService extends Service {
                         MissionLadderBean missionLadderBean = getMissionLadderBean(missionLadderId);
                         MissionTreeBean missionTreeBean = getMissionTreeBean(missionLadderId, missionTreeId);
                         missionLadderBean.getMissionTreeBeans().remove(missionTreeBean);
-                        peerToPeerOxygenApi.saveMissionLadder(missionLadderBean).execute();
+                        peerToPeerOxygenApi
+                                .saveMissionLadder(getSessionId(), missionLadderBean)
+                                .execute();
 
                         makeDataReceivedCallbacks();
                     } catch (IOException ex) {
-                        ex.printStackTrace();
-                        showNetworkErrorToast();
+                        Log.e(LOG_CAT, "Failed to delete mission tree.", ex);
+                        redirectToLoginActivity();
                     }
                 }
             }).start();
@@ -400,13 +414,17 @@ public class DataService extends Service {
                         missionTreeBean.getMissionBeans().remove(missionBean);
 
                         peerToPeerOxygenApi
-                                .deleteMission(missionLadderId, missionTreeId, missionId)
+                                .deleteMission(
+                                        getSessionId(),
+                                        missionLadderId,
+                                        missionTreeId,
+                                        missionId)
                                 .execute();
 
                         makeDataReceivedCallbacks();
                     } catch (IOException ex) {
-                        ex.printStackTrace();
-                        showNetworkErrorToast();
+                        Log.e(LOG_CAT, "Failed to delete mission.", ex);
+                        redirectToLoginActivity();
                     }
                 }
             }).start();
