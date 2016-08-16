@@ -39,10 +39,14 @@
     <!-- Mission tree view -->
     <string name="boss_label">Boss: %1$s</string>
 
+    <!-- Student profile activity -->
+    <string name="profile_title">Your profile</string>
+
     <!-- Admin and student menu -->
     <string name="admin_home_menu_title">Admin home</string>
     <string name="student_home_menu_title">Student home</string>
     <string name="refresh_menu_title">Refresh</string>
+    <string name="student_profile_link">View profile</string>
 
     <!-- Reusable strings -->
     <string name="name_form_label">Name</string>

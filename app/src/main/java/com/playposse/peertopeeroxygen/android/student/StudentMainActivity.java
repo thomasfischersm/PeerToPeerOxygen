@@ -2,7 +2,6 @@ package com.playposse.peertopeeroxygen.android.student;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,8 +16,6 @@ import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 /**
@@ -30,6 +27,7 @@ public class StudentMainActivity extends StudentParentActivity {
     public static final String LOG_TAG = StudentMainActivity.class.getSimpleName();
 
     private GridView studentHomeGridView;
+    private TextView studentProfileLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +37,14 @@ public class StudentMainActivity extends StudentParentActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         studentHomeGridView = (GridView) findViewById(R.id.studentHomeGridView);
+        studentProfileLink = (TextView) findViewById(R.id.studentProfileLink);
+
+        studentProfileLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), StudentProfileActivity.class));
+            }
+        });
     }
 
     @Override

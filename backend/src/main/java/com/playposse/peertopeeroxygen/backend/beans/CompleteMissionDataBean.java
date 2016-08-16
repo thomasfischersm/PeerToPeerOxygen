@@ -25,4 +25,8 @@ public class CompleteMissionDataBean {
     public List<MissionLadderBean> getMissionLadderBeans() {
         return missionLadderBeans;
     }
+
+    public UserBean getUserBean() {
+        return userBean;
+    }
 }

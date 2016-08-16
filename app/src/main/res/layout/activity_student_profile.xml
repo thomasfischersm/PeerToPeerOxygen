@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.playposse.peertopeeroxygen.android.student.StudentMainActivity">
+    tools:context="com.playposse.peertopeeroxygen.android.student.StudentProfileActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -20,17 +20,14 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <GridView
-        android:id="@+id/studentHomeGridView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnWidth="200dp"
-        android:numColumns="3" />
+    <ImageView
+        android:id="@+id/profilePhotoImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/studentProfileLink"
+        android:id="@+id/profileNameTextView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/student_profile_link" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

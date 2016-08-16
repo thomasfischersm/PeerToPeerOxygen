@@ -4,15 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceParentActivity;
+import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 
 public class StudentLoginActivity extends DataServiceParentActivity {
@@ -69,6 +72,17 @@ public class StudentLoginActivity extends DataServiceParentActivity {
             }
         });
         Log.i(LOG_CAT, "Facebook callback registered.");
+
+        // Check if we already have a session id.
+        if (OxygenSharedPreferences.getSessionId(this) != -1) {
+            startActivity(new Intent(this, StudentMainActivity.class));
+        }
+
+        // Apparently, the session ID is dead or something else requires trying to login again if
+        // there is an access token but no valid session id.
+        if (AccessToken.getCurrentAccessToken() != null) {
+            LoginManager.getInstance().logOut();
+        }
     }
 
     @Override

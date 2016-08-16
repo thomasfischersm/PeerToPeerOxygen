@@ -69,6 +69,13 @@ public class DataService extends Service {
     }
 
     private void debugDump() {
+        Log.i(LOG_CAT, "Dumping user info");
+        if (completeMissionDataBean.getUserBean() == null) {
+            Log.i(LOG_CAT, "User bean is null");
+        } else {
+            Log.i(LOG_CAT, "User is " + completeMissionDataBean.getUserBean().getName());
+        }
+
         Log.i(LOG_CAT, "Dumping complete mission data bean:");
         if (completeMissionDataBean.getMissionLadderBeans() != null) {
             for (MissionLadderBean missionLadderBean : completeMissionDataBean.getMissionLadderBeans()) {
@@ -163,8 +170,13 @@ public class DataService extends Service {
     }
 
     public void redirectToLoginActivity() {
+        // Clear the session id because it may be bad.
+        OxygenSharedPreferences.setSessionId(getApplicationContext(), (long) -1);
+
         Context context = getApplicationContext();
-        context.startActivity(new Intent(context, StudentLoginActivity.class));
+        Intent intent = new Intent(context, StudentLoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
     /**
