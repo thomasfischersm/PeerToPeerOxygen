@@ -200,6 +200,10 @@ public class DataService extends Service {
             }
         }
 
+        public void unregisterDataReceivedCallback(DataReceivedCallback callback) {
+            dataReceivedCallbacks.remove(callback);
+        }
+
         public void init() {
             new Thread(new MissionDataRetrieverRunnable()).start();
         }
@@ -223,6 +227,14 @@ public class DataService extends Service {
                     }
                 }
             }).start();
+        }
+
+        public UserBean getUserBean() {
+            if (completeMissionDataBean != null) {
+                return completeMissionDataBean.getUserBean();
+            } else {
+                return null;
+            }
         }
 
         public MissionLadderBean getMissionLadderBean(Long id) {

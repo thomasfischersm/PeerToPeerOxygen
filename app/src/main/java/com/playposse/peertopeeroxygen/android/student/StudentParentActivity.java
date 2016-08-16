@@ -9,7 +9,10 @@ import android.view.MenuItem;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.admin.AdminMainActivity;
+import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceParentActivity;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
 /**
  * A base activity that implements common functionality for student activities.
@@ -27,8 +30,30 @@ public abstract class StudentParentActivity extends DataServiceParentActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.student_menu, menu);
-        return true;
+        if ((dataServiceConnection != null)
+                && (dataServiceConnection.getLocalBinder() != null)
+                && (dataServiceConnection.getLocalBinder().getUserBean() != null)) {
+            UserBean userBean = dataServiceConnection.getLocalBinder().getUserBean();
+            if (userBean.getAdmin()) {
+                getMenuInflater().inflate(R.menu.student_menu, menu);
+                return true;
+            } else {
+                // The user is loaded and not an admin. -> Nothing to do.
+                return true;
+            }
+        } else {
+            dataServiceConnection.getLocalBinder().registerDataReceivedCallback(
+                    new DataService.DataReceivedCallback() {
+                        @Override
+                        public void receiveData(CompleteMissionDataBean completeMissionDataBean) {
+                            invalidateOptionsMenu();
+                            dataServiceConnection
+                                    .getLocalBinder()
+                                    .unregisterDataReceivedCallback(this);
+                        }
+                    });
+            return true;
+        }
     }
 
     @Override
