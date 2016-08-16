@@ -39,6 +39,9 @@
     <!-- Mission tree view -->
     <string name="boss_label">Boss: %1$s</string>
 
+    <!-- Student mission activity -->
+    <string name="startScanButton">Start scanning buddy profile.</string>
+
     <!-- Student profile activity -->
     <string name="profile_title">Your profile</string>
 

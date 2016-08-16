@@ -54,28 +54,27 @@ public class StudentProfileActivity extends StudentParentActivity {
                     URL photoUrl = new URL(userBean.getProfilePictureUrl());
                     final Bitmap photoBitmap =
                             BitmapFactory.decodeStream(photoUrl.openConnection().getInputStream());
+                    final Bitmap qrCodeBitMap = generateQrCode(
+                            userBean.getId().toString(),
+                            qrCodeImageView.getWidth(),
+                            qrCodeImageView.getHeight());
 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            try {
-                                profilePhotoImageView.setImageBitmap(photoBitmap);
-                                String fullName =
-                                        userBean.getFirstName() + " " + userBean.getLastName();
-                                profileNameTextView.setText(fullName);
-                                Bitmap qrCodeBitMap = generateQrCode(
-                                        userBean.getId().toString(),
-                                        qrCodeImageView.getWidth(),
-                                        qrCodeImageView.getHeight());
-                                qrCodeImageView.setImageBitmap(qrCodeBitMap);
-                                qrCodeImageView.invalidate();
-                            } catch (WriterException ex) {
-                                Log.e(LOG_CAT, "Failed to render QR code.", ex);
-                            }
+                            profilePhotoImageView.setImageBitmap(photoBitmap);
+                            String fullName =
+                                    userBean.getFirstName() + " " + userBean.getLastName();
+                            profileNameTextView.setText(fullName);
+
+                            qrCodeImageView.setImageBitmap(qrCodeBitMap);
+                            qrCodeImageView.invalidate();
                         }
                     });
                 } catch (IOException ex) {
                     Log.e(LOG_CAT, "Failed to download profile photo from Facebook.", ex);
+                } catch (WriterException ex) {
+                    Log.e(LOG_CAT, "Failed to render QR code.", ex);
                 }
             }
         }).start();
