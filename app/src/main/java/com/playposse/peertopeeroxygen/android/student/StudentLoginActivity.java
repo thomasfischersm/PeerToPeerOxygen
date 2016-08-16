@@ -34,7 +34,7 @@ public class StudentLoginActivity extends DataServiceParentActivity {
         Log.i(LOG_CAT, "After Facebook SDK init");
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_student_login);
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions("public_profile", "email");

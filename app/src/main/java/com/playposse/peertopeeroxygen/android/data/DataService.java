@@ -200,8 +200,15 @@ public class DataService extends Service {
             }
         }
 
-        public void unregisterDataReceivedCallback(DataReceivedCallback callback) {
-            dataReceivedCallbacks.remove(callback);
+        public void unregisterDataReceivedCallback(final DataReceivedCallback callback) {
+            // Create a new thread to prevent concurrent modification exceptions to happen if this
+            // is called from within a call to callbacks.
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    dataReceivedCallbacks.remove(callback);
+                }
+            }).start();
         }
 
         public void init() {
