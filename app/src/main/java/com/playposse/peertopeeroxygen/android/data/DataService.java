@@ -196,6 +196,7 @@ public class DataService extends Service {
                 @Override
                 public void run() {
                     try {
+                        createApiIfNeeded();
                         UserBean userBean = peerToPeerOxygenApi.registerOrLogin(accessToken).execute();
                         OxygenSharedPreferences.setSessionId(
                                 getApplicationContext(),

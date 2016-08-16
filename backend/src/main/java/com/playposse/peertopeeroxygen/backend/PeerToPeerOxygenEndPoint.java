@@ -47,6 +47,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
   )
 )
 public class PeerToPeerOxygenEndPoint {
+    // TODO(tfischer): Protect all service methods with a check of session id.
 
     private static final Logger log = Logger.getLogger(PeerToPeerOxygenEndPoint.class.getName());
 
