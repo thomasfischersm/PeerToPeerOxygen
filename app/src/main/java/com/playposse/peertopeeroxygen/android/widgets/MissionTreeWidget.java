@@ -12,10 +12,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.playposse.peertopeeroxygen.android.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.missiondependencies.MissionPlaceHolder;
 import com.playposse.peertopeeroxygen.android.missiondependencies.MissionTreeUntangler;
+import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.student.StudentMissionActivity;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class MissionTreeWidget extends View {
 
-    public static final String LOG_CAT = MissionTreeWidget.class.getSimpleName();
+    private static final String LOG_CAT = MissionTreeWidget.class.getSimpleName();
 
     public static final int BOX_WIDTH = 200;
     public static final int BOX_HEIGHT = 150;

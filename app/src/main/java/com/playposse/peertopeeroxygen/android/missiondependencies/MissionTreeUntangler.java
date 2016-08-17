@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class MissionTreeUntangler {
 
-    public static final String LOG_CAT = MissionTreeUntangler.class.getSimpleName();
+    private static final String LOG_CAT = MissionTreeUntangler.class.getSimpleName();
 
     public static List<List<MissionPlaceHolder>> untangle(MissionTreeBean missionTreeBean) {
         return sortIntoRows(sortIntoList(missionTreeBean));

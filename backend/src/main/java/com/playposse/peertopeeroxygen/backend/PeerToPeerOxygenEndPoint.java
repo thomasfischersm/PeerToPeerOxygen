@@ -221,7 +221,7 @@ public class PeerToPeerOxygenEndPoint {
 
     private void protectByAdminCheck(Long sessionId) throws UnauthorizedException {
         OxygenUser oxygenUser = loadUserBySessionId(sessionId);
-        if (oxygenUser.isAdmin()) {
+        if (!oxygenUser.isAdmin()) {
             throw new UnauthorizedException(
                     "The user is NOT an admin: " + oxygenUser.getId());
         }
@@ -337,11 +337,19 @@ public class PeerToPeerOxygenEndPoint {
 
         FirebaseUtil.sendMissionInviteToBuddy(
                 buddy.getFirebaseToken(),
-                student.getId(),
+                stripForSafety(new UserBean(student)),
                 missionLadderId,
                 missionTreeId,
                 missionId);
 
-        return  new UserBean(buddy);
+        return stripForSafety(new UserBean(buddy));
+    }
+
+    /**
+     * Clears any data that could be a security issue.
+     */
+    private static UserBean stripForSafety(UserBean userBean) {
+        userBean.setSessionId(null);
+        return userBean;
     }
 }

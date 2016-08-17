@@ -16,7 +16,7 @@ import java.io.IOException;
  */
 public class OxygenFirebaseInstanceIdService extends FirebaseInstanceIdService {
 
-    public static final String LOG_CAT = OxygenFirebaseInstanceIdService.class.getSimpleName();
+    private static final String LOG_CAT = OxygenFirebaseInstanceIdService.class.getSimpleName();
 
     @Override
     public void onTokenRefresh() {

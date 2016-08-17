@@ -64,6 +64,10 @@ public class UserBean {
         return sessionId;
     }
 
+    public void setSessionId(Long sessionId) {
+        this.sessionId = sessionId;
+    }
+
     public String getFirebaseToken() {
         return firebaseToken;
     }

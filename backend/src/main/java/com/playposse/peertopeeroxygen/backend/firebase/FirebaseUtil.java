@@ -1,5 +1,8 @@
 package com.playposse.peertopeeroxygen.backend.firebase;
 
+import com.google.appengine.repackaged.com.google.gson.Gson;
+import com.playposse.peertopeeroxygen.backend.beans.UserBean;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -9,33 +12,43 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.logging.Logger;
 
 /**
  * A class with utility methods for dealing with Firebase.
  */
 public class FirebaseUtil {
 
+    private static final Logger log = Logger.getLogger(FirebaseUtil.class.getName());
+
     private static final String FIREBASE_URL = "https://fcm.googleapis.com/fcm/send";
     private static final String APP_ID = "AIzaSyDMTDhV84ZdiacBCm9vN2z0q5BM3vJccgs";
 
     private static final String TYPE_KEY = "type";
     private static final String MISSION_INVITE_TYPE = "missionInvite";
-    private static final String FROM_KEY = "fromStudent";
+    private static final String FROM_STUDENT_ID = "fromStudentId";
+    private static final String FROM_STUDENT_BEAN = "fromStudentBean";
     private static final String MISSION_LADDER_KEY = "missionLadderId";
     private static final String MISSION_TREE_KEY = "missionTreeId";
     private static final String MISSION_KEY = "missionid";
 
     public static String sendMissionInviteToBuddy(
             String firebaseToken,
-            Long studentId,
+            UserBean studentBean,
             Long missionLadderId,
             Long missionTreeId,
             Long missionId)
             throws IOException {
 
+        Gson gson = new Gson();
+        String studentBeanJson = gson.toJson(studentBean);
+        log.info("The student translated to JSON: " + studentBeanJson);
+        log.info("The student id is " + studentBean.getId());
+
         JSONObject rootNode = new JSONObject();
         rootNode.put(TYPE_KEY, MISSION_INVITE_TYPE);
-        rootNode.put(FROM_KEY, studentId);
+        rootNode.put(FROM_STUDENT_ID, studentBean.getId());
+        rootNode.put(FROM_STUDENT_BEAN, studentBeanJson);
         rootNode.put(MISSION_LADDER_KEY, missionLadderId);
         rootNode.put(MISSION_TREE_KEY, missionTreeId);
         rootNode.put(MISSION_KEY, missionId);

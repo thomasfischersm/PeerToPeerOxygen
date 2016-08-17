@@ -23,7 +23,7 @@ import java.net.URL;
  */
 public class StudentProfileActivity extends StudentParentActivity {
 
-    public static final String LOG_CAT = StudentProfileActivity.class.getSimpleName();
+    private static final String LOG_CAT = StudentProfileActivity.class.getSimpleName();
 
     private static final int WHITE = 0xFFFFFFFF;
     private static final int BLACK = 0xFF000000;

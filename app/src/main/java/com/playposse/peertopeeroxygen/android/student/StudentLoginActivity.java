@@ -20,7 +20,7 @@ import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.Complete
 
 public class StudentLoginActivity extends DataServiceParentActivity {
 
-    public static final String LOG_CAT = StudentLoginActivity.class.getSimpleName();
+    private static final String LOG_CAT = StudentLoginActivity.class.getSimpleName();
 
     private LoginButton loginButton;
     private CallbackManager callbackManager;

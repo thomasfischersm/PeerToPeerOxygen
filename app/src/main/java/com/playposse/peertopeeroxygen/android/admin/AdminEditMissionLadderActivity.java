@@ -12,8 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.playposse.peertopeeroxygen.android.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.widgets.ConfirmationDialogBuilder;
 import com.playposse.peertopeeroxygen.android.widgets.ListViewNoScroll;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class AdminEditMissionLadderActivity extends AdminParentActivity {
 
-    public static final String LOG_CAT = AdminEditMissionLadderActivity.class.getSimpleName();
+    private static final String LOG_CAT = AdminEditMissionLadderActivity.class.getSimpleName();
 
     private MissionLadderBean missionLadderBean;
     private Long missionLadderId;

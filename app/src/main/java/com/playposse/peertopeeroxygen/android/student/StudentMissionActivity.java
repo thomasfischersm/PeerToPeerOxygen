@@ -16,8 +16,8 @@ import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
-import com.playposse.peertopeeroxygen.android.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 
@@ -25,7 +25,7 @@ import java.io.IOException;
 
 public class StudentMissionActivity extends StudentParentActivity {
 
-    public static final String LOG_CAT = StudentMissionActivity.class.getSimpleName();
+    private static final String LOG_CAT = StudentMissionActivity.class.getSimpleName();
 
     private Long missionLadderId;
     private Long missionTreeId;
