@@ -11,6 +11,7 @@ public class UserBean {
     private boolean isAdmin;
     private String fbProfileId;
     private Long sessionId;
+    private String firebaseToken;
     private String firstName;
     private String lastName;
     private String name;
@@ -24,6 +25,7 @@ public class UserBean {
         isAdmin = oxygenUser.isAdmin();
         fbProfileId = oxygenUser.getFbProfileId();
         sessionId = oxygenUser.getSessionId();
+        firebaseToken = oxygenUser.getFirebaseToken();
         firstName = oxygenUser.getFirstName();
         lastName = oxygenUser.getLastName();
         name = oxygenUser.getLastName();
@@ -60,5 +62,13 @@ public class UserBean {
 
     public Long getSessionId() {
         return sessionId;
+    }
+
+    public String getFirebaseToken() {
+        return firebaseToken;
+    }
+
+    public void setFirebaseToken(String firebaseToken) {
+        this.firebaseToken = firebaseToken;
     }
 }

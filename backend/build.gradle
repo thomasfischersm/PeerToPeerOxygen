@@ -30,6 +30,7 @@ dependencies {
     compile 'com.google.guava:guava:19.0'
     compile 'com.googlecode.objectify:objectify:5.1.12'
     compile group: 'com.restfb', name: 'restfb', version: '1.30.0'
+    compile group: 'org.json', name: 'json', version: '20160810'
 }
 
 appengine {

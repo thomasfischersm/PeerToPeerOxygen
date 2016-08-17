@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.student.StudentLoginActivity;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxygenApi;
@@ -224,7 +225,11 @@ public class DataService extends Service {
                 public void run() {
                     try {
                         createApiIfNeeded();
-                        UserBean userBean = peerToPeerOxygenApi.registerOrLogin(accessToken).execute();
+                        String firebaseToken = FirebaseInstanceId.getInstance().getToken();
+                        UserBean userBean =
+                                peerToPeerOxygenApi
+                                        .registerOrLogin(accessToken, firebaseToken)
+                                        .execute();
                         OxygenSharedPreferences.setSessionId(
                                 getApplicationContext(),
                                 userBean.getSessionId());
@@ -444,6 +449,30 @@ public class DataService extends Service {
                     } catch (IOException ex) {
                         Log.e(LOG_CAT, "Failed to delete mission.", ex);
                         redirectToLoginActivity();
+                    }
+                }
+            }).start();
+        }
+
+        public void inviteBuddyToMission(
+                final Long buddyId,
+                final Long missionLadderId,
+                final Long missionTreeId,
+                final Long missionId) {
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        peerToPeerOxygenApi.inviteBuddyToMission(
+                                OxygenSharedPreferences.getSessionId(getApplicationContext()),
+                                buddyId,
+                                missionLadderId,
+                                missionTreeId,
+                                missionId).execute();
+                        Log.i(LOG_CAT, "Buddy has been invited via appengine call.");
+                    } catch (IOException ex) {
+                        Log.e(LOG_CAT, "Failed to invite buddy to mission: " + buddyId, ex);
                     }
                 }
             }).start();

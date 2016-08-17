@@ -127,6 +127,12 @@ public class StudentMissionActivity extends StudentParentActivity {
                 cameraSource = null;
             }
         });
+
+        dataServiceConnection.getLocalBinder().inviteBuddyToMission(
+                new Long(barcode.displayValue),
+                missionLadderId,
+                missionTreeId,
+                missionId);
     }
 
     private void scanForQrCode() {

@@ -18,6 +18,7 @@ public class OxygenUser {
     private boolean isAdmin = false;
     @Index private String fbProfileId;
     @Index private Long sessionId = null;
+    private String firebaseToken;
     private Long lastLogin = System.currentTimeMillis();
     private Long created = System.currentTimeMillis();
     private String firstName;
@@ -41,6 +42,7 @@ public class OxygenUser {
     public OxygenUser(
             Long sessionId,
             String fbProfileId,
+            String firebaseToken,
             String name,
             String firstName,
             String lastName,
@@ -55,6 +57,7 @@ public class OxygenUser {
         this.sessionId = sessionId;
         this.name = name;
         this.fbProfileId = fbProfileId;
+        this.firebaseToken = firebaseToken;
         this.isAdmin = isAdmin;
     }
 
@@ -152,5 +155,13 @@ public class OxygenUser {
 
     public void setSessionId(Long sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public String getFirebaseToken() {
+        return firebaseToken;
+    }
+
+    public void setFirebaseToken(String firebaseToken) {
+        this.firebaseToken = firebaseToken;
     }
 }

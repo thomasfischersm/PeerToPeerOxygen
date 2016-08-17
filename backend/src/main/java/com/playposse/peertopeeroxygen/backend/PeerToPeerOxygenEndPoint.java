@@ -18,6 +18,7 @@ import com.playposse.peertopeeroxygen.backend.beans.MissionBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionTreeBean;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
+import com.playposse.peertopeeroxygen.backend.firebase.FirebaseUtil;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
 import com.playposse.peertopeeroxygen.backend.schema.MissionBoss;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
@@ -29,6 +30,7 @@ import com.restfb.Parameter;
 import com.restfb.Version;
 import com.restfb.types.User;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -218,21 +220,43 @@ public class PeerToPeerOxygenEndPoint {
     }
 
     private void protectByAdminCheck(Long sessionId) throws UnauthorizedException {
+        OxygenUser oxygenUser = loadUserBySessionId(sessionId);
+        if (oxygenUser.isAdmin()) {
+            throw new UnauthorizedException(
+                    "The user is NOT an admin: " + oxygenUser.getId());
+        }
+    }
+
+    private OxygenUser loadUserById(Long userId) throws UnauthorizedException {
+        OxygenUser oxygenUser = ofy()
+                .load()
+                .type(OxygenUser.class)
+                .id(userId)
+                .now();
+        if (oxygenUser == null) {
+            throw new UnauthorizedException("user id is not found: " + userId);
+        }
+        return oxygenUser;
+    }
+
+    private OxygenUser loadUserBySessionId(Long sessionId) throws UnauthorizedException {
         List<OxygenUser> oxygenUsers = ofy()
                 .load()
                 .type(OxygenUser.class)
                 .filter("sessionId", sessionId)
                 .list();
-        if (oxygenUsers.size() == 0) {
-            throw new UnauthorizedException("SessionId is not found: " + sessionId);
-        } else if (!oxygenUsers.get(0).isAdmin()) {
-            throw new UnauthorizedException(
-                    "The user is NOT an admin: " + oxygenUsers.get(0).getId());
+        if (oxygenUsers.size() != 1) {
+            throw new UnauthorizedException("SessionId is not found: " + sessionId
+                    + " users found count: " + oxygenUsers.size());
         }
+        return oxygenUsers.get(0);
     }
 
     @ApiMethod(name = "registerOrLogin")
-    public UserBean registerOrLogin(@Named("accessToken") String accessToken) {
+    public UserBean registerOrLogin(
+            @Named("accessToken") String accessToken,
+            @Named("firebaseToken") String firebaseToken) {
+
         Long sessionId = new Random().nextLong();
 
         // Retrieve user data.
@@ -249,6 +273,7 @@ public class PeerToPeerOxygenEndPoint {
             oxygenUser = new OxygenUser(
                     sessionId,
                     fbUser.getId(),
+                    firebaseToken,
                     fbUser.getName(),
                     fbUser.getFirstName(),
                     fbUser.getLastName(),
@@ -264,6 +289,7 @@ public class PeerToPeerOxygenEndPoint {
                         + fbUser.getId());
             }
             oxygenUser.setSessionId(sessionId);
+            oxygenUser.setFirebaseToken(firebaseToken);
             oxygenUser.setLastLogin(System.currentTimeMillis());
             ofy().save().entity(oxygenUser).now();
         }
@@ -277,5 +303,45 @@ public class PeerToPeerOxygenEndPoint {
                 "me",
                 User.class,
                 Parameter.with("fields", "id,name,link,first_name, last_name,cover,picture.type(large)"));
+    }
+
+    @ApiMethod(name = "updateFirebaseToken")
+    public void updateFirebaseToken(
+            @Named("sessionId") Long sessionId,
+            @Named("firebaseToken") String firebaseToken)
+            throws UnauthorizedException {
+
+        OxygenUser user = loadUserBySessionId(sessionId);
+        user.setFirebaseToken(firebaseToken);
+        ofy().save().entity(user).now();
+    }
+
+    /**
+     * Invites a buddy to teach a mission. The buddy is sent a message via Firebase.
+     *
+     * @return UserBean Information about the buddy.
+     */
+    @ApiMethod(name = "inviteBuddyToMission")
+    public UserBean inviteBuddyToMission(
+            @Named("sessionId") Long sessionId,
+            @Named("buddyId") Long buddyId,
+            @Named("missionLadderId") Long missionLadderId,
+            @Named("missionTreeId") Long missionTreeId,
+            @Named("missionId") Long missionId)
+            throws UnauthorizedException, IOException {
+
+        OxygenUser student = loadUserBySessionId(sessionId);
+        OxygenUser buddy = loadUserById(buddyId);
+
+        // TODO: Check if the buddy is allowed to teach the mission.
+
+        FirebaseUtil.sendMissionInviteToBuddy(
+                buddy.getFirebaseToken(),
+                student.getId(),
+                missionLadderId,
+                missionTreeId,
+                missionId);
+
+        return  new UserBean(buddy);
     }
 }
