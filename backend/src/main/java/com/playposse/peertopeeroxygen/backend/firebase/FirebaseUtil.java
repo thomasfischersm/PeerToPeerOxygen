@@ -26,8 +26,10 @@ public class FirebaseUtil {
 
     private static final String TYPE_KEY = "type";
     private static final String MISSION_INVITE_TYPE = "missionInvite";
+    private static final String MISSION_COMPLETION_TYPE = "missionCompletion";
     private static final String FROM_STUDENT_ID = "fromStudentId";
     private static final String FROM_STUDENT_BEAN = "fromStudentBean";
+    private static final String BUDDY_BEAN = "buddyBean";
     private static final String MISSION_LADDER_KEY = "missionLadderId";
     private static final String MISSION_TREE_KEY = "missionTreeId";
     private static final String MISSION_KEY = "missionid";
@@ -51,6 +53,23 @@ public class FirebaseUtil {
         rootNode.put(FROM_STUDENT_BEAN, studentBeanJson);
         rootNode.put(MISSION_LADDER_KEY, missionLadderId);
         rootNode.put(MISSION_TREE_KEY, missionTreeId);
+        rootNode.put(MISSION_KEY, missionId);
+
+        return sendMessageToDevice(firebaseToken, rootNode);
+    }
+
+    public static String sendMissionCompletionToStudent(
+            String firebaseToken,
+            UserBean buddyBean,
+            Long missionId)
+            throws IOException {
+
+        Gson gson = new Gson();
+        String buddyBeanJson = gson.toJson(buddyBean);
+
+        JSONObject rootNode = new JSONObject();
+        rootNode.put(TYPE_KEY, MISSION_COMPLETION_TYPE);
+        rootNode.put(BUDDY_BEAN, buddyBeanJson);
         rootNode.put(MISSION_KEY, missionId);
 
         return sendMessageToDevice(firebaseToken, rootNode);

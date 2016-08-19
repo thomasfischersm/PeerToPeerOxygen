@@ -17,6 +17,7 @@ import com.playposse.peertopeeroxygen.android.student.StudentLoginActivity;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxygenApi;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
@@ -476,6 +477,66 @@ public class DataService extends Service {
                     }
                 }
             }).start();
+        }
+
+        public void reportMissionComplete(final Long studentId, final Long missionId) {
+            // Increment local data to avoid getting fresh data from the server.
+            MissionCompletionBean completionBean = getMissionCompletion(missionId);
+            completionBean.setStudyCount(completionBean.getStudyCount() + 1);
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        peerToPeerOxygenApi.reportMissionComplete(
+                                OxygenSharedPreferences.getSessionId(getApplicationContext()),
+                                studentId,
+                                missionId).execute();
+                    } catch (IOException ex) {
+                        Log.e(LOG_CAT, "Failed to report mission completed.", ex);
+                    }
+                }
+            }).start();
+        }
+
+        public MissionCompletionBean getMissionCompletion(Long missionId) {
+            if (getUserBean().getMissionCompletionBeans() != null) {
+                for (MissionCompletionBean completionBean : getUserBean().getMissionCompletionBeans()) {
+                    if (completionBean.getMissionId().equals(missionId)) {
+                        return completionBean;
+                    }
+                }
+            } else {
+                getUserBean().setMissionCompletionBeans(new ArrayList<MissionCompletionBean>());
+            }
+
+            // Create a new one.
+            MissionCompletionBean completionBean = new MissionCompletionBean();
+            completionBean.setMissionId(missionId);
+            completionBean.setStudyCount(0);
+            completionBean.setMentorCount(0);
+            getUserBean().getMissionCompletionBeans().add(completionBean);
+            return completionBean;
+        }
+
+        /**
+         * Finds the mission ladder id and mission tree id.
+         *
+         * @return Long[] An array with the ids for the mission ladder, mission tree, and mission.
+         */
+        public Long[] getMissionPath(Long missionId) {
+            for (MissionLadderBean ladderBean : completeMissionDataBean.getMissionLadderBeans()) {
+                for (MissionTreeBean treeBean : ladderBean.getMissionTreeBeans()) {
+                    for (MissionBean missionBean : treeBean.getMissionBeans()) {
+                        if (missionId.equals(missionBean.getId())) {
+                            return new Long[]{ladderBean.getId(), treeBean.getId(), missionId};
+                        }
+                    }
+                }
+            }
+
+            Log.e(LOG_CAT, "Couldn't find mission " + missionId);
+            return null;
         }
 
         public void reload() {

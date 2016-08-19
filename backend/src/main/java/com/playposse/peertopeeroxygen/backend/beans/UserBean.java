@@ -1,6 +1,10 @@
 package com.playposse.peertopeeroxygen.backend.beans;
 
+import com.playposse.peertopeeroxygen.backend.schema.MissionCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Equivalent of {@link OxygenUser} for transport across the network.
@@ -16,6 +20,7 @@ public class UserBean {
     private String lastName;
     private String name;
     private String profilePictureUrl;
+    private List<MissionCompletionBean> missionCompletionBeans = new ArrayList<>();
 
     public UserBean() {
     }
@@ -30,6 +35,10 @@ public class UserBean {
         lastName = oxygenUser.getLastName();
         name = oxygenUser.getLastName();
         profilePictureUrl = oxygenUser.getProfilePictureUrl();
+
+        for (MissionCompletion missionCompletion : oxygenUser.getMissionCompletions().values()) {
+            missionCompletionBeans.add(new MissionCompletionBean(missionCompletion));
+        }
     }
 
     public String getFbProfileId() {
@@ -74,5 +83,9 @@ public class UserBean {
 
     public void setFirebaseToken(String firebaseToken) {
         this.firebaseToken = firebaseToken;
+    }
+
+    public List<MissionCompletionBean> getMissionCompletionBeans() {
+        return missionCompletionBeans;
     }
 }

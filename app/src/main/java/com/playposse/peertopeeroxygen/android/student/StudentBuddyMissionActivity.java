@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -61,6 +62,23 @@ public class StudentBuddyMissionActivity extends StudentParentActivity {
         String invitation =
                 String.format(getString(R.string.mission_invitation_message), studentName);
         invitationTextView.setText(invitation);
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        graduateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dataServiceConnection
+                        .getLocalBinder()
+                        .reportMissionComplete(studentBean.getId(), missionId);
+                startActivity(new Intent(getApplicationContext(), StudentMainActivity.class));
+            }
+        });
     }
 
     @Override

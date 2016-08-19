@@ -56,6 +56,9 @@
     <string name="refresh_menu_title">Refresh</string>
     <string name="student_profile_link">View profile</string>
 
+    <!-- Toasts -->
+    <string name="mission_completion_toast">Congratulation on completing "%1$s"! %2$s graduated you.</string>
+
     <!-- Reusable strings -->
     <string name="name_form_label">Name</string>
     <string name="description_form_label">Description</string>
@@ -70,7 +73,4 @@
 
     <!-- Error messages -->
     <string name="network_error">Failed to retrieve data from the server.</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

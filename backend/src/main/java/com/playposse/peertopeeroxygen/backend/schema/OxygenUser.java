@@ -28,7 +28,7 @@ public class OxygenUser {
     private Map<UserPoints.PointType, UserPoints> points = new HashMap<>();
 
     @Stringify(LongStringifier.class)
-    private Map<Long, MissionCompleted> completedMissions = new HashMap<>();
+    private Map<Long, MissionCompletion> missionCompletions = new HashMap<>();
 
     /**
      * Default constructor for Objectify.
@@ -61,12 +61,12 @@ public class OxygenUser {
         this.isAdmin = isAdmin;
     }
 
-    public Map<Long, MissionCompleted> getCompletedMissions() {
-        return completedMissions;
+    public Map<Long, MissionCompletion> getMissionCompletions() {
+        return missionCompletions;
     }
 
-    public void setCompletedMissions(Map<Long, MissionCompleted> completedMissions) {
-        this.completedMissions = completedMissions;
+    public void setMissionCompletions(Map<Long, MissionCompletion> missionCompletions) {
+        this.missionCompletions = missionCompletions;
     }
 
     public Long getCreated() {
