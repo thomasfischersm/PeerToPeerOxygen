@@ -313,6 +313,8 @@ public class MissionTreeWidget extends View {
                     return unlockedPaint;
                 case COMPLETED:
                     return completedPaint;
+                case TEACHABLE:
+                    return completedPaint;
                 default:
                     throw new RuntimeException("Unexpected mission availability: " + availability);
             }

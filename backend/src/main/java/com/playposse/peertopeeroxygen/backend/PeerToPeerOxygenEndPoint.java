@@ -11,34 +11,26 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.config.Named;
 import com.google.api.server.spi.response.UnauthorizedException;
-import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.beans.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionTreeBean;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
-import com.playposse.peertopeeroxygen.backend.firebase.FirebaseUtil;
-import com.playposse.peertopeeroxygen.backend.schema.MentoringAuditLog;
-import com.playposse.peertopeeroxygen.backend.schema.Mission;
-import com.playposse.peertopeeroxygen.backend.schema.MissionBoss;
-import com.playposse.peertopeeroxygen.backend.schema.MissionCompletion;
-import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
-import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
-import com.restfb.DefaultFacebookClient;
-import com.restfb.FacebookClient;
-import com.restfb.Parameter;
-import com.restfb.Version;
-import com.restfb.types.User;
+import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionLadderAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.GetMissionDataAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.InviteBuddyToMissionAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.RegisterOrLoginAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.ReportMissionCompleteAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionLadderAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionTreeAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.ServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.UpdateFirebaseTokenAction;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Random;
 import java.util.logging.Logger;
-
-import static com.googlecode.objectify.ObjectifyService.factory;
-import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * An endpoint class we are exposing
@@ -63,22 +55,7 @@ public class PeerToPeerOxygenEndPoint {
     public CompleteMissionDataBean getMissionData(@Named("sessionId") Long sessionId)
             throws UnauthorizedException {
 
-        List<OxygenUser> oxygenUsers = ofy()
-                .load()
-                .type(OxygenUser.class)
-                .filter("sessionId", sessionId)
-                .list();
-        if (oxygenUsers.size() == 0) {
-            throw new UnauthorizedException("SessionId is not found: " + sessionId);
-        }
-        UserBean userBean = new UserBean(oxygenUsers.get(0));
-
-        List<MissionLadder> missionLadders = ofy().load()
-                .group(MissionTree.class, Mission.class, MissionBoss.class)
-                .type(MissionLadder.class)
-                .list();
-
-        return new CompleteMissionDataBean(userBean, missionLadders);
+        return GetMissionDataAction.getMissionData(sessionId);
     }
 
     @ApiMethod(name = "saveMissionLadder")
@@ -88,9 +65,7 @@ public class PeerToPeerOxygenEndPoint {
 
         protectByAdminCheck(sessionId);
 
-        MissionLadder missionLadder = missionLadderBean.toEntity();
-        ofy().save().entity(missionLadder).now();
-        return new MissionLadderBean(missionLadder);
+        return SaveMissionLadderAction.saveMissionLadder(sessionId, missionLadderBean);
     }
 
     @ApiMethod(name = "deleteMissionLadder")
@@ -100,8 +75,7 @@ public class PeerToPeerOxygenEndPoint {
 
         protectByAdminCheck(sessionId);
 
-        ofy().delete().type(MissionLadder.class).id(missionLadderId).now();
-        log.info("Just deleted mission ladder: " + missionLadderId);
+        DeleteMissionLadderAction.deleteMissionLadder(sessionId, missionLadderId);
     }
 
     @ApiMethod(name = "saveMissionTree")
@@ -112,45 +86,7 @@ public class PeerToPeerOxygenEndPoint {
 
         protectByAdminCheck(sessionId);
 
-        log.info("saveMissionTree is called (ladder id: " + missionLadderId
-                + ", tree id: " + missionTreeBean.getId()
-                + ", mission count: " + missionTreeBean.getMissionBeans().size()
-                + ", required mission count: " + missionTreeBean.getRequiredMissionIds().size()
-                + ")");
-
-        MissionTree missionTree = missionTreeBean.toEntity();
-//        ofy().save().entity(missionTree).now();
-
-        if (missionTree.getId() == null) {
-            missionTree.setId(factory().allocateId(MissionTree.class).getId());
-        }
-
-        if ((missionTree.getMissionBoss() != null)
-                && (missionTree.getMissionBoss().getId() == null)) {
-            missionTree.getMissionBoss().setId(factory().allocateId(MissionBoss.class).getId());
-        }
-
-        MissionLadder missionLadder = ofy().load()
-                .group(MissionTree.class, MissionBoss.class, Mission.class)
-                .type(MissionLadder.class)
-                .id(missionLadderId)
-                .now();
-
-        if (missionTreeBean.getId() == null) {
-            missionLadder.getMissionTrees().add(missionTree);
-        } else {
-            for (int i = 0; i < missionLadder.getMissionTrees().size(); i++) {
-                if (missionLadder.getMissionTrees().get(i).getId().equals(missionTreeBean.getId())) {
-                    missionLadder.getMissionTrees().set(i, missionTree);
-                    break;
-                }
-            }
-        }
-
-        log.info("Saving required mission count: " + missionTree.getRequiredMissions().size());
-        ofy().save().entity(missionLadder).now();
-
-        return new MissionTreeBean(missionTree);
+        return SaveMissionTreeAction.saveMissionTree(sessionId, missionLadderId, missionTreeBean);
     }
 
     @ApiMethod(name = "saveMission")
@@ -163,33 +99,11 @@ public class PeerToPeerOxygenEndPoint {
 
         protectByAdminCheck(sessionId);
 
-        Mission mission = missionBean.toEntity();
-
-        MissionLadder missionLadder = ofy().load()
-                .group(MissionTree.class, Mission.class)
-                .type(MissionLadder.class)
-                .id(missionLadderId)
-                .now();
-
-        MissionTree missionTree = findMissionTree(missionLadder, missionTreeId);
-
-        ofy().save().entity(mission).now();
-
-        if (missionBean.getId() == null) {
-            missionTree.getMissions().add(Ref.create(Key.create(Mission.class, mission.getId())));
-            ofy().save().entity(missionLadder).now();
-        }
-
-        return new MissionBean(mission);
-    }
-
-    private MissionTree findMissionTree(MissionLadder missionLadder, Long missionTreeId) {
-        for (MissionTree missionTree : missionLadder.getMissionTrees()) {
-            if (missionTree.getId().equals(missionTreeId)) {
-                return missionTree;
-            }
-        }
-        return null;
+        return SaveMissionAction.saveMission(
+                sessionId,
+                missionLadderId,
+                missionTreeId,
+                missionBean);
     }
 
     @ApiMethod(name = "deleteMission")
@@ -202,56 +116,15 @@ public class PeerToPeerOxygenEndPoint {
 
         protectByAdminCheck(sessionId);
 
-        MissionLadder missionLadder = ofy().load()
-                .group(MissionTree.class)
-                .type(MissionLadder.class)
-                .id(missionLadderId)
-                .now();
-        MissionTree missionTree = findMissionTree(missionLadder, missionTreeId);
-        Key<Mission> missionKey = Key.create(Mission.class, missionId);
-
-        for (Ref<Mission> otherMissionRef : missionTree.getMissions()) {
-            if (missionId == otherMissionRef.getKey().getId()) {
-                missionTree.getMissions().remove(otherMissionRef);
-                ofy().save().entity(missionTree).now();
-                break;
-            }
-        }
-
-        ofy().delete().key(missionKey).now();
+        DeleteMissionAction.deleteMission(sessionId, missionLadderId, missionTreeId, missionId);
     }
 
     private void protectByAdminCheck(Long sessionId) throws UnauthorizedException {
-        OxygenUser oxygenUser = loadUserBySessionId(sessionId);
+        OxygenUser oxygenUser = ServerAction.loadUserBySessionId(sessionId);
         if (!oxygenUser.isAdmin()) {
             throw new UnauthorizedException(
                     "The user is NOT an admin: " + oxygenUser.getId());
         }
-    }
-
-    private OxygenUser loadUserById(Long userId) throws UnauthorizedException {
-        OxygenUser oxygenUser = ofy()
-                .load()
-                .type(OxygenUser.class)
-                .id(userId)
-                .now();
-        if (oxygenUser == null) {
-            throw new UnauthorizedException("user id is not found: " + userId);
-        }
-        return oxygenUser;
-    }
-
-    private OxygenUser loadUserBySessionId(Long sessionId) throws UnauthorizedException {
-        List<OxygenUser> oxygenUsers = ofy()
-                .load()
-                .type(OxygenUser.class)
-                .filter("sessionId", sessionId)
-                .list();
-        if (oxygenUsers.size() != 1) {
-            throw new UnauthorizedException("SessionId is not found: " + sessionId
-                    + " users found count: " + oxygenUsers.size());
-        }
-        return oxygenUsers.get(0);
     }
 
     @ApiMethod(name = "registerOrLogin")
@@ -259,52 +132,7 @@ public class PeerToPeerOxygenEndPoint {
             @Named("accessToken") String accessToken,
             @Named("firebaseToken") String firebaseToken) {
 
-        Long sessionId = new Random().nextLong();
-
-        // Retrieve user data.
-        User fbUser = fetchUserFromFaceBook(accessToken);
-        List<OxygenUser> oxygenUsers = ofy()
-                .load()
-                .type(OxygenUser.class)
-                .filter("fbProfileId", fbUser.getId())
-                .list();
-
-        // Register if necessary.
-        OxygenUser oxygenUser;
-        if (oxygenUsers.size() == 0) {
-            oxygenUser = new OxygenUser(
-                    sessionId,
-                    fbUser.getId(),
-                    firebaseToken,
-                    fbUser.getName(),
-                    fbUser.getFirstName(),
-                    fbUser.getLastName(),
-                    fbUser.getPicture().getUrl(),
-                    System.currentTimeMillis(),
-                    false);
-            Key<OxygenUser> oxygenUserKey = ofy().save().entity(oxygenUser).now();
-            oxygenUser.setId(oxygenUser.getId());
-        } else {
-            oxygenUser = oxygenUsers.get(0);
-            if (oxygenUsers.size() > 1) {
-                log.info("Found more than one OxygenUser entries for fbProfileId: "
-                        + fbUser.getId());
-            }
-            oxygenUser.setSessionId(sessionId);
-            oxygenUser.setFirebaseToken(firebaseToken);
-            oxygenUser.setLastLogin(System.currentTimeMillis());
-            ofy().save().entity(oxygenUser).now();
-        }
-
-        return new UserBean(oxygenUser);
-    }
-
-    private static User fetchUserFromFaceBook(String accessToken) {
-        FacebookClient facebookClient = new DefaultFacebookClient(accessToken, Version.VERSION_2_7);
-        return facebookClient.fetchObject(
-                "me",
-                User.class,
-                Parameter.with("fields", "id,name,link,first_name, last_name,cover,picture.type(large)"));
+        return RegisterOrLoginAction.registerOrLogin(accessToken, firebaseToken);
     }
 
     @ApiMethod(name = "updateFirebaseToken")
@@ -313,9 +141,7 @@ public class PeerToPeerOxygenEndPoint {
             @Named("firebaseToken") String firebaseToken)
             throws UnauthorizedException {
 
-        OxygenUser user = loadUserBySessionId(sessionId);
-        user.setFirebaseToken(firebaseToken);
-        ofy().save().entity(user).now();
+        UpdateFirebaseTokenAction.updateFirebaseToken(sessionId, firebaseToken);
     }
 
     /**
@@ -332,20 +158,12 @@ public class PeerToPeerOxygenEndPoint {
             @Named("missionId") Long missionId)
             throws UnauthorizedException, IOException {
 
-        OxygenUser student = loadUserBySessionId(sessionId);
-        OxygenUser buddy = loadUserById(buddyId);
-//        Mission mission = ofy().load().type(Mission.class).id(missionId).now();
-
-        // TODO: Check if the buddy is allowed to teach the mission.
-
-        FirebaseUtil.sendMissionInviteToBuddy(
-                buddy.getFirebaseToken(),
-                stripForSafety(new UserBean(student)),
+        return InviteBuddyToMissionAction.inviteBuddyToMission(
+                sessionId,
+                buddyId,
                 missionLadderId,
                 missionTreeId,
                 missionId);
-
-        return stripForSafety(new UserBean(buddy));
     }
 
     @ApiMethod(name = "reportMissionComplete")
@@ -355,66 +173,6 @@ public class PeerToPeerOxygenEndPoint {
             @Named("missionId") Long missionId)
             throws UnauthorizedException, IOException {
 
-        // Load relevant data.
-        OxygenUser buddy = loadUserBySessionId(sessionId);
-        OxygenUser student = loadUserById(studentId);
-        Ref<Mission> missionRef = Ref.create(Key.create(Mission.class, missionId));
-//        Mission mission = ofy().load().type(Mission.class).id(missionId).now();
-
-        // TODO: Check if the buddy is allowed to teach the mission.
-
-        // Update student
-        if (student.getMissionCompletions().containsKey(missionId)) {
-            MissionCompletion completion = student.getMissionCompletions().get(missionId);
-            completion.setStudyCount(completion.getStudyCount() + 1);
-        } else {
-            long completionId = factory().allocateId(MissionCompletion.class).getId();
-            MissionCompletion completion =
-                    new MissionCompletion(completionId, missionRef, 1, 0);
-            student.getMissionCompletions().put(missionId, completion);
-        }
-        ofy().save().entity(student).now();
-
-        // Update buddy.
-        if (buddy.getMissionCompletions().containsKey(missionId)) {
-            MissionCompletion completion = buddy.getMissionCompletions().get(missionId);
-            completion.setMentorCount(completion.getMentorCount() + 1);
-        } else {
-            if (buddy.isAdmin()) {
-                long completionId = factory().allocateId(MissionCompletion.class).getId();
-                MissionCompletion completion =
-                        new MissionCompletion(completionId, missionRef, 0, 1);
-                buddy.getMissionCompletions().put(missionId, completion);
-            } else {
-                // This is an error case because a mission has to be studied at least once before being
-                // allowed to teach.
-                // TODO: throw exception
-            }
-        }
-        ofy().save().entity(buddy).now();
-
-        // Save audit log
-        MentoringAuditLog audit = new MentoringAuditLog(
-                Ref.create(Key.create(OxygenUser.class, studentId)),
-                Ref.create(Key.create(OxygenUser.class, buddy.getId())),
-                null,
-                missionRef,
-                true,
-                System.currentTimeMillis());
-        ofy().save().entity(audit).now();
-
-        // Send a Firebase message to the student to confirm completion.
-        FirebaseUtil.sendMissionCompletionToStudent(
-                student.getFirebaseToken(),
-                new UserBean(buddy),
-                missionId);
-    }
-
-    /**
-     * Clears any data that could be a security issue.
-     */
-    private static UserBean stripForSafety(UserBean userBean) {
-        userBean.setSessionId(null);
-        return userBean;
+        ReportMissionCompleteAction.reportMissionComplete(sessionId, studentId, missionId);
     }
 }
