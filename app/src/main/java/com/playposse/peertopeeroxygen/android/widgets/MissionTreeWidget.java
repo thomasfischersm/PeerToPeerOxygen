@@ -16,6 +16,7 @@ import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataService;
@@ -144,13 +145,22 @@ public class MissionTreeWidget extends View {
         if ((rows.size() > row) && (rows.get(row).size() > column)) {
             MissionPlaceHolder holder = rows.get(row).get(column);
             if (holder.getMissionBean() != null) {
-                Long missionId = holder.getMissionBean().getId();
-                Intent intent = new Intent(getContext(), StudentMissionActivity.class);
-                intent.putExtra(ExtraConstants.EXTRA_MISSION_LADDER_ID, missionLadderId);
-                intent.putExtra(ExtraConstants.EXTRA_MISSION_TREE_ID, missionTreeId);
-                intent.putExtra(ExtraConstants.EXTRA_MISSION_ID, missionId);
-                getContext().startActivity(intent);
-                return true;
+                if (MissionAvailabilityChecker.determineAvailability(holder, dataServiceBinder)
+                        == MissionAvailabilityChecker.MissionAvailability.LOCKED) {
+                    String lockReasonMessage =
+                            MissionAvailabilityChecker.getLockReasonMessage(getContext(), holder);
+                    Toast toast = Toast.makeText(getContext(), lockReasonMessage, Toast.LENGTH_LONG);
+                    toast.show();
+                    return true;
+                } else {
+                    Long missionId = holder.getMissionBean().getId();
+                    Intent intent = new Intent(getContext(), StudentMissionActivity.class);
+                    intent.putExtra(ExtraConstants.EXTRA_MISSION_LADDER_ID, missionLadderId);
+                    intent.putExtra(ExtraConstants.EXTRA_MISSION_TREE_ID, missionTreeId);
+                    intent.putExtra(ExtraConstants.EXTRA_MISSION_ID, missionId);
+                    getContext().startActivity(intent);
+                    return true;
+                }
             }
 
             // TODO: Show mission boss.

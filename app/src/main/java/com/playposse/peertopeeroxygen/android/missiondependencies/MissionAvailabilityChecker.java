@@ -1,5 +1,8 @@
 package com.playposse.peertopeeroxygen.android.missiondependencies;
 
+import android.content.Context;
+
+import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
 
@@ -55,5 +58,12 @@ public class MissionAvailabilityChecker {
     public static LockReason determineLockReason() {
         // TODO:
         return null;
+    }
+
+    /**
+     * Returns a user friendly message to explain why the mission is locked.
+     */
+    public static String getLockReasonMessage(Context context, MissionPlaceHolder holder) {
+        return context.getString(R.string.prerequisites_mission_lock_reason);
     }
 }

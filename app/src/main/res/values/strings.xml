@@ -56,6 +56,9 @@
     <string name="refresh_menu_title">Refresh</string>
     <string name="student_profile_link">View profile</string>
 
+    <!-- Explanations why missions are locked -->
+    <string name="prerequisites_mission_lock_reason">You have to complete prerequisite missions.</string>
+
     <!-- Toasts -->
     <string name="mission_completion_toast">Congratulation on completing "%1$s"! %2$s graduated you.</string>
 
