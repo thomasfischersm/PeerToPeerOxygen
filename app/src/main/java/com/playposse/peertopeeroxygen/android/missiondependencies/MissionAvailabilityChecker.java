@@ -34,6 +34,11 @@ public class MissionAvailabilityChecker {
             MissionPlaceHolder holder,
             DataService.LocalBinder dataServiceBinder) {
 
+        if (dataServiceBinder.getUserBean().getAdmin() == true) {
+            // Admin can access everything.
+            return MissionAvailability.TEACHABLE;
+        }
+
         // TODO: Handle completion of mission boss. (The holder could be a MissionTree.)
         if (holder.getMissionBean() != null) {
             MissionCompletionBean missionCompletion =
