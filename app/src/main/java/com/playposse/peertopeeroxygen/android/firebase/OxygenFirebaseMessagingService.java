@@ -17,6 +17,7 @@ import com.playposse.peertopeeroxygen.android.student.StudentBuddyMissionActivit
 import com.playposse.peertopeeroxygen.android.student.StudentMissionTreeActivity;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
 
 import java.util.Map;
 
@@ -106,12 +107,18 @@ public class OxygenFirebaseMessagingService
         MissionCompletionMessage completionMessage =
                 new MissionCompletionMessage(remoteMessage);
         UserBeanParcelable buddyBean = completionMessage.getBuddyBean();
+        Long missionId = completionMessage.getMissionId();
         Long[] ids = dataServiceConnection
                 .getLocalBinder()
-                .getMissionPath(completionMessage.getMissionId());
+                .getMissionPath(missionId);
         MissionBean missionBean = dataServiceConnection
                 .getLocalBinder()
                 .getMissionBean(ids[0], ids[1], ids[2]);
+
+        // Update local mission completion count.
+        MissionCompletionBean missionCompletion =
+                dataServiceConnection.getLocalBinder().getMissionCompletion(missionId);
+        missionCompletion.setStudyCount(missionCompletion.getStudyCount() + 1);
 
         // Send a toast.
         final Context context = getApplicationContext();
@@ -128,14 +135,14 @@ public class OxygenFirebaseMessagingService
         });
 
         // Re-direct user back to the tree activity.
-        Intent completionIntent = ExtraConstants.createIntent(
+        Intent intent = ExtraConstants.createIntent(
                 context,
                 StudentMissionTreeActivity.class,
                 ids[0], /* missionLadderId */
                 ids[1], /* missionTreeId */
                 null); /* missionId */
-        completionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(completionIntent);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     /**

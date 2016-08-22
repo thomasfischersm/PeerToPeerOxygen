@@ -40,7 +40,10 @@ public class StudentMissionTreeActivity extends StudentParentActivity {
                 missionTreeBean = dataServiceConnection
                         .getLocalBinder()
                         .getMissionTreeBean(missionLadderId, missionTreeId);
-                missionTreeWidget.setMissionTreeBean(missionLadderId, missionTreeBean);
+                missionTreeWidget.setMissionTreeBean(
+                        missionLadderId,
+                        missionTreeBean,
+                        dataServiceConnection.getLocalBinder());
                 setTitle("" + missionTreeBean.getName());
             }
         });
