@@ -1,7 +1,9 @@
 package com.playposse.peertopeeroxygen.android.data;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.playposse.peertopeeroxygen.android.data.facebook.FacebookProfilePhotoCache;
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.JsonMap;
@@ -22,6 +24,17 @@ public class DataRepository {
     private static final String LOG_CAT = DataRepository.class.getSimpleName();
 
     private CompleteMissionDataBean completeMissionDataBean;
+    private FacebookProfilePhotoCache facebookProfilePhotoCache;
+
+    public void onStart(Context context) {
+        facebookProfilePhotoCache = new FacebookProfilePhotoCache();
+        facebookProfilePhotoCache.onStart(context);
+    }
+
+    public void onStop(Context context) {
+        facebookProfilePhotoCache.onStop(context);
+        facebookProfilePhotoCache = null;
+    }
 
     public CompleteMissionDataBean getCompleteMissionDataBean() {
         return completeMissionDataBean;
@@ -31,6 +44,9 @@ public class DataRepository {
         this.completeMissionDataBean = completeMissionDataBean;
     }
 
+    public FacebookProfilePhotoCache getFacebookProfilePhotoCache() {
+        return facebookProfilePhotoCache;
+    }
 
     public UserBean getUserBean() {
         if (completeMissionDataBean != null) {

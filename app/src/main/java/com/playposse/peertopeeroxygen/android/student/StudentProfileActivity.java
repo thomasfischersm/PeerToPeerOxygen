@@ -1,7 +1,6 @@
 package com.playposse.peertopeeroxygen.android.student;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -13,10 +12,8 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
+import com.playposse.peertopeeroxygen.android.data.facebook.FacebookProfilePhotoCache;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
-
-import java.io.IOException;
-import java.net.URL;
 
 /**
  * An activity that shows the profile information of the student.
@@ -46,14 +43,21 @@ public class StudentProfileActivity extends StudentParentActivity {
 
     @Override
     public void receiveData(final DataRepository dataRepository) {
+        final UserBean userBean = dataRepository.getUserBean();
+        FacebookProfilePhotoCache photoCache = dataServiceConnection
+                .getLocalBinder()
+                .getDataRepository()
+                .getFacebookProfilePhotoCache();
+        photoCache.loadImage(
+                this,
+                profilePhotoImageView,
+                userBean.getFbProfileId(),
+                userBean.getProfilePictureUrl());
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    final UserBean userBean = dataRepository.getUserBean();
-                    URL photoUrl = new URL(userBean.getProfilePictureUrl());
-                    final Bitmap photoBitmap =
-                            BitmapFactory.decodeStream(photoUrl.openConnection().getInputStream());
                     final Bitmap qrCodeBitMap = generateQrCode(
                             userBean.getId().toString(),
                             qrCodeImageView.getWidth(),
@@ -62,7 +66,6 @@ public class StudentProfileActivity extends StudentParentActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            profilePhotoImageView.setImageBitmap(photoBitmap);
                             String fullName =
                                     userBean.getFirstName() + " " + userBean.getLastName();
                             profileNameTextView.setText(fullName);
@@ -71,8 +74,6 @@ public class StudentProfileActivity extends StudentParentActivity {
                             qrCodeImageView.invalidate();
                         }
                     });
-                } catch (IOException ex) {
-                    Log.e(LOG_CAT, "Failed to download profile photo from Facebook.", ex);
                 } catch (WriterException ex) {
                     Log.e(LOG_CAT, "Failed to render QR code.", ex);
                 }

@@ -46,11 +46,17 @@ public class DataService extends Service {
     private static PeerToPeerOxygenApi peerToPeerOxygenApi;
 
     private final List<DataReceivedCallback> dataReceivedCallbacks = new ArrayList<>();
-    private final DataRepository dataRepository = new DataRepository();
+
+    private DataRepository dataRepository;
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        if (dataRepository == null) {
+            dataRepository = new DataRepository();
+            dataRepository.onStart(getApplicationContext());
+        }
+
         return new LocalBinder();
     }
 
@@ -62,6 +68,13 @@ public class DataService extends Service {
                 .setApplicationName("PeerToPeerOxygen")
                 .setRootUrl("https://peertopeeroxygen.appspot.com/_ah/api/")
                 .build();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        dataRepository.onStop(getApplicationContext());
     }
 
     private void showNetworkErrorToast() {

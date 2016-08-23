@@ -1,11 +1,7 @@
 package com.playposse.peertopeeroxygen.android.admin;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -16,14 +12,12 @@ import android.widget.TextView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.clientaction.GetStudentRosterAction;
+import com.playposse.peertopeeroxygen.android.data.facebook.FacebookProfilePhotoCache;
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -103,10 +97,15 @@ public class AdminStudentRosterActivity
             });
 
             // Schedule profile photo for loading in a separate thread.
-            new LoadProfilePhotoAsyncTask(
+            FacebookProfilePhotoCache photoCache = dataServiceConnection
+                    .getLocalBinder()
+                    .getDataRepository()
+                    .getFacebookProfilePhotoCache();
+            photoCache.loadImage(
+                    getContext(),
                     viewHolder.profilePhotoImageView,
-                    student.getProfilePictureUrl())
-                    .execute();
+                    student.getFbProfileId(),
+                    student.getProfilePictureUrl());
 
             return convertView;
         }
@@ -126,37 +125,6 @@ public class AdminStudentRosterActivity
                 teachPointsTextView = (TextView) view.findViewById(R.id.teachPointsTextView);
                 practicePointsTextView = (TextView) view.findViewById(R.id.practicePointsTextView);
                 heartPointsTextView = (TextView) view.findViewById(R.id.heartPointsTextView);
-            }
-        }
-
-        private class LoadProfilePhotoAsyncTask extends AsyncTask<Void, Void, Bitmap> {
-
-            private final ImageView imageView;
-            private final String photoUrlString;
-
-            public LoadProfilePhotoAsyncTask(ImageView imageView, String photoUrlString) {
-                this.imageView = imageView;
-                this.photoUrlString = photoUrlString;
-            }
-
-            @Override
-            protected Bitmap doInBackground(Void... voids) {
-                final Bitmap photoBitmap;
-                try {
-                    URL photoUrl = new URL(photoUrlString);
-                    InputStream inputStream = photoUrl.openConnection().getInputStream();
-                    photoBitmap = BitmapFactory.decodeStream(inputStream);
-                    inputStream.close();
-                    return photoBitmap;
-                } catch (IOException ex) {
-                    Log.e(LOG_CAT, "Failed to load student profile photo." + ex);
-                    return null;
-                }
-            }
-
-            @Override
-            protected void onPostExecute(Bitmap photoBitmap) {
-                imageView.setImageBitmap(photoBitmap);
             }
         }
     }
