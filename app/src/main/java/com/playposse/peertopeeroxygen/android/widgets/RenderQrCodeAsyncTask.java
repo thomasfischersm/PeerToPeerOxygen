@@ -1,0 +1,71 @@
+package com.playposse.peertopeeroxygen.android.widgets;
+
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.ImageView;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+
+/**
+ * {@link AsyncTask} that renders a QR code into a {@link Bitmap} and then stores it in the
+ * provided {@link ImageView}.
+ */
+public class RenderQrCodeAsyncTask extends AsyncTask<Void, Void, Bitmap> {
+
+    private static final String LOG_CAT = RenderQrCodeAsyncTask.class.getSimpleName();
+
+    private static final int WHITE = 0xFFFFFFFF;
+    private static final int BLACK = 0xFF000000;
+
+    private final Long userId;
+    private final ImageView imageView;
+    private final int width;
+    private final int height;
+
+    public RenderQrCodeAsyncTask(Long userId, ImageView imageView) {
+        this.userId = userId;
+        this.imageView = imageView;
+
+        width = imageView.getWidth();
+        height = imageView.getHeight();
+    }
+
+    @Override
+    protected Bitmap doInBackground(Void... voids) {
+        try {
+            return generateQrCode(userId.toString(), width, height);
+        } catch (WriterException ex) {
+            Log.e(LOG_CAT, "Failed to render QR code.", ex);
+            return null;
+        }
+    }
+
+    @Override
+    protected void onPostExecute(Bitmap bitmap) {
+        imageView.setImageBitmap(bitmap);
+    }
+
+    private Bitmap generateQrCode(String str, int width, int height) throws WriterException {
+        // Generate QR code.
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix = qrCodeWriter.encode(str, BarcodeFormat.QR_CODE, width, height);
+
+        // Copy QR code into int array.
+        int[] pixels = new int[width * height];
+        for (int y = 0; y < height; y++) {
+            int offset = y * width;
+            for (int x = 0; x < width; x++) {
+                pixels[offset + x] = bitMatrix.get(x, y) ? BLACK : WHITE;
+            }
+        }
+
+        // Copy int array into Bitmap.
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+        return bitmap;
+    }
+}
