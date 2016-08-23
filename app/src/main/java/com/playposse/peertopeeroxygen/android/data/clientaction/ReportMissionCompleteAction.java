@@ -20,7 +20,7 @@ public class ReportMissionCompleteAction extends ClientAction {
 
     public void reportMissionComplete(final Long studentId, final Long missionId) {
         // Increment local data to avoid getting fresh data from the server.
-        MissionCompletionBean completionBean = getBinder().getMissionCompletion(missionId);
+        MissionCompletionBean completionBean = getDataRepository().getMissionCompletion(missionId);
         completionBean.setStudyCount(completionBean.getStudyCount() + 1);
 
         new Thread(new Runnable() {

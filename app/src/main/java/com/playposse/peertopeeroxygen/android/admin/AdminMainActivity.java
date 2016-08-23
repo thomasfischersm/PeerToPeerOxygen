@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
-import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
+import com.playposse.peertopeeroxygen.android.data.DataRepository;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -55,7 +55,7 @@ public class AdminMainActivity extends AdminParentActivity {
     }
 
     @Override
-    public void receiveData(CompleteMissionDataBean completeMissionDataBean) {
+    public void receiveData(DataRepository dataRepository) {
         // Nothing to do. Yet, calling the service ensures that the data is already there for other
         // activities.
     }

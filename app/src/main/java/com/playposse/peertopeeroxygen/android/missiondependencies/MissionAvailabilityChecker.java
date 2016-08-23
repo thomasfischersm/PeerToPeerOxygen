@@ -3,7 +3,7 @@ package com.playposse.peertopeeroxygen.android.missiondependencies;
 import android.content.Context;
 
 import com.playposse.peertopeeroxygen.android.R;
-import com.playposse.peertopeeroxygen.android.data.DataService;
+import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
 
 /**
@@ -32,9 +32,9 @@ public class MissionAvailabilityChecker {
 
     public static MissionAvailability determineAvailability(
             MissionPlaceHolder holder,
-            DataService.LocalBinder dataServiceBinder) {
+            DataRepository dataRepository) {
 
-        if (dataServiceBinder.getUserBean().getAdmin() == true) {
+        if (dataRepository.getUserBean().getAdmin() == true) {
             // Admin can access everything.
             return MissionAvailability.TEACHABLE;
         }
@@ -42,7 +42,7 @@ public class MissionAvailabilityChecker {
         // TODO: Handle completion of mission boss. (The holder could be a MissionTree.)
         if (holder.getMissionBean() != null) {
             MissionCompletionBean missionCompletion =
-                    dataServiceBinder.getMissionCompletion(holder.getMissionBean().getId());
+                    dataRepository.getMissionCompletion(holder.getMissionBean().getId());
 
             if (missionCompletion.getStudyCount() > 0) {
                 return MissionAvailability.COMPLETED;
@@ -51,7 +51,7 @@ public class MissionAvailabilityChecker {
 
         for (MissionPlaceHolder child : holder.getChildren()) {
             MissionCompletionBean childCompletion =
-                    dataServiceBinder.getMissionCompletion(child.getMissionBean().getId());
+                    dataRepository.getMissionCompletion(child.getMissionBean().getId());
             if (childCompletion.getStudyCount() == 0) {
                 return MissionAvailability.LOCKED;
             }

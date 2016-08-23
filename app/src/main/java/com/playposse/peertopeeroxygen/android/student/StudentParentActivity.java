@@ -9,9 +9,9 @@ import android.view.MenuItem;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.admin.AdminMainActivity;
+import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceParentActivity;
-import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
 /**
@@ -32,8 +32,9 @@ public abstract class StudentParentActivity extends DataServiceParentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         if ((dataServiceConnection != null)
                 && (dataServiceConnection.getLocalBinder() != null)
-                && (dataServiceConnection.getLocalBinder().getUserBean() != null)) {
-            UserBean userBean = dataServiceConnection.getLocalBinder().getUserBean();
+                && (dataServiceConnection.getLocalBinder().getDataRepository().getUserBean() != null)) {
+            UserBean userBean =
+                    dataServiceConnection.getLocalBinder().getDataRepository().getUserBean();
             if (userBean.getAdmin()) {
                 getMenuInflater().inflate(R.menu.student_menu, menu);
                 return true;
@@ -45,7 +46,7 @@ public abstract class StudentParentActivity extends DataServiceParentActivity {
             dataServiceConnection.getLocalBinder().registerDataReceivedCallback(
                     new DataService.DataReceivedCallback() {
                         @Override
-                        public void receiveData(CompleteMissionDataBean completeMissionDataBean) {
+                        public void receiveData(DataRepository dataRepository) {
                             invalidateOptionsMenu();
                             dataServiceConnection
                                     .getLocalBinder()

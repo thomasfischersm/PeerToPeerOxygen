@@ -26,9 +26,9 @@ public class DeleteMissionLadderAction extends ClientAction {
                             .deleteMissionLadder(getBinder().getSessionId(), missionLadderId)
                             .execute();
                     MissionLadderBean missionLadderBean =
-                            getBinder().getMissionLadderBean(missionLadderId);
+                            getDataRepository().getMissionLadderBean(missionLadderId);
                     getBinder()
-                            .getCompleteMissionDataBean()
+                            .getDataRepository()
                             .getMissionLadderBeans()
                             .remove(missionLadderBean);
 

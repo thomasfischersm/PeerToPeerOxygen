@@ -9,13 +9,13 @@ import android.widget.Toast;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
 import com.playposse.peertopeeroxygen.android.student.StudentBuddyMissionActivity;
 import com.playposse.peertopeeroxygen.android.student.StudentMissionTreeActivity;
-import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
 
@@ -61,7 +61,7 @@ public class OxygenFirebaseMessagingService
     }
 
     @Override
-    public void receiveData(CompleteMissionDataBean completeMissionDataBean) {
+    public void receiveData(DataRepository dataRepository) {
         // Nothing to do.
     }
 
@@ -110,14 +110,18 @@ public class OxygenFirebaseMessagingService
         Long missionId = completionMessage.getMissionId();
         Long[] ids = dataServiceConnection
                 .getLocalBinder()
+                .getDataRepository()
                 .getMissionPath(missionId);
         MissionBean missionBean = dataServiceConnection
                 .getLocalBinder()
+                .getDataRepository()
                 .getMissionBean(ids[0], ids[1], ids[2]);
 
         // Update local mission completion count.
-        MissionCompletionBean missionCompletion =
-                dataServiceConnection.getLocalBinder().getMissionCompletion(missionId);
+        MissionCompletionBean missionCompletion = dataServiceConnection
+                .getLocalBinder()
+                .getDataRepository()
+                .getMissionCompletion(missionId);
         missionCompletion.setStudyCount(missionCompletion.getStudyCount() + 1);
 
         // Send a toast.

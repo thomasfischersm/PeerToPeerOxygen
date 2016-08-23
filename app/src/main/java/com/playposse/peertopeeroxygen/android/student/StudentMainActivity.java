@@ -12,8 +12,8 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
-import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 
 import java.util.List;
@@ -48,12 +48,12 @@ public class StudentMainActivity extends StudentParentActivity {
     }
 
     @Override
-    public void receiveData(final CompleteMissionDataBean completeMissionDataBean) {
+    public void receiveData(final DataRepository dataRepository) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 List<MissionLadderBean> missionLadderBeans =
-                        completeMissionDataBean.getMissionLadderBeans();
+                        dataRepository.getMissionLadderBeans();
                 studentHomeGridView.setAdapter(
                         new MissionLadderBeansArrayAdapter(missionLadderBeans));
             }

@@ -19,7 +19,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.playposse.peertopeeroxygen.android.R;
-import com.playposse.peertopeeroxygen.android.data.DataService;
+import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.missiondependencies.MissionAvailabilityChecker;
 import com.playposse.peertopeeroxygen.android.missiondependencies.MissionPlaceHolder;
 import com.playposse.peertopeeroxygen.android.missiondependencies.MissionTreeUntangler;
@@ -50,7 +50,7 @@ public class MissionTreeWidget extends View {
     private TextPaint unlockedPaint;
     private TextPaint completedPaint;
 
-    private DataService.LocalBinder dataServiceBinder;
+    private DataRepository dataRepository;
     private Long missionLadderId;
     private Long missionTreeId;
     private MissionTreeBean missionTreeBean;
@@ -76,12 +76,12 @@ public class MissionTreeWidget extends View {
     public void setMissionTreeBean(
             Long missionLadderId,
             final MissionTreeBean missionTreeBean,
-            DataService.LocalBinder dataServiceBinder) {
+            DataRepository dataRepository) {
 
         this.missionLadderId = missionLadderId;
         this.missionTreeId = missionTreeBean.getId();
         this.missionTreeBean = missionTreeBean;
-        this.dataServiceBinder = dataServiceBinder;
+        this.dataRepository = dataRepository;
 
         post(new Runnable() {
             @Override
@@ -145,7 +145,7 @@ public class MissionTreeWidget extends View {
         if ((rows.size() > row) && (rows.get(row).size() > column)) {
             MissionPlaceHolder holder = rows.get(row).get(column);
             if (holder.getMissionBean() != null) {
-                if (MissionAvailabilityChecker.determineAvailability(holder, dataServiceBinder)
+                if (MissionAvailabilityChecker.determineAvailability(holder, dataRepository)
                         == MissionAvailabilityChecker.MissionAvailability.LOCKED) {
                     String lockReasonMessage =
                             MissionAvailabilityChecker.getLockReasonMessage(getContext(), holder);
@@ -305,7 +305,7 @@ public class MissionTreeWidget extends View {
          */
         private TextPaint determineBoxPaint(MissionPlaceHolder holder) {
             MissionAvailabilityChecker.MissionAvailability availability =
-                    MissionAvailabilityChecker.determineAvailability(holder, dataServiceBinder);
+                    MissionAvailabilityChecker.determineAvailability(holder, dataRepository);
             switch (availability) {
                 case LOCKED:
                     return lockedPaint;

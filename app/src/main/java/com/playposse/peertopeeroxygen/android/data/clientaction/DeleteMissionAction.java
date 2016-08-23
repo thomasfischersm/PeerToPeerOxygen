@@ -27,9 +27,9 @@ public class DeleteMissionAction extends ClientAction {
             public void run() {
                 try {
                     MissionTreeBean missionTreeBean =
-                            getBinder().getMissionTreeBean(missionLadderId, missionTreeId);
+                            getDataRepository().getMissionTreeBean(missionLadderId, missionTreeId);
                     MissionBean missionBean =
-                            getBinder().getMissionBean(missionLadderId, missionTreeId, missionId);
+                            getDataRepository().getMissionBean(missionLadderId, missionTreeId, missionId);
                     missionTreeBean.getMissionBeans().remove(missionBean);
 
                     getBinder().getApi()

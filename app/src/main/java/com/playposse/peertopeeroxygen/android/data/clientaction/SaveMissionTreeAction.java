@@ -38,7 +38,7 @@ public class SaveMissionTreeAction extends ClientAction {
                     // Update local data to avoid reloading data from the server.
                     if (create) {
                         MissionLadderBean missionLadderBean =
-                                getBinder().getMissionLadderBean(missionLadderId);
+                                getDataRepository().getMissionLadderBean(missionLadderId);
                         missionTreeBean.setMissionBeans(new ArrayList<MissionBean>());
                         missionLadderBean.getMissionTreeBeans().add(missionTreeBean);
                     }

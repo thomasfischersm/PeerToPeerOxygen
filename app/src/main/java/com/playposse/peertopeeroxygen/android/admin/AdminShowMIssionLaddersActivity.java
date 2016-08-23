@@ -11,9 +11,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.widgets.ConfirmationDialogBuilder;
-import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 
 import java.util.ArrayList;
@@ -46,12 +46,12 @@ public class AdminShowMissionLaddersActivity extends AdminParentActivity {
     }
 
     @Override
-    public void receiveData(final CompleteMissionDataBean completeMissionDataBean) {
+    public void receiveData(final DataRepository dataRepository) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 MissionLadderBeanArrayAdapter adapter = new MissionLadderBeanArrayAdapter(
-                        new ArrayList<>(completeMissionDataBean.getMissionLadderBeans()));
+                        new ArrayList<>(dataRepository.getMissionLadderBeans()));
                 missionLaddersListView.setAdapter(adapter);
                 missionLaddersListView.refreshDrawableState();
             }

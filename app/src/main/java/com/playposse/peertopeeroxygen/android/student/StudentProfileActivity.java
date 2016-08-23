@@ -12,7 +12,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.playposse.peertopeeroxygen.android.R;
-import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
+import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
 import java.io.IOException;
@@ -45,12 +45,12 @@ public class StudentProfileActivity extends StudentParentActivity {
     }
 
     @Override
-    public void receiveData(final CompleteMissionDataBean completeMissionDataBean) {
+    public void receiveData(final DataRepository dataRepository) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    final UserBean userBean = completeMissionDataBean.getUserBean();
+                    final UserBean userBean = dataRepository.getUserBean();
                     URL photoUrl = new URL(userBean.getProfilePictureUrl());
                     final Bitmap photoBitmap =
                             BitmapFactory.decodeStream(photoUrl.openConnection().getInputStream());

@@ -11,9 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
-import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 
 import java.io.IOException;
@@ -82,7 +82,7 @@ public class StudentBuddyMissionActivity extends StudentParentActivity {
     }
 
     @Override
-    public void receiveData(CompleteMissionDataBean completeMissionDataBean) {
+    public void receiveData(final DataRepository dataRepository) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -95,7 +95,7 @@ public class StudentBuddyMissionActivity extends StudentParentActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            missionBean = dataServiceConnection.getLocalBinder()
+                            missionBean = dataRepository
                                     .getMissionBean(missionLadderId, missionTreeId, missionId);
 
                             missionNameTextView.setText(missionBean.getName());

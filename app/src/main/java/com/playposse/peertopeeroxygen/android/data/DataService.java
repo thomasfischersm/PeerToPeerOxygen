@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -17,6 +16,7 @@ import com.playposse.peertopeeroxygen.android.data.clientaction.DeleteMissionAct
 import com.playposse.peertopeeroxygen.android.data.clientaction.DeleteMissionLadderAction;
 import com.playposse.peertopeeroxygen.android.data.clientaction.DeleteMissionTreeAction;
 import com.playposse.peertopeeroxygen.android.data.clientaction.InviteBuddyToMissionAction;
+import com.playposse.peertopeeroxygen.android.data.clientaction.MissionDataRetrieverAction;
 import com.playposse.peertopeeroxygen.android.data.clientaction.RegisterOrLoginAction;
 import com.playposse.peertopeeroxygen.android.data.clientaction.ReportMissionCompleteAction;
 import com.playposse.peertopeeroxygen.android.data.clientaction.SaveMissionAction;
@@ -24,14 +24,10 @@ import com.playposse.peertopeeroxygen.android.data.clientaction.SaveMissionLadde
 import com.playposse.peertopeeroxygen.android.data.clientaction.SaveMissionTreeAction;
 import com.playposse.peertopeeroxygen.android.student.StudentLoginActivity;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxygenApi;
-import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
-import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
-import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,8 +45,7 @@ public class DataService extends Service {
     private static PeerToPeerOxygenApi peerToPeerOxygenApi;
 
     private final List<DataReceivedCallback> dataReceivedCallbacks = new ArrayList<>();
-
-    private CompleteMissionDataBean completeMissionDataBean;
+    private final DataRepository dataRepository = new DataRepository();
 
     @Nullable
     @Override
@@ -75,113 +70,12 @@ public class DataService extends Service {
 
     private void makeDataReceivedCallbacks() {
         for (DataReceivedCallback callback : dataReceivedCallbacks) {
-            callback.receiveData(completeMissionDataBean);
+            callback.receiveData(dataRepository);
         }
     }
 
     private Long getSessionId() {
         return OxygenSharedPreferences.getSessionId(getApplicationContext());
-    }
-
-    private void debugDump() {
-        Log.i(LOG_CAT, "Dumping user info");
-        if (completeMissionDataBean.getUserBean() == null) {
-            Log.i(LOG_CAT, "User bean is null");
-        } else {
-            Log.i(LOG_CAT, "User is " + completeMissionDataBean.getUserBean().getName());
-        }
-
-        Log.i(LOG_CAT, "Dumping complete mission data bean:");
-        if (completeMissionDataBean.getMissionLadderBeans() != null) {
-            for (MissionLadderBean missionLadderBean : completeMissionDataBean.getMissionLadderBeans()) {
-                Log.i(LOG_CAT, "- ladder (id: " + missionLadderBean.getId()
-                        + ", name: " + missionLadderBean.getName()
-                        + ", description: " + missionLadderBean.getDescription());
-                if (missionLadderBean.getMissionTreeBeans() == null) {
-                    Log.i(LOG_CAT, "-- mission tree: null");
-                } else {
-                    if (missionLadderBean.getMissionTreeBeans() != null) {
-                        for (MissionTreeBean missionTreeBean : missionLadderBean.getMissionTreeBeans()) {
-                            Log.i(LOG_CAT, "-- mission tree (id: " + missionTreeBean.getId()
-                                    + ", name: " + missionTreeBean.getName()
-                                    + ", description: " + missionTreeBean.getDescription());
-                            if (missionTreeBean.getMissionBeans() == null) {
-                                Log.i(LOG_CAT, "--- mission: null");
-                            } else {
-                                if (missionTreeBean.getMissionBeans() != null) {
-                                    for (MissionBean missionBean : missionTreeBean.getMissionBeans()) {
-                                        Log.i(LOG_CAT, "--- mission: (id: " + missionBean.getId()
-                                                + ", name: " + missionBean.getName()
-                                                + ", student instruction: " + missionBean.getStudentInstruction()
-                                                + ", buddy instruction: " + missionBean.getBuddyInstruction());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * A {@link Runnable} that retrieves the mission data from the cloud.
-     */
-    private class MissionDataRetrieverRunnable implements Runnable {
-
-        @Override
-        public void run() {
-            createApiIfNeeded();
-
-            try {
-                Long sessionId = OxygenSharedPreferences.getSessionId(getApplicationContext());
-                if (sessionId == -1) {
-                    redirectToLoginActivity();
-                }
-                completeMissionDataBean = peerToPeerOxygenApi.getMissionData(sessionId).execute();
-
-                Log.i(LOG_CAT, "BEFORE FIX");
-                debugDump();
-
-                fixNullLists();
-
-                Log.i(LOG_CAT, "AFTER FIX");
-                debugDump();
-
-                makeDataReceivedCallbacks();
-                Log.i(LOG_CAT, "The data has been loaded.");
-//                String msg = "Data has been loaded";
-//                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                redirectToLoginActivity();
-            }
-        }
-
-        /**
-         * Replaces null lists with an empty list.
-         *
-         * <p>Somehow, empty lists turn into null during transport. (JSON probably doesn't
-         * differentiate.) To make things easier, all null lists are initialized with an empty list.
-         */
-        private void fixNullLists() {
-            if (completeMissionDataBean.getMissionLadderBeans() == null) {
-                completeMissionDataBean.setMissionLadderBeans(
-                        new ArrayList<MissionLadderBean>());
-            }
-
-            for (MissionLadderBean missionLadderBean : completeMissionDataBean.getMissionLadderBeans()) {
-                if (missionLadderBean.getMissionTreeBeans() == null) {
-                    missionLadderBean.setMissionTreeBeans(new ArrayList<MissionTreeBean>());
-                }
-
-                for (MissionTreeBean missionTreeBean : missionLadderBean.getMissionTreeBeans()) {
-                    if (missionTreeBean.getMissionBeans() == null) {
-                        missionTreeBean.setMissionBeans(new ArrayList<MissionBean>());
-                    }
-                }
-            }
-        }
     }
 
     public void redirectToLoginActivity() {
@@ -206,8 +100,8 @@ public class DataService extends Service {
         public void registerDataReceivedCallback(DataReceivedCallback callback) {
             dataReceivedCallbacks.add(callback);
 
-            if (completeMissionDataBean != null) {
-                callback.receiveData(completeMissionDataBean);
+            if ((dataRepository != null) && (dataRepository.getCompleteMissionDataBean() != null)) {
+                callback.receiveData(dataRepository);
             }
         }
 
@@ -223,7 +117,9 @@ public class DataService extends Service {
         }
 
         public void init() {
-            new Thread(new MissionDataRetrieverRunnable()).start();
+            if ((dataRepository == null) || (dataRepository.getCompleteMissionDataBean() == null)) {
+                new MissionDataRetrieverAction(this).retrieveMissionData();
+            }
         }
 
         @Override
@@ -243,8 +139,8 @@ public class DataService extends Service {
         }
 
         @Override
-        public CompleteMissionDataBean getCompleteMissionDataBean() {
-            return completeMissionDataBean;
+        public DataRepository getDataRepository() {
+            return dataRepository;
         }
 
         @Override
@@ -262,48 +158,6 @@ public class DataService extends Service {
                 final SignInSuccessCallback signInSuccessCallback) {
 
             new RegisterOrLoginAction(this).registerOrLogin(accessToken, signInSuccessCallback);
-        }
-
-        public UserBean getUserBean() {
-            if (completeMissionDataBean != null) {
-                return completeMissionDataBean.getUserBean();
-            } else {
-                return null;
-            }
-        }
-
-        @Override
-        public MissionLadderBean getMissionLadderBean(Long id) {
-            for (MissionLadderBean missionLadderBean : completeMissionDataBean.getMissionLadderBeans()) {
-                if (missionLadderBean.getId().equals(id)) {
-                    return missionLadderBean;
-                }
-            }
-            return null;
-        }
-
-        @Override
-        public MissionTreeBean getMissionTreeBean(Long missionLadderId, Long missionTreeId) {
-            for (MissionTreeBean missionTreeBean : getMissionLadderBean(missionLadderId).getMissionTreeBeans()) {
-                if (missionTreeBean.getId().equals(missionTreeId)) {
-                    return missionTreeBean;
-                }
-            }
-            return null;
-        }
-
-        @Override
-        public MissionBean getMissionBean(
-                Long missionLadderId,
-                Long missionTreeId,
-                Long missionId) {
-
-            for (MissionBean missionBean : getMissionTreeBean(missionLadderId, missionTreeId).getMissionBeans()) {
-                if (missionBean.getId().equals(missionId)) {
-                    return missionBean;
-                }
-            }
-            return null;
         }
 
         public void save(final MissionLadderBean missionLadderBean) {
@@ -352,54 +206,13 @@ public class DataService extends Service {
             new ReportMissionCompleteAction(this).reportMissionComplete(studentId, missionId);
         }
 
-        @Override
-        public MissionCompletionBean getMissionCompletion(Long missionId) {
-            if (getUserBean().getMissionCompletionBeans() != null) {
-                for (MissionCompletionBean completionBean : getUserBean().getMissionCompletionBeans()) {
-                    if (completionBean.getMissionId().equals(missionId)) {
-                        return completionBean;
-                    }
-                }
-            } else {
-                getUserBean().setMissionCompletionBeans(new ArrayList<MissionCompletionBean>());
-            }
-
-            // Create a new one.
-            MissionCompletionBean completionBean = new MissionCompletionBean();
-            completionBean.setMissionId(missionId);
-            completionBean.setStudyCount(0);
-            completionBean.setMentorCount(0);
-            getUserBean().getMissionCompletionBeans().add(completionBean);
-            return completionBean;
-        }
-
-        /**
-         * Finds the mission ladder id and mission tree id.
-         *
-         * @return Long[] An array with the ids for the mission ladder, mission tree, and mission.
-         */
-        public Long[] getMissionPath(Long missionId) {
-            for (MissionLadderBean ladderBean : completeMissionDataBean.getMissionLadderBeans()) {
-                for (MissionTreeBean treeBean : ladderBean.getMissionTreeBeans()) {
-                    for (MissionBean missionBean : treeBean.getMissionBeans()) {
-                        if (missionId.equals(missionBean.getId())) {
-                            return new Long[]{ladderBean.getId(), treeBean.getId(), missionId};
-                        }
-                    }
-                }
-            }
-
-            Log.e(LOG_CAT, "Couldn't find mission " + missionId);
-            return null;
-        }
-
         public void reload() {
-            new Thread(new MissionDataRetrieverRunnable()).start();
+            new MissionDataRetrieverAction(this).retrieveMissionData();
         }
     }
 
     /**
-     * A callback interface for activities to implement. The {@link #receiveData(CompleteMissionDataBean)} method is
+     * A callback interface for activities to implement. The {@link #receiveData(DataRepository)} method is
      * called when the data is first loaded, when the data is refreshed, and when the callback is
      * first registered (if data is available).
      */
@@ -408,9 +221,9 @@ public class DataService extends Service {
         /**
          * Called when data is available. It's the job of this method to switch to the UI thread.
          *
-         * @param completeMissionDataBean
+         * @param dataRepository
          */
-        void receiveData(CompleteMissionDataBean completeMissionDataBean);
+        void receiveData(DataRepository dataRepository);
     }
 
     /**

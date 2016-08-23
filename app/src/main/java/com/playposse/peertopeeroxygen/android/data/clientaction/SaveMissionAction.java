@@ -39,7 +39,7 @@ public class SaveMissionAction extends ClientAction {
 
                     if (create) {
                         MissionTreeBean missionTreeBean =
-                                getBinder().getMissionTreeBean(missionLadderId, missionTreeId);
+                                getDataRepository().getMissionTreeBean(missionLadderId, missionTreeId);
                         missionTreeBean.getMissionBeans().add(missionBean);
                     }
 
