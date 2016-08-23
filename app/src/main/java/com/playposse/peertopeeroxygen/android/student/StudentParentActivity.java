@@ -19,6 +19,8 @@ import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean
  */
 public abstract class StudentParentActivity extends DataServiceParentActivity {
 
+    private boolean isWaitingToInvalidateOptionsMenu = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,23 +45,31 @@ public abstract class StudentParentActivity extends DataServiceParentActivity {
                 return true;
             }
         } else {
-            dataServiceConnection.getLocalBinder().registerDataReceivedCallback(
-                    new DataReceivedCallback() {
-                        @Override
-                        public void receiveData(DataRepository dataRepository) {
-                            invalidateOptionsMenu();
-                            dataServiceConnection
-                                    .getLocalBinder()
-                                    .unregisterDataReceivedCallback(this);
-                        }
-
-                        @Override
-                        public void runOnUiThread(Runnable runnable) {
-                            StudentParentActivity.this.runOnUiThread(runnable);
-                        }
-                    });
+            if (dataServiceConnection.getLocalBinder() != null) {
+                registerDataReceivedCallbackToInvalidateOptionsMenu();
+            } else {
+                isWaitingToInvalidateOptionsMenu = true;
+            }
             return true;
         }
+    }
+
+    private void registerDataReceivedCallbackToInvalidateOptionsMenu() {
+        dataServiceConnection.getLocalBinder().registerDataReceivedCallback(
+                new DataReceivedCallback() {
+                    @Override
+                    public void receiveData(DataRepository dataRepository) {
+                        invalidateOptionsMenu();
+                        dataServiceConnection
+                                .getLocalBinder()
+                                .unregisterDataReceivedCallback(this);
+                    }
+
+                    @Override
+                    public void runOnUiThread(Runnable runnable) {
+                        StudentParentActivity.this.runOnUiThread(runnable);
+                    }
+                });
     }
 
     @Override
@@ -73,6 +83,14 @@ public abstract class StudentParentActivity extends DataServiceParentActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void receiveData(final DataRepository dataRepository) {
+        if (isWaitingToInvalidateOptionsMenu) {
+            invalidateOptionsMenu();
+            isWaitingToInvalidateOptionsMenu = false;
         }
     }
 }
