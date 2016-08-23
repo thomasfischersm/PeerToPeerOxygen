@@ -1,5 +1,6 @@
 package com.playposse.peertopeeroxygen.android.admin;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -16,6 +17,8 @@ import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.clientaction.GetStudentRosterAction;
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
+import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
+import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
 import java.io.IOException;
@@ -76,7 +79,7 @@ public class AdminStudentRosterActivity
             }
 
             // Populate values
-            UserBean student = getItem(position);
+            final UserBean student = getItem(position);
             int practicePoints = DataRepository.getPointByType(student, PointType.practice);
             int teachPoints = DataRepository.getPointByType(student, PointType.teach);
             int heartPoints = DataRepository.getPointByType(student, PointType.heart);
@@ -86,6 +89,18 @@ public class AdminStudentRosterActivity
             viewHolder.teachPointsTextView.setText("" + teachPoints);
             viewHolder.practicePointsTextView.setText("" + practicePoints);
             viewHolder.heartPointsTextView.setText("" + heartPoints);
+
+            // Add click handler to open student detail activity.
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getContext(), AdminStudentDetailActivity.class);
+                    intent.putExtra(
+                            ExtraConstants.EXTRA_STUDENT_BEAN,
+                            UserBeanParcelable.fromBean(student));
+                    startActivity(intent);
+                }
+            });
 
             // Schedule profile photo for loading in a separate thread.
             new LoadProfilePhotoAsyncTask(

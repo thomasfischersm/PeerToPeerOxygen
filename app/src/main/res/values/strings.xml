@@ -77,6 +77,10 @@
     <string name="confirm_delete_required_mission">Do you want to remove the required mission: %1$s?</string>
     <string name="required_missions_label">Prerequisite missions</string>
     <string name="blank_required_mission">Select a required mission</string>
+    <string name="sign_up_date_label">Sign up: %1$s</string>
+    <string name="teach_points_label">Teach points: %1$s</string>
+    <string name="practice_points_label">Practice points: %1$s</string>
+    <string name="heart_points_label">Heart points: %1$s</string>
 
     <!-- Error messages -->
     <string name="network_error">Failed to retrieve data from the server.</string>

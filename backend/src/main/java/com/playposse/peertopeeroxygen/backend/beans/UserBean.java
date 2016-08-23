@@ -23,6 +23,7 @@ public class UserBean {
     private String lastName;
     private String name;
     private String profilePictureUrl;
+    private Long created;
     private List<MissionCompletionBean> missionCompletionBeans = new ArrayList<>();
     private Map<String, Integer> pointsMap = new HashMap<>();
 
@@ -39,6 +40,7 @@ public class UserBean {
         lastName = oxygenUser.getLastName();
         name = oxygenUser.getLastName();
         profilePictureUrl = oxygenUser.getProfilePictureUrl();
+        created = oxygenUser.getCreated();
 
         for (MissionCompletion missionCompletion : oxygenUser.getMissionCompletions().values()) {
             missionCompletionBeans.add(new MissionCompletionBean(missionCompletion));
@@ -95,6 +97,10 @@ public class UserBean {
 
     public Map<String, Integer> getPointsMap() {
         return pointsMap;
+    }
+
+    public Long getCreated() {
+        return created;
     }
 
     public List<MissionCompletionBean> getMissionCompletionBeans() {

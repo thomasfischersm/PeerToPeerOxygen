@@ -6,6 +6,11 @@ import android.os.Parcelable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.playposse.peertopeeroxygen.android.data.types.PointType;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A {@link Parcelable} version of the UserBean, so that it can be passed in between
@@ -21,6 +26,8 @@ public class UserBeanParcelable implements Parcelable {
     private String lastName;
     private String name;
     private String profilePictureUrl;
+    private Long created;
+    private Map<PointType, Integer> pointMap;
 
     public int describeContents() {
         return 0;
@@ -35,6 +42,17 @@ public class UserBeanParcelable implements Parcelable {
         out.writeString(lastName);
         out.writeString(name);
         out.writeString(profilePictureUrl);
+        out.writeLong((created != null) ? created : 0);
+
+        if (pointMap == null) {
+            out.writeInt(0);
+        } else {
+            out.writeInt(pointMap.size());
+            for (Map.Entry<PointType, Integer> entry : pointMap.entrySet()) {
+                out.writeString(entry.getKey().name());
+                out.writeInt(entry.getValue());
+            }
+        }
     }
 
     public static final Parcelable.Creator<UserBeanParcelable> CREATOR
@@ -57,11 +75,47 @@ public class UserBeanParcelable implements Parcelable {
         lastName = in.readString();
         name = in.readString();
         profilePictureUrl = in.readString();
+        created = in.readLong();
+
+        int pointMapSize = in.readInt();
+        pointMap = new HashMap<>(pointMapSize);
+        for (int i = 0; i < pointMapSize; i++) {
+            PointType pointType = PointType.valueOf(in.readString());
+            int pointCount = in.readInt();
+            pointMap.put(pointType, pointCount);
+        }
+    }
+
+    private UserBeanParcelable(UserBean userBean) {
+        id = userBean.getId();
+        isAdmin = userBean.getAdmin();
+        fbProfileId = userBean.getFbProfileId();
+        firebaseToken = userBean.getFirebaseToken();
+        firstName = userBean.getFirstName();
+        lastName = userBean.getLastName();
+        name = userBean.getName();
+        profilePictureUrl = userBean.getProfilePictureUrl();
+        created = userBean.getCreated();
+
+        if (userBean.getPointsMap() != null) {
+            pointMap = new HashMap<>(userBean.getPointsMap().size());
+            for (Map.Entry<String, Object> entry : userBean.getPointsMap().entrySet()) {
+                PointType pointType = PointType.valueOf(entry.getKey());
+                int pointCount = Integer.parseInt(entry.getValue().toString());
+                pointMap.put(pointType, pointCount);
+            }
+        } else {
+            pointMap = new HashMap<>();
+        }
     }
 
     public static UserBeanParcelable fromJson(String json) {
         Gson gson = new GsonBuilder().create();
         return gson.fromJson(json, UserBeanParcelable.class);
+    }
+
+    public static UserBeanParcelable fromBean(UserBean userBean) {
+        return new UserBeanParcelable(userBean);
     }
 
     public String getFbProfileId() {
@@ -122,6 +176,14 @@ public class UserBeanParcelable implements Parcelable {
 
     public String getProfilePictureUrl() {
         return profilePictureUrl;
+    }
+
+    public Long getCreated() {
+        return created;
+    }
+
+    public Map<PointType, Integer> getPointMap() {
+        return pointMap;
     }
 
     public void setProfilePictureUrl(String profilePictureUrl) {
