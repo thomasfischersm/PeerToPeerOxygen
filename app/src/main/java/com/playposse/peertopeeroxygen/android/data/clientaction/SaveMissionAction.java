@@ -14,43 +14,41 @@ public class SaveMissionAction extends ClientAction {
 
     private static final String LOG_CAT = SaveMissionTreeAction.class.getSimpleName();
 
-    public SaveMissionAction(BinderForActions binder) {
-        super(binder);
+    private final Long missionLadderId;
+    private final Long missionTreeId;
+    private final MissionBean missionBean;
+
+    public SaveMissionAction(
+            BinderForActions binder,
+            Long missionLadderId,
+            Long missionTreeId,
+            MissionBean missionBean) {
+
+        super(binder, true);
+
+        this.missionLadderId = missionLadderId;
+        this.missionTreeId = missionTreeId;
+        this.missionBean = missionBean;
     }
 
-    public void save(
-            final Long missionLadderId,
-            final Long missionTreeId,
-            final MissionBean missionBean) {
+    @Override
+    protected void executeAsync() throws IOException {
+        boolean create = missionBean.getId() == null;
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    boolean create = missionBean.getId() == null;
+        MissionBean result = getBinder().getApi().saveMission(
+                getBinder().getSessionId(),
+                missionLadderId,
+                missionTreeId,
+                missionBean)
+                .execute();
+        missionBean.setId(result.getId());
 
-                    MissionBean result = getBinder().getApi().saveMission(
-                            getBinder().getSessionId(),
-                            missionLadderId,
-                            missionTreeId,
-                            missionBean)
-                            .execute();
-                    missionBean.setId(result.getId());
+        if (create) {
+            MissionTreeBean missionTreeBean =
+                    getDataRepository().getMissionTreeBean(missionLadderId, missionTreeId);
+            missionTreeBean.getMissionBeans().add(missionBean);
+        }
 
-                    if (create) {
-                        MissionTreeBean missionTreeBean =
-                                getDataRepository().getMissionTreeBean(missionLadderId, missionTreeId);
-                        missionTreeBean.getMissionBeans().add(missionBean);
-                    }
-
-                    getBinder().makeDataReceivedCallbacks();
-
-                    Log.i(LOG_CAT, "Mission has been saved.");
-                } catch (IOException ex) {
-                    Log.e(LOG_CAT, "Failed to save mission bean.", ex);
-                    getBinder().redirectToLoginActivity();
-                }
-            }
-        }).start();
+        Log.i(LOG_CAT, "Mission has been saved.");
     }
 }

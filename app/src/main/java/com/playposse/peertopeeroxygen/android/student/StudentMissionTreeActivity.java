@@ -34,17 +34,12 @@ public class StudentMissionTreeActivity extends StudentParentActivity {
 
     @Override
     public void receiveData(final DataRepository dataRepository) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                missionTreeBean = dataRepository
-                        .getMissionTreeBean(missionLadderId, missionTreeId);
-                missionTreeWidget.setMissionTreeBean(
-                        missionLadderId,
-                        missionTreeBean,
-                        dataRepository);
-                setTitle("" + missionTreeBean.getName());
-            }
-        });
+        missionTreeBean = dataRepository
+                .getMissionTreeBean(missionLadderId, missionTreeId);
+        missionTreeWidget.setMissionTreeBean(
+                missionLadderId,
+                missionTreeBean,
+                dataRepository);
+        setTitle("" + missionTreeBean.getName());
     }
 }

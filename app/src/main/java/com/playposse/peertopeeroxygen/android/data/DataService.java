@@ -94,7 +94,7 @@ public class DataService extends Service {
 
         public void init() {
             if ((dataRepository == null) || (dataRepository.getCompleteMissionDataBean() == null)) {
-                new MissionDataRetrieverAction(this).retrieveMissionData();
+                new MissionDataRetrieverAction(this).execute();
             }
         }
 
@@ -116,8 +116,13 @@ public class DataService extends Service {
 
         @Override
         public void makeDataReceivedCallbacks() {
-            for (DataReceivedCallback callback : dataReceivedCallbacks) {
-                callback.receiveData(dataRepository);
+            for (final DataReceivedCallback callback : dataReceivedCallbacks) {
+                callback.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.receiveData(dataRepository);
+                    }
+                });
             }
         }
 
@@ -141,15 +146,15 @@ public class DataService extends Service {
                 final String accessToken,
                 final SignInSuccessCallback signInSuccessCallback) {
 
-            new RegisterOrLoginAction(this).registerOrLogin(accessToken, signInSuccessCallback);
+            new RegisterOrLoginAction(this, accessToken, signInSuccessCallback).execute();
         }
 
         public void save(final MissionLadderBean missionLadderBean) {
-            new SaveMissionLadderAction(this).save(missionLadderBean);
+            new SaveMissionLadderAction(this, missionLadderBean).execute();
         }
 
         public void save(final Long missionLadderId, final MissionTreeBean missionTreeBean) {
-            new SaveMissionTreeAction(this).save(missionLadderId, missionTreeBean);
+            new SaveMissionTreeAction(this, missionLadderId, missionTreeBean).execute();
         }
 
         public void save(
@@ -157,15 +162,15 @@ public class DataService extends Service {
                 final Long missionTreeId,
                 final MissionBean missionBean) {
 
-            new SaveMissionAction(this).save(missionLadderId, missionTreeId, missionBean);
+            new SaveMissionAction(this, missionLadderId, missionTreeId, missionBean).execute();
         }
 
         public void deleteMissionLadder(final Long missionLadderId) {
-            new DeleteMissionLadderAction(this).deleteMissionLadder(missionLadderId);
+            new DeleteMissionLadderAction(this, missionLadderId).execute();
         }
 
         public void deleteMissionTree(final Long missionLadderId, final Long missionTreeId) {
-            new DeleteMissionTreeAction(this).deleteMissionTree(missionLadderId, missionTreeId);
+            new DeleteMissionTreeAction(this, missionLadderId, missionTreeId).execute();
         }
 
         public void deleteMission(
@@ -173,7 +178,7 @@ public class DataService extends Service {
                 final Long missionTreeId,
                 final Long missionId) {
 
-            new DeleteMissionAction(this).deleteMission(missionLadderId, missionTreeId, missionId);
+            new DeleteMissionAction(this, missionLadderId, missionTreeId, missionId).execute();
         }
 
         public void inviteBuddyToMission(
@@ -182,32 +187,17 @@ public class DataService extends Service {
                 final Long missionTreeId,
                 final Long missionId) {
 
-            new InviteBuddyToMissionAction(this)
-                    .inviteBuddyToMission(buddyId, missionLadderId, missionTreeId, missionId);
+            new InviteBuddyToMissionAction(this, buddyId, missionLadderId, missionTreeId, missionId)
+                    .execute();
         }
 
         public void reportMissionComplete(final Long studentId, final Long missionId) {
-            new ReportMissionCompleteAction(this).reportMissionComplete(studentId, missionId);
+            new ReportMissionCompleteAction(this, studentId, missionId).execute();
         }
 
         public void reload() {
-            new MissionDataRetrieverAction(this).retrieveMissionData();
+            new MissionDataRetrieverAction(this).execute();
         }
-    }
-
-    /**
-     * A callback interface for activities to implement. The {@link #receiveData(DataRepository)} method is
-     * called when the data is first loaded, when the data is refreshed, and when the callback is
-     * first registered (if data is available).
-     */
-    public interface DataReceivedCallback {
-
-        /**
-         * Called when data is available. It's the job of this method to switch to the UI thread.
-         *
-         * @param dataRepository
-         */
-        void receiveData(DataRepository dataRepository);
     }
 
     /**

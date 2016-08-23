@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.data.DataReceivedCallback;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
@@ -25,9 +26,7 @@ import java.util.Map;
  * An implementation of {@link FirebaseMessagingService} that receives messages from AppEngine. The
  * messages initiate the pairing process of a student and buddy.
  */
-public class OxygenFirebaseMessagingService
-        extends FirebaseMessagingService
-        implements DataService.DataReceivedCallback {
+public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String LOG_CAT = OxygenFirebaseMessagingService.class.getSimpleName();
 
@@ -49,7 +48,7 @@ public class OxygenFirebaseMessagingService
         super.onCreate();
 
         Intent intent = new Intent(this, DataService.class);
-        dataServiceConnection = new DataServiceConnection(this, false);
+        dataServiceConnection = new DataServiceConnection(new EmptyDataReceivedCallback(), false);
         bindService(intent, dataServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
@@ -58,11 +57,6 @@ public class OxygenFirebaseMessagingService
         super.onDestroy();
 
         unbindService(dataServiceConnection);
-    }
-
-    @Override
-    public void receiveData(DataRepository dataRepository) {
-        // Nothing to do.
     }
 
     @Override
@@ -209,6 +203,18 @@ public class OxygenFirebaseMessagingService
 
         public UserBeanParcelable getBuddyBean() {
             return UserBeanParcelable.fromJson(data.get(BUDDY_BEAN));
+        }
+    }
+
+    private static final class EmptyDataReceivedCallback implements DataReceivedCallback {
+        @Override
+        public void receiveData(DataRepository dataRepository) {
+            // Nothing to do.
+        }
+
+        @Override
+        public void runOnUiThread(Runnable runnable) {
+            // Ignore.
         }
     }
 }

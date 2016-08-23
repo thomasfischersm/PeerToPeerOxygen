@@ -103,17 +103,12 @@ public class StudentMissionActivity extends StudentParentActivity {
 
     @Override
     public void receiveData(final DataRepository dataRepository) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                missionBean = dataRepository
-                        .getMissionBean(missionLadderId, missionTreeId, missionId);
+        missionBean = dataRepository
+                .getMissionBean(missionLadderId, missionTreeId, missionId);
 
-                missionNameTextView.setText(missionBean.getName());
-                missionInstructionsTextView.setText(missionBean.getStudentInstruction());
-                setTitle("" + missionBean.getName());
-            }
-        });
+        missionNameTextView.setText(missionBean.getName());
+        missionInstructionsTextView.setText(missionBean.getStudentInstruction());
+        setTitle("" + missionBean.getName());
     }
 
     private void receivedBarcode(final Barcode barcode) {

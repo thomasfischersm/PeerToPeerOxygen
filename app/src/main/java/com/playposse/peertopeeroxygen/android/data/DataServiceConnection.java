@@ -12,14 +12,14 @@ public class DataServiceConnection implements ServiceConnection {
 
     private static final String LOG_CAT = DataServiceConnection.class.getSimpleName();
 
-    private final DataService.DataReceivedCallback dataReceivedCallback;
+    private final DataReceivedCallback dataReceivedCallback;
 
     private boolean bound = false;
     private DataService.LocalBinder localBinder;
     private boolean shouldAutoInit;
 
     public DataServiceConnection(
-            DataService.DataReceivedCallback dataReceivedCallback,
+            DataReceivedCallback dataReceivedCallback,
             boolean shouldAutoInit) {
 
         this.dataReceivedCallback = dataReceivedCallback;

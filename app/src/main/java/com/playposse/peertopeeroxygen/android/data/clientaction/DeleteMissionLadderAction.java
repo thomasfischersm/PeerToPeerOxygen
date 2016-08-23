@@ -13,32 +13,25 @@ public class DeleteMissionLadderAction extends ClientAction {
 
     private static final String LOG_CAT = DeleteMissionLadderAction.class.getSimpleName();
 
-    public DeleteMissionLadderAction(BinderForActions binder) {
-        super(binder);
+    private final Long missionLadderId;
+
+    public DeleteMissionLadderAction(BinderForActions binder, Long missionLadderId) {
+        super(binder, true);
+
+        this.missionLadderId = missionLadderId;
     }
 
-    public void deleteMissionLadder(final Long missionLadderId) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    getBinder().getApi()
-                            .deleteMissionLadder(getBinder().getSessionId(), missionLadderId)
-                            .execute();
-                    MissionLadderBean missionLadderBean =
-                            getDataRepository().getMissionLadderBean(missionLadderId);
-                    getBinder()
-                            .getDataRepository()
-                            .getMissionLadderBeans()
-                            .remove(missionLadderBean);
-
-                    getBinder().makeDataReceivedCallbacks();
-                    Log.i(LOG_CAT, "Completed deleting mission ladder: " + missionLadderId);
-                } catch (IOException ex) {
-                    Log.e(LOG_CAT, "Failed to delete mission ladder.", ex);
-                    getBinder().redirectToLoginActivity();
-                }
-            }
-        }).start();
+    @Override
+    protected void executeAsync() throws IOException {
+        getBinder().getApi()
+                .deleteMissionLadder(getBinder().getSessionId(), missionLadderId)
+                .execute();
+        MissionLadderBean missionLadderBean =
+                getDataRepository().getMissionLadderBean(missionLadderId);
+        getBinder()
+                .getDataRepository()
+                .getMissionLadderBeans()
+                .remove(missionLadderBean);
+        Log.i(LOG_CAT, "Completed deleting mission ladder: " + missionLadderId);
     }
 }

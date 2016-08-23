@@ -1,7 +1,5 @@
 package com.playposse.peertopeeroxygen.android.data.clientaction;
 
-import android.util.Log;
-
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
 
 import java.io.IOException;
@@ -14,27 +12,28 @@ public class ReportMissionCompleteAction extends ClientAction {
 
     private static final String LOG_CAT = ReportMissionCompleteAction.class.getSimpleName();
 
-    public ReportMissionCompleteAction(BinderForActions binder) {
-        super(binder);
+    private final Long studentId;
+    private final Long missionId;
+
+    public ReportMissionCompleteAction(BinderForActions binder, Long studentId, Long missionId) {
+        super(binder, true);
+
+        this.studentId = studentId;
+        this.missionId = missionId;
     }
 
-    public void reportMissionComplete(final Long studentId, final Long missionId) {
+    @Override
+    protected void preExecute() {
         // Increment local data to avoid getting fresh data from the server.
         MissionCompletionBean completionBean = getDataRepository().getMissionCompletion(missionId);
         completionBean.setStudyCount(completionBean.getStudyCount() + 1);
+    }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    getBinder().getApi().reportMissionComplete(
-                            getBinder().getSessionId(),
-                            studentId,
-                            missionId).execute();
-                } catch (IOException ex) {
-                    Log.e(LOG_CAT, "Failed to report mission completed.", ex);
-                }
-            }
-        }).start();
+    @Override
+    protected void executeAsync() throws IOException {
+        getBinder().getApi().reportMissionComplete(
+                getBinder().getSessionId(),
+                studentId,
+                missionId).execute();
     }
 }

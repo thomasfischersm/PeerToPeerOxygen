@@ -1,7 +1,5 @@
 package com.playposse.peertopeeroxygen.android.data.clientaction;
 
-import android.util.Log;
-
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
@@ -14,30 +12,29 @@ public class DeleteMissionTreeAction extends ClientAction {
 
     private static final String LOG_CAT = DeleteMissionTreeAction.class.getSimpleName();
 
-    public DeleteMissionTreeAction(BinderForActions binder) {
-        super(binder);
+    private final Long missionLadderId;
+    private final Long missionTreeId;
+
+    public DeleteMissionTreeAction(
+            BinderForActions binder,
+            Long missionLadderId,
+            Long missionTreeId) {
+
+        super(binder, true);
+
+        this.missionLadderId = missionLadderId;
+        this.missionTreeId = missionTreeId;
     }
 
-    public void deleteMissionTree(final Long missionLadderId, final Long missionTreeId) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    MissionLadderBean missionLadderBean =
-                            getDataRepository().getMissionLadderBean(missionLadderId);
-                    MissionTreeBean missionTreeBean =
-                            getDataRepository().getMissionTreeBean(missionLadderId, missionTreeId);
-                    missionLadderBean.getMissionTreeBeans().remove(missionTreeBean);
-                    getBinder().getApi()
-                            .saveMissionLadder(getBinder().getSessionId(), missionLadderBean)
-                            .execute();
-
-                    getBinder().makeDataReceivedCallbacks();
-                } catch (IOException ex) {
-                    Log.e(LOG_CAT, "Failed to delete mission tree.", ex);
-                    getBinder().redirectToLoginActivity();
-                }
-            }
-        }).start();
+    @Override
+    public void executeAsync() throws IOException {
+        MissionLadderBean missionLadderBean =
+                getDataRepository().getMissionLadderBean(missionLadderId);
+        MissionTreeBean missionTreeBean =
+                getDataRepository().getMissionTreeBean(missionLadderId, missionTreeId);
+        missionLadderBean.getMissionTreeBeans().remove(missionTreeBean);
+        getBinder().getApi()
+                .saveMissionLadder(getBinder().getSessionId(), missionLadderBean)
+                .execute();
     }
 }

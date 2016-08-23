@@ -1,7 +1,5 @@
 package com.playposse.peertopeeroxygen.android.data.clientaction;
 
-import android.util.Log;
-
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
@@ -17,31 +15,30 @@ public class RegisterOrLoginAction extends ClientAction {
 
     private static final String LOG_CAT = RegisterOrLoginAction.class.getSimpleName();
 
-    public RegisterOrLoginAction(BinderForActions binder) {
-        super(binder);
+    private final String accessToken;
+    private final DataService.SignInSuccessCallback signInSuccessCallback;
+
+    public RegisterOrLoginAction(
+            BinderForActions binder,
+            String accessToken,
+            DataService.SignInSuccessCallback signInSuccessCallback) {
+
+        super(binder, false);
+
+        this.accessToken = accessToken;
+        this.signInSuccessCallback = signInSuccessCallback;
     }
 
-    public void registerOrLogin(
-            final String accessToken,
-            final DataService.SignInSuccessCallback signInSuccessCallback) {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String firebaseToken = FirebaseInstanceId.getInstance().getToken();
-                    UserBean userBean =
-                            getBinder().getApi()
-                                    .registerOrLogin(accessToken, firebaseToken)
-                                    .execute();
-                    OxygenSharedPreferences.setSessionId(
-                            getBinder().getApplicationContext(),
-                            userBean.getSessionId());
-                    signInSuccessCallback.onSuccess();
-                } catch (IOException ex) {
-                    Log.e(LOG_CAT, "Failed to registerOrLogin.", ex);
-                }
-            }
-        }).start();
+    @Override
+    protected void executeAsync() throws IOException {
+        String firebaseToken = FirebaseInstanceId.getInstance().getToken();
+        UserBean userBean =
+                getBinder().getApi()
+                        .registerOrLogin(accessToken, firebaseToken)
+                        .execute();
+        OxygenSharedPreferences.setSessionId(
+                getBinder().getApplicationContext(),
+                userBean.getSessionId());
+        signInSuccessCallback.onSuccess();
     }
 }

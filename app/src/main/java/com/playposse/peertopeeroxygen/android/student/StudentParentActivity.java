@@ -9,8 +9,8 @@ import android.view.MenuItem;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.admin.AdminMainActivity;
+import com.playposse.peertopeeroxygen.android.data.DataReceivedCallback;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
-import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceParentActivity;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
@@ -44,13 +44,18 @@ public abstract class StudentParentActivity extends DataServiceParentActivity {
             }
         } else {
             dataServiceConnection.getLocalBinder().registerDataReceivedCallback(
-                    new DataService.DataReceivedCallback() {
+                    new DataReceivedCallback() {
                         @Override
                         public void receiveData(DataRepository dataRepository) {
                             invalidateOptionsMenu();
                             dataServiceConnection
                                     .getLocalBinder()
                                     .unregisterDataReceivedCallback(this);
+                        }
+
+                        @Override
+                        public void runOnUiThread(Runnable runnable) {
+                            StudentParentActivity.this.runOnUiThread(runnable);
                         }
                     });
             return true;

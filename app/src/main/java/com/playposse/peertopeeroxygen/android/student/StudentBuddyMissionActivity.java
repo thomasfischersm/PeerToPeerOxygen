@@ -83,31 +83,26 @@ public class StudentBuddyMissionActivity extends StudentParentActivity {
 
     @Override
     public void receiveData(final DataRepository dataRepository) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    URL studentPhotoUrl = new URL(studentBean.getProfilePictureUrl());
-                    final Bitmap studentPhotoBitmap =
-                            BitmapFactory.decodeStream(
-                                    studentPhotoUrl.openConnection().getInputStream());
+        try {
+            URL studentPhotoUrl = new URL(studentBean.getProfilePictureUrl());
+            final Bitmap studentPhotoBitmap =
+                    BitmapFactory.decodeStream(
+                            studentPhotoUrl.openConnection().getInputStream());
 
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            missionBean = dataRepository
-                                    .getMissionBean(missionLadderId, missionTreeId, missionId);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    missionBean = dataRepository
+                            .getMissionBean(missionLadderId, missionTreeId, missionId);
 
-                            missionNameTextView.setText(missionBean.getName());
-                            missionBuddyDescriptionTextView.setText(
-                                    missionBean.getBuddyInstruction());
-                            studentPhotoImageView.setImageBitmap(studentPhotoBitmap);
-                        }
-                    });
-                } catch (IOException ex) {
-                    Log.e(LOG_CAT, "Failed to load student's profile image.", ex);
+                    missionNameTextView.setText(missionBean.getName());
+                    missionBuddyDescriptionTextView.setText(
+                            missionBean.getBuddyInstruction());
+                    studentPhotoImageView.setImageBitmap(studentPhotoBitmap);
                 }
-            }
-        }).start();
+            });
+        } catch (IOException ex) {
+            Log.e(LOG_CAT, "Failed to load student's profile image.", ex);
+        }
     }
 }

@@ -47,15 +47,10 @@ public class AdminShowMissionLaddersActivity extends AdminParentActivity {
 
     @Override
     public void receiveData(final DataRepository dataRepository) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                MissionLadderBeanArrayAdapter adapter = new MissionLadderBeanArrayAdapter(
-                        new ArrayList<>(dataRepository.getMissionLadderBeans()));
-                missionLaddersListView.setAdapter(adapter);
-                missionLaddersListView.refreshDrawableState();
-            }
-        });
+        MissionLadderBeanArrayAdapter adapter = new MissionLadderBeanArrayAdapter(
+                new ArrayList<>(dataRepository.getMissionLadderBeans()));
+        missionLaddersListView.setAdapter(adapter);
+        missionLaddersListView.refreshDrawableState();
     }
 
     private final class MissionLadderBeanArrayAdapter

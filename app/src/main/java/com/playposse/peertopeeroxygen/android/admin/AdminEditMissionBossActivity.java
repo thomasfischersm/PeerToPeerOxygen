@@ -56,9 +56,6 @@ public class AdminEditMissionBossActivity extends AdminParentActivity {
 
     @Override
     public void receiveData(final DataRepository dataRepository) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
                 missionTreeBean = dataRepository
                         .getMissionTreeBean(missionLadderId, missionTreeId);
                 missionBossBean = missionTreeBean.getMissionBossBean();
@@ -82,8 +79,6 @@ public class AdminEditMissionBossActivity extends AdminParentActivity {
                 setTitle(String.format(
                         getString(R.string.edit_mission_boss_title),
                         missionTreeBean.getName()));
-            }
-        });
     }
 
     private void saveIfNecessary() {

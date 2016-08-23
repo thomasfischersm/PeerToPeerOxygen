@@ -49,15 +49,10 @@ public class StudentMainActivity extends StudentParentActivity {
 
     @Override
     public void receiveData(final DataRepository dataRepository) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                List<MissionLadderBean> missionLadderBeans =
-                        dataRepository.getMissionLadderBeans();
-                studentHomeGridView.setAdapter(
-                        new MissionLadderBeansArrayAdapter(missionLadderBeans));
-            }
-        });
+        List<MissionLadderBean> missionLadderBeans =
+                dataRepository.getMissionLadderBeans();
+        studentHomeGridView.setAdapter(
+                new MissionLadderBeansArrayAdapter(missionLadderBeans));
     }
 
     private final class MissionLadderBeansArrayAdapter extends ArrayAdapter<MissionLadderBean> {

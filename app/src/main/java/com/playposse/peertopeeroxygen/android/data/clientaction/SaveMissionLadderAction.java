@@ -1,7 +1,5 @@
 package com.playposse.peertopeeroxygen.android.data.clientaction;
 
-import android.util.Log;
-
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
@@ -15,40 +13,30 @@ public class SaveMissionLadderAction extends ClientAction {
 
     private static final String LOG_CAT = SaveMissionLadderAction.class.getSimpleName();
 
-    public SaveMissionLadderAction(BinderForActions binder) {
-        super(binder);
+    private final MissionLadderBean missionLadderBean;
+
+    public SaveMissionLadderAction(BinderForActions binder, MissionLadderBean missionLadderBean) {
+        super(binder, true);
+
+        this.missionLadderBean = missionLadderBean;
     }
 
-    public void save(final MissionLadderBean missionLadderBean) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+    @Override
+    protected void executeAsync() throws IOException {
+        boolean create = missionLadderBean.getId() == null;
+        MissionLadderBean result =
+                getBinder().getApi()
+                        .saveMissionLadder(getBinder().getSessionId(), missionLadderBean)
+                        .execute();
+        missionLadderBean.setId(result.getId()); // Save id for new entities.
 
-                try {
-                    boolean create = missionLadderBean.getId() == null;
-                    MissionLadderBean result =
-                            getBinder().getApi()
-                                    .saveMissionLadder(getBinder().getSessionId(), missionLadderBean)
-                                    .execute();
-                    missionLadderBean.setId(result.getId()); // Save id for new entities.
-
-                    // Update local data to avoid reloading data from the server.
-                    if (create) {
-                        missionLadderBean.setMissionTreeBeans(new ArrayList<MissionTreeBean>());
-                        getDataRepository()
-                                .getCompleteMissionDataBean()
-                                .getMissionLadderBeans()
-                                .add(missionLadderBean);
-                    }
-
-                    getBinder().makeDataReceivedCallbacks();
-
-                    Log.i(LOG_CAT, "Mission ladder has been saved.");
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    getBinder().redirectToLoginActivity();
-                }
-            }
-        }).start();
+        // Update local data to avoid reloading data from the server.
+        if (create) {
+            missionLadderBean.setMissionTreeBeans(new ArrayList<MissionTreeBean>());
+            getDataRepository()
+                    .getCompleteMissionDataBean()
+                    .getMissionLadderBeans()
+                    .add(missionLadderBean);
+        }
     }
 }

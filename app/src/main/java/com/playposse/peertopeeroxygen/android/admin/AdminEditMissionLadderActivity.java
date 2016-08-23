@@ -103,34 +103,29 @@ public class AdminEditMissionLadderActivity extends AdminParentActivity {
 
     @Override
     public void receiveData(final DataRepository dataRepository) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (missionLadderId == -1) {
-                    // new mission ladder
-                    nameEditText.setText("");
-                    descriptionEditText.setText("");
+        if (missionLadderId == -1) {
+            // new mission ladder
+            nameEditText.setText("");
+            descriptionEditText.setText("");
 
-                    setTitle(String.format(
-                            getString(R.string.edit_mission_ladder_title),
-                            getString(R.string.new_entity)));
-                } else {
-                    // existing mission ladder
-                    missionLadderBean =
-                            dataRepository.getMissionLadderBean( missionLadderId);
-                    nameEditText.setText(missionLadderBean.getName());
-                    descriptionEditText.setText(missionLadderBean.getDescription());
+            setTitle(String.format(
+                    getString(R.string.edit_mission_ladder_title),
+                    getString(R.string.new_entity)));
+        } else {
+            // existing mission ladder
+            missionLadderBean =
+                    dataRepository.getMissionLadderBean(missionLadderId);
+            nameEditText.setText(missionLadderBean.getName());
+            descriptionEditText.setText(missionLadderBean.getDescription());
 
-                    MissionTreeBeanArrayAdapter adapter = new MissionTreeBeanArrayAdapter(
-                            missionLadderBean.getMissionTreeBeans());
-                    missionLaddersListView.setAdapter(adapter);
+            MissionTreeBeanArrayAdapter adapter = new MissionTreeBeanArrayAdapter(
+                    missionLadderBean.getMissionTreeBeans());
+            missionLaddersListView.setAdapter(adapter);
 
-                    setTitle(String.format(
-                            getString(R.string.edit_mission_ladder_title),
-                            missionLadderBean.getName()));
-                }
-            }
-        });
+            setTitle(String.format(
+                    getString(R.string.edit_mission_ladder_title),
+                    missionLadderBean.getName()));
+        }
     }
 
     private final class MissionTreeBeanArrayAdapter

@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
  */
 public abstract class DataServiceParentActivity
         extends AppCompatActivity
-        implements DataService.DataReceivedCallback {
+        implements DataReceivedCallback {
 
     protected DataServiceConnection dataServiceConnection;
     protected boolean shouldAutoInit = true;

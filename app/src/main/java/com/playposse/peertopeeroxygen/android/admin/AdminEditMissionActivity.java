@@ -54,43 +54,38 @@ public class AdminEditMissionActivity extends AdminParentActivity {
 
     @Override
     public void receiveData(final DataRepository dataRepository) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (missionId == -1) {
-                    // new mission ladder
-                    nameEditText.setText("");
-                    studentInstructionEditText.setText("");
-                    buddyInstructionEditText.setText("");
+        if (missionId == -1) {
+            // new mission ladder
+            nameEditText.setText("");
+            studentInstructionEditText.setText("");
+            buddyInstructionEditText.setText("");
 
-                    setTitle(String.format(
-                            getString(R.string.edit_mission_title),
-                            getString(R.string.new_entity)));
-                } else {
-                    // existing mission ladder
-                    missionBean = dataRepository.getMissionBean(
-                                    missionLadderId,
-                                    missionTreeId,
-                                    missionId);
-                    missionTreeBean = dataRepository.getMissionTreeBean(
-                            missionLadderId,
-                            missionTreeId);
+            setTitle(String.format(
+                    getString(R.string.edit_mission_title),
+                    getString(R.string.new_entity)));
+        } else {
+            // existing mission ladder
+            missionBean = dataRepository.getMissionBean(
+                    missionLadderId,
+                    missionTreeId,
+                    missionId);
+            missionTreeBean = dataRepository.getMissionTreeBean(
+                    missionLadderId,
+                    missionTreeId);
 
-                    nameEditText.setText(missionBean.getName());
-                    studentInstructionEditText.setText(missionBean.getStudentInstruction());
-                    buddyInstructionEditText.setText(missionBean.getBuddyInstruction());
+            nameEditText.setText(missionBean.getName());
+            studentInstructionEditText.setText(missionBean.getStudentInstruction());
+            buddyInstructionEditText.setText(missionBean.getBuddyInstruction());
 
-                    requiredMissionsListView.setAdapter(
-                            missionTreeBean.getMissionBeans(),
-                            missionBean.getRequiredMissionIds(),
-                            missionBean);
+            requiredMissionsListView.setAdapter(
+                    missionTreeBean.getMissionBeans(),
+                    missionBean.getRequiredMissionIds(),
+                    missionBean);
 
-                    setTitle(String.format(
-                            getString(R.string.edit_mission_title),
-                            missionBean.getName()));
-                }
-            }
-        });
+            setTitle(String.format(
+                    getString(R.string.edit_mission_title),
+                    missionBean.getName()));
+        }
     }
 
     private void saveIfNecessary() {
@@ -104,9 +99,9 @@ public class AdminEditMissionActivity extends AdminParentActivity {
         } else {
             shouldSave =
                     !nameEditText.getText().toString().equals(missionBean.getName())
-                    || !studentInstructionEditText.getText().toString().equals(missionBean.getStudentInstruction())
-                    || !buddyInstructionEditText.getText().toString().equals(missionBean.getBuddyInstruction())
-                    || requiredMissionsListView.isDirty();
+                            || !studentInstructionEditText.getText().toString().equals(missionBean.getStudentInstruction())
+                            || !buddyInstructionEditText.getText().toString().equals(missionBean.getBuddyInstruction())
+                            || requiredMissionsListView.isDirty();
         }
 
         // Save mission.

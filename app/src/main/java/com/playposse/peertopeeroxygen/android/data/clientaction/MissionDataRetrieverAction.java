@@ -19,48 +19,36 @@ public class MissionDataRetrieverAction extends ClientAction {
     private static final String LOG_CAT = MissionDataRetrieverAction.class.getSimpleName();
 
     public MissionDataRetrieverAction(BinderForActions binder) {
-        super(binder);
+        super(binder, true);
     }
 
-    public void retrieveMissionData() {
-        new Thread(new Runnable() {
+    @Override
+    protected void executeAsync() throws IOException {
+        Long sessionId = getBinder().getSessionId();
+        if (sessionId == -1) {
+            getBinder().redirectToLoginActivity();
+        }
+        CompleteMissionDataBean completeMissionDataBean =
+                getBinder().getApi().getMissionData(sessionId).execute();
 
-                @Override
-                public void run() {
-                    try {
-                        Long sessionId = getBinder().getSessionId();
-                        if (sessionId == -1) {
-                            getBinder().redirectToLoginActivity();
-                        }
-                        CompleteMissionDataBean completeMissionDataBean =
-                                getBinder().getApi().getMissionData(sessionId).execute();
+        Log.i(LOG_CAT, "BEFORE FIX");
+        debugDump(completeMissionDataBean);
 
-                        Log.i(LOG_CAT, "BEFORE FIX");
-                        debugDump(completeMissionDataBean);
+        fixNullLists(completeMissionDataBean);
 
-                        fixNullLists(completeMissionDataBean);
+        Log.i(LOG_CAT, "AFTER FIX");
+        debugDump(completeMissionDataBean);
 
-                        Log.i(LOG_CAT, "AFTER FIX");
-                        debugDump(completeMissionDataBean);
-
-                        getBinder().getDataRepository()
-                                .setCompleteMissionDataBean(completeMissionDataBean);
-                        getBinder().makeDataReceivedCallbacks();
-                        Log.i(LOG_CAT, "The data has been loaded.");
-//                String msg = "Data has been loaded";
-//                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                        getBinder().redirectToLoginActivity();
-                    }
-                }
-        }).start();
+        getBinder().getDataRepository()
+                .setCompleteMissionDataBean(completeMissionDataBean);
+        getBinder().makeDataReceivedCallbacks();
+        Log.i(LOG_CAT, "The data has been loaded.");
     }
 
 
     /**
      * Replaces null lists with an empty list.
-     *
+     * <p/>
      * <p>Somehow, empty lists turn into null during transport. (JSON probably doesn't
      * differentiate.) To make things easier, all null lists are initialized with an empty list.
      */

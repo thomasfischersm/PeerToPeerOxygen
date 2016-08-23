@@ -121,42 +121,37 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
 
     @Override
     public void receiveData(final DataRepository dataRepository) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (missionTreeId == -1) {
-                    // new mission ladder
-                    nameEditText.setText("");
-                    descriptionEditText.setText("");
+        if (missionTreeId == -1) {
+            // new mission ladder
+            nameEditText.setText("");
+            descriptionEditText.setText("");
 
-                    setTitle(String.format(
-                            getString(R.string.edit_mission_tree_title),
-                            getString(R.string.new_entity)));
-                } else {
-                    // existing mission ladder
-                    missionTreeBean = dataRepository.getMissionTreeBean(
-                            missionLadderId,
-                            missionTreeId);
-                    nameEditText.setText(missionTreeBean.getName());
-                    descriptionEditText.setText(missionTreeBean.getDescription());
+            setTitle(String.format(
+                    getString(R.string.edit_mission_tree_title),
+                    getString(R.string.new_entity)));
+        } else {
+            // existing mission ladder
+            missionTreeBean = dataRepository.getMissionTreeBean(
+                    missionLadderId,
+                    missionTreeId);
+            nameEditText.setText(missionTreeBean.getName());
+            descriptionEditText.setText(missionTreeBean.getDescription());
 
-                    setTitle(String.format(
-                            getString(R.string.edit_mission_tree_title),
-                            missionTreeBean.getName()));
+            setTitle(String.format(
+                    getString(R.string.edit_mission_tree_title),
+                    missionTreeBean.getName()));
 
-                    MissionBeanArrayAdapter adapter = new MissionBeanArrayAdapter(
-                            missionTreeBean.getMissionBeans());
-                    missionsListView.setAdapter(adapter);
+            MissionBeanArrayAdapter adapter = new MissionBeanArrayAdapter(
+                    missionTreeBean.getMissionBeans());
+            missionsListView.setAdapter(adapter);
 
-                    requiredMissionsListView.setAdapter(
-                            missionTreeBean.getMissionBeans(),
-                            missionTreeBean.getRequiredMissionIds(),
-                            null);
-                }
+            requiredMissionsListView.setAdapter(
+                    missionTreeBean.getMissionBeans(),
+                    missionTreeBean.getRequiredMissionIds(),
+                    null);
+        }
 
-                missionLadderBean = dataRepository.getMissionLadderBean(missionLadderId);
-            }
-        });
+        missionLadderBean = dataRepository.getMissionLadderBean(missionLadderId);
     }
 
     /**
