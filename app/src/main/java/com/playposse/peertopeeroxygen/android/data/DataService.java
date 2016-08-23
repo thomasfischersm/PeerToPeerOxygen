@@ -11,8 +11,17 @@ import android.widget.Toast;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.data.clientaction.BinderForActions;
+import com.playposse.peertopeeroxygen.android.data.clientaction.DeleteMissionAction;
+import com.playposse.peertopeeroxygen.android.data.clientaction.DeleteMissionLadderAction;
+import com.playposse.peertopeeroxygen.android.data.clientaction.DeleteMissionTreeAction;
+import com.playposse.peertopeeroxygen.android.data.clientaction.InviteBuddyToMissionAction;
+import com.playposse.peertopeeroxygen.android.data.clientaction.RegisterOrLoginAction;
+import com.playposse.peertopeeroxygen.android.data.clientaction.ReportMissionCompleteAction;
+import com.playposse.peertopeeroxygen.android.data.clientaction.SaveMissionAction;
+import com.playposse.peertopeeroxygen.android.data.clientaction.SaveMissionLadderAction;
+import com.playposse.peertopeeroxygen.android.data.clientaction.SaveMissionTreeAction;
 import com.playposse.peertopeeroxygen.android.student.StudentLoginActivity;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxygenApi;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
@@ -188,7 +197,7 @@ public class DataService extends Service {
     /**
      * {@link IBinder} that returns a reference to this.
      */
-    public class LocalBinder extends Binder {
+    public class LocalBinder extends Binder implements BinderForActions {
 
         public DataService getService() {
             return DataService.this;
@@ -217,29 +226,42 @@ public class DataService extends Service {
             new Thread(new MissionDataRetrieverRunnable()).start();
         }
 
+        @Override
+        public PeerToPeerOxygenApi getApi() {
+            createApiIfNeeded();
+            return peerToPeerOxygenApi;
+        }
+
+        @Override
+        public Context getApplicationContext() {
+            return DataService.this.getApplicationContext();
+        }
+
+        @Override
+        public Long getSessionId() {
+            return DataService.this.getSessionId();
+        }
+
+        @Override
+        public CompleteMissionDataBean getCompleteMissionDataBean() {
+            return completeMissionDataBean;
+        }
+
+        @Override
+        public void makeDataReceivedCallbacks() {
+            DataService.this.makeDataReceivedCallbacks();
+        }
+
+        @Override
+        public void redirectToLoginActivity() {
+            DataService.this.redirectToLoginActivity();
+        }
+
         public void registerOrLogin(
                 final String accessToken,
                 final SignInSuccessCallback signInSuccessCallback) {
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        createApiIfNeeded();
-                        String firebaseToken = FirebaseInstanceId.getInstance().getToken();
-                        UserBean userBean =
-                                peerToPeerOxygenApi
-                                        .registerOrLogin(accessToken, firebaseToken)
-                                        .execute();
-                        OxygenSharedPreferences.setSessionId(
-                                getApplicationContext(),
-                                userBean.getSessionId());
-                        signInSuccessCallback.onSuccess();
-                    } catch (IOException ex) {
-                        Log.e(LOG_CAT, "Failed to registerOrLogin.", ex);
-                    }
-                }
-            }).start();
+            new RegisterOrLoginAction(this).registerOrLogin(accessToken, signInSuccessCallback);
         }
 
         public UserBean getUserBean() {
@@ -250,6 +272,7 @@ public class DataService extends Service {
             }
         }
 
+        @Override
         public MissionLadderBean getMissionLadderBean(Long id) {
             for (MissionLadderBean missionLadderBean : completeMissionDataBean.getMissionLadderBeans()) {
                 if (missionLadderBean.getId().equals(id)) {
@@ -259,6 +282,7 @@ public class DataService extends Service {
             return null;
         }
 
+        @Override
         public MissionTreeBean getMissionTreeBean(Long missionLadderId, Long missionTreeId) {
             for (MissionTreeBean missionTreeBean : getMissionLadderBean(missionLadderId).getMissionTreeBeans()) {
                 if (missionTreeBean.getId().equals(missionTreeId)) {
@@ -268,6 +292,7 @@ public class DataService extends Service {
             return null;
         }
 
+        @Override
         public MissionBean getMissionBean(
                 Long missionLadderId,
                 Long missionTreeId,
@@ -282,67 +307,11 @@ public class DataService extends Service {
         }
 
         public void save(final MissionLadderBean missionLadderBean) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                    try {
-                        boolean create = missionLadderBean.getId() == null;
-                        MissionLadderBean result =
-                                peerToPeerOxygenApi
-                                        .saveMissionLadder(getSessionId(), missionLadderBean)
-                                        .execute();
-                        missionLadderBean.setId(result.getId()); // Save id for new entities.
-
-                        // Update local data to avoid reloading data from the server.
-                        if (create) {
-                            missionLadderBean.setMissionTreeBeans(new ArrayList<MissionTreeBean>());
-                            completeMissionDataBean.getMissionLadderBeans().add(missionLadderBean);
-                        }
-
-                        makeDataReceivedCallbacks();
-
-                        Log.i(LOG_CAT, "Mission ladder has been saved.");
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                        redirectToLoginActivity();
-                    }
-                }
-            }).start();
+            new SaveMissionLadderAction(this).save(missionLadderBean);
         }
 
         public void save(final Long missionLadderId, final MissionTreeBean missionTreeBean) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        boolean create = missionTreeBean.getId() == null;
-                        MissionTreeBean result =
-                                peerToPeerOxygenApi
-                                        .saveMissionTree(
-                                                getSessionId(),
-                                                missionLadderId,
-                                                missionTreeBean)
-                                        .execute();
-                        missionTreeBean.setId(result.getId()); // Save id for new entities.
-
-                        // Update local data to avoid reloading data from the server.
-                        if (create) {
-                            MissionLadderBean missionLadderBean =
-                                    getMissionLadderBean(missionLadderId);
-                            missionTreeBean.setMissionBeans(new ArrayList<MissionBean>());
-                            missionLadderBean.getMissionTreeBeans().add(missionTreeBean);
-                        }
-
-                        makeDataReceivedCallbacks();
-
-                        Log.i(LOG_CAT, "Mission tree has been saved.");
-                    } catch (IOException ex) {
-                        Log.e(LOG_CAT, "Failed to create new mission tree.", ex);
-                        redirectToLoginActivity();
-                    }
-                }
-            }).start();
+            new SaveMissionTreeAction(this).save(missionLadderId, missionTreeBean);
         }
 
         public void save(
@@ -350,109 +319,23 @@ public class DataService extends Service {
                 final Long missionTreeId,
                 final MissionBean missionBean) {
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        boolean create = missionBean.getId() == null;
-
-                        MissionBean result = peerToPeerOxygenApi.saveMission(
-                                getSessionId(),
-                                missionLadderId,
-                                missionTreeId,
-                                missionBean)
-                                .execute();
-                        missionBean.setId(result.getId());
-
-                        if (create) {
-                            MissionTreeBean missionTreeBean =
-                                    getMissionTreeBean(missionLadderId, missionTreeId);
-                            missionTreeBean.getMissionBeans().add(missionBean);
-                        }
-
-                        makeDataReceivedCallbacks();
-
-                        Log.i(LOG_CAT, "Mission has been saved.");
-                    } catch (IOException ex) {
-                        Log.e(LOG_CAT, "Failed to save mission bean.", ex);
-                        redirectToLoginActivity();
-                    }
-                }
-            }).start();
+            new SaveMissionAction(this).save(missionLadderId, missionTreeId, missionBean);
         }
 
         public void deleteMissionLadder(final Long missionLadderId) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        peerToPeerOxygenApi
-                                .deleteMissionLadder(getSessionId(), missionLadderId)
-                                .execute();
-                        MissionLadderBean missionLadderBean = getMissionLadderBean(missionLadderId);
-                        completeMissionDataBean.getMissionLadderBeans().remove(missionLadderBean);
-
-                        makeDataReceivedCallbacks();
-                        Log.i(LOG_CAT, "Completed deleting mission ladder: " + missionLadderId);
-                    } catch (IOException ex) {
-                        Log.e(LOG_CAT, "Failed to delete mission ladder.", ex);
-                        redirectToLoginActivity();
-                    }
-                }
-            }).start();
+            new DeleteMissionLadderAction(this).deleteMissionLadder(missionLadderId);
         }
 
         public void deleteMissionTree(final Long missionLadderId, final Long missionTreeId) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        MissionLadderBean missionLadderBean = getMissionLadderBean(missionLadderId);
-                        MissionTreeBean missionTreeBean = getMissionTreeBean(missionLadderId, missionTreeId);
-                        missionLadderBean.getMissionTreeBeans().remove(missionTreeBean);
-                        peerToPeerOxygenApi
-                                .saveMissionLadder(getSessionId(), missionLadderBean)
-                                .execute();
-
-                        makeDataReceivedCallbacks();
-                    } catch (IOException ex) {
-                        Log.e(LOG_CAT, "Failed to delete mission tree.", ex);
-                        redirectToLoginActivity();
-                    }
-                }
-            }).start();
+            new DeleteMissionTreeAction(this).deleteMissionTree(missionLadderId, missionTreeId);
         }
-
 
         public void deleteMission(
                 final Long missionLadderId,
                 final Long missionTreeId,
                 final Long missionId) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        MissionTreeBean missionTreeBean =
-                                getMissionTreeBean(missionLadderId, missionTreeId);
-                        MissionBean missionBean =
-                                getMissionBean(missionLadderId, missionTreeId, missionId);
-                        missionTreeBean.getMissionBeans().remove(missionBean);
 
-                        peerToPeerOxygenApi
-                                .deleteMission(
-                                        getSessionId(),
-                                        missionLadderId,
-                                        missionTreeId,
-                                        missionId)
-                                .execute();
-
-                        makeDataReceivedCallbacks();
-                    } catch (IOException ex) {
-                        Log.e(LOG_CAT, "Failed to delete mission.", ex);
-                        redirectToLoginActivity();
-                    }
-                }
-            }).start();
+            new DeleteMissionAction(this).deleteMission(missionLadderId, missionTreeId, missionId);
         }
 
         public void inviteBuddyToMission(
@@ -461,44 +344,15 @@ public class DataService extends Service {
                 final Long missionTreeId,
                 final Long missionId) {
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        peerToPeerOxygenApi.inviteBuddyToMission(
-                                OxygenSharedPreferences.getSessionId(getApplicationContext()),
-                                buddyId,
-                                missionLadderId,
-                                missionTreeId,
-                                missionId).execute();
-                        Log.i(LOG_CAT, "Buddy has been invited via appengine call.");
-                    } catch (IOException ex) {
-                        Log.e(LOG_CAT, "Failed to invite buddy to mission: " + buddyId, ex);
-                    }
-                }
-            }).start();
+            new InviteBuddyToMissionAction(this)
+                    .inviteBuddyToMission(buddyId, missionLadderId, missionTreeId, missionId);
         }
 
         public void reportMissionComplete(final Long studentId, final Long missionId) {
-            // Increment local data to avoid getting fresh data from the server.
-            MissionCompletionBean completionBean = getMissionCompletion(missionId);
-            completionBean.setStudyCount(completionBean.getStudyCount() + 1);
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        peerToPeerOxygenApi.reportMissionComplete(
-                                OxygenSharedPreferences.getSessionId(getApplicationContext()),
-                                studentId,
-                                missionId).execute();
-                    } catch (IOException ex) {
-                        Log.e(LOG_CAT, "Failed to report mission completed.", ex);
-                    }
-                }
-            }).start();
+            new ReportMissionCompleteAction(this).reportMissionComplete(studentId, missionId);
         }
 
+        @Override
         public MissionCompletionBean getMissionCompletion(Long missionId) {
             if (getUserBean().getMissionCompletionBeans() != null) {
                 for (MissionCompletionBean completionBean : getUserBean().getMissionCompletionBeans()) {
