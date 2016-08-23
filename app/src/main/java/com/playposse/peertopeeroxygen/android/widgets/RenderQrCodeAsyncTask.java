@@ -23,15 +23,28 @@ public class RenderQrCodeAsyncTask extends AsyncTask<Void, Void, Bitmap> {
 
     private final Long userId;
     private final ImageView imageView;
-    private final int width;
-    private final int height;
+    private int width;
+    private int height;
+    private int retryCount;
 
-    public RenderQrCodeAsyncTask(Long userId, ImageView imageView) {
+    public RenderQrCodeAsyncTask(Long userId, final ImageView imageView) {
         this.userId = userId;
         this.imageView = imageView;
+        waitForImageDimensionsToBeSet(imageView);
+    }
 
-        width = imageView.getWidth();
-        height = imageView.getHeight();
+    private void waitForImageDimensionsToBeSet(final ImageView imageView) {
+        imageView.post(new Runnable() {
+            @Override
+            public void run() {
+                retryCount++;
+                width = imageView.getWidth();
+                height = imageView.getHeight();
+                if (retryCount < 3) {
+                    waitForImageDimensionsToBeSet(imageView);
+                }
+            }
+        });
     }
 
     @Override

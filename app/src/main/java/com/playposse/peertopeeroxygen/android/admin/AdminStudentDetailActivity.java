@@ -59,10 +59,6 @@ public class AdminStudentDetailActivity extends AdminParentActivity {
         showPoints(teachPointsTextView, PointType.teach, R.string.teach_points_label);
         showPoints(practicePointsTextView, PointType.practice, R.string.practice_points_label);
         showPoints(heartPointsTextView, PointType.heart, R.string.heart_points_label);
-
-        // Load profile photo asynchronously.
-        String photoUrlString = studentBean.getProfilePictureUrl();
-//        new LoadProfilePhotoAsyncTask(profilePhotoImageView, photoUrlString).execute();
     }
 
     private void showPoints(TextView textView, PointType pointType, int messageId) {
@@ -86,35 +82,4 @@ public class AdminStudentDetailActivity extends AdminParentActivity {
                 studentBean.getFbProfileId(),
                 studentBean.getProfilePictureUrl());
     }
-
-//    private class LoadProfilePhotoAsyncTask extends AsyncTask<Void, Void, Bitmap> {
-//
-//        private final ImageView imageView;
-//        private final String photoUrlString;
-//
-//        public LoadProfilePhotoAsyncTask(ImageView imageView, String photoUrlString) {
-//            this.imageView = imageView;
-//            this.photoUrlString = photoUrlString;
-//        }
-//
-//        @Override
-//        protected Bitmap doInBackground(Void... voids) {
-//            final Bitmap photoBitmap;
-//            try {
-//                URL photoUrl = new URL(photoUrlString);
-//                InputStream inputStream = photoUrl.openConnection().getInputStream();
-//                photoBitmap = BitmapFactory.decodeStream(inputStream);
-//                inputStream.close();
-//                return photoBitmap;
-//            } catch (IOException ex) {
-//                Log.e(LOG_CAT, "Failed to load student profile photo." + ex);
-//                return null;
-//            }
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Bitmap photoBitmap) {
-//            imageView.setImageBitmap(photoBitmap);
-//        }
-//    }
 }

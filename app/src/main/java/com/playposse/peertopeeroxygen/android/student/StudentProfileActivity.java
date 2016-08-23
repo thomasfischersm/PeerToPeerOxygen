@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.facebook.FacebookProfilePhotoCache;
+import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.android.widgets.RenderQrCodeAsyncTask;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
@@ -20,6 +21,9 @@ public class StudentProfileActivity extends StudentParentActivity {
     private ImageView profilePhotoImageView;
     private TextView profileNameTextView;
     private ImageView qrCodeImageView;
+    private TextView teachPointsTextView;
+    private TextView practicePointsTextView;
+    private TextView heartPointsTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +32,9 @@ public class StudentProfileActivity extends StudentParentActivity {
 
         profilePhotoImageView = (ImageView) findViewById(R.id.profilePhotoImageView);
         profileNameTextView = (TextView) findViewById(R.id.profileNameTextView);
+        teachPointsTextView = (TextView) findViewById(R.id.teachPointsTextView);
+        practicePointsTextView = (TextView) findViewById(R.id.practicePointsTextView);
+        heartPointsTextView = (TextView) findViewById(R.id.heartPointsTextView);
         qrCodeImageView = (ImageView) findViewById(R.id.qrCodeImageView);
 
         setTitle(getString(R.string.profile_title));
@@ -36,10 +43,13 @@ public class StudentProfileActivity extends StudentParentActivity {
     @Override
     public void receiveData(final DataRepository dataRepository) {
         // Show data.
-        final UserBean userBean = dataRepository.getUserBean();
+        UserBean userBean = dataRepository.getUserBean();
         String fullName =
                 userBean.getFirstName() + " " + userBean.getLastName();
         profileNameTextView.setText(fullName);
+        showPoints(userBean, teachPointsTextView, PointType.teach, R.string.teach_points_label);
+        showPoints(userBean, practicePointsTextView, PointType.practice, R.string.practice_points_label);
+        showPoints(userBean, heartPointsTextView, PointType.heart, R.string.heart_points_label);
 
         // Show profile photo.
         FacebookProfilePhotoCache photoCache = dataServiceConnection
@@ -54,5 +64,16 @@ public class StudentProfileActivity extends StudentParentActivity {
 
         // Show QR code.
         new RenderQrCodeAsyncTask(userBean.getId(), qrCodeImageView).execute();
+    }
+
+    private void showPoints(
+            UserBean userBean,
+            TextView textView,
+            PointType pointType,
+            int messageId) {
+
+        int points = DataRepository.getPointByType(userBean, pointType);
+        String pointsString = String.format(getString(messageId), points);
+        textView.setText(pointsString);
     }
 }
