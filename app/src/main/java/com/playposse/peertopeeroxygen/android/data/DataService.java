@@ -68,34 +68,10 @@ public class DataService extends Service {
         Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_SHORT).show();
     }
 
-    private void makeDataReceivedCallbacks() {
-        for (DataReceivedCallback callback : dataReceivedCallbacks) {
-            callback.receiveData(dataRepository);
-        }
-    }
-
-    private Long getSessionId() {
-        return OxygenSharedPreferences.getSessionId(getApplicationContext());
-    }
-
-    public void redirectToLoginActivity() {
-        // Clear the session id because it may be bad.
-        OxygenSharedPreferences.setSessionId(getApplicationContext(), (long) -1);
-
-        Context context = getApplicationContext();
-        Intent intent = new Intent(context, StudentLoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-    }
-
     /**
      * {@link IBinder} that returns a reference to this.
      */
     public class LocalBinder extends Binder implements BinderForActions {
-
-        public DataService getService() {
-            return DataService.this;
-        }
 
         public void registerDataReceivedCallback(DataReceivedCallback callback) {
             dataReceivedCallbacks.add(callback);
@@ -134,23 +110,31 @@ public class DataService extends Service {
         }
 
         @Override
-        public Long getSessionId() {
-            return DataService.this.getSessionId();
-        }
-
-        @Override
         public DataRepository getDataRepository() {
             return dataRepository;
         }
 
         @Override
         public void makeDataReceivedCallbacks() {
-            DataService.this.makeDataReceivedCallbacks();
+            for (DataReceivedCallback callback : dataReceivedCallbacks) {
+                callback.receiveData(dataRepository);
+            }
+        }
+
+        @Override
+        public Long getSessionId() {
+            return OxygenSharedPreferences.getSessionId(getApplicationContext());
         }
 
         @Override
         public void redirectToLoginActivity() {
-            DataService.this.redirectToLoginActivity();
+            // Clear the session id because it may be bad.
+            OxygenSharedPreferences.setSessionId(getApplicationContext(), (long) -1);
+
+            Context context = getApplicationContext();
+            Intent intent = new Intent(context, StudentLoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
         }
 
         public void registerOrLogin(
