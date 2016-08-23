@@ -6,6 +6,7 @@
     <!-- Admin home -->
     <string name="admin_home_title">Admin home</string>
     <string name="show_mission_ladders_link">Show mission ladders</string>
+    <string name="student_roster_link">Show student roster</string>
 
     <!-- Show mission ladders -->
     <string name="show_mission_ladders_title">Show mission ladders</string>
@@ -35,6 +36,9 @@
     <string name="student_instructions_label">Student instructions</string>
     <string name="buddy_instructions_label">Buddy instructions</string>
     <string name="confirm_delete_mission_message">Do you want to delete mission: %1$s?</string>
+
+    <!-- Student roster -->
+    <string name="student_roster_title">Student Roster</string>
 
     <!-- Mission tree view -->
     <string name="boss_label">Boss: %1$s</string>

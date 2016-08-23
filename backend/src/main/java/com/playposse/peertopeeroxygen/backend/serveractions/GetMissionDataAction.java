@@ -8,6 +8,7 @@ import com.playposse.peertopeeroxygen.backend.schema.MissionBoss;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
+import com.playposse.peertopeeroxygen.backend.schema.UserPoints;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class GetMissionDataAction {
 
         List<OxygenUser> oxygenUsers = ofy()
                 .load()
+                .group(UserPoints.class)
                 .type(OxygenUser.class)
                 .filter("sessionId", sessionId)
                 .list();

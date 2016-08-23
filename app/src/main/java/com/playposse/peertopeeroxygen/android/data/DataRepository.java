@@ -2,7 +2,9 @@ package com.playposse.peertopeeroxygen.android.data;
 
 import android.util.Log;
 
+import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.JsonMap;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
@@ -111,5 +113,14 @@ public class DataRepository {
 
         Log.e(LOG_CAT, "Couldn't find mission " + missionId);
         return null;
+    }
+
+    public static int getPointByType(UserBean userBean, PointType pointType) {
+        JsonMap pointsMap = userBean.getPointsMap();
+        if ((pointsMap != null) && pointsMap.containsKey(pointType.name())) {
+            Object obj = pointsMap.get(pointType.name());
+            return Integer.parseInt(obj.toString());
+        }
+        return 0;
     }
 }

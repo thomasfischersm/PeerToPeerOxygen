@@ -7,7 +7,6 @@ import android.content.pm.Signature;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 
@@ -26,12 +25,7 @@ public class AdminMainActivity extends AdminParentActivity {
     public static final String LOG_TAG = AdminMainActivity.class.getSimpleName();
 
     private TextView openMissionLaddersTextView;
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.admin_menu, menu);
-        return true;
-    }
+    private TextView openStudentRosterTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +38,16 @@ public class AdminMainActivity extends AdminParentActivity {
         openMissionLaddersTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent =
-                        new Intent(AdminMainActivity.this, AdminShowMissionLaddersActivity.class);
-                startActivity(intent);
+                startActivity(
+                        new Intent(AdminMainActivity.this, AdminShowMissionLaddersActivity.class));
+            }
+        });
+
+        openStudentRosterTextView = (TextView) findViewById(R.id.openStudentRosterLink);
+        openStudentRosterTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(AdminMainActivity.this, AdminStudentRosterActivity.class));
             }
         });
 

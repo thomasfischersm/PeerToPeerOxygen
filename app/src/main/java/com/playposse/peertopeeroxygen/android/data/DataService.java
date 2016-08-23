@@ -15,6 +15,7 @@ import com.playposse.peertopeeroxygen.android.data.clientaction.BinderForActions
 import com.playposse.peertopeeroxygen.android.data.clientaction.DeleteMissionAction;
 import com.playposse.peertopeeroxygen.android.data.clientaction.DeleteMissionLadderAction;
 import com.playposse.peertopeeroxygen.android.data.clientaction.DeleteMissionTreeAction;
+import com.playposse.peertopeeroxygen.android.data.clientaction.GetStudentRosterAction;
 import com.playposse.peertopeeroxygen.android.data.clientaction.InviteBuddyToMissionAction;
 import com.playposse.peertopeeroxygen.android.data.clientaction.MissionDataRetrieverAction;
 import com.playposse.peertopeeroxygen.android.data.clientaction.RegisterOrLoginAction;
@@ -193,6 +194,10 @@ public class DataService extends Service {
 
         public void reportMissionComplete(final Long studentId, final Long missionId) {
             new ReportMissionCompleteAction(this, studentId, missionId).execute();
+        }
+
+        public void getStudentRoster(GetStudentRosterAction.StudentRosterCallback callback) {
+            new GetStudentRosterAction(this, callback).execute();
         }
 
         public void reload() {

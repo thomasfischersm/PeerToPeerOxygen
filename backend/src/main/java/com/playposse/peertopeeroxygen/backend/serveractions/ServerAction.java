@@ -56,4 +56,12 @@ public class ServerAction {
         userBean.setSessionId(null);
         return userBean;
     }
+
+    protected static List<UserBean> stripForSafety(List<UserBean> userBeans) {
+        for (UserBean userBean : userBeans) {
+            stripForSafety(userBean);
+        }
+
+        return userBeans;
+    }
 }

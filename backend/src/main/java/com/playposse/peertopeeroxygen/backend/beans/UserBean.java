@@ -2,9 +2,12 @@ package com.playposse.peertopeeroxygen.backend.beans;
 
 import com.playposse.peertopeeroxygen.backend.schema.MissionCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
+import com.playposse.peertopeeroxygen.backend.schema.UserPoints;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Equivalent of {@link OxygenUser} for transport across the network.
@@ -21,6 +24,7 @@ public class UserBean {
     private String name;
     private String profilePictureUrl;
     private List<MissionCompletionBean> missionCompletionBeans = new ArrayList<>();
+    private Map<String, Integer> pointsMap = new HashMap<>();
 
     public UserBean() {
     }
@@ -38,6 +42,10 @@ public class UserBean {
 
         for (MissionCompletion missionCompletion : oxygenUser.getMissionCompletions().values()) {
             missionCompletionBeans.add(new MissionCompletionBean(missionCompletion));
+        }
+
+        for (UserPoints point : oxygenUser.getPoints().values()) {
+            pointsMap.put(point.getType().name(), point.getCount());
         }
     }
 
@@ -83,6 +91,10 @@ public class UserBean {
 
     public void setFirebaseToken(String firebaseToken) {
         this.firebaseToken = firebaseToken;
+    }
+
+    public Map<String, Integer> getPointsMap() {
+        return pointsMap;
     }
 
     public List<MissionCompletionBean> getMissionCompletionBeans() {

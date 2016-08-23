@@ -88,6 +88,10 @@
             android:launchMode="singleTop"
             android:parentActivityName=".student.StudentMainActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".admin.AdminStudentRosterActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".admin.AdminMainActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
     </application>
-
 </manifest>

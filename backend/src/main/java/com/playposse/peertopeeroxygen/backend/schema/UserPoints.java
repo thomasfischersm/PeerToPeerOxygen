@@ -3,8 +3,6 @@ package com.playposse.peertopeeroxygen.backend.schema;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
-import java.util.List;
-
 /**
  * Objectify Entity that represents how many points of a certain type a particular user has.
  */
@@ -12,9 +10,9 @@ import java.util.List;
 public class UserPoints {
 
     public enum PointType {
-        hearts,
-        dancers,
-        mortarboards,
+        teach,
+        practice,
+        heart,
     }
 
     @Id private Long id;

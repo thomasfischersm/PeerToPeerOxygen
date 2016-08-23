@@ -20,6 +20,7 @@ import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionLadderAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetMissionDataAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.GetStudentRosterAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.InviteBuddyToMissionAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.RegisterOrLoginAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.ReportMissionCompleteAction;
@@ -30,6 +31,7 @@ import com.playposse.peertopeeroxygen.backend.serveractions.ServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.UpdateFirebaseTokenAction;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -174,5 +176,14 @@ public class PeerToPeerOxygenEndPoint {
             throws UnauthorizedException, IOException {
 
         ReportMissionCompleteAction.reportMissionComplete(sessionId, studentId, missionId);
+    }
+
+    @ApiMethod(name = "getStudentRoster")
+    public List<UserBean> getStudentRoster(@Named("sessionId") Long sessionId)
+            throws UnauthorizedException {
+
+        protectByAdminCheck(sessionId);
+
+        return new GetStudentRosterAction().getStudentRoster();
     }
 }
