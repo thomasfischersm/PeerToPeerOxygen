@@ -19,7 +19,7 @@ public class MissionTreeUntangler {
     private static final String LOG_CAT = MissionTreeUntangler.class.getSimpleName();
 
     public static List<List<MissionPlaceHolder>> untangle(MissionTreeBean missionTreeBean) {
-        return sortIntoRows(sortIntoList(missionTreeBean));
+        return moveChildrenUnderParent(sortIntoRows(sortIntoList(missionTreeBean)));
     }
 
 //    private static MissionTreeMeasurements sortVertically(MissionTreeBean missionTreeBean) {
@@ -142,6 +142,66 @@ public class MissionTreeUntangler {
             return "Tree: " + holder.getMissionTreeBean().getName();
         } else {
             return holder.getMissionBean().getName();
+        }
+    }
+
+    private static List<List<MissionPlaceHolder>> moveChildrenUnderParent(
+            List<List<MissionPlaceHolder>> rows) {
+
+        for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
+            List<MissionPlaceHolder> row = rows.get(rowIndex);
+            for (int columnIndex = 0; columnIndex < row.size(); columnIndex++) {
+                MissionPlaceHolder holder = row.get(columnIndex);
+                int maxParentRowIndex = -1;
+                for (MissionPlaceHolder parent : holder.getParents()) {
+                    maxParentRowIndex = Math.max(maxParentRowIndex, parent.getRow());
+                }
+                if (maxParentRowIndex < holder.getRow() - 1) {
+                    moveToRowEnd(rows, holder, maxParentRowIndex + 1);
+                    columnIndex--;
+                }
+            }
+        }
+
+        return rows;
+    }
+
+    private static void moveToRowEnd(
+            List<List<MissionPlaceHolder>> rows,
+            MissionPlaceHolder holder,
+            int newRowIndex) {
+
+        move(rows, holder, newRowIndex, rows.get(newRowIndex).size());
+    }
+
+    private static void move(
+            List<List<MissionPlaceHolder>> rows,
+            MissionPlaceHolder holder,
+            int newRowIndex,
+            int newColumnIndex) {
+
+        // Remove from old row
+        int oldRowIndex = holder.getRow();
+        int oldColumnIndex = holder.getColumn();
+        List<MissionPlaceHolder> oldRow = rows.get(oldRowIndex);
+        oldRow.remove(oldColumnIndex);
+
+        // Move holders on the old column into the vacated space.
+        for (int columnIndex = oldColumnIndex; columnIndex < oldRow.size(); columnIndex++) {
+            MissionPlaceHolder otherHolder = oldRow.get(columnIndex);
+            otherHolder.setColumn(otherHolder.getColumn() - 1);
+        }
+
+        // Move into new row
+        List<MissionPlaceHolder> newRow = rows.get(newRowIndex);
+        newRow.add(newColumnIndex, holder);
+        holder.setRow(newRowIndex);
+        holder.setColumn(newRow.indexOf(holder));
+
+        // Move holders in the new row to the right.
+        for (int columnIndex = newColumnIndex + 1; columnIndex < newRow.size(); columnIndex++) {
+            MissionPlaceHolder otherHolder = newRow.get(columnIndex);
+            otherHolder.setColumn(otherHolder.getColumn() + 1);
         }
     }
 
