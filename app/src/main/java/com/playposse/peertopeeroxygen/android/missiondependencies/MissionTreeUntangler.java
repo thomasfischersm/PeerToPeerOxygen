@@ -189,7 +189,21 @@ public class MissionTreeUntangler {
         // Move holders on the old column into the vacated space.
         for (int columnIndex = oldColumnIndex; columnIndex < oldRow.size(); columnIndex++) {
             MissionPlaceHolder otherHolder = oldRow.get(columnIndex);
+            assert otherHolder.getColumn() - 1 == columnIndex;
             otherHolder.setColumn(otherHolder.getColumn() - 1);
+        }
+
+        // If the row is empty, move everyone up.
+        if (oldRow.size() == 0) {
+            rows.remove(oldRow);
+            for (int rowIndex = oldRowIndex; rowIndex < rows.size(); rowIndex++) {
+                List<MissionPlaceHolder> row = rows.get(rowIndex);
+                for (int columnIndex = 0; columnIndex < row.size(); columnIndex++) {
+                    MissionPlaceHolder otherHolder = row.get(columnIndex);
+                    assert otherHolder.getRow() - 1 == rowIndex;
+                    otherHolder.setRow(otherHolder.getRow() - 1);
+                }
+            }
         }
 
         // Move into new row
@@ -201,6 +215,7 @@ public class MissionTreeUntangler {
         // Move holders in the new row to the right.
         for (int columnIndex = newColumnIndex + 1; columnIndex < newRow.size(); columnIndex++) {
             MissionPlaceHolder otherHolder = newRow.get(columnIndex);
+            assert  otherHolder.getColumn() + 1 == columnIndex;
             otherHolder.setColumn(otherHolder.getColumn() + 1);
         }
     }
