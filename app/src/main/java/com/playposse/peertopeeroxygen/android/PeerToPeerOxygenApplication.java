@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.playposse.peertopeeroxygen.android.data.DataService;
+import com.playposse.peertopeeroxygen.android.firebase.OxygenFirebaseMessagingService;
 
 /**
  * An {@link Application} that starts the {@link DataService} when the application is started to
@@ -19,6 +20,10 @@ public class PeerToPeerOxygenApplication extends Application {
         super.onCreate();
 
         startService(new Intent(this, DataService.class));
+
+        // Fixes a timing bug where the OxygenFirebaseMessagingService isn't ready when a message
+        // comes in.
+        startService(new Intent(this, OxygenFirebaseMessagingService.class));
     }
 
     @Override
@@ -27,5 +32,6 @@ public class PeerToPeerOxygenApplication extends Application {
         super.onTerminate();
 
         stopService(new Intent(this, DataService.class));
+        stopService(new Intent(this, OxygenFirebaseMessagingService.class));
     }
 }

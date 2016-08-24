@@ -51,6 +51,7 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
     public void onCreate() {
         super.onCreate();
 
+        Log.i(LOG_CAT, "OxygenFirebaseMessagingService.onCreate is called");
         Intent intent = new Intent(this, DataService.class);
         dataServiceConnection = new DataServiceConnection(new EmptyDataReceivedCallback(), false);
         bindService(intent, dataServiceConnection, Context.BIND_AUTO_CREATE);
@@ -146,6 +147,10 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
 
     private void handleUpdatePoints(RemoteMessage remoteMessage) {
         UpdatePointsMessage message = new UpdatePointsMessage(remoteMessage);
+        Log.i(LOG_CAT, "dataServiceConnection" + dataServiceConnection);
+        Log.i(LOG_CAT, "dataServiceConnection.getLocalBinder()" + dataServiceConnection.getLocalBinder());
+        Log.i(LOG_CAT, "dataServiceConnection.getLocalBinder().getDataRepository()" + dataServiceConnection.getLocalBinder().getDataRepository());
+        Log.i(LOG_CAT, "dataServiceConnection.getLocalBinder().getDataRepository().getUserBean()" + dataServiceConnection.getLocalBinder().getDataRepository().getUserBean());
         UserBean userBean = dataServiceConnection.getLocalBinder().getDataRepository().getUserBean();
 
         if (userBean.getPointsMap() == null) {
