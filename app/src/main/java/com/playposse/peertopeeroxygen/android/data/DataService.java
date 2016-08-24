@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.data.clientaction.AddPointsByAdminAction;
 import com.playposse.peertopeeroxygen.android.data.clientaction.BinderForActions;
 import com.playposse.peertopeeroxygen.android.data.clientaction.DeleteMissionAction;
 import com.playposse.peertopeeroxygen.android.data.clientaction.DeleteMissionLadderAction;
@@ -211,6 +212,11 @@ public class DataService extends Service {
 
         public void getStudentRoster(GetStudentRosterAction.StudentRosterCallback callback) {
             new GetStudentRosterAction(this, callback).execute();
+        }
+
+        public void addPointsByAdmin(Long studentId,String pointType,int addedPoints) {
+            new AddPointsByAdminAction(this, getSessionId(), studentId, pointType, addedPoints)
+                    .execute();
         }
 
         public void reload() {

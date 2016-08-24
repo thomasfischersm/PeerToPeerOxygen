@@ -27,7 +27,7 @@ public class UserBeanParcelable implements Parcelable {
     private String name;
     private String profilePictureUrl;
     private Long created;
-    private Map<PointType, Integer> pointMap;
+    private Map<String, Integer> pointsMap = new HashMap<>();
 
     public int describeContents() {
         return 0;
@@ -44,12 +44,12 @@ public class UserBeanParcelable implements Parcelable {
         out.writeString(profilePictureUrl);
         out.writeLong((created != null) ? created : 0);
 
-        if (pointMap == null) {
+        if (pointsMap == null) {
             out.writeInt(0);
         } else {
-            out.writeInt(pointMap.size());
-            for (Map.Entry<PointType, Integer> entry : pointMap.entrySet()) {
-                out.writeString(entry.getKey().name());
+            out.writeInt(pointsMap.size());
+            for (Map.Entry<String, Integer> entry : pointsMap.entrySet()) {
+                out.writeString(entry.getKey());
                 out.writeInt(entry.getValue());
             }
         }
@@ -78,11 +78,11 @@ public class UserBeanParcelable implements Parcelable {
         created = in.readLong();
 
         int pointMapSize = in.readInt();
-        pointMap = new HashMap<>(pointMapSize);
+        pointsMap = new HashMap<>(pointMapSize);
         for (int i = 0; i < pointMapSize; i++) {
             PointType pointType = PointType.valueOf(in.readString());
             int pointCount = in.readInt();
-            pointMap.put(pointType, pointCount);
+            pointsMap.put(pointType.name(), pointCount);
         }
     }
 
@@ -98,14 +98,14 @@ public class UserBeanParcelable implements Parcelable {
         created = userBean.getCreated();
 
         if (userBean.getPointsMap() != null) {
-            pointMap = new HashMap<>(userBean.getPointsMap().size());
+            pointsMap = new HashMap<>(userBean.getPointsMap().size());
             for (Map.Entry<String, Object> entry : userBean.getPointsMap().entrySet()) {
                 PointType pointType = PointType.valueOf(entry.getKey());
                 int pointCount = Integer.parseInt(entry.getValue().toString());
-                pointMap.put(pointType, pointCount);
+                pointsMap.put(pointType.name(), pointCount);
             }
         } else {
-            pointMap = new HashMap<>();
+            pointsMap = new HashMap<>();
         }
     }
 
@@ -182,8 +182,8 @@ public class UserBeanParcelable implements Parcelable {
         return created;
     }
 
-    public Map<PointType, Integer> getPointMap() {
-        return pointMap;
+    public Map<String, Integer> getPointsMap() {
+        return pointsMap;
     }
 
     public void setProfilePictureUrl(String profilePictureUrl) {

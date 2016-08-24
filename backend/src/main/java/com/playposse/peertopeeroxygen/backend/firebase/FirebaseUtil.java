@@ -27,9 +27,12 @@ public class FirebaseUtil {
     private static final String TYPE_KEY = "type";
     private static final String MISSION_INVITE_TYPE = "missionInvite";
     private static final String MISSION_COMPLETION_TYPE = "missionCompletion";
+    private static final String UPDATE_STUDENT_POINTS_TYPE = "updateStudentPoints";
+
     private static final String FROM_STUDENT_ID = "fromStudentId";
     private static final String FROM_STUDENT_BEAN = "fromStudentBean";
     private static final String BUDDY_BEAN = "buddyBean";
+    private static final String STUDENT_BEAN = "studentBean";
     private static final String MISSION_LADDER_KEY = "missionLadderId";
     private static final String MISSION_TREE_KEY = "missionTreeId";
     private static final String MISSION_KEY = "missionid";
@@ -75,6 +78,17 @@ public class FirebaseUtil {
         return sendMessageToDevice(firebaseToken, rootNode);
     }
 
+    public static String sendPointsUpdateToStudent(UserBean studentBean) throws IOException {
+        Gson gson = new Gson();
+        String studentBeanJson = gson.toJson(studentBean);
+
+        JSONObject rootNode = new JSONObject();
+        rootNode.put(TYPE_KEY, UPDATE_STUDENT_POINTS_TYPE);
+        rootNode.put(STUDENT_BEAN, studentBeanJson);
+
+        return sendMessageToDevice(studentBean.getFirebaseToken(), rootNode);
+    }
+
     private static String sendMessageToDevice(String firebaseToken, JSONObject data)
             throws IOException {
 
@@ -82,6 +96,7 @@ public class FirebaseUtil {
         rootNode.put("to", firebaseToken);
         rootNode.put("data", data);
 
+        log.info("Firebase payload: " + rootNode.toString());
         return sendMessage(rootNode.toString());
     }
 

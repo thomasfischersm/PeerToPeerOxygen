@@ -40,7 +40,7 @@ public class RenderQrCodeAsyncTask extends AsyncTask<Void, Void, Bitmap> {
                 retryCount++;
                 width = imageView.getWidth();
                 height = imageView.getHeight();
-                if (retryCount < 3) {
+                if ((retryCount < 6) && (width == 0)) {
                     waitForImageDimensionsToBeSet(imageView);
                 }
             }
@@ -49,6 +49,14 @@ public class RenderQrCodeAsyncTask extends AsyncTask<Void, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(Void... voids) {
+        while (width == 0) {
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException ex) {
+                Log.e(LOG_CAT, "Failed to wait for width.", ex);
+            }
+        }
+
         try {
             return generateQrCode(userId.toString(), width, height);
         } catch (WriterException ex) {

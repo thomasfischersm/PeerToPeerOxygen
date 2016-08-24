@@ -17,6 +17,7 @@ import com.playposse.peertopeeroxygen.backend.beans.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionTreeBean;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
+import com.playposse.peertopeeroxygen.backend.serveractions.AddPointsByAdminAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionLadderAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetMissionDataAction;
@@ -185,5 +186,18 @@ public class PeerToPeerOxygenEndPoint {
         protectByAdminCheck(sessionId);
 
         return new GetStudentRosterAction().getStudentRoster();
+    }
+
+    @ApiMethod(name = "addPointsByAdmin")
+    public void addPointsByAdmin(
+            @Named("sessionId") Long sessionId,
+            @Named("studentId") Long studentId,
+            @Named("pointType") String pointType,
+            @Named("addedPoints") int addedPoints)
+            throws UnauthorizedException, IOException {
+
+        protectByAdminCheck(sessionId);
+
+        new AddPointsByAdminAction().addPointsByAdmin(sessionId, studentId, pointType, addedPoints);
     }
 }

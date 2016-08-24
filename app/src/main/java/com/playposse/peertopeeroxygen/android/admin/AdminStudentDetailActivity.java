@@ -1,15 +1,19 @@
 package com.playposse.peertopeeroxygen.android.admin;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
+import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.facebook.FacebookProfilePhotoCache;
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
+import com.playposse.peertopeeroxygen.android.widgets.NumberPickerDialogBuilder;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -56,18 +60,44 @@ public class AdminStudentDetailActivity extends AdminParentActivity {
         // Show data.
         nameTextView.setText(studentName);
         signupDateTextView.setText(signupDateLabel);
-        showPoints(teachPointsTextView, PointType.teach, R.string.teach_points_label);
-        showPoints(practicePointsTextView, PointType.practice, R.string.practice_points_label);
-        showPoints(heartPointsTextView, PointType.heart, R.string.heart_points_label);
+        refreshPoints();
     }
 
-    private void showPoints(TextView textView, PointType pointType, int messageId) {
-        Integer points = studentBean.getPointMap().get(pointType);
+    private void refreshPoints() {
+        showPointsAndAddHandler(teachPointsTextView, PointType.teach, R.string.teach_points_label);
+        showPointsAndAddHandler(practicePointsTextView, PointType.practice, R.string.practice_points_label);
+        showPointsAndAddHandler(heartPointsTextView, PointType.heart, R.string.heart_points_label);
+    }
+
+    private void showPointsAndAddHandler(
+            TextView textView,
+            final PointType pointType,
+            int messageId) {
+
+        Integer points = studentBean.getPointsMap().get(pointType.name());
         if (points == null) {
             points = 0;
         }
         String pointsString = String.format(getString(messageId), points);
         textView.setText(pointsString);
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String dialogTitle = String.format(
+                        getString(R.string.add_points_dialog_title),
+                        pointType.name());
+                NumberPickerDialogBuilder.build(
+                        AdminStudentDetailActivity.this,
+                        dialogTitle,
+                        new NumberPickerDialogBuilder.NumberPickerDialogCallback() {
+                            @Override
+                            public void onPickedNumer(int addedPoints) {
+                                addPoints(pointType, addedPoints);
+                            }
+                        });
+            }
+        });
     }
 
     @Override
@@ -81,5 +111,20 @@ public class AdminStudentDetailActivity extends AdminParentActivity {
                 profilePhotoImageView,
                 studentBean.getFbProfileId(),
                 studentBean.getProfilePictureUrl());
+    }
+
+    private void addPoints(PointType pointType, int addedPoints) {
+        Log.i(LOG_CAT, "About to add " + addedPoints + " " + pointType.name() + " points.");
+        DataService.LocalBinder binder = dataServiceConnection.getLocalBinder();
+        binder.addPointsByAdmin(studentBean.getId(), pointType.name(), addedPoints);
+
+        Integer pointCount = studentBean.getPointsMap().get(pointType.name());
+        if (pointCount == null) {
+            pointCount = 0;
+        }
+        pointCount += addedPoints;
+        studentBean.getPointsMap().put(pointType.name(), pointCount);
+
+        refreshPoints();
     }
 }

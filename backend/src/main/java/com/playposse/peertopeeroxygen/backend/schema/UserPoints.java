@@ -19,6 +19,9 @@ public class UserPoints {
     private PointType type;
     private int count;
 
+    public UserPoints() {
+    }
+
     public UserPoints(PointType type, int count) {
         this.type = type;
         this.count = count;

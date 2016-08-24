@@ -17,8 +17,10 @@ import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
 import com.playposse.peertopeeroxygen.android.student.StudentBuddyMissionActivity;
 import com.playposse.peertopeeroxygen.android.student.StudentMissionTreeActivity;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.JsonMap;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
 import java.util.Map;
 
@@ -33,10 +35,12 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TYPE_KEY = "type";
     private static final String MISSION_INVITE_TYPE = "missionInvite";
     private static final String MISSION_COMPLETION_TYPE = "missionCompletion";
+    private static final String UPDATE_STUDENT_POINTS_TYPE = "updateStudentPoints";
 
     private static final String FROM_STUDENT_ID = "fromStudentId";
     private static final String FROM_STUDENT_BEAN = "fromStudentBean";
     private static final String BUDDY_BEAN = "buddyBean";
+    private static final String STUDENT_BEAN = "studentBean";
     private static final String MISSION_LADDER_KEY = "missionLadderId";
     private static final String MISSION_TREE_KEY = "missionTreeId";
     private static final String MISSION_KEY = "missionid";
@@ -76,6 +80,9 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
                 break;
             case MISSION_COMPLETION_TYPE:
                 handleMissionCompletion(remoteMessage);
+                break;
+            case UPDATE_STUDENT_POINTS_TYPE:
+                handleUpdatePoints(remoteMessage);
                 break;
             default:
                 Log.w(LOG_CAT, "Received an unknown message type from Firebase: "
@@ -119,18 +126,12 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
         missionCompletion.setStudyCount(missionCompletion.getStudyCount() + 1);
 
         // Send a toast.
-        final Context context = getApplicationContext();
-        final String message = String.format(
+        Context context = getApplicationContext();
+        String message = String.format(
                 context.getString(R.string.mission_completion_toast),
                 missionBean.getName(),
                 buddyBean.getFirstName() + " " + buddyBean.getLastName());
-        Handler h = new Handler(context.getMainLooper());
-        h.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-            }
-        });
+        sendToast(message);
 
         // Re-direct user back to the tree activity.
         Intent intent = ExtraConstants.createIntent(
@@ -141,6 +142,37 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
                 null); /* missionId */
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    private void handleUpdatePoints(RemoteMessage remoteMessage) {
+        UpdatePointsMessage message = new UpdatePointsMessage(remoteMessage);
+        UserBean userBean = dataServiceConnection.getLocalBinder().getDataRepository().getUserBean();
+
+        if (userBean.getPointsMap() == null) {
+            userBean.setPointsMap(new JsonMap());
+        }
+
+        Map<String, Integer> pointMap = message.getStudentBean().getPointsMap();
+        if (pointMap != null) {
+            for (Map.Entry<String, Integer> entry : pointMap.entrySet()) {
+                userBean.getPointsMap().put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        dataServiceConnection.getLocalBinder().makeDataReceivedCallbacks();
+
+        sendToast(getString(R.string.admin_sent_points_toast));
+    }
+
+    private void sendToast(final String message) {
+        final Context context = getApplicationContext();
+        Handler h = new Handler(context.getMainLooper());
+        h.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     /**
@@ -215,6 +247,21 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
         @Override
         public void runOnUiThread(Runnable runnable) {
             // Ignore.
+        }
+    }
+
+    /**
+     * A Firebase message that the AppEngine sends when an admin has updated the points of this
+     * student.
+     */
+    private static final class UpdatePointsMessage extends FirebaseMessage {
+
+        public UpdatePointsMessage(RemoteMessage message) {
+            super(message);
+        }
+
+        public UserBeanParcelable getStudentBean() {
+            return UserBeanParcelable.fromJson(data.get(STUDENT_BEAN));
         }
     }
 }
