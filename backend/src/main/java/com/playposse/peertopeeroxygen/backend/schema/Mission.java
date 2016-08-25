@@ -6,7 +6,9 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Load;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Objectify entity that describes a mission.
@@ -19,6 +21,7 @@ public class Mission {
     private String studentInstruction;
     private String buddyInstruction;
     @Load private List<Ref<Mission>> requiredMissions = new ArrayList<>();
+    private Map<UserPoints.PointType, Integer> pointCostMap = new HashMap<>();
 //    private byte[] icon;
 
     /**
@@ -67,5 +70,9 @@ public class Mission {
 
     public List<Ref<Mission>> getRequiredMissions() {
         return requiredMissions;
+    }
+
+    public Map<UserPoints.PointType, Integer> getPointCostMap() {
+        return pointCostMap;
     }
 }

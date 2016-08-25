@@ -132,11 +132,26 @@ public class DataRepository {
     }
 
     public static int getPointByType(UserBean userBean, PointType pointType) {
-        JsonMap pointsMap = userBean.getPointsMap();
+        return getPointByType(userBean.getPointsMap(), pointType);
+    }
+
+    public static int getPointByType(MissionBean missionBean, PointType pointType) {
+        return getPointByType(missionBean.getPointCostMap(), pointType);
+    }
+
+    private static int getPointByType(JsonMap pointsMap, PointType pointType) {
         if ((pointsMap != null) && pointsMap.containsKey(pointType.name())) {
             Object obj = pointsMap.get(pointType.name());
             return Integer.parseInt(obj.toString());
         }
         return 0;
+    }
+
+    public static void setPoint(MissionBean missionBean, int pointCount, PointType pointType) {
+        if (missionBean.getPointCostMap() == null) {
+            missionBean.setPointCostMap(new JsonMap());
+        }
+
+        missionBean.getPointCostMap().put(pointType.name(), pointCount);
     }
 }

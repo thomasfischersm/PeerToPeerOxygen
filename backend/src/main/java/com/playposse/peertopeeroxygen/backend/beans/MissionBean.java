@@ -2,12 +2,14 @@ package com.playposse.peertopeeroxygen.backend.beans;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
-import com.googlecode.objectify.annotation.Id;
-import com.googlecode.objectify.annotation.Load;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
+import com.playposse.peertopeeroxygen.backend.schema.UserPoints;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Equivalent of {@link Mission} for transport across the network.
@@ -19,6 +21,7 @@ public class MissionBean {
     private String studentInstruction;
     private String buddyInstruction;
     private List<Long> requiredMissionIds = new ArrayList<>();
+    private Map<String, Integer> pointCostMap = new HashMap<>();
 
     public MissionBean() {
     }
@@ -32,6 +35,14 @@ public class MissionBean {
         for (Ref<Mission> requiredMissionRef : mission.getRequiredMissions()) {
             if (requiredMissionRef.get() != null) {
                 requiredMissionIds.add(requiredMissionRef.getKey().getId());
+            }
+        }
+
+        if (pointCostMap != null) {
+            Set<Map.Entry<UserPoints.PointType, Integer>> pointMapEntries =
+                    mission.getPointCostMap().entrySet();
+            for (Map.Entry<UserPoints.PointType, Integer> entry : pointMapEntries) {
+                pointCostMap.put(entry.getKey().name(), entry.getValue());
             }
         }
     }
@@ -72,12 +83,21 @@ public class MissionBean {
         return requiredMissionIds;
     }
 
+    public Map<String, Integer> getPointCostMap() {
+        return pointCostMap;
+    }
+
     public Mission toEntity() {
         Mission mission = new Mission(id, name, studentInstruction, buddyInstruction);
 
         for (Long requiredMissionId : requiredMissionIds) {
             Key<Mission> requiredMissionKey = Key.create(Mission.class, requiredMissionId);
             mission.getRequiredMissions().add(Ref.create(requiredMissionKey));
+        }
+
+        for (Map.Entry<String, Integer> entry : pointCostMap.entrySet()) {
+            UserPoints.PointType pointType = UserPoints.PointType.valueOf(entry.getKey());
+            mission.getPointCostMap().put(pointType, entry.getValue());
         }
 
         return mission;

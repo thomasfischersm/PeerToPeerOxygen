@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 
+import com.playposse.peertopeeroxygen.android.MathUtil;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
+import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.widgets.RequiredMissionListView;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
@@ -23,6 +25,9 @@ public class AdminEditMissionActivity extends AdminParentActivity {
     private MissionTreeBean missionTreeBean;
 
     EditText nameEditText;
+    EditText teachPointEditText;
+    EditText practicePointEditText;
+    EditText heartPointEditText;
     EditText studentInstructionEditText;
     EditText buddyInstructionEditText;
     private RequiredMissionListView requiredMissionsListView;
@@ -39,6 +44,9 @@ public class AdminEditMissionActivity extends AdminParentActivity {
         missionBean = null;
 
         nameEditText = (EditText) findViewById(R.id.missionNameEditText);
+        teachPointEditText = (EditText) findViewById(R.id.teachPointEditText);
+        practicePointEditText = (EditText) findViewById(R.id.practicePointEditText);
+        heartPointEditText = (EditText) findViewById(R.id.heartPointEditText);
         studentInstructionEditText = (EditText) findViewById(R.id.studentInstructionsEditText);
         buddyInstructionEditText = (EditText) findViewById(R.id.buddyInstructionsEditText);
         requiredMissionsListView =
@@ -74,6 +82,12 @@ public class AdminEditMissionActivity extends AdminParentActivity {
                     missionTreeId);
 
             nameEditText.setText(missionBean.getName());
+            teachPointEditText.setText(
+                    "" + DataRepository.getPointByType(missionBean, PointType.teach));
+            practicePointEditText.setText(
+                    "" + DataRepository.getPointByType(missionBean, PointType.practice));
+            heartPointEditText.setText(
+                    "" + DataRepository.getPointByType(missionBean, PointType.heart));
             studentInstructionEditText.setText(missionBean.getStudentInstruction());
             buddyInstructionEditText.setText(missionBean.getBuddyInstruction());
 
@@ -99,6 +113,9 @@ public class AdminEditMissionActivity extends AdminParentActivity {
         } else {
             shouldSave =
                     !nameEditText.getText().toString().equals(missionBean.getName())
+                            || hasPointCountChanged(teachPointEditText, PointType.teach)
+                            || hasPointCountChanged(practicePointEditText, PointType.practice)
+                            || hasPointCountChanged(heartPointEditText, PointType.heart)
                             || !studentInstructionEditText.getText().toString().equals(missionBean.getStudentInstruction())
                             || !buddyInstructionEditText.getText().toString().equals(missionBean.getBuddyInstruction())
                             || requiredMissionsListView.isDirty();
@@ -107,6 +124,9 @@ public class AdminEditMissionActivity extends AdminParentActivity {
         // Save mission.
         if (shouldSave) {
             missionBean.setName(nameEditText.getText().toString());
+            setPointOnMissionBean(teachPointEditText, PointType.teach);
+            setPointOnMissionBean(practicePointEditText, PointType.practice);
+            setPointOnMissionBean(heartPointEditText, PointType.heart);
             missionBean.setStudentInstruction(studentInstructionEditText.getText().toString());
             missionBean.setBuddyInstruction(buddyInstructionEditText.getText().toString());
             missionBean.setRequiredMissionIds(requiredMissionsListView.getRequiredMissionIds());
@@ -115,5 +135,16 @@ public class AdminEditMissionActivity extends AdminParentActivity {
                     .getLocalBinder()
                     .save(missionLadderId, missionTreeId, missionBean);
         }
+    }
+
+    private void setPointOnMissionBean(EditText editText, PointType pointType) {
+        int pointCount = MathUtil.tryParseInt(editText.getText().toString(), 0);
+        DataRepository.setPoint(missionBean, pointCount, pointType);
+    }
+
+    private boolean hasPointCountChanged(EditText editText, PointType pointType) {
+        int originalCount = DataRepository.getPointByType(missionBean, pointType);
+        int newCount = MathUtil.tryParseInt(editText.getText().toString(), 0);
+        return originalCount != newCount;
     }
 }

@@ -33,6 +33,9 @@
 
     <!-- Edit mission -->
     <string name="edit_mission_title">Mission: %1$s</string>
+    <string name="teach_point_cost_label">Teach point cost</string>
+    <string name="practice_point_cost_label">Practice point cost</string>
+    <string name="heart_point_cost_label">Heart point cost</string>
     <string name="student_instructions_label">Student instructions</string>
     <string name="buddy_instructions_label">Buddy instructions</string>
     <string name="confirm_delete_mission_message">Do you want to delete mission: %1$s?</string>
