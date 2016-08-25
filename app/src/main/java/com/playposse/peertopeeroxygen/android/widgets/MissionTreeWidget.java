@@ -20,11 +20,13 @@ import android.widget.Toast;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
+import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.android.missiondependencies.MissionAvailabilityChecker;
 import com.playposse.peertopeeroxygen.android.missiondependencies.MissionPlaceHolder;
 import com.playposse.peertopeeroxygen.android.missiondependencies.MissionTreeUntangler;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.student.StudentMissionActivity;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
 import java.util.List;
@@ -272,7 +274,8 @@ public class MissionTreeWidget extends View {
                                 getContext().getString(R.string.boss_label),
                                 holder.getMissionTreeBean().getName());
                     } else {
-                        txt = holder.getMissionBean().getName();
+                        txt = holder.getMissionBean().getName()
+                                + formatCostString(holder.getMissionBean());
                     }
 
                     int textX = upperLeftX + TEXT_PADDING;
@@ -353,5 +356,46 @@ public class MissionTreeWidget extends View {
         Resources resources = getResources();
         DisplayMetrics displayMetrics = resources.getDisplayMetrics();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, displayMetrics);
+    }
+
+    private String formatCostString(MissionBean missionBean) {
+        StringBuilder sb = new StringBuilder("\n");
+
+        int teachCount = formatCostString(
+                sb,
+                R.string.teach_point_abbreviation,
+                missionBean,
+                PointType.teach);
+        int practiceCount = formatCostString(
+                sb,
+                R.string.practice_point_abbreviation,
+                missionBean,
+                PointType.practice);
+        int heartCount = formatCostString(
+                sb,
+                R.string.heart_point_abbreviation,
+                missionBean,
+                PointType.heart);
+
+        if (teachCount == 0) {
+            return "";
+        } else {
+            return sb.toString();
+        }
+    }
+
+    private int formatCostString(
+            StringBuilder sb,
+            int resId,
+            MissionBean missionBean,
+            PointType pointType) {
+
+        int pointCount = DataRepository.getPointByType(missionBean, pointType);
+        String teachPointAbbreviation = getContext().getString(resId);
+        if (sb.length() > 1) {
+            sb.append(" ");
+        }
+        sb.append(String.format(teachPointAbbreviation, pointCount));
+        return pointCount;
     }
 }

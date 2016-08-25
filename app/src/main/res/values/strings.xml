@@ -48,6 +48,9 @@
 
     <!-- Mission tree view -->
     <string name="boss_label">Boss: %1$s</string>
+    <string name="teach_point_abbreviation">T: %1$s</string>
+    <string name="practice_point_abbreviation">P: %1$s</string>
+    <string name="heart_point_abbreviation">H: %1$s</string>
 
     <!-- Student mission activity -->
     <string name="start_scan_button">Start scanning buddy profile.</string>
