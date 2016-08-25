@@ -154,4 +154,18 @@ public class DataRepository {
 
         missionBean.getPointCostMap().put(pointType.name(), pointCount);
     }
+
+    public static void addPoints(UserBean userBean, PointType pointType, int pointCount) {
+        JsonMap pointsMap = userBean.getPointsMap();
+        if (pointsMap == null) {
+            userBean.setPointsMap(new JsonMap());
+        }
+
+        if (pointsMap.containsKey(pointType.name())) {
+            Object obj = pointsMap.get(pointType.name());
+            pointCount += Integer.parseInt(obj.toString());
+        }
+
+        pointsMap.put(pointType.name(), pointCount);
+    }
 }

@@ -9,8 +9,11 @@ import com.playposse.peertopeeroxygen.backend.schema.MentoringAuditLog;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
 import com.playposse.peertopeeroxygen.backend.schema.MissionCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
+import com.playposse.peertopeeroxygen.backend.schema.PointsTransferAuditLog;
+import com.playposse.peertopeeroxygen.backend.schema.UserPoints;
 
 import java.io.IOException;
+import java.util.Map;
 
 import static com.googlecode.objectify.ObjectifyService.factory;
 import static com.googlecode.objectify.ObjectifyService.ofy;
@@ -31,7 +34,9 @@ public class ReportMissionCompleteAction extends ServerAction {
         OxygenUser buddy = loadUserBySessionId(sessionId);
         OxygenUser student = loadUserById(studentId);
         Ref<Mission> missionRef = Ref.create(Key.create(Mission.class, missionId));
-//        Mission mission = ofy().load().type(Mission.class).id(missionId).now();
+        Ref<OxygenUser> buddyRef = Ref.create(Key.create(OxygenUser.class, buddy.getId()));
+        Ref<OxygenUser> studentRef = Ref.create(Key.create(OxygenUser.class, student.getId()));
+        Mission mission = ofy().load().type(Mission.class).id(missionId).now();
 
         // TODO: Check if the buddy is allowed to teach the mission.
 
@@ -45,6 +50,7 @@ public class ReportMissionCompleteAction extends ServerAction {
                     new MissionCompletion(completionId, missionRef, 1, 0);
             student.getMissionCompletions().put(missionId, completion);
         }
+        chargePoints(student, mission, buddyRef, studentRef);
         ofy().save().entity(student).now();
 
         // Update buddy.
@@ -58,12 +64,22 @@ public class ReportMissionCompleteAction extends ServerAction {
                         new MissionCompletion(completionId, missionRef, 0, 1);
                 buddy.getMissionCompletions().put(missionId, completion);
             } else {
-                // This is an error case because a mission has to be studied at least once before being
-                // allowed to teach.
+                // This is an error case because a mission has to be studied at least once before
+                // being allowed to teach.
                 // TODO: throw exception
             }
         }
+        buddy.addPoints(UserPoints.PointType.teach, 1);
         ofy().save().entity(buddy).now();
+
+        // Save point transfer log for buddy
+        PointsTransferAuditLog auditLog = new PointsTransferAuditLog(
+                PointsTransferAuditLog.PointsTransferType.teachMission,
+                buddyRef,
+                studentRef,
+                UserPoints.PointType.teach,
+                1);
+        ofy().save().entity(auditLog);
 
         // Save audit log
         MentoringAuditLog audit = new MentoringAuditLog(
@@ -73,12 +89,35 @@ public class ReportMissionCompleteAction extends ServerAction {
                 missionRef,
                 true,
                 System.currentTimeMillis());
-        ofy().save().entity(audit).now();
+        ofy().save().entity(audit);
 
         // Send a Firebase message to the student to confirm completion.
         FirebaseUtil.sendMissionCompletionToStudent(
                 student.getFirebaseToken(),
                 new UserBean(buddy),
                 missionId);
+    }
+
+    private static void chargePoints(
+            OxygenUser student,
+            Mission mission,
+            Ref<OxygenUser> buddyRef,
+            Ref<OxygenUser> studentRef) {
+
+        for (Map.Entry<UserPoints.PointType, Integer> entry : mission.getPointCostMap().entrySet()) {
+            Integer pointCount = 0 - entry.getValue();
+            if (pointCount != 0) {
+                UserPoints.PointType pointType = entry.getKey();
+                student.addPoints(pointType, pointCount);
+
+                PointsTransferAuditLog auditLog = new PointsTransferAuditLog(
+                        PointsTransferAuditLog.PointsTransferType.teachMission,
+                        studentRef,
+                        buddyRef,
+                        pointType,
+                        pointCount);
+                ofy().save().entity(auditLog);
+            }
+        }
     }
 }

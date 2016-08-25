@@ -1,5 +1,7 @@
 package com.playposse.peertopeeroxygen.android.data.clientaction;
 
+import com.playposse.peertopeeroxygen.android.data.DataRepository;
+import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
 
 import java.io.IOException;
@@ -27,6 +29,8 @@ public class ReportMissionCompleteAction extends ClientAction {
         // Increment local data to avoid getting fresh data from the server.
         MissionCompletionBean completionBean = getDataRepository().getMissionCompletion(missionId);
         completionBean.setMentorCount(completionBean.getMentorCount() + 1);
+
+        DataRepository.addPoints(getDataRepository().getUserBean(), PointType.teach, 1);
     }
 
     @Override

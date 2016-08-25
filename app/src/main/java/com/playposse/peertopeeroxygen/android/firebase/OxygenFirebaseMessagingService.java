@@ -8,11 +8,13 @@ import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.playposse.peertopeeroxygen.android.MathUtil;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataReceivedCallback;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
+import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
 import com.playposse.peertopeeroxygen.android.student.StudentBuddyMissionActivity;
@@ -110,21 +112,25 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
                 new MissionCompletionMessage(remoteMessage);
         UserBeanParcelable buddyBean = completionMessage.getBuddyBean();
         Long missionId = completionMessage.getMissionId();
-        Long[] ids = dataServiceConnection
+        DataRepository dataRepository = dataServiceConnection
                 .getLocalBinder()
-                .getDataRepository()
-                .getMissionPath(missionId);
-        MissionBean missionBean = dataServiceConnection
-                .getLocalBinder()
-                .getDataRepository()
-                .getMissionBean(ids[0], ids[1], ids[2]);
+                .getDataRepository();
+        Long[] ids = dataRepository.getMissionPath(missionId);
+        MissionBean missionBean = dataRepository.getMissionBean(ids[0], ids[1], ids[2]);
 
         // Update local mission completion count.
-        MissionCompletionBean missionCompletion = dataServiceConnection
-                .getLocalBinder()
-                .getDataRepository()
+        MissionCompletionBean missionCompletion = dataRepository
                 .getMissionCompletion(missionId);
         missionCompletion.setStudyCount(missionCompletion.getStudyCount() + 1);
+
+        // Update local point counts.
+        if (missionBean.getPointCostMap() != null) {
+            for (Map.Entry<String, Object> entry : missionBean.getPointCostMap().entrySet()) {
+                PointType pointType = PointType.valueOf(entry.getKey());
+                int pointCount = 0 - MathUtil.tryParseInt(entry.getValue().toString(), 0);
+                DataRepository.addPoints(dataRepository.getUserBean(), pointType, pointCount);
+            }
+        }
 
         // Send a toast.
         Context context = getApplicationContext();

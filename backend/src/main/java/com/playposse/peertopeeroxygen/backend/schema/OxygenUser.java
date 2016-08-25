@@ -164,4 +164,13 @@ public class OxygenUser {
     public void setFirebaseToken(String firebaseToken) {
         this.firebaseToken = firebaseToken;
     }
+
+    public void addPoints(UserPoints.PointType pointType, int pointCount) {
+        if (points.containsKey(pointType)) {
+            UserPoints userPoints = points.get(pointType);
+            userPoints.setCount(userPoints.getCount() + pointCount);
+        } else {
+            points.put(pointType, new UserPoints(pointType, pointCount));
+        }
+    }
 }
