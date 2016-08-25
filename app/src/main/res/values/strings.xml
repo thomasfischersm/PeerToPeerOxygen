@@ -73,6 +73,7 @@
 
     <!-- Explanations why missions are locked -->
     <string name="prerequisites_mission_lock_reason">You have to complete prerequisite missions.</string>
+    <string name="missing_points_lock_reason">You don\'t have enough points.</string>
 
     <!-- Toasts -->
     <string name="mission_completion_toast">Congratulation on completing "%1$s"! %2$s graduated you.</string>

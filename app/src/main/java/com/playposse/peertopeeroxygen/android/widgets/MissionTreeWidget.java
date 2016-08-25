@@ -150,8 +150,10 @@ public class MissionTreeWidget extends View {
             if (holder.getMissionBean() != null) {
                 if (MissionAvailabilityChecker.determineAvailability(holder, dataRepository)
                         == MissionAvailabilityChecker.MissionAvailability.LOCKED) {
-                    String lockReasonMessage =
-                            MissionAvailabilityChecker.getLockReasonMessage(getContext(), holder);
+                    String lockReasonMessage = MissionAvailabilityChecker.getLockReasonMessage(
+                            getContext(),
+                            dataRepository,
+                            holder);
                     Toast toast = Toast.makeText(getContext(), lockReasonMessage, Toast.LENGTH_LONG);
                     toast.show();
                     return true;
