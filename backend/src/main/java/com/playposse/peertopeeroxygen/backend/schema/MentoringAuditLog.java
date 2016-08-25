@@ -3,6 +3,7 @@ package com.playposse.peertopeeroxygen.backend.schema;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 
 import javax.annotation.Nullable;
 
@@ -14,12 +15,12 @@ import javax.annotation.Nullable;
 public class MentoringAuditLog {
 
     @Id private Long id;
-    private Ref<OxygenUser> student;
-    private Ref<OxygenUser> buddy;
+    @Index private Ref<OxygenUser> student;
+    @Index private Ref<OxygenUser> buddy;
     @Nullable private Ref<OxygenUser> supervisingBuddy;
     private Ref<Mission> mission;
     private boolean isSuccess;
-    private Long date;
+    @Index private Long date;
 
     public MentoringAuditLog() {
     }

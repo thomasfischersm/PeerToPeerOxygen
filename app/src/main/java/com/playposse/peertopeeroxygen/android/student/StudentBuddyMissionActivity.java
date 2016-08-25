@@ -1,10 +1,7 @@
 package com.playposse.peertopeeroxygen.android.student;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,12 +9,10 @@ import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
+import com.playposse.peertopeeroxygen.android.data.facebook.FacebookProfilePhotoCache;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
-
-import java.io.IOException;
-import java.net.URL;
 
 /**
  * An activity that shows the mission to a buddy.
@@ -83,26 +78,22 @@ public class StudentBuddyMissionActivity extends StudentParentActivity {
 
     @Override
     public void receiveData(final DataRepository dataRepository) {
-        try {
-            URL studentPhotoUrl = new URL(studentBean.getProfilePictureUrl());
-            final Bitmap studentPhotoBitmap =
-                    BitmapFactory.decodeStream(
-                            studentPhotoUrl.openConnection().getInputStream());
+        // Show profile photo.
+        FacebookProfilePhotoCache photoCache = dataServiceConnection
+                .getLocalBinder()
+                .getDataRepository()
+                .getFacebookProfilePhotoCache();
+        photoCache.loadImage(
+                this,
+                studentPhotoImageView,
+                studentBean.getFbProfileId(),
+                studentBean.getProfilePictureUrl());
 
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    missionBean = dataRepository
-                            .getMissionBean(missionLadderId, missionTreeId, missionId);
+        missionBean = dataRepository
+                .getMissionBean(missionLadderId, missionTreeId, missionId);
 
-                    missionNameTextView.setText(missionBean.getName());
-                    missionBuddyDescriptionTextView.setText(
-                            missionBean.getBuddyInstruction());
-                    studentPhotoImageView.setImageBitmap(studentPhotoBitmap);
-                }
-            });
-        } catch (IOException ex) {
-            Log.e(LOG_CAT, "Failed to load student's profile image.", ex);
-        }
+        missionNameTextView.setText(missionBean.getName());
+        missionBuddyDescriptionTextView.setText(
+                missionBean.getBuddyInstruction());
     }
 }

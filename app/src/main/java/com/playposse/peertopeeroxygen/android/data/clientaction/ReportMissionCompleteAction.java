@@ -26,7 +26,7 @@ public class ReportMissionCompleteAction extends ClientAction {
     protected void preExecute() {
         // Increment local data to avoid getting fresh data from the server.
         MissionCompletionBean completionBean = getDataRepository().getMissionCompletion(missionId);
-        completionBean.setStudyCount(completionBean.getStudyCount() + 1);
+        completionBean.setMentorCount(completionBean.getMentorCount() + 1);
     }
 
     @Override

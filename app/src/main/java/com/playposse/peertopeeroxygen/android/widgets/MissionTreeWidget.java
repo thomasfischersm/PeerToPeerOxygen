@@ -27,6 +27,7 @@ import com.playposse.peertopeeroxygen.android.missiondependencies.MissionTreeUnt
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.student.StudentMissionActivity;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
 import java.util.List;
@@ -275,7 +276,8 @@ public class MissionTreeWidget extends View {
                                 holder.getMissionTreeBean().getName());
                     } else {
                         txt = holder.getMissionBean().getName()
-                                + formatCostString(holder.getMissionBean());
+                                + formatCostString(holder.getMissionBean())
+                                + formatCompletionString(holder.getMissionBean());
                     }
 
                     int textX = upperLeftX + TEXT_PADDING;
@@ -299,7 +301,7 @@ public class MissionTreeWidget extends View {
 
         /**
          * Determines the paint for the {@link MissionPlaceHolder}.
-         * <p/>
+         * <p>
          * <ul>
          * <li>Black -> completely learned</li>
          * <li>Gray -> locked mission</li>
@@ -397,5 +399,19 @@ public class MissionTreeWidget extends View {
         }
         sb.append(String.format(teachPointAbbreviation, pointCount));
         return pointCount;
+    }
+
+    private String formatCompletionString(MissionBean missionBean) {
+        // TODO: Consider avoiding that this creates new entries in the UserBean.
+        MissionCompletionBean completion = dataRepository.getMissionCompletion(missionBean.getId());
+        if (completion.getMentorCount() > 0) {
+            String mentorCountLabel = getContext().getString(R.string.mentorCountLabel);
+            return String.format("\n" + mentorCountLabel, completion.getMentorCount());
+        } else if (completion.getStudyCount() > 0) {
+            String studyCountLabel = getContext().getString(R.string.studyCountLabel);
+            return String.format("\n" + studyCountLabel, completion.getStudyCount());
+        } else {
+            return "";
+        }
     }
 }
