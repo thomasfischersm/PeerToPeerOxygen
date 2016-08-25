@@ -13,12 +13,10 @@ import javax.annotation.Nullable;
 @Entity
 public class MentoringAuditLog {
 
-    @Id
-    private Long id;
+    @Id private Long id;
     private Ref<OxygenUser> student;
     private Ref<OxygenUser> buddy;
-    @Nullable
-    private Ref<OxygenUser> supervisingBuddy;
+    @Nullable private Ref<OxygenUser> supervisingBuddy;
     private Ref<Mission> mission;
     private boolean isSuccess;
     private Long date;

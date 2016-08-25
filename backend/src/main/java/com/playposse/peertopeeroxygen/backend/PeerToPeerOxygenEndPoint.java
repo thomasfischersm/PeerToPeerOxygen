@@ -122,12 +122,13 @@ public class PeerToPeerOxygenEndPoint {
         DeleteMissionAction.deleteMission(sessionId, missionLadderId, missionTreeId, missionId);
     }
 
-    private void protectByAdminCheck(Long sessionId) throws UnauthorizedException {
+    private OxygenUser protectByAdminCheck(Long sessionId) throws UnauthorizedException {
         OxygenUser oxygenUser = ServerAction.loadUserBySessionId(sessionId);
         if (!oxygenUser.isAdmin()) {
             throw new UnauthorizedException(
                     "The user is NOT an admin: " + oxygenUser.getId());
         }
+        return oxygenUser;
     }
 
     @ApiMethod(name = "registerOrLogin")
@@ -196,8 +197,8 @@ public class PeerToPeerOxygenEndPoint {
             @Named("addedPoints") int addedPoints)
             throws UnauthorizedException, IOException {
 
-        protectByAdminCheck(sessionId);
+        OxygenUser adminUser = protectByAdminCheck(sessionId);
 
-        new AddPointsByAdminAction().addPointsByAdmin(sessionId, studentId, pointType, addedPoints);
+        new AddPointsByAdminAction().addPointsByAdmin(adminUser, studentId, pointType, addedPoints);
     }
 }

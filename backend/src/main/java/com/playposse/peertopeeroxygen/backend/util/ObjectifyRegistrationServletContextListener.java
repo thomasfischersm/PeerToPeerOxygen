@@ -8,6 +8,7 @@ import com.playposse.peertopeeroxygen.backend.schema.MissionCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
+import com.playposse.peertopeeroxygen.backend.schema.PointsTransferAuditLog;
 import com.playposse.peertopeeroxygen.backend.schema.UserPoints;
 
 import javax.servlet.ServletContextEvent;
@@ -26,6 +27,7 @@ public class ObjectifyRegistrationServletContextListener implements ServletConte
         ObjectifyService.register(MissionLadder.class);
         ObjectifyService.register(MissionTree.class);
         ObjectifyService.register(OxygenUser.class);
+        ObjectifyService.register(PointsTransferAuditLog.class);
         ObjectifyService.register(UserPoints.class);
     }
 
