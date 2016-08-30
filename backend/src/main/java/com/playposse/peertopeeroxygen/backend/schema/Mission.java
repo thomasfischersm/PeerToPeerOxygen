@@ -20,6 +20,7 @@ public class Mission {
     private String name;
     private String studentInstruction;
     private String buddyInstruction;
+    private int minimumStudyCount = 1;
     @Load private List<Ref<Mission>> requiredMissions = new ArrayList<>();
     private Map<UserPoints.PointType, Integer> pointCostMap = new HashMap<>();
 //    private byte[] icon;
@@ -33,11 +34,18 @@ public class Mission {
     /**
      * Default constructor to create a new mission.
      */
-    public Mission(Long id, String name, String studentInstruction, String buddyInstruction) {
+    public Mission(
+            Long id,
+            String name,
+            String studentInstruction,
+            String buddyInstruction,
+            int minimumStudyCount) {
+
         this.id = id;
         this.buddyInstruction = buddyInstruction;
         this.name = name;
         this.studentInstruction = studentInstruction;
+        this.minimumStudyCount = minimumStudyCount;
     }
 
     public Long getId() {
@@ -66,6 +74,14 @@ public class Mission {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getMinimumStudyCount() {
+        return minimumStudyCount;
+    }
+
+    public void setMinimumStudyCount(int minimumStudyCount) {
+        this.minimumStudyCount = minimumStudyCount;
     }
 
     public List<Ref<Mission>> getRequiredMissions() {

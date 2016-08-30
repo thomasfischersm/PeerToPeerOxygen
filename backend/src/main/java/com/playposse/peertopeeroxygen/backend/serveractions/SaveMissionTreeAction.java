@@ -2,7 +2,6 @@ package com.playposse.peertopeeroxygen.backend.serveractions;
 
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.playposse.peertopeeroxygen.backend.beans.MissionTreeBean;
-import com.playposse.peertopeeroxygen.backend.schema.Mission;
 import com.playposse.peertopeeroxygen.backend.schema.MissionBoss;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
@@ -44,7 +43,7 @@ public class SaveMissionTreeAction {
         }
 
         MissionLadder missionLadder = ofy().load()
-                .group(MissionTree.class, MissionBoss.class, Mission.class)
+//                .group(MissionTree.class, MissionBoss.class, Mission.class)
                 .type(MissionLadder.class)
                 .id(missionLadderId)
                 .now();

@@ -52,6 +52,7 @@ public class MissionTreeWidget extends View {
     private TextPaint lockedPaint;
     private TextPaint unlockedPaint;
     private TextPaint completedPaint;
+    private TextPaint teachablePaint;
 
     private DataRepository dataRepository;
     private Long missionLadderId;
@@ -213,12 +214,16 @@ public class MissionTreeWidget extends View {
             lockedPaint.setTextSize(toPx(TEXT_SIZE));
 
             unlockedPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-            unlockedPaint.setColor(Color.parseColor("#1B5E20"));
+            unlockedPaint.setColor(Color.parseColor("#1B5E20")); // dark green
             unlockedPaint.setTextSize(toPx(TEXT_SIZE));
 
             completedPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
             completedPaint.setColor(Color.BLACK);
             completedPaint.setTextSize(toPx(TEXT_SIZE));
+
+            teachablePaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+            teachablePaint.setColor(Color.parseColor("#673AB7")); // dark purple
+            teachablePaint.setTextSize(toPx(TEXT_SIZE));
         }
 
         private void drawArrows(Canvas canvas, List<List<MissionPlaceHolder>> rows) {
@@ -321,7 +326,7 @@ public class MissionTreeWidget extends View {
                 case COMPLETED:
                     return completedPaint;
                 case TEACHABLE:
-                    return completedPaint;
+                    return teachablePaint;
                 default:
                     throw new RuntimeException("Unexpected mission availability: " + availability);
             }
@@ -411,7 +416,10 @@ public class MissionTreeWidget extends View {
             return String.format("\n" + mentorCountLabel, completion.getMentorCount());
         } else if (completion.getStudyCount() > 0) {
             String studyCountLabel = getContext().getString(R.string.studyCountLabel);
-            return String.format("\n" + studyCountLabel, completion.getStudyCount());
+            return String.format(
+                    "\n" + studyCountLabel,
+                    completion.getStudyCount(),
+                    missionBean.getMinimumStudyCount());
         } else {
             return "";
         }

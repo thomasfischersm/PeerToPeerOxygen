@@ -20,6 +20,7 @@ public class MissionBean {
     private String name;
     private String studentInstruction;
     private String buddyInstruction;
+    private int minimumStudyCount;
     private List<Long> requiredMissionIds = new ArrayList<>();
     private Map<String, Integer> pointCostMap = new HashMap<>();
 
@@ -31,6 +32,7 @@ public class MissionBean {
         this.name = mission.getName();
         this.studentInstruction = mission.getStudentInstruction();
         this.buddyInstruction = mission.getBuddyInstruction();
+        this.minimumStudyCount = mission.getMinimumStudyCount();
 
         for (Ref<Mission> requiredMissionRef : mission.getRequiredMissions()) {
             if (requiredMissionRef.get() != null) {
@@ -79,6 +81,14 @@ public class MissionBean {
         this.studentInstruction = studentInstruction;
     }
 
+    public int getMinimumStudyCount() {
+        return minimumStudyCount;
+    }
+
+    public void setMinimumStudyCount(int minimumStudyCount) {
+        this.minimumStudyCount = minimumStudyCount;
+    }
+
     public List<Long> getRequiredMissionIds() {
         return requiredMissionIds;
     }
@@ -88,7 +98,12 @@ public class MissionBean {
     }
 
     public Mission toEntity() {
-        Mission mission = new Mission(id, name, studentInstruction, buddyInstruction);
+        Mission mission = new Mission(
+                id,
+                name,
+                studentInstruction,
+                buddyInstruction,
+                minimumStudyCount);
 
         for (Long requiredMissionId : requiredMissionIds) {
             Key<Mission> requiredMissionKey = Key.create(Mission.class, requiredMissionId);

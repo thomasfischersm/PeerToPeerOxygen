@@ -5,7 +5,6 @@ import com.playposse.peertopeeroxygen.backend.beans.UserBean;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
-import com.playposse.peertopeeroxygen.backend.schema.UserPoints;
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class ServerAction {
     protected static OxygenUser loadUserById(Long userId) throws UnauthorizedException {
         OxygenUser oxygenUser = ofy()
                 .load()
-                .group(UserPoints.class)
+//                .group(UserPoints.class)
                 .type(OxygenUser.class)
                 .id(userId)
                 .now();
@@ -41,7 +40,7 @@ public class ServerAction {
     public static OxygenUser loadUserBySessionId(Long sessionId) throws UnauthorizedException {
         List<OxygenUser> oxygenUsers = ofy()
                 .load()
-                .group(UserPoints.class)
+//                .group(UserPoints.class)
                 .type(OxygenUser.class)
                 .filter("sessionId", sessionId)
                 .list();

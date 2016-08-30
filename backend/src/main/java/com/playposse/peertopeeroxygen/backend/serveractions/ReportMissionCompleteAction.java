@@ -38,41 +38,79 @@ public class ReportMissionCompleteAction extends ServerAction {
         Ref<OxygenUser> studentRef = Ref.create(Key.create(OxygenUser.class, student.getId()));
         Mission mission = ofy().load().type(Mission.class).id(missionId).now();
 
-        // TODO: Check if the buddy is allowed to teach the mission.
+        // Check if the buddy is allowed to teach the mission.
+        // Update buddy first because this includes checks if the buddy is allowed to teach.
+        updateBuddy(missionId, buddy, missionRef);
+        updateStudent(missionId, student, missionRef, buddyRef, studentRef, mission);
+        updatePointTransferLogForBuddy(buddyRef, studentRef);
+        updateMentoringLog(studentId, buddy, missionRef);
 
-        // Update student
+
+        // Send a Firebase message to the student to confirm completion.
+        FirebaseUtil.sendMissionCompletionToStudent(
+                student.getFirebaseToken(),
+                new UserBean(buddy),
+                missionId);
+    }
+
+    private static void updateStudent(
+            Long missionId,
+            OxygenUser student,
+            Ref<Mission> missionRef,
+            Ref<OxygenUser> buddyRef,
+            Ref<OxygenUser> studentRef,
+            Mission mission) {
+
+        final MissionCompletion completion;
         if (student.getMissionCompletions().containsKey(missionId)) {
-            MissionCompletion completion = student.getMissionCompletions().get(missionId);
+            completion = student.getMissionCompletions().get(missionId);
             completion.setStudyCount(completion.getStudyCount() + 1);
         } else {
             long completionId = factory().allocateId(MissionCompletion.class).getId();
-            MissionCompletion completion =
-                    new MissionCompletion(completionId, missionRef, 1, 0);
+            completion =
+                    new MissionCompletion(completionId, missionRef, 1, 0, false, false);
             student.getMissionCompletions().put(missionId, completion);
         }
         chargePoints(student, mission, buddyRef, studentRef);
+        if (completion.getStudyCount() >= mission.getMinimumStudyCount()) {
+            // Be sure to avoid accidentally setting studyComplete to false if the mission study
+            // minimum was raised after the student completed the old minimum.
+            completion.setStudyComplete(true);
+        }
         ofy().save().entity(student).now();
+    }
 
-        // Update buddy.
+    private static void updateBuddy(Long missionId, OxygenUser buddy, Ref<Mission> missionRef)
+            throws UnauthorizedException {
+
         if (buddy.getMissionCompletions().containsKey(missionId)) {
             MissionCompletion completion = buddy.getMissionCompletions().get(missionId);
-            completion.setMentorCount(completion.getMentorCount() + 1);
+            if (completion.isMentorCheckoutComplete() || buddy.isAdmin()) {
+                completion.setMentorCount(completion.getMentorCount() + 1);
+            } else {
+                throw new UnauthorizedException("The buddy " + buddy.getId()
+                        + " isn't allowed to teach mission " + missionId);
+            }
         } else {
             if (buddy.isAdmin()) {
                 long completionId = factory().allocateId(MissionCompletion.class).getId();
                 MissionCompletion completion =
-                        new MissionCompletion(completionId, missionRef, 0, 1);
+                        new MissionCompletion(completionId, missionRef, 0, 1, false, false);
                 buddy.getMissionCompletions().put(missionId, completion);
             } else {
-                // This is an error case because a mission has to be studied at least once before
-                // being allowed to teach.
-                // TODO: throw exception
+                throw new UnauthorizedException("The buddy " + buddy.getId()
+                        + " isn't allowed to teach mission " + missionId
+                        + ". The completion entry is missing.");
             }
         }
         buddy.addPoints(UserPoints.PointType.teach, 1);
         ofy().save().entity(buddy).now();
+    }
 
-        // Save point transfer log for buddy
+    private static void updatePointTransferLogForBuddy(
+            Ref<OxygenUser> buddyRef,
+            Ref<OxygenUser> studentRef) {
+
         PointsTransferAuditLog auditLog = new PointsTransferAuditLog(
                 PointsTransferAuditLog.PointsTransferType.teachMission,
                 buddyRef,
@@ -80,7 +118,9 @@ public class ReportMissionCompleteAction extends ServerAction {
                 UserPoints.PointType.teach,
                 1);
         ofy().save().entity(auditLog);
+    }
 
+    private static void updateMentoringLog(Long studentId, OxygenUser buddy, Ref<Mission> missionRef) {
         // Save audit log
         MentoringAuditLog audit = new MentoringAuditLog(
                 Ref.create(Key.create(OxygenUser.class, studentId)),
@@ -90,12 +130,6 @@ public class ReportMissionCompleteAction extends ServerAction {
                 true,
                 System.currentTimeMillis());
         ofy().save().entity(audit);
-
-        // Send a Firebase message to the student to confirm completion.
-        FirebaseUtil.sendMissionCompletionToStudent(
-                student.getFirebaseToken(),
-                new UserBean(buddy),
-                missionId);
     }
 
     private static void chargePoints(

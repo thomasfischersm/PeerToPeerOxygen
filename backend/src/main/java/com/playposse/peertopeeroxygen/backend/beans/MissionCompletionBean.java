@@ -14,6 +14,8 @@ public class MissionCompletionBean {
     private Long missionId;
     private int studyCount;
     private int mentorCount;
+    private boolean studyComplete;
+    private boolean mentorCheckoutComplete;
 
     public MissionCompletionBean() {
     }
@@ -23,11 +25,19 @@ public class MissionCompletionBean {
         missionId = missionCompletion.getMission().getKey().getId();
         studyCount = missionCompletion.getStudyCount();
         mentorCount = missionCompletion.getMentorCount();
+        studyComplete = missionCompletion.isStudyComplete();
+        mentorCheckoutComplete = missionCompletion.isMentorCheckoutComplete();
     }
 
     public MissionCompletion toEntity() {
         Ref<Mission> missionRef = Ref.create(Key.create(Mission.class, missionId));
-        return new MissionCompletion(id, missionRef, studyCount, mentorCount);
+        return new MissionCompletion(
+                id,
+                missionRef,
+                studyCount,
+                mentorCount,
+                studyComplete,
+                mentorCheckoutComplete);
     }
 
     public Long getId() {
@@ -60,5 +70,21 @@ public class MissionCompletionBean {
 
     public void setStudyCount(int studyCount) {
         this.studyCount = studyCount;
+    }
+
+    public boolean isMentorCheckoutComplete() {
+        return mentorCheckoutComplete;
+    }
+
+    public void setMentorCheckoutComplete(boolean mentorCheckoutComplete) {
+        this.mentorCheckoutComplete = mentorCheckoutComplete;
+    }
+
+    public boolean isStudyComplete() {
+        return studyComplete;
+    }
+
+    public void setStudyComplete(boolean studyComplete) {
+        this.studyComplete = studyComplete;
     }
 }

@@ -22,7 +22,7 @@ public class DeleteMissionAction extends ServerAction {
             throws UnauthorizedException {
 
         MissionLadder missionLadder = ofy().load()
-                .group(MissionTree.class)
+//                .group(MissionTree.class)
                 .type(MissionLadder.class)
                 .id(missionLadderId)
                 .now();

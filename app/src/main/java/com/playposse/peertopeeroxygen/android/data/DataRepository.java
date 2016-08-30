@@ -107,6 +107,8 @@ public class DataRepository {
         completionBean.setMissionId(missionId);
         completionBean.setStudyCount(0);
         completionBean.setMentorCount(0);
+        completionBean.setStudyComplete(false);
+        completionBean.setMentorCheckoutComplete(false);
         getUserBean().getMissionCompletionBeans().add(completionBean);
         return completionBean;
     }

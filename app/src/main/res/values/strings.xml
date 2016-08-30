@@ -33,6 +33,7 @@
 
     <!-- Edit mission -->
     <string name="edit_mission_title">Mission: %1$s</string>
+    <string name="minimum_study_count_label">Min. study count</string>
     <string name="teach_point_cost_label">Teach point cost</string>
     <string name="practice_point_cost_label">Practice point cost</string>
     <string name="heart_point_cost_label">Heart point cost</string>
@@ -51,7 +52,7 @@
     <string name="teach_point_abbreviation">T: %1$s</string>
     <string name="practice_point_abbreviation">P: %1$s</string>
     <string name="heart_point_abbreviation">H: %1$s</string>
-    <string name="studyCountLabel">Studied: %1$s</string>
+    <string name="studyCountLabel">Studied: %1$s/%2$s</string>
     <string name="mentorCountLabel">Taught: %1$s times</string>
 
     <!-- Student mission activity -->

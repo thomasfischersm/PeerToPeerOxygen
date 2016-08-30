@@ -15,15 +15,26 @@ public class MissionCompletion {
     @Load private Ref<Mission> mission;
     private int studyCount;
     private int mentorCount;
+    private boolean studyComplete = false;
+    private boolean mentorCheckoutComplete = false;
 
     public MissionCompletion() {
     }
 
-    public MissionCompletion(Long id, Ref<Mission> mission, int studyCount, int mentorCount) {
+    public MissionCompletion(
+            Long id,
+            Ref<Mission> mission,
+            int studyCount,
+            int mentorCount,
+            boolean studyComplete,
+            boolean mentorCheckoutComplete) {
+
         this.id = id;
         this.mentorCount = mentorCount;
         this.mission = mission;
         this.studyCount = studyCount;
+        this.studyComplete = studyComplete;
+        this.mentorCheckoutComplete = mentorCheckoutComplete;
     }
 
     public Long getId() {
@@ -56,5 +67,21 @@ public class MissionCompletion {
 
     public void setStudyCount(int studyCount) {
         this.studyCount = studyCount;
+    }
+
+    public boolean isMentorCheckoutComplete() {
+        return mentorCheckoutComplete;
+    }
+
+    public void setMentorCheckoutComplete(boolean mentorCheckoutComplete) {
+        this.mentorCheckoutComplete = mentorCheckoutComplete;
+    }
+
+    public boolean isStudyComplete() {
+        return studyComplete;
+    }
+
+    public void setStudyComplete(boolean studyComplete) {
+        this.studyComplete = studyComplete;
     }
 }

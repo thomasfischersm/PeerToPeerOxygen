@@ -3,12 +3,8 @@ package com.playposse.peertopeeroxygen.backend.serveractions;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.playposse.peertopeeroxygen.backend.beans.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
-import com.playposse.peertopeeroxygen.backend.schema.Mission;
-import com.playposse.peertopeeroxygen.backend.schema.MissionBoss;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
-import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
-import com.playposse.peertopeeroxygen.backend.schema.UserPoints;
 
 import java.util.List;
 
@@ -24,7 +20,7 @@ public class GetMissionDataAction {
 
         List<OxygenUser> oxygenUsers = ofy()
                 .load()
-                .group(UserPoints.class)
+//                .group(UserPoints.class)
                 .type(OxygenUser.class)
                 .filter("sessionId", sessionId)
                 .list();
@@ -34,7 +30,7 @@ public class GetMissionDataAction {
         UserBean userBean = new UserBean(oxygenUsers.get(0));
 
         List<MissionLadder> missionLadders = ofy().load()
-                .group(MissionTree.class, Mission.class, MissionBoss.class)
+//                .group(MissionTree.class, Mission.class, MissionBoss.class, UserPoints.class)
                 .type(MissionLadder.class)
                 .list();
 

@@ -2,7 +2,6 @@ package com.playposse.peertopeeroxygen.backend.serveractions;
 
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
-import com.playposse.peertopeeroxygen.backend.schema.UserPoints;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,7 @@ public class GetStudentRosterAction extends ServerAction {
     public List<UserBean> getStudentRoster() {
         List<OxygenUser> users = ofy()
                 .load()
-                .group(UserPoints.class)
+//                .group(UserPoints.class)
                 .type(OxygenUser.class)
                 .list();
 

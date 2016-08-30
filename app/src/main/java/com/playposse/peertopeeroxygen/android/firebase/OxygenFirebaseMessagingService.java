@@ -122,6 +122,9 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
         MissionCompletionBean missionCompletion = dataRepository
                 .getMissionCompletion(missionId);
         missionCompletion.setStudyCount(missionCompletion.getStudyCount() + 1);
+        if (missionCompletion.getStudyCount() >= missionBean.getMinimumStudyCount()) {
+            missionCompletion.setStudyComplete(true);
+        }
 
         // Update local point counts.
         if (missionBean.getPointCostMap() != null) {

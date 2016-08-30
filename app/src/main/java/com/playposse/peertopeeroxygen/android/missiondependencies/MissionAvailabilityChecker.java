@@ -55,7 +55,9 @@ public class MissionAvailabilityChecker {
             MissionCompletionBean missionCompletion =
                     dataRepository.getMissionCompletion(holder.getMissionBean().getId());
 
-            if (missionCompletion.getStudyCount() > 0) {
+            if (missionCompletion.getMentorCheckoutComplete()) {
+                return MissionAvailability.TEACHABLE;
+            } else if (missionCompletion.getStudyComplete()) {
                 return MissionAvailability.COMPLETED;
             }
         }
@@ -79,7 +81,7 @@ public class MissionAvailabilityChecker {
         for (MissionPlaceHolder child : holder.getChildren()) {
             MissionCompletionBean childCompletion =
                     dataRepository.getMissionCompletion(child.getMissionBean().getId());
-            if (childCompletion.getStudyCount() == 0) {
+            if (childCompletion.getStudyComplete() == false) {
                 return false;
             }
         }

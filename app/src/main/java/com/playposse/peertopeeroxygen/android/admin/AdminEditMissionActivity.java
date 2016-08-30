@@ -25,6 +25,7 @@ public class AdminEditMissionActivity extends AdminParentActivity {
     private MissionTreeBean missionTreeBean;
 
     EditText nameEditText;
+    EditText minimumStudyCountEditText;
     EditText teachPointEditText;
     EditText practicePointEditText;
     EditText heartPointEditText;
@@ -44,6 +45,7 @@ public class AdminEditMissionActivity extends AdminParentActivity {
         missionBean = null;
 
         nameEditText = (EditText) findViewById(R.id.missionNameEditText);
+        minimumStudyCountEditText = (EditText) findViewById(R.id.minimumStudyCountEditText);
         teachPointEditText = (EditText) findViewById(R.id.teachPointEditText);
         practicePointEditText = (EditText) findViewById(R.id.practicePointEditText);
         heartPointEditText = (EditText) findViewById(R.id.heartPointEditText);
@@ -65,6 +67,10 @@ public class AdminEditMissionActivity extends AdminParentActivity {
         if (missionId == -1) {
             // new mission ladder
             nameEditText.setText("");
+            minimumStudyCountEditText.setText("1");
+            teachPointEditText.setText("1");
+            practicePointEditText.setText("0");
+            heartPointEditText.setText("0");
             studentInstructionEditText.setText("");
             buddyInstructionEditText.setText("");
 
@@ -82,6 +88,7 @@ public class AdminEditMissionActivity extends AdminParentActivity {
                     missionTreeId);
 
             nameEditText.setText(missionBean.getName());
+            minimumStudyCountEditText.setText("" + missionBean.getMinimumStudyCount());
             teachPointEditText.setText(
                     "" + DataRepository.getPointByType(missionBean, PointType.teach));
             practicePointEditText.setText(
@@ -113,6 +120,7 @@ public class AdminEditMissionActivity extends AdminParentActivity {
         } else {
             shouldSave =
                     !nameEditText.getText().toString().equals(missionBean.getName())
+                            || (missionBean.getMinimumStudyCount() != MathUtil.tryParseInt(minimumStudyCountEditText.getText().toString(), 1))
                             || hasPointCountChanged(teachPointEditText, PointType.teach)
                             || hasPointCountChanged(practicePointEditText, PointType.practice)
                             || hasPointCountChanged(heartPointEditText, PointType.heart)
@@ -124,6 +132,7 @@ public class AdminEditMissionActivity extends AdminParentActivity {
         // Save mission.
         if (shouldSave) {
             missionBean.setName(nameEditText.getText().toString());
+            missionBean.setMinimumStudyCount(MathUtil.tryParseInt(minimumStudyCountEditText.getText().toString(), 1));
             setPointOnMissionBean(teachPointEditText, PointType.teach);
             setPointOnMissionBean(practicePointEditText, PointType.practice);
             setPointOnMissionBean(heartPointEditText, PointType.heart);

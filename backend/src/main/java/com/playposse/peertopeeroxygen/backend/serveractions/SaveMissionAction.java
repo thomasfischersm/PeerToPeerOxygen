@@ -25,7 +25,7 @@ public class SaveMissionAction extends ServerAction {
         Mission mission = missionBean.toEntity();
 
         MissionLadder missionLadder = ofy().load()
-                .group(MissionTree.class, Mission.class)
+//                .group(MissionTree.class, Mission.class)
                 .type(MissionLadder.class)
                 .id(missionLadderId)
                 .now();
