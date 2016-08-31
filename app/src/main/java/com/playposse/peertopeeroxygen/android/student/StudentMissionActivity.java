@@ -163,14 +163,15 @@ public class StudentMissionActivity extends StudentParentActivity {
 //                        };
 //                detector.setProcessor(processor);
 
-                MultiProcessor.Factory trackerFactory = new MultiProcessor.Factory() {
-                    @Override
-                    public Tracker create(Object o) {
-                        return tracker;
-                    }
-                };
+                MultiProcessor.Factory<Barcode> trackerFactory =
+                        new MultiProcessor.Factory<Barcode>() {
+                            @Override
+                            public Tracker create(Barcode barcode) {
+                                return tracker;
+                            }
+                        };
                 MultiProcessor<Barcode> multiProcessor =
-                        new MultiProcessor.Builder(trackerFactory).build();
+                        new MultiProcessor.Builder<>(trackerFactory).build();
                 detector.setProcessor(multiProcessor);
 
                 cameraSource = new CameraSource.Builder(getApplicationContext(), detector)
