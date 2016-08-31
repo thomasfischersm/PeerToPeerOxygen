@@ -6,7 +6,6 @@ import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
-import com.playposse.peertopeeroxygen.android.data.facebook.FacebookProfilePhotoCache;
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.android.widgets.RenderQrCodeAsyncTask;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
@@ -52,12 +51,7 @@ public class StudentProfileActivity extends StudentParentActivity {
         showPoints(userBean, heartPointsTextView, PointType.heart, R.string.heart_points_label);
 
         // Show profile photo.
-        FacebookProfilePhotoCache photoCache = dataServiceConnection
-                .getLocalBinder()
-                .getDataRepository()
-                .getFacebookProfilePhotoCache();
-        photoCache.loadImage(
-                this,
+        loadProfilePhoto(
                 profilePhotoImageView,
                 userBean.getFbProfileId(),
                 userBean.getProfilePictureUrl());

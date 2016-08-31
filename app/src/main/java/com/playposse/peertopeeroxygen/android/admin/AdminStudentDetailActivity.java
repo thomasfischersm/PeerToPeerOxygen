@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataService;
-import com.playposse.peertopeeroxygen.android.data.facebook.FacebookProfilePhotoCache;
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
@@ -102,12 +101,7 @@ public class AdminStudentDetailActivity extends AdminParentActivity {
 
     @Override
     public void receiveData(DataRepository dataRepository) {
-        FacebookProfilePhotoCache photoCache = dataServiceConnection
-                .getLocalBinder()
-                .getDataRepository()
-                .getFacebookProfilePhotoCache();
-        photoCache.loadImage(
-                this,
+        loadProfilePhoto(
                 profilePhotoImageView,
                 studentBean.getFbProfileId(),
                 studentBean.getProfilePictureUrl());

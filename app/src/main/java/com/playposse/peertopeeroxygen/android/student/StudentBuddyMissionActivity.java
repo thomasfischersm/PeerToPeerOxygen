@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
-import com.playposse.peertopeeroxygen.android.data.facebook.FacebookProfilePhotoCache;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
@@ -78,13 +77,7 @@ public class StudentBuddyMissionActivity extends StudentParentActivity {
 
     @Override
     public void receiveData(final DataRepository dataRepository) {
-        // Show profile photo.
-        FacebookProfilePhotoCache photoCache = dataServiceConnection
-                .getLocalBinder()
-                .getDataRepository()
-                .getFacebookProfilePhotoCache();
-        photoCache.loadImage(
-                this,
+        loadProfilePhoto(
                 studentPhotoImageView,
                 studentBean.getFbProfileId(),
                 studentBean.getProfilePictureUrl());
