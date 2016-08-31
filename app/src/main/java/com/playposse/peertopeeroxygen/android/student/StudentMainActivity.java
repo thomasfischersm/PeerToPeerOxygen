@@ -72,7 +72,7 @@ public class StudentMainActivity extends StudentParentActivity {
             final MissionLadderBean missionLadderBean = getItem(position);
             missionLadderNameLink.setText(missionLadderBean.getName());
 
-            missionLadderNameLink.setOnClickListener(new View.OnClickListener() {
+            rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (missionLadderBean.getMissionTreeBeans().size() == 0) {
