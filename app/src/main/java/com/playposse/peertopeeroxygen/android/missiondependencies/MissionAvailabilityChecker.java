@@ -2,10 +2,10 @@ package com.playposse.peertopeeroxygen.android.missiondependencies;
 
 import android.content.Context;
 
-import com.playposse.peertopeeroxygen.android.MathUtil;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
+import com.playposse.peertopeeroxygen.android.util.MathUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.JsonMap;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;

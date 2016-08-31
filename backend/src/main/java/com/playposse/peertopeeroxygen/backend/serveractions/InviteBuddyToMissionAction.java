@@ -2,10 +2,13 @@ package com.playposse.peertopeeroxygen.backend.serveractions;
 
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
+import com.playposse.peertopeeroxygen.backend.exceptions.BuddyLacksMissionExperienceException;
 import com.playposse.peertopeeroxygen.backend.firebase.FirebaseUtil;
+import com.playposse.peertopeeroxygen.backend.schema.MissionCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * A server action that invites a buddy to a mission. This will fire a Firebase message to notify
@@ -19,13 +22,17 @@ public class InviteBuddyToMissionAction extends ServerAction {
             Long missionLadderId,
             Long missionTreeId,
             Long missionId)
-            throws UnauthorizedException, IOException {
+            throws UnauthorizedException, IOException, BuddyLacksMissionExperienceException {
 
         OxygenUser student = loadUserBySessionId(sessionId);
         OxygenUser buddy = loadUserById(buddyId);
-//        Mission mission = ofy().load().type(Mission.class).id(missionId).now();
 
-        // TODO: Check if the buddy is allowed to teach the mission.
+        Map<Long, MissionCompletion> buddyCompletions = buddy.getMissionCompletions();
+        if (!buddyCompletions.containsKey(missionId)
+                || !buddyCompletions.get(missionId).isStudyComplete()) {
+            String buddyName = buddy.getFirstName() + " " + buddy.getLastName();
+            throw new BuddyLacksMissionExperienceException(buddyName);
+        }
 
         FirebaseUtil.sendMissionInviteToBuddy(
                 buddy.getFirebaseToken(),

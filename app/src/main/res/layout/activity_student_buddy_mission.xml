@@ -46,6 +46,26 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/seniorBuddyRequiredTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/senior_buddy_required_message"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/startScanButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start_scan_button"
+                android:visibility="gone" />
+
+            <SurfaceView
+                android:id="@+id/surfaceView"
+                android:layout_width="320dp"
+                android:layout_height="240dp"
+                android:visibility="gone" />
+
+            <TextView
                 android:id="@+id/missionBuddyDescriptionTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

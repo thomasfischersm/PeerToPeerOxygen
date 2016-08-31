@@ -16,6 +16,7 @@ import com.playposse.peertopeeroxygen.backend.beans.MissionBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionTreeBean;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
+import com.playposse.peertopeeroxygen.backend.exceptions.BuddyLacksMissionExperienceException;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 import com.playposse.peertopeeroxygen.backend.serveractions.AddPointsByAdminAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionAction;
@@ -160,7 +161,7 @@ public class PeerToPeerOxygenEndPoint {
             @Named("missionLadderId") Long missionLadderId,
             @Named("missionTreeId") Long missionTreeId,
             @Named("missionId") Long missionId)
-            throws UnauthorizedException, IOException {
+            throws UnauthorizedException, IOException, BuddyLacksMissionExperienceException {
 
         return InviteBuddyToMissionAction.inviteBuddyToMission(
                 sessionId,

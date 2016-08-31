@@ -1,4 +1,4 @@
-package com.playposse.peertopeeroxygen.android;
+package com.playposse.peertopeeroxygen.android.util;
 
 /**
  * Helpful class for dealing with math.

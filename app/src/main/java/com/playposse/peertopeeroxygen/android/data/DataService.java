@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * A {@link Service} that retrieves the data from AppEngine and locally cashes it. (The second
  * part has to still be built.
- * <p>
+ * <p/>
  * <p>Currently, the service should be started when the app starts up. Each activity should bind to
  * it to retrieve data.
  */
@@ -202,7 +202,13 @@ public class DataService extends Service {
                 final Long missionTreeId,
                 final Long missionId) {
 
-            new InviteBuddyToMissionAction(this, buddyId, missionLadderId, missionTreeId, missionId)
+            new InviteBuddyToMissionAction(
+                    getApplicationContext(),
+                    this,
+                    buddyId,
+                    missionLadderId,
+                    missionTreeId,
+                    missionId)
                     .execute();
         }
 
@@ -214,7 +220,7 @@ public class DataService extends Service {
             new GetStudentRosterAction(this, callback).execute();
         }
 
-        public void addPointsByAdmin(Long studentId,String pointType,int addedPoints) {
+        public void addPointsByAdmin(Long studentId, String pointType, int addedPoints) {
             new AddPointsByAdminAction(this, getSessionId(), studentId, pointType, addedPoints)
                     .execute();
         }

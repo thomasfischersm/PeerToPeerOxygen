@@ -60,6 +60,7 @@
 
     <!-- Buddy mission activity -->
     <string name="mission_invitation_message">%1$s has invited you to teach him a mission.</string>
+    <string name="senior_buddy_required_message">As you are teaching this mission for the first time, you need to invite a buddy who has already taught this mission to supervise you.</string>
     <string name="cancel_button_label">Cancel</string>
     <string name="graduate_button_label">Graduate</string>
 
@@ -80,6 +81,7 @@
     <string name="mission_completion_toast">Congratulation on completing "%1$s"! %2$s graduated you.</string>
     <string name="admin_sent_points_toast">An admin has sent you points!</string>
     <string name="cant_mentor_mission_toast">%1$s invited you to mentor \'%2$s\'. You have to learn that mission yourself first!</string>
+    <string name="mentor_not_ready_toast">%1$s isn\'t ready to mentor that mission yet.</string>
 
     <!-- Reusable strings -->
     <string name="name_form_label">Name</string>
