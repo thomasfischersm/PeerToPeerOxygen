@@ -1,4 +1,4 @@
-package com.playposse.peertopeeroxygen.android.data.clientaction;
+package com.playposse.peertopeeroxygen.android.data.clientactions;
 
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;

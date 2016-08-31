@@ -33,6 +33,7 @@ public class AdminMainActivity extends AdminParentActivity {
         super.onCreate(savedInstanceState);
 
         setTitle(R.string.admin_home_title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         openMissionLaddersTextView = (TextView) findViewById(R.id.openMissionLaddersLink);
         openMissionLaddersTextView.setOnClickListener(new View.OnClickListener() {

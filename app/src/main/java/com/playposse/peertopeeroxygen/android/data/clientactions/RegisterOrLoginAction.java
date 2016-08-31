@@ -1,4 +1,4 @@
-package com.playposse.peertopeeroxygen.android.data.clientaction;
+package com.playposse.peertopeeroxygen.android.data.clientactions;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.playposse.peertopeeroxygen.android.data.DataService;

@@ -79,6 +79,7 @@
     <!-- Toasts -->
     <string name="mission_completion_toast">Congratulation on completing "%1$s"! %2$s graduated you.</string>
     <string name="admin_sent_points_toast">An admin has sent you points!</string>
+    <string name="cant_mentor_mission_toast">%1$s invited you to mentor \'%2$s\'. You have to learn that mission yourself first!</string>
 
     <!-- Reusable strings -->
     <string name="name_form_label">Name</string>
