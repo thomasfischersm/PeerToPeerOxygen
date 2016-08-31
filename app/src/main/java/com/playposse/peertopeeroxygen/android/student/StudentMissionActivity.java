@@ -102,12 +102,19 @@ public class StudentMissionActivity extends StudentParentActivity {
     }
 
     @Override
-    public void receiveData(final DataRepository dataRepository) {
+    public void receiveData(DataRepository dataRepository) {
         missionBean = dataRepository
                 .getMissionBean(missionLadderId, missionTreeId, missionId);
 
         missionNameTextView.setText(missionBean.getName());
-        missionInstructionsTextView.setText(missionBean.getStudentInstruction());
+
+        if (dataRepository.getMissionCompletion(missionId).getStudyComplete()
+                || dataRepository.getUserBean().getAdmin()) {
+            missionInstructionsTextView.setText(missionBean.getBuddyInstruction());
+        } else {
+            missionInstructionsTextView.setText(missionBean.getStudentInstruction());
+        }
+
         setTitle("" + missionBean.getName());
     }
 
