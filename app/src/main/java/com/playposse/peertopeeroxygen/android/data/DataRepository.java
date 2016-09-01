@@ -171,4 +171,17 @@ public class DataRepository {
 
         pointsMap.put(pointType.name(), pointCount);
     }
+
+    public MissionTreeBean getMissionTreeBeanByLevel(Long missionLadderId, int level) {
+        MissionLadderBean missionLadderBean = getMissionLadderBean(missionLadderId);
+        if (missionLadderBean.getMissionTreeBeans() != null) {
+            for (MissionTreeBean possibleMissionTreeBean : missionLadderBean.getMissionTreeBeans()) {
+                if (possibleMissionTreeBean.getLevel() == level) {
+                    return possibleMissionTreeBean;
+                }
+            }
+        }
+
+        return null;
+    }
 }

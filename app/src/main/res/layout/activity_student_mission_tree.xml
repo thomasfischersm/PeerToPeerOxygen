@@ -28,10 +28,39 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.playposse.peertopeeroxygen.android.widgets.MissionTreeWidget
-                android:id="@+id/missionTreeWidget"
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content">
+
+                <com.playposse.peertopeeroxygen.android.widgets.MissionTreeWidget
+                    android:id="@+id/missionTreeWidget"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right">
+
+                    <ImageButton
+                        android:id="@+id/levelDownImageButton"
+                        android:src="@drawable/ic_expand_more_black_24dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+
+                    <ImageButton
+                        android:id="@+id/levelUpImageButton"
+                        android:src="@drawable/ic_expand_less_black_24dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </LinearLayout>
         </ScrollView>
     </HorizontalScrollView>
 </LinearLayout>

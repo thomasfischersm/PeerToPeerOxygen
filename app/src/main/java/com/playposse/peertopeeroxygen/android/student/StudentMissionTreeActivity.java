@@ -2,6 +2,9 @@ package com.playposse.peertopeeroxygen.android.student;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.IntentCompat;
+import android.view.View;
+import android.widget.ImageButton;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
@@ -19,6 +22,8 @@ public class StudentMissionTreeActivity extends StudentParentActivity {
     private MissionTreeBean missionTreeBean;
 
     private MissionTreeWidget missionTreeWidget;
+    private ImageButton levelDownImageButton;
+    private ImageButton levelUpImageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,16 +35,45 @@ public class StudentMissionTreeActivity extends StudentParentActivity {
         missionTreeId = intent.getLongExtra(ExtraConstants.EXTRA_MISSION_TREE_ID, -1);
 
         missionTreeWidget = (MissionTreeWidget) findViewById(R.id.missionTreeWidget);
+        levelDownImageButton = (ImageButton) findViewById(R.id.levelDownImageButton);
+        levelUpImageButton = (ImageButton) findViewById(R.id.levelUpImageButton);
     }
 
     @Override
-    public void receiveData(final DataRepository dataRepository) {
+    public void receiveData(DataRepository dataRepository) {
         missionTreeBean = dataRepository
                 .getMissionTreeBean(missionLadderId, missionTreeId);
         missionTreeWidget.setMissionTreeBean(
                 missionLadderId,
                 missionTreeBean,
                 dataRepository);
-        setTitle("" + missionTreeBean.getName());
+        String title = String.format(
+                getString(R.string.student_mission_tree_activity_title),
+                missionTreeBean.getLevel(),
+                missionTreeBean.getName());
+        setTitle(title);
+
+        initLevelButton(dataRepository, levelDownImageButton, missionTreeBean.getLevel() - 1);
+        initLevelButton(dataRepository, levelUpImageButton, missionTreeBean.getLevel() + 1);
+    }
+
+    private void initLevelButton(DataRepository dataRepository, ImageButton button, int level) {
+        final MissionTreeBean otherMissionTreeBean = dataRepository.getMissionTreeBeanByLevel(
+                missionLadderId,
+                level);
+        button.setVisibility(otherMissionTreeBean != null ? View.VISIBLE : View.GONE);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = ExtraConstants.createIntent(
+                        getApplicationContext(),
+                        StudentMissionTreeActivity.class,
+                        missionLadderId,
+                        otherMissionTreeBean.getId(),
+                        null);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
     }
 }
