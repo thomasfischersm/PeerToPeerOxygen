@@ -2,7 +2,6 @@ package com.playposse.peertopeeroxygen.backend.serveractions;
 
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.playposse.peertopeeroxygen.backend.beans.MissionTreeBean;
-import com.playposse.peertopeeroxygen.backend.schema.MissionBoss;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 
@@ -31,19 +30,12 @@ public class SaveMissionTreeAction {
                 + ")");
 
         MissionTree missionTree = missionTreeBean.toEntity();
-//        ofy().save().entity(missionTree).now();
 
         if (missionTree.getId() == null) {
             missionTree.setId(factory().allocateId(MissionTree.class).getId());
         }
 
-        if ((missionTree.getMissionBoss() != null)
-                && (missionTree.getMissionBoss().getId() == null)) {
-            missionTree.getMissionBoss().setId(factory().allocateId(MissionBoss.class).getId());
-        }
-
         MissionLadder missionLadder = ofy().load()
-//                .group(MissionTree.class, MissionBoss.class, Mission.class)
                 .type(MissionLadder.class)
                 .id(missionLadderId)
                 .now();

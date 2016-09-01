@@ -70,18 +70,7 @@ public class MissionTreeMeasurements {
 //        if ()
 
         // Add to lookup.
-        if (missionPlaceHolder.getMissionBean() != null) {
-            missionLookup.put(missionPlaceHolder.getMissionBean(), missionPlaceHolder);
-        } else if (missionPlaceHolder.getMissionTreeBean() != null) {
-            if (missionTreeBean != null) {
-                missionTreeBean = missionPlaceHolder.getMissionTreeBean();
-            } else {
-                throw new RuntimeException("The MissionTreeBean was provided twice!");
-            }
-        } else {
-            throw new RuntimeException(
-                    "Excepted either the MissionTreeBean or the MissionBean to be provided.");
-        }
+        missionLookup.put(missionPlaceHolder.getMissionBean(), missionPlaceHolder);
     }
 
     public int getRowCount() {

@@ -4,7 +4,6 @@ import com.googlecode.objectify.ObjectifyService;
 import com.playposse.peertopeeroxygen.backend.schema.LevelCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.MentoringAuditLog;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
-import com.playposse.peertopeeroxygen.backend.schema.MissionBoss;
 import com.playposse.peertopeeroxygen.backend.schema.MissionCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
@@ -24,7 +23,6 @@ public class ObjectifyRegistrationServletContextListener implements ServletConte
         ObjectifyService.register(LevelCompletion.class);
         ObjectifyService.register(MentoringAuditLog.class);
         ObjectifyService.register(Mission.class);
-        ObjectifyService.register(MissionBoss.class);
         ObjectifyService.register(MissionCompletion.class);
         ObjectifyService.register(MissionLadder.class);
         ObjectifyService.register(MissionTree.class);

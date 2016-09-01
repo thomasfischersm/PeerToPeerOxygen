@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
@@ -15,11 +17,13 @@ import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.widgets.ConfirmationDialogBuilder;
 import com.playposse.peertopeeroxygen.android.widgets.ListViewNoScroll;
+import com.playposse.peertopeeroxygen.android.widgets.MissionSpinnerArrayAdapter;
 import com.playposse.peertopeeroxygen.android.widgets.RequiredMissionListView;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,11 +35,12 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
     private Long missionTreeId;
     private MissionLadderBean missionLadderBean;
     private MissionTreeBean missionTreeBean;
+    private MissionBean bossMissionBean;
 
     private TextView createMissionLink;
     private EditText nameEditText;
     private EditText descriptionEditText;
-    private TextView editMissionBossLink;
+    private Spinner bossMissionSpinner;
     private ListViewNoScroll missionsListView;
     private RequiredMissionListView requiredMissionsListView;
 
@@ -52,24 +57,10 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
         createMissionLink = (TextView) findViewById(R.id.createMissionLink);
         nameEditText = (EditText) findViewById(R.id.missionTreeNameEditText);
         descriptionEditText = (EditText) findViewById(R.id.missionTreeDescriptionEditText);
-        editMissionBossLink = (TextView) findViewById(R.id.editMissionBossLink);
+        bossMissionSpinner = (Spinner) findViewById(R.id.bossMissionSpinner);
         missionsListView = (ListViewNoScroll) findViewById(R.id.missionsListView);
         requiredMissionsListView =
                 (RequiredMissionListView) findViewById(R.id.requiredMissionsListView);
-
-        editMissionBossLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveIfNecessary();
-
-                Intent intent = new Intent(
-                        getApplicationContext(),
-                        AdminEditMissionBossActivity.class);
-                intent.putExtra(ExtraConstants.EXTRA_MISSION_LADDER_ID, missionLadderId);
-                intent.putExtra(ExtraConstants.EXTRA_MISSION_TREE_ID, missionTreeId);
-                startActivity(intent);
-            }
-        });
 
         createMissionLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +98,7 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
             // Check if changes have been made.
             shouldSave = !nameEditText.getText().toString().equals(missionTreeBean.getName())
                     || !descriptionEditText.getText().toString().equals(missionTreeBean.getDescription())
+                    || !bossMissionBean.getId().equals(missionTreeBean.getBossMissionId())
                     || requiredMissionsListView.isDirty();
         }
 
@@ -114,6 +106,7 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
         if (shouldSave) {
             missionTreeBean.setName(nameEditText.getText().toString());
             missionTreeBean.setDescription(descriptionEditText.getText().toString());
+            missionTreeBean.setBossMissionId((bossMissionBean != null) ? bossMissionBean.getId() : null);
             missionTreeBean.setRequiredMissionIds(requiredMissionsListView.getRequiredMissionIds());
             dataServiceConnection.getLocalBinder().save(missionLadderId, missionTreeBean);
         }
@@ -141,6 +134,39 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
                     getString(R.string.edit_mission_tree_title),
                     missionTreeBean.getName()));
 
+            // Load boss mission spinner.
+            final List<MissionBean> possibleBossMissions = getPossibleBossMissions(missionTreeBean);
+            bossMissionSpinner.setAdapter(new MissionSpinnerArrayAdapter(
+                    this,
+                    R.layout.list_item_text_view,
+                    possibleBossMissions));
+            if (missionTreeBean.getBossMissionId() != null) {
+                bossMissionBean = dataRepository.getMissionBean(
+                        missionLadderId,
+                        missionTreeId,
+                        missionTreeBean.getBossMissionId());
+                bossMissionSpinner.setSelection(possibleBossMissions.indexOf(bossMissionBean));
+            } else {
+                bossMissionBean = null;
+            }
+            bossMissionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(
+                        AdapterView<?> adapterView,
+                        View view,
+                        int selectedPosition,
+                        long id) {
+
+                    bossMissionBean = possibleBossMissions.get(selectedPosition);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+                    bossMissionBean = null;
+                }
+            });
+
+            // Load child missions.
             MissionBeanArrayAdapter adapter = new MissionBeanArrayAdapter(
                     missionTreeBean.getMissionBeans());
             missionsListView.setAdapter(adapter);
@@ -165,6 +191,30 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
         return level;
     }
 
+    /**
+     * Removes all missions that have a parent. If there is a parent, it shouldn't be the boss
+     * mission.
+     */
+    private List<MissionBean> getPossibleBossMissions(MissionTreeBean missionTreeBean) {
+        if (missionTreeBean.getMissionBeans() == null) {
+            return new ArrayList<>(0);
+        }
+
+        List<MissionBean> missions = new ArrayList<>(missionTreeBean.getMissionBeans());
+        for (MissionBean mission : missionTreeBean.getMissionBeans()) {
+            List<Long> childMissionIds = mission.getRequiredMissionIds();
+            if (childMissionIds != null) {
+                for (int i = missions.size() - 1; i >= 0; i--) {
+                    MissionBean possibleChildMission = missions.get(i);
+                    if (childMissionIds.contains(possibleChildMission.getId())) {
+                        missions.remove(possibleChildMission);
+                    }
+                }
+            }
+        }
+        return missions;
+    }
+
     private final class MissionBeanArrayAdapter
             extends ArrayAdapter<MissionBean> {
 
@@ -186,7 +236,7 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
                 public void onClick(View view) {
                     saveIfNecessary();
 
-                    Long missionId = new Long(missionBean.getId());
+                    Long missionId = Long.valueOf(missionBean.getId());
                     Intent intent = new Intent(
                             getApplicationContext(),
                             AdminEditMissionActivity.class);

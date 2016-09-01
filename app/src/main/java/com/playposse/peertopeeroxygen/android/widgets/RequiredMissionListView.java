@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
@@ -208,44 +207,6 @@ public class RequiredMissionListView extends ListViewNoScroll {
             }
 
             return rowView;
-        }
-    }
-
-    /**
-     * {@link ArrayAdapter} for the spinner to select a mission.
-     */
-    private final class MissionSpinnerArrayAdapter
-            extends ArrayAdapter<MissionBean>
-            implements SpinnerAdapter {
-
-        private final List<MissionBean> missionBeans;
-
-        public MissionSpinnerArrayAdapter(
-                Context context,
-                int resource,
-                List<MissionBean> missionBeans) {
-
-            super(context, resource, missionBeans);
-
-            this.missionBeans = missionBeans;
-
-            setDropDownViewResource(R.layout.list_item_text_view); // remove!
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-//            TextView textView = (TextView) convertView.findViewById(R.id.text_view);
-            LayoutInflater inflater = (LayoutInflater) getContext()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            TextView textView =
-                    (TextView) inflater.inflate(R.layout.list_item_text_view, parent, false);
-            textView.setText(getItem(position).getName());
-            return textView;
-        }
-
-        @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            return getView(position, convertView, parent);
         }
     }
 }

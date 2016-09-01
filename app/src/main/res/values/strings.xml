@@ -22,7 +22,7 @@
 
     <!-- Edit mission trees -->
     <string name="edit_mission_tree_title">Mission tree: %1$s</string>
-    <string name="edit_mission_boss_link">Edit mission boss</string>
+    <string name="boss_mission_label">Boss mission: </string>
     <string name="missions_label">Missions</string>
     <string name="new_mission_link">Create new mission</string>
 

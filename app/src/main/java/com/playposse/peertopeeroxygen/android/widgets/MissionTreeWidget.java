@@ -32,6 +32,8 @@ import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionT
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 /**
  * A widget that draws the missions of a mission tree along with arrows to show the dependencies.
  */
@@ -183,7 +185,8 @@ public class MissionTreeWidget extends View {
 
         @Override
         protected Bitmap doInBackground(MissionTreeBean[] missionTreeBeans) {
-            rows = MissionTreeUntangler.untangle(missionTreeBeans[0]);
+            MissionTreeBean missionTreeBean = missionTreeBeans[0];
+            rows = MissionTreeUntangler.untangle(missionTreeBean);
             MissionTreeUntangler.debugDump(rows);
 
             desiredWidth = MissionTreeUntangler.getMaxColumns(rows) * COLUMN_WIDTH;
@@ -200,7 +203,7 @@ public class MissionTreeWidget extends View {
 
             // TODO: set dimensions on the view.
             drawArrows(canvas, rows);
-            drawBoxes(canvas, rows);
+            drawBoxes(canvas, rows, missionTreeBean.getBossMissionId());
 
             return bitmap;
         }
@@ -255,7 +258,11 @@ public class MissionTreeWidget extends View {
             }
         }
 
-        private void drawBoxes(Canvas canvas, List<List<MissionPlaceHolder>> rows) {
+        private void drawBoxes(
+                Canvas canvas,
+                List<List<MissionPlaceHolder>> rows,
+                @Nullable Long bossMissionId) {
+
             int x = 0;
             int y = 0;
             int rowIndex = 0;
@@ -276,20 +283,20 @@ public class MissionTreeWidget extends View {
                             toPx(lowerRightY),
                             paint);
 
-                    final String txt;
-                    if (holder.getMissionTreeBean() != null) {
+                    String txt;
+                    if (holder.getMissionBean().getId().equals(bossMissionId)) {
                         txt = String.format(
                                 getContext().getString(R.string.boss_label),
-                                holder.getMissionTreeBean().getName());
+                                holder.getMissionBean().getName());
                     } else {
-                        txt = holder.getMissionBean().getName()
-                                + formatCostString(holder.getMissionBean())
-                                + formatCompletionString(holder.getMissionBean());
+                        txt = holder.getMissionBean().getName();
+
                     }
+                    txt += formatCostString(holder.getMissionBean())
+                            + formatCompletionString(holder.getMissionBean());
 
                     int textX = upperLeftX + TEXT_PADDING;
                     int textY = upperLeftY + TEXT_PADDING;
-//                    canvas.drawText(txt, toPx(textX), toPx(textY), paint);
                     CanvasHelper.drawText(
                             canvas,
                             paint,
@@ -308,7 +315,7 @@ public class MissionTreeWidget extends View {
 
         /**
          * Determines the paint for the {@link MissionPlaceHolder}.
-         * <p>
+         * <p/>
          * <ul>
          * <li>Black -> completely learned</li>
          * <li>Gray -> locked mission</li>

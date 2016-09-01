@@ -1,7 +1,6 @@
 package com.playposse.peertopeeroxygen.android.missiondependencies;
 
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
-import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.List;
 public class MissionPlaceHolder {
 
     private final MissionBean missionBean;
-    private final MissionTreeBean missionTreeBean;
 
     private int row;
     private int column;
@@ -22,20 +20,10 @@ public class MissionPlaceHolder {
 
     public MissionPlaceHolder(MissionBean missionBean) {
         this.missionBean = missionBean;
-        this.missionTreeBean = null;
-    }
-
-    public MissionPlaceHolder(MissionTreeBean missionTreeBean) {
-        this.missionBean = null;
-        this.missionTreeBean = missionTreeBean;
     }
 
     public MissionBean getMissionBean() {
         return missionBean;
-    }
-
-    public MissionTreeBean getMissionTreeBean() {
-        return missionTreeBean;
     }
 
     public int getRow() {

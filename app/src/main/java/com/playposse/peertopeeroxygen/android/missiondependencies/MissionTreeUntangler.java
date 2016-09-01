@@ -22,21 +22,10 @@ public class MissionTreeUntangler {
         return moveChildrenUnderParent(sortIntoRows(sortIntoList(missionTreeBean)));
     }
 
-//    private static MissionTreeMeasurements sortVertically(MissionTreeBean missionTreeBean) {
-//        MissionTreeMeasurements measurements = new MissionTreeMeasurements();
-//
-//        // Add MissionTree itself.
-//        MissionPlaceHolder treeHolder = new MissionPlaceHolder(missionTreeBean);
-//        treeHolder.setRow(0);
-//        treeHolder.setColumn(0);
-//        measurements.addMissionPlaceHolder();
-//    }
-
     private static List<MissionPlaceHolder> sortIntoList(MissionTreeBean missionTreeBean) {
         // Add everything into an unsorted list.
         List<MissionPlaceHolder> holders = new ArrayList<>();
         Map<Long, MissionPlaceHolder> map = new HashMap<>();
-        holders.add(new MissionPlaceHolder(missionTreeBean));
         for (MissionBean missionBean : missionTreeBean.getMissionBeans()) {
             MissionPlaceHolder holder = new MissionPlaceHolder(missionBean);
             holders.add(holder);
@@ -45,12 +34,7 @@ public class MissionTreeUntangler {
 
         // Add dependencies.
         for (MissionPlaceHolder holder : holders) {
-            final List<Long> childMissionIds;
-            if (holder.getMissionTreeBean() != null) {
-                childMissionIds = holder.getMissionTreeBean().getRequiredMissionIds();
-            } else {
-                childMissionIds = holder.getMissionBean().getRequiredMissionIds();
-            }
+            List<Long> childMissionIds = holder.getMissionBean().getRequiredMissionIds();
 
             if (childMissionIds != null) {
                 for (Long childMissionId : childMissionIds) {
@@ -101,7 +85,7 @@ public class MissionTreeUntangler {
             currentRow.add(holder);
             holder.setColumn(currentRow.size() - 1);
             holder.setRow(rows.size() - 1);
-            needNewRow |= holder.getMissionTreeBean() != null;
+//            needNewRow |= holder.getMissionTreeBean() != null; WHAT DID THIS DO?
         }
         return rows;
     }
@@ -120,28 +104,20 @@ public class MissionTreeUntangler {
             Log.i(LOG_CAT, "- New Row");
             for (MissionPlaceHolder holder : row) {
                 StringBuilder sb = new StringBuilder();
-                sb.append("-- Holder: " + getName(holder));
+                sb.append("-- Holder: " + holder.getMissionBean().getName());
 
                 sb.append(" parents: ");
                 for (MissionPlaceHolder parent : holder.getParents()) {
-                    sb.append(getName(parent) + ", ");
+                    sb.append(parent.getMissionBean().getName() + ", ");
                 }
 
                 sb.append(" children: ");
                 for (MissionPlaceHolder child : holder.getChildren()) {
-                    sb.append(getName(child) + ", ");
+                    sb.append(child.getMissionBean().getName() + ", ");
                 }
 
                 Log.i(LOG_CAT, sb.toString());
             }
-        }
-    }
-
-    private static String getName(MissionPlaceHolder holder) {
-        if (holder.getMissionTreeBean() != null) {
-            return "Tree: " + holder.getMissionTreeBean().getName();
-        } else {
-            return holder.getMissionBean().getName();
         }
     }
 

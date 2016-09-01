@@ -44,7 +44,7 @@ public class MissionAvailabilityChecker {
 
         // Admins can always teach a mission.
         UserBean userBean = dataRepository.getUserBean();
-        if (userBean.getAdmin() == true) {
+        if (userBean.getAdmin()) {
             // Admin can access everything.
             return MissionAvailability.TEACHABLE;
         }
@@ -81,7 +81,7 @@ public class MissionAvailabilityChecker {
         for (MissionPlaceHolder child : holder.getChildren()) {
             MissionCompletionBean childCompletion =
                     dataRepository.getMissionCompletion(child.getMissionBean().getId());
-            if (childCompletion.getStudyComplete() == false) {
+            if (!childCompletion.getStudyComplete()) {
                 return false;
             }
         }

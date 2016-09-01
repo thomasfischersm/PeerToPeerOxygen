@@ -8,6 +8,8 @@ import com.googlecode.objectify.annotation.Load;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 /**
  * Objectify entity that represents a mission tree. A mission tree is a collection of missions
  * that ends with beating the mission boss. The missions have a theme. The theme can have multiple
@@ -20,7 +22,7 @@ public class MissionTree {
     private String name;
     private String description;
     private int level;
-    @Load private MissionBoss missionBoss;
+    @Load @Nullable Ref<Mission> bossMissionRef;
     @Load private List<Ref<Mission>> missions = new ArrayList<>();
 
     /**
@@ -40,13 +42,13 @@ public class MissionTree {
             String name,
             String description,
             int level,
-            MissionBoss missionBoss) {
+            Ref<Mission> bossMissionRef) {
 
         this.description = description;
         this.id = id;
         this.level = level;
         this.name = name;
-        this.missionBoss = missionBoss;
+        this.bossMissionRef = bossMissionRef;
     }
 
     public Long getId() {
@@ -81,12 +83,13 @@ public class MissionTree {
         this.level = level;
     }
 
-    public MissionBoss getMissionBoss() {
-        return missionBoss;
+    @Nullable
+    public Ref<Mission> getBossMissionRef() {
+        return bossMissionRef;
     }
 
-    public void setMissionBoss(MissionBoss missionBoss) {
-        this.missionBoss = missionBoss;
+    public void setBossMissionRef(@Nullable Ref<Mission> bossMissionRef) {
+        this.bossMissionRef = bossMissionRef;
     }
 
     public String getName() {

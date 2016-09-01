@@ -3,7 +3,6 @@ package com.playposse.peertopeeroxygen.backend.beans;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
-import com.playposse.peertopeeroxygen.backend.schema.MissionBoss;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ public class MissionTreeBean {
     private String name;
     private String description;
     private int level;
-    private MissionBossBean missionBossBean;
+    private Long bossMissionId;
     private List<MissionBean> missionBeans = new ArrayList<>();
     private List<Long> requiredMissionIds = new ArrayList<>();
 
@@ -31,8 +30,10 @@ public class MissionTreeBean {
         this.description = missionTree.getDescription();
         this.level = missionTree.getLevel();
 
-        if (missionTree.getMissionBoss() != null) {
-            this.missionBossBean = new MissionBossBean(missionTree.getMissionBoss());
+        if (missionTree.getBossMissionRef() != null) {
+            bossMissionId = missionTree.getBossMissionRef().getKey().getId();
+        } else {
+            bossMissionId = null;
         }
 
         for (Ref<Mission> missionRef : missionTree.getMissions()) {
@@ -81,12 +82,12 @@ public class MissionTreeBean {
         this.name = name;
     }
 
-    public MissionBossBean getMissionBossBean() {
-        return missionBossBean;
+    public Long getBossMissionId() {
+        return bossMissionId;
     }
 
-    public void setMissionBossBean(MissionBossBean missionBossBean) {
-        this.missionBossBean = missionBossBean;
+    public void setBossMissionId(Long bossMissionId) {
+        this.bossMissionId = bossMissionId;
     }
 
     public List<MissionBean> getMissionBeans() {
@@ -102,8 +103,14 @@ public class MissionTreeBean {
     }
 
     public MissionTree toEntity() {
-        MissionBoss missionBoss = (missionBossBean != null) ? missionBossBean.toEntity() : null;
-        MissionTree missionTree = new MissionTree(id, name, description, level, missionBoss);
+        final Ref<Mission> bossMissionRef;
+        if (bossMissionId != null) {
+            bossMissionRef = Ref.create(Key.create(Mission.class, bossMissionId));
+        } else {
+            bossMissionRef = null;
+        }
+
+        MissionTree missionTree = new MissionTree(id, name, description, level, bossMissionRef);
 
         for (MissionBean missionBean : missionBeans) {
             Key<Mission> missionKey = Key.create(Mission.class, missionBean.getId());
