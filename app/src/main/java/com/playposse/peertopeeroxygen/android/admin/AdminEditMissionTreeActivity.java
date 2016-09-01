@@ -96,9 +96,18 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
             }
         } else {
             // Check if changes have been made.
+            boolean isBossMissionDirty;
+            if ((bossMissionBean == null) && (missionTreeBean.getBossMissionId() == null)) {
+                isBossMissionDirty = true;
+            } else if (bossMissionBean == null) {
+                isBossMissionDirty = true;
+            } else {
+                isBossMissionDirty = !bossMissionBean.getId().equals(missionTreeBean.getBossMissionId());
+            }
+
             shouldSave = !nameEditText.getText().toString().equals(missionTreeBean.getName())
                     || !descriptionEditText.getText().toString().equals(missionTreeBean.getDescription())
-                    || !bossMissionBean.getId().equals(missionTreeBean.getBossMissionId())
+                    || isBossMissionDirty
                     || requiredMissionsListView.isDirty();
         }
 
