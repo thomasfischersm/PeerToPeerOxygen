@@ -1,10 +1,7 @@
 package com.playposse.peertopeeroxygen.android.firebase.actions;
 
-import android.content.Context;
-
 import com.google.firebase.messaging.RemoteMessage;
 import com.playposse.peertopeeroxygen.android.R;
-import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
 import com.playposse.peertopeeroxygen.android.firebase.FirebaseMessage;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.JsonMap;
@@ -17,14 +14,12 @@ import java.util.Map;
  */
 public class UpdatePointsAction extends FirebaseAction {
 
-    public UpdatePointsAction(
-            Context applicationContext,
-            DataServiceConnection dataServiceConnection) {
-
-        super(applicationContext, dataServiceConnection);
+    public UpdatePointsAction(RemoteMessage remoteMessage) {
+        super(remoteMessage);
     }
 
-    public void handleUpdatePoints(RemoteMessage remoteMessage) {
+    @Override
+    public void execute(RemoteMessage remoteMessage) {
         UpdatePointsMessage message = new UpdatePointsMessage(remoteMessage);
         UserBean userBean = getDataRepository().getUserBean();
 

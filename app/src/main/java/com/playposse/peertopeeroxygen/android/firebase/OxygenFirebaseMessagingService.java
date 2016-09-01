@@ -10,12 +10,15 @@ import com.playposse.peertopeeroxygen.android.data.DataReceivedCallback;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
+import com.playposse.peertopeeroxygen.android.firebase.actions.FirebaseAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.MissionCheckoutCompletionAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.MissionCompletionAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.MissionInvitationAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.MissionSeniorInvitationAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.UpdatePointsAction;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,6 +37,7 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
     private static final String UPDATE_STUDENT_POINTS_TYPE = "updateStudentPoints";
 
     protected DataServiceConnection dataServiceConnection;
+    private List<FirebaseAction> pendingActions = new ArrayList<>();
 
     @Override
     public void onCreate() {
@@ -65,24 +69,19 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
 
         switch (data.get(TYPE_KEY)) {
             case MISSION_INVITE_TYPE:
-                new MissionInvitationAction(getApplicationContext(), dataServiceConnection)
-                        .handleMissionInvitation(remoteMessage);
+                execute(new MissionInvitationAction(remoteMessage));
                 break;
             case MISSION_SENIOR_INVITE_TYPE:
-                new MissionSeniorInvitationAction(getApplicationContext(), dataServiceConnection)
-                        .handleSeniorMissionInvitation(remoteMessage);
+                execute(new MissionSeniorInvitationAction(remoteMessage));
                 break;
             case MISSION_COMPLETION_TYPE:
-                new MissionCompletionAction(getApplicationContext(), dataServiceConnection)
-                        .handleMissionCompletion(remoteMessage);
+                execute(new MissionCompletionAction(remoteMessage));
                 break;
             case MISSION_CHECKOUT_COMPLETION_TYPE:
-                new MissionCheckoutCompletionAction(getApplicationContext(), dataServiceConnection)
-                        .handleMissionCheckoutCompletion(remoteMessage);
+                execute(new MissionCheckoutCompletionAction(remoteMessage));
                 break;
             case UPDATE_STUDENT_POINTS_TYPE:
-                new UpdatePointsAction(getApplicationContext(), dataServiceConnection)
-                        .handleUpdatePoints(remoteMessage);
+                execute(new UpdatePointsAction(remoteMessage));
                 break;
             default:
                 Log.w(LOG_CAT, "Received an unknown message type from Firebase: "
@@ -90,15 +89,36 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private static final class EmptyDataReceivedCallback implements DataReceivedCallback {
+    private void execute(FirebaseAction action) {
+        pendingActions.add(action);
+        executePendingActions();
+    }
+
+    private void executePendingActions() {
+        if ((dataServiceConnection == null)
+                || (dataServiceConnection.getLocalBinder() == null)
+                || (dataServiceConnection.getLocalBinder().getDataRepository() == null)
+                || (dataServiceConnection.getLocalBinder().getDataRepository().getCompleteMissionDataBean() == null)) {
+            // Not ready to execute actions yet.
+            return;
+        }
+
+        while (pendingActions.size() > 0) {
+            FirebaseAction action = pendingActions.get(0);
+            action.execute(this, dataServiceConnection);
+            pendingActions.remove(action);
+        }
+    }
+
+    private final class EmptyDataReceivedCallback implements DataReceivedCallback {
         @Override
         public void receiveData(DataRepository dataRepository) {
-            // Nothing to do.
+            executePendingActions();
         }
 
         @Override
         public void runOnUiThread(Runnable runnable) {
-            // Ignore.
+            runnable.run();
         }
     }
 }

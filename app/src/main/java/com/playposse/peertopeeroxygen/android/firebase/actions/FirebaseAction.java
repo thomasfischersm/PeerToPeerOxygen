@@ -3,6 +3,7 @@ package com.playposse.peertopeeroxygen.android.firebase.actions;
 import android.content.Context;
 import android.content.Intent;
 
+import com.google.firebase.messaging.RemoteMessage;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
 import com.playposse.peertopeeroxygen.android.util.ToastUtil;
@@ -12,13 +13,22 @@ import com.playposse.peertopeeroxygen.android.util.ToastUtil;
  */
 public abstract class FirebaseAction {
 
-    private final Context applicationContext;
-    // TODO: Implement delay until this is populated.
-    private final DataServiceConnection dataServiceConnection;
+    private final RemoteMessage remoteMessage;
 
-    public FirebaseAction(Context applicationContext, DataServiceConnection dataServiceConnection) {
+    private Context applicationContext;
+    private DataServiceConnection dataServiceConnection;
+
+    public FirebaseAction(RemoteMessage remoteMessage) {
+        this.remoteMessage = remoteMessage;
+    }
+
+    protected abstract void execute(RemoteMessage remoteMessage);
+
+    public void execute(Context applicationContext, DataServiceConnection dataServiceConnection) {
         this.applicationContext = applicationContext;
         this.dataServiceConnection = dataServiceConnection;
+
+        execute(remoteMessage);
     }
 
     protected Context getApplicationContext() {

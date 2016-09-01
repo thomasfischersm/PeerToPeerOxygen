@@ -7,7 +7,6 @@ import android.support.v4.content.IntentCompat;
 import com.google.firebase.messaging.RemoteMessage;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
-import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
 import com.playposse.peertopeeroxygen.android.firebase.FirebaseMessage;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
@@ -20,22 +19,18 @@ import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionC
  */
 public class MissionCheckoutCompletionAction extends FirebaseAction {
 
-    public MissionCheckoutCompletionAction(
-            Context applicationContext,
-            DataServiceConnection dataServiceConnection) {
-
-        super(applicationContext, dataServiceConnection);
+    public MissionCheckoutCompletionAction(RemoteMessage remoteMessage) {
+        super(remoteMessage);
     }
 
-
-    public void handleMissionCheckoutCompletion(RemoteMessage remoteMessage) {
+    @Override
+    public void execute(RemoteMessage remoteMessage) {
         MissionCheckoutCompletionMessage message =
                 new MissionCheckoutCompletionMessage(remoteMessage);
 
         // Look up data.
         MissionCheckoutCompletionMessage completionMessage =
                 new MissionCheckoutCompletionMessage(remoteMessage);
-        UserBeanParcelable studentBean = completionMessage.getStudentBean();
         Long missionId = completionMessage.getMissionId();
         DataRepository dataRepository = getDataRepository();
         Long[] ids = dataRepository.getMissionPath(missionId);
@@ -76,7 +71,7 @@ public class MissionCheckoutCompletionAction extends FirebaseAction {
         }
 
         public Long getMissionId() {
-            return new Long(data.get(MISSION_KEY));
+            return Long.valueOf(data.get(MISSION_KEY));
         }
 
         public UserBeanParcelable getStudentBean() {

@@ -1,11 +1,9 @@
 package com.playposse.peertopeeroxygen.android.firebase.actions;
 
-import android.content.Context;
 import android.content.Intent;
 
 import com.google.firebase.messaging.RemoteMessage;
 import com.playposse.peertopeeroxygen.android.R;
-import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
 import com.playposse.peertopeeroxygen.android.firebase.FirebaseMessage;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
@@ -18,14 +16,13 @@ import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionC
  */
 public class MissionInvitationAction extends FirebaseAction {
 
-    public MissionInvitationAction(
-            Context applicationContext,
-            DataServiceConnection dataServiceConnection) {
-
-        super(applicationContext, dataServiceConnection);
+    public MissionInvitationAction(RemoteMessage remoteMessage) {
+        super(remoteMessage);
     }
 
-    public void handleMissionInvitation(RemoteMessage remoteMessage) {
+    @Override
+    public void execute(RemoteMessage remoteMessage) {
+
         MissionInviteMessage message = new MissionInviteMessage(remoteMessage);
         MissionCompletionBean completion =
                 getDataRepository().getMissionCompletion(message.getMissionId());
