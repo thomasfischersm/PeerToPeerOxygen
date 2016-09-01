@@ -26,7 +26,9 @@ public class FirebaseUtil {
 
     private static final String TYPE_KEY = "type";
     private static final String MISSION_INVITE_TYPE = "missionInvite";
+    private static final String MISSION_SENIOR_INVITE_TYPE = "missionSeniorInvite";
     private static final String MISSION_COMPLETION_TYPE = "missionCompletion";
+    private static final String MISSION_CHECKOUT_COMPLETION_TYPE = "missionCheckoutCompletion";
     private static final String UPDATE_STUDENT_POINTS_TYPE = "updateStudentPoints";
 
     private static final String FROM_STUDENT_ID = "fromStudentId";
@@ -61,6 +63,33 @@ public class FirebaseUtil {
         return sendMessageToDevice(firebaseToken, rootNode);
     }
 
+    public static String sendMissionInviteToSeniorBuddy(
+            String firebaseToken,
+            UserBean studentBean,
+            UserBean buddyBean,
+            Long missionLadderId,
+            Long missionTreeId,
+            Long missionId)
+            throws IOException {
+
+        Gson gson = new Gson();
+        String studentBeanJson = gson.toJson(studentBean);
+        String buddyBeanJson = gson.toJson(buddyBean);
+        log.info("The student translated to JSON: " + studentBeanJson);
+        log.info("The student id is " + studentBean.getId());
+
+        JSONObject rootNode = new JSONObject();
+        rootNode.put(TYPE_KEY, MISSION_SENIOR_INVITE_TYPE);
+        rootNode.put(FROM_STUDENT_ID, studentBean.getId());
+        rootNode.put(FROM_STUDENT_BEAN, studentBeanJson);
+        rootNode.put(BUDDY_BEAN, buddyBeanJson);
+        rootNode.put(MISSION_LADDER_KEY, missionLadderId);
+        rootNode.put(MISSION_TREE_KEY, missionTreeId);
+        rootNode.put(MISSION_KEY, missionId);
+
+        return sendMessageToDevice(firebaseToken, rootNode);
+    }
+
     public static String sendMissionCompletionToStudent(
             String firebaseToken,
             UserBean buddyBean,
@@ -73,6 +102,23 @@ public class FirebaseUtil {
         JSONObject rootNode = new JSONObject();
         rootNode.put(TYPE_KEY, MISSION_COMPLETION_TYPE);
         rootNode.put(BUDDY_BEAN, buddyBeanJson);
+        rootNode.put(MISSION_KEY, missionId);
+
+        return sendMessageToDevice(firebaseToken, rootNode);
+    }
+
+    public static String sendMissionCompletionToBuddy(
+            String firebaseToken,
+            UserBean studentBean,
+            Long missionId)
+            throws IOException {
+
+        Gson gson = new Gson();
+        String studentBeanJson = gson.toJson(studentBean);
+
+        JSONObject rootNode = new JSONObject();
+        rootNode.put(TYPE_KEY, MISSION_CHECKOUT_COMPLETION_TYPE);
+        rootNode.put(STUDENT_BEAN, studentBeanJson);
         rootNode.put(MISSION_KEY, missionId);
 
         return sendMessageToDevice(firebaseToken, rootNode);

@@ -59,10 +59,13 @@
     <string name="start_scan_button">Start scanning buddy profile.</string>
 
     <!-- Buddy mission activity -->
-    <string name="mission_invitation_message">%1$s has invited you to teach him a mission.</string>
+    <string name="mission_invitation_message">%1$s has invited you to teach him/her a mission.</string>
     <string name="senior_buddy_required_message">As you are teaching this mission for the first time, you need to invite a buddy who has already taught this mission to supervise you.</string>
     <string name="cancel_button_label">Cancel</string>
     <string name="graduate_button_label">Graduate</string>
+
+    <!-- Senior buddy mission activity -->
+    <string name="mission_senior_invitation_message">%1$s has invited you to supervise him/her teaching a mission to %2$s.</string>
 
     <!-- Student profile activity -->
     <string name="profile_title">Your profile</string>
@@ -72,6 +75,7 @@
     <string name="student_home_menu_title">Student home</string>
     <string name="refresh_menu_title">Refresh</string>
     <string name="student_profile_link">View profile</string>
+    <string name="debug_menu_title">Debug</string>
 
     <!-- Explanations why missions are locked -->
     <string name="prerequisites_mission_lock_reason">You have to complete prerequisite missions.</string>
@@ -79,8 +83,10 @@
 
     <!-- Toasts -->
     <string name="mission_completion_toast">Congratulation on completing "%1$s"! %2$s graduated you.</string>
+    <string name="mission_checkout_completion_toast">Congratulation! You can teach \'%1$s\' on your own.</string>
     <string name="admin_sent_points_toast">An admin has sent you points!</string>
     <string name="cant_mentor_mission_toast">%1$s invited you to mentor \'%2$s\'. You have to learn that mission yourself first!</string>
+    <string name="cant_supervise_mission_toast">%1$s invited you to supervise teaching  \'%2$s\'. You have to teach the mission under supervision yourself before you can supervise another buddy!</string>
     <string name="mentor_not_ready_toast">%1$s isn\'t ready to mentor that mission yet.</string>
 
     <!-- Reusable strings -->

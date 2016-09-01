@@ -11,7 +11,9 @@ import android.widget.TextView;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
+import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
+import com.playposse.peertopeeroxygen.android.widgets.debug.SelectDebugUserDialogBuilder;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 
 public class StudentMissionActivity extends StudentParentActivityWithCameraSource {
@@ -47,7 +49,11 @@ public class StudentMissionActivity extends StudentParentActivityWithCameraSourc
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        scanForQrCode(surfaceView);
+                        if (!OxygenSharedPreferences.getDebugFlag(getApplicationContext())) {
+                            scanForQrCode(surfaceView);
+                        } else {
+                            pickDebugUser();
+                        }
                     }
                 }
         );
@@ -80,5 +86,18 @@ public class StudentMissionActivity extends StudentParentActivityWithCameraSourc
                 missionLadderId,
                 missionTreeId,
                 missionId);
+    }
+
+    private void pickDebugUser() {
+        SelectDebugUserDialogBuilder.build(
+                this,
+                new SelectDebugUserDialogBuilder.DebugUserPickerDialogCallback() {
+                    @Override
+                    public void onPickedDebugUser(long userId) {
+                        Barcode barcode = new Barcode();
+                        barcode.displayValue = "" + userId;
+                        receivedBarcode(barcode);
+                    }
+                });
     }
 }

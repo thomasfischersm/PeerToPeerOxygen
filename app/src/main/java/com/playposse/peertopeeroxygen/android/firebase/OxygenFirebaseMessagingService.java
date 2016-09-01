@@ -10,8 +10,10 @@ import com.playposse.peertopeeroxygen.android.data.DataReceivedCallback;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
+import com.playposse.peertopeeroxygen.android.firebase.actions.MissionCheckoutCompletionAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.MissionCompletionAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.MissionInvitationAction;
+import com.playposse.peertopeeroxygen.android.firebase.actions.MissionSeniorInvitationAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.UpdatePointsAction;
 
 import java.util.Map;
@@ -26,7 +28,9 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TYPE_KEY = "type";
     private static final String MISSION_INVITE_TYPE = "missionInvite";
+    private static final String MISSION_SENIOR_INVITE_TYPE = "missionSeniorInvite";
     private static final String MISSION_COMPLETION_TYPE = "missionCompletion";
+    private static final String MISSION_CHECKOUT_COMPLETION_TYPE = "missionCheckoutCompletion";
     private static final String UPDATE_STUDENT_POINTS_TYPE = "updateStudentPoints";
 
     protected DataServiceConnection dataServiceConnection;
@@ -64,9 +68,17 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
                 new MissionInvitationAction(getApplicationContext(), dataServiceConnection)
                         .handleMissionInvitation(remoteMessage);
                 break;
+            case MISSION_SENIOR_INVITE_TYPE:
+                new MissionSeniorInvitationAction(getApplicationContext(), dataServiceConnection)
+                        .handleSeniorMissionInvitation(remoteMessage);
+                break;
             case MISSION_COMPLETION_TYPE:
                 new MissionCompletionAction(getApplicationContext(), dataServiceConnection)
                         .handleMissionCompletion(remoteMessage);
+                break;
+            case MISSION_CHECKOUT_COMPLETION_TYPE:
+                new MissionCheckoutCompletionAction(getApplicationContext(), dataServiceConnection)
+                        .handleMissionCheckoutCompletion(remoteMessage);
                 break;
             case UPDATE_STUDENT_POINTS_TYPE:
                 new UpdatePointsAction(getApplicationContext(), dataServiceConnection)

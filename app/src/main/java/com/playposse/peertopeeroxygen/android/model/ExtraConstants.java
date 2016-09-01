@@ -16,6 +16,8 @@ public final class ExtraConstants {
             "com.playposse.peertopeeroxygen.android.missionId";
     public static final String EXTRA_STUDENT_BEAN =
             "com.playposse.peertopeeroxygen.android.studentBean";
+    public static final String EXTRA_BUDDY_BEAN =
+            "com.playposse.peertopeeroxygen.android.buddyBean";
 
     public static Intent createIntent(
             Context context,

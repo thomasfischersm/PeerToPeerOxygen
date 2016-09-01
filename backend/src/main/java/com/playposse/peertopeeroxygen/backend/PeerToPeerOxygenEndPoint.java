@@ -24,7 +24,9 @@ import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionLadderA
 import com.playposse.peertopeeroxygen.backend.serveractions.GetMissionDataAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetStudentRosterAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.InviteBuddyToMissionAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.InviteSeniorBuddyToMissionAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.RegisterOrLoginAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.ReportMissionCheckoutCompleteAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.ReportMissionCompleteAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionLadderAction;
@@ -171,6 +173,32 @@ public class PeerToPeerOxygenEndPoint {
                 missionId);
     }
 
+
+    /**
+     * Invites a senior buddy to supervise the teaching of a mission. The senior buddy is sent a
+     * message via Firebase.
+     *
+     * @return UserBean Information about the buddy.
+     */
+    @ApiMethod(name = "inviteSeniorBuddyToMission")
+    public UserBean inviteSeniorBuddyToMission(
+            @Named("sessionId") Long sessionId,
+            @Named("buddyId") Long studentId,
+            @Named("seniorBuddyId") Long seniorBuddyId,
+            @Named("missionLadderId") Long missionLadderId,
+            @Named("missionTreeId") Long missionTreeId,
+            @Named("missionId") Long missionId)
+            throws UnauthorizedException, IOException, BuddyLacksMissionExperienceException {
+
+        return InviteSeniorBuddyToMissionAction.inviteSeniorBuddyToMission(
+                sessionId,
+                studentId,
+                seniorBuddyId,
+                missionLadderId,
+                missionTreeId,
+                missionId);
+    }
+
     @ApiMethod(name = "reportMissionComplete")
     public void reportMissionComplete(
             @Named("sessionId") Long sessionId,
@@ -179,6 +207,18 @@ public class PeerToPeerOxygenEndPoint {
             throws UnauthorizedException, IOException {
 
         ReportMissionCompleteAction.reportMissionComplete(sessionId, studentId, missionId);
+    }
+
+    @ApiMethod(name = "reportMissionCheckoutComplete")
+    public void reportMissionCheckoutComplete(
+            @Named("sessionId") Long sessionId,
+            @Named("studentId") Long studentId,
+            @Named("buddyId") Long buddyId,
+            @Named("missionId") Long missionId)
+            throws UnauthorizedException, IOException {
+
+        ReportMissionCheckoutCompleteAction
+                .reportMissionCheckoutComplete(sessionId, studentId, buddyId, missionId);
     }
 
     @ApiMethod(name = "getStudentRoster")

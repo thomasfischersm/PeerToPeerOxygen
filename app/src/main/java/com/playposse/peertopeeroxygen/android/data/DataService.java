@@ -18,8 +18,10 @@ import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionLa
 import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionTreeAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetStudentRosterAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.InviteBuddyToMissionAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.InviteSeniorBuddyToMissionAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.MissionDataRetrieverAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.RegisterOrLoginAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.ReportMissionCheckoutCompleteAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.ReportMissionCompleteAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionLadderAction;
@@ -131,7 +133,7 @@ public class DataService extends Service {
 
         @Override
         public void makeDataReceivedCallbacks() {
-            for (final DataReceivedCallback callback : dataReceivedCallbacks) {
+            for (final DataReceivedCallback callback : new ArrayList<>(dataReceivedCallbacks)) {
                 callback.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -212,8 +214,30 @@ public class DataService extends Service {
                     .execute();
         }
 
-        public void reportMissionComplete(final Long studentId, final Long missionId) {
+        public void inviteSeniorBuddyToMission(
+                final Long studentId,
+                final Long seniorBuddyId,
+                final Long missionLadderId,
+                final Long missionTreeId,
+                final Long missionId) {
+
+            new InviteSeniorBuddyToMissionAction(
+                    getApplicationContext(),
+                    this,
+                    studentId,
+                    seniorBuddyId,
+                    missionLadderId,
+                    missionTreeId,
+                    missionId)
+                    .execute();
+        }
+
+        public void reportMissionComplete(Long studentId, Long missionId) {
             new ReportMissionCompleteAction(this, studentId, missionId).execute();
+        }
+
+        public void reportMissionCheckoutComplete(Long studentId, Long buddyId, Long missionId) {
+            new ReportMissionCheckoutCompleteAction(this, studentId, buddyId, missionId).execute();
         }
 
         public void getStudentRoster(GetStudentRosterAction.StudentRosterCallback callback) {

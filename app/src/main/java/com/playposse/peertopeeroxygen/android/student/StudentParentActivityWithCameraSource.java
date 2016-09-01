@@ -73,9 +73,11 @@ public abstract class StudentParentActivityWithCameraSource extends StudentParen
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                getCameraSource().stop();
-                getCameraSource().release();
-                setCameraSource(null);
+                if (cameraSource != null) {
+                    cameraSource.stop();
+                    cameraSource.release();
+                    setCameraSource(null);
+                }
             }
         });
     }

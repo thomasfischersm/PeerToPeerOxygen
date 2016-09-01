@@ -3,8 +3,10 @@ package com.playposse.peertopeeroxygen.android.data;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.widget.ImageView;
 
+import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.facebook.FacebookProfilePhotoCache;
 
 /**
@@ -32,6 +34,22 @@ public abstract class DataServiceParentActivity
         super.onStop();
 
         unbindService(dataServiceConnection);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.refreshMenuItem:
+                dataServiceConnection.getLocalBinder().reload();
+                return true;
+            case R.id.debugMenuItem:
+                boolean debugFlag = !item.isChecked();
+                item.setChecked(debugFlag);
+                OxygenSharedPreferences.setDebugFlag(this, debugFlag);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     protected void loadProfilePhoto(

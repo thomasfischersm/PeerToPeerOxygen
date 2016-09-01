@@ -12,6 +12,7 @@ import com.playposse.peertopeeroxygen.android.admin.AdminMainActivity;
 import com.playposse.peertopeeroxygen.android.data.DataReceivedCallback;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataServiceParentActivity;
+import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
 /**
@@ -39,6 +40,10 @@ public abstract class StudentParentActivity extends DataServiceParentActivity {
                     dataServiceConnection.getLocalBinder().getDataRepository().getUserBean();
             if (userBean.getAdmin()) {
                 getMenuInflater().inflate(R.menu.student_menu, menu);
+
+                boolean debugFlag = OxygenSharedPreferences.getDebugFlag(this);
+                MenuItem debugMenuItem = menu.findItem(R.id.debugMenuItem);
+                debugMenuItem.setChecked(debugFlag);
                 return true;
             } else {
                 // The user is loaded and not an admin. -> Nothing to do.
@@ -77,9 +82,6 @@ public abstract class StudentParentActivity extends DataServiceParentActivity {
         switch (item.getItemId()) {
             case R.id.adminHomeMenuItem:
                 startActivity(new Intent(this, AdminMainActivity.class));
-                return true;
-            case R.id.refreshMenuItem:
-                dataServiceConnection.getLocalBinder().reload();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

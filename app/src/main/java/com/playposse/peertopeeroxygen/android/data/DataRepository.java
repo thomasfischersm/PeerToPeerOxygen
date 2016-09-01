@@ -161,6 +161,7 @@ public class DataRepository {
         JsonMap pointsMap = userBean.getPointsMap();
         if (pointsMap == null) {
             userBean.setPointsMap(new JsonMap());
+            pointsMap = userBean.getPointsMap();
         }
 
         if (pointsMap.containsKey(pointType.name())) {
