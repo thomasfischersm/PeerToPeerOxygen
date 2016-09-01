@@ -1,4 +1,4 @@
-package com.playposse.peertopeeroxygen.backend.schema;
+package com.playposse.peertopeeroxygen.backend.schema.util;
 
 import com.googlecode.objectify.stringifier.Stringifier;
 

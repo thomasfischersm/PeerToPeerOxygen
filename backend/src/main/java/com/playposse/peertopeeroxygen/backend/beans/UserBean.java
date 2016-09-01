@@ -1,5 +1,6 @@
 package com.playposse.peertopeeroxygen.backend.beans;
 
+import com.playposse.peertopeeroxygen.backend.schema.LevelCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.MissionCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 import com.playposse.peertopeeroxygen.backend.schema.UserPoints;
@@ -26,6 +27,7 @@ public class UserBean {
     private Long created;
     private List<MissionCompletionBean> missionCompletionBeans = new ArrayList<>();
     private Map<String, Integer> pointsMap = new HashMap<>();
+    private List<LevelCompletionBean> levelCompletionBeans = new ArrayList<>();
 
     public UserBean() {
     }
@@ -44,6 +46,10 @@ public class UserBean {
 
         for (MissionCompletion missionCompletion : oxygenUser.getMissionCompletions().values()) {
             missionCompletionBeans.add(new MissionCompletionBean(missionCompletion));
+        }
+
+        for (LevelCompletion levelCompletion : oxygenUser.getLevelCompletions()) {
+            levelCompletionBeans.add(new LevelCompletionBean(levelCompletion));
         }
 
         for (UserPoints point : oxygenUser.getPoints().values()) {
@@ -105,5 +111,13 @@ public class UserBean {
 
     public List<MissionCompletionBean> getMissionCompletionBeans() {
         return missionCompletionBeans;
+    }
+
+    public List<LevelCompletionBean> getLevelCompletionBeans() {
+        return levelCompletionBeans;
+    }
+
+    public void setLevelCompletionBeans(List<LevelCompletionBean> levelCompletionBeans) {
+        this.levelCompletionBeans = levelCompletionBeans;
     }
 }

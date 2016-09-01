@@ -5,8 +5,11 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.Stringify;
+import com.playposse.peertopeeroxygen.backend.schema.util.LongStringifier;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,6 +30,7 @@ public class OxygenUser {
     private String name;
     private String profilePictureUrl;
     @Load private Map<UserPoints.PointType, UserPoints> points = new HashMap<>();
+    @Load private List<LevelCompletion> levelCompletions = new ArrayList<>();
 
     @Stringify(LongStringifier.class)
     private Map<Long, MissionCompletion> missionCompletions = new HashMap<>();
@@ -173,5 +177,9 @@ public class OxygenUser {
         } else {
             points.put(pointType, new UserPoints(pointType, pointCount));
         }
+    }
+
+    public List<LevelCompletion> getLevelCompletions() {
+        return levelCompletions;
     }
 }

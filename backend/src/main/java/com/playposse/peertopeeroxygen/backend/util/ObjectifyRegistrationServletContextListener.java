@@ -1,6 +1,7 @@
 package com.playposse.peertopeeroxygen.backend.util;
 
 import com.googlecode.objectify.ObjectifyService;
+import com.playposse.peertopeeroxygen.backend.schema.LevelCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.MentoringAuditLog;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
 import com.playposse.peertopeeroxygen.backend.schema.MissionBoss;
@@ -20,6 +21,7 @@ import javax.servlet.ServletContextListener;
 public class ObjectifyRegistrationServletContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+        ObjectifyService.register(LevelCompletion.class);
         ObjectifyService.register(MentoringAuditLog.class);
         ObjectifyService.register(Mission.class);
         ObjectifyService.register(MissionBoss.class);
