@@ -41,17 +41,17 @@
             android:name=".admin.AdminEditMissionLadderActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".admin.AdminShowMissionLaddersActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".admin.AdminEditMissionTreeActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".admin.AdminEditMissionLadderActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".admin.AdminEditMissionActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".admin.AdminEditMissionTreeActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity android:name=".student.StudentMainActivity" />
         <activity
             android:name=".student.StudentMissionTreeActivity"
@@ -77,27 +77,27 @@
             android:name=".student.StudentProfileActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".student.StudentMainActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".student.StudentBuddyMissionActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".student.StudentMainActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".admin.AdminStudentRosterActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".admin.AdminMainActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".admin.AdminStudentDetailActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".admin.AdminStudentRosterActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".student.StudentSeniorBuddyMissionActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".student.StudentMainActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
     </application>
 
 </manifest>
