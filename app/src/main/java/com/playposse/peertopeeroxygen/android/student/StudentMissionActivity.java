@@ -13,6 +13,7 @@ import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
+import com.playposse.peertopeeroxygen.android.util.TextFormatter;
 import com.playposse.peertopeeroxygen.android.widgets.debug.SelectDebugUserDialogBuilder;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 
@@ -66,12 +67,14 @@ public class StudentMissionActivity extends StudentParentActivityWithCameraSourc
 
         missionNameTextView.setText(missionBean.getName());
 
+        final String instruction;
         if (dataRepository.getMissionCompletion(missionId).getStudyComplete()
                 || dataRepository.getUserBean().getAdmin()) {
-            missionInstructionsTextView.setText(missionBean.getBuddyInstruction());
+            instruction = missionBean.getBuddyInstruction();
         } else {
-            missionInstructionsTextView.setText(missionBean.getStudentInstruction());
+            instruction = missionBean.getStudentInstruction();
         }
+        missionInstructionsTextView.setText(TextFormatter.format(instruction));
 
         setTitle("" + missionBean.getName());
     }

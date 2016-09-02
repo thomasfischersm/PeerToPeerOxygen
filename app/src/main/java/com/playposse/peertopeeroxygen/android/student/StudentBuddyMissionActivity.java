@@ -15,6 +15,7 @@ import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
+import com.playposse.peertopeeroxygen.android.util.TextFormatter;
 import com.playposse.peertopeeroxygen.android.widgets.debug.SelectDebugUserDialogBuilder;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
@@ -114,7 +115,7 @@ public class StudentBuddyMissionActivity extends StudentParentActivityWithCamera
 
         missionNameTextView.setText(missionBean.getName());
         missionBuddyDescriptionTextView.setText(
-                missionBean.getBuddyInstruction());
+                TextFormatter.format(missionBean.getBuddyInstruction()));
 
         MissionCompletionBean completion = dataRepository.getMissionCompletion(missionId);
         if (!completion.getMentorCheckoutComplete() && !dataRepository.getUserBean().getAdmin()) {
