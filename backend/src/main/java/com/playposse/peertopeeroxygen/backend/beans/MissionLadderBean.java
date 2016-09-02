@@ -27,7 +27,10 @@ public class MissionLadderBean {
         this.description = missionLadder.getDescription();
 
         for (Ref<MissionTree> missionTreeRef : missionLadder.getMissionTreeRefs()) {
-            missionTreeBeans.add(new MissionTreeBean(missionTreeRef.get()));
+            MissionTree missionTree = missionTreeRef.get();
+            if (missionTree != null) {
+                missionTreeBeans.add(new MissionTreeBean(missionTree));
+            }
         }
     }
 

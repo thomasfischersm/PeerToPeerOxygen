@@ -86,8 +86,17 @@ public class MissionLadder {
     private static final class MissionTreeRefComparator implements Comparator<Ref<MissionTree>> {
 
         @Override
-        public int compare(Ref<MissionTree> missionTree0, Ref<MissionTree> missionTree1) {
-            return missionTree0.getValue().getLevel() - missionTree1.getValue().getLevel();
+        public int compare(Ref<MissionTree> missionTreeRef0, Ref<MissionTree> missionTreeRef1) {
+            MissionTree missionTree0 = missionTreeRef0.getValue();
+            MissionTree missionTree1 = missionTreeRef1.getValue();
+
+            if (missionTree0 == null) {
+                return 1;
+            } else if (missionTree1 == null) {
+                return -1;
+            } else {
+                return missionTree0.getLevel() - missionTree1.getLevel();
+            }
         }
     }
 }

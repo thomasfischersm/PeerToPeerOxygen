@@ -20,6 +20,8 @@ public class DeleteMissionTreeAction {
             }
         }
 
+        // TODO: Delete reference to tree from ladder!
+
         ofy().delete().type(MissionTree.class).id(missionTree.getId());
     }
 }
