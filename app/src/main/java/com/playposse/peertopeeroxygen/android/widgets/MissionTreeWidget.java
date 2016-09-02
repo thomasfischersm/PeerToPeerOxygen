@@ -151,12 +151,14 @@ public class MissionTreeWidget extends View {
         if ((rows.size() > row) && (rows.get(row).size() > column)) {
             MissionPlaceHolder holder = rows.get(row).get(column);
             if (holder.getMissionBean() != null) {
-                if (MissionAvailabilityChecker.determineAvailability(holder, dataRepository)
+                if (MissionAvailabilityChecker.determineAvailability(holder, missionLadderId, missionTreeBean, dataRepository)
                         == MissionAvailabilityChecker.MissionAvailability.LOCKED) {
                     String lockReasonMessage = MissionAvailabilityChecker.getLockReasonMessage(
                             getContext(),
                             dataRepository,
-                            holder);
+                            holder,
+                            missionLadderId,
+                            missionTreeBean);
                     Toast toast = Toast.makeText(getContext(), lockReasonMessage, Toast.LENGTH_LONG);
                     toast.show();
                     return true;
@@ -324,7 +326,12 @@ public class MissionTreeWidget extends View {
          */
         private TextPaint determineBoxPaint(MissionPlaceHolder holder) {
             MissionAvailabilityChecker.MissionAvailability availability =
-                    MissionAvailabilityChecker.determineAvailability(holder, dataRepository);
+                    MissionAvailabilityChecker.determineAvailability(
+                            holder,
+                            missionLadderId,
+                            missionTreeBean,
+                            dataRepository);
+
             switch (availability) {
                 case LOCKED:
                     return lockedPaint;

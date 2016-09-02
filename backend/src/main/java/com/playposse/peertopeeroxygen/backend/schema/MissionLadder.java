@@ -1,5 +1,6 @@
 package com.playposse.peertopeeroxygen.backend.schema;
 
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Load;
@@ -23,7 +24,7 @@ public class MissionLadder {
     @Id private Long id;
     private String name;
     private String description;
-    @Load private List<MissionTree> missionTrees = new ArrayList<>();
+    @Load private List<Ref<MissionTree>> missionTreeRefs = new ArrayList<>();
 
 //    private byte[] icon;
 
@@ -55,11 +56,11 @@ public class MissionLadder {
      */
     @OnLoad
     public void onLoad() {
-        Collections.sort(missionTrees, new MissionTreeComparator());
+        Collections.sort(missionTreeRefs, new MissionTreeRefComparator());
     }
 
-    public List<MissionTree> getMissionTrees() {
-        return missionTrees;
+    public List<Ref<MissionTree>> getMissionTreeRefs() {
+        return missionTreeRefs;
     }
 
     public Long getId() {
@@ -82,14 +83,11 @@ public class MissionLadder {
         this.name = name;
     }
 
-    private static final class MissionTreeComparator implements Comparator<MissionTree> {
+    private static final class MissionTreeRefComparator implements Comparator<Ref<MissionTree>> {
 
         @Override
-        public int compare(MissionTree missionTree0, MissionTree missionTree1) {
-//            int level0 = missionTree0.getLevel();
-//            int level1 = missionTree1.getLevel();
-            return missionTree0.getLevel() - missionTree1.getLevel();
-//            return (level0 < level1 ? -1 : (level0==level1 ? 0 : 1));
+        public int compare(Ref<MissionTree> missionTree0, Ref<MissionTree> missionTree1) {
+            return missionTree0.getValue().getLevel() - missionTree1.getValue().getLevel();
         }
     }
 }

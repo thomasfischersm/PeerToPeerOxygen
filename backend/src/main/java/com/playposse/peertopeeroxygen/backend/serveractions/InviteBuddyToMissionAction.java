@@ -28,10 +28,12 @@ public class InviteBuddyToMissionAction extends ServerAction {
         OxygenUser buddy = loadUserById(buddyId);
 
         Map<Long, MissionCompletion> buddyCompletions = buddy.getMissionCompletions();
-        if (!buddyCompletions.containsKey(missionId)
-                || !buddyCompletions.get(missionId).isStudyComplete()) {
-            String buddyName = buddy.getFirstName() + " " + buddy.getLastName();
-            throw new BuddyLacksMissionExperienceException(buddyName);
+        if (!buddy.isAdmin()) {
+            if (!buddyCompletions.containsKey(missionId)
+                    || !buddyCompletions.get(missionId).isStudyComplete()) {
+                String buddyName = buddy.getFirstName() + " " + buddy.getLastName();
+                throw new BuddyLacksMissionExperienceException(buddyName);
+            }
         }
 
         FirebaseUtil.sendMissionInviteToBuddy(

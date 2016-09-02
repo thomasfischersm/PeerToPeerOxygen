@@ -3,6 +3,7 @@ package com.playposse.peertopeeroxygen.backend.schema;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Load;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class MissionTree {
     private String name;
     private String description;
     private int level;
-    @Load @Nullable Ref<Mission> bossMissionRef;
+    @Index @Load @Nullable Ref<Mission> bossMissionRef;
     @Load private List<Ref<Mission>> missions = new ArrayList<>();
 
     /**
@@ -44,10 +45,10 @@ public class MissionTree {
             int level,
             Ref<Mission> bossMissionRef) {
 
-        this.description = description;
         this.id = id;
-        this.level = level;
         this.name = name;
+        this.description = description;
+        this.level = level;
         this.bossMissionRef = bossMissionRef;
     }
 

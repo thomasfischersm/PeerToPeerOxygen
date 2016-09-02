@@ -1,7 +1,9 @@
 package com.playposse.peertopeeroxygen.backend.serveractions;
 
 import com.google.api.server.spi.response.UnauthorizedException;
+import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
+import com.playposse.peertopeeroxygen.backend.schema.LevelCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
@@ -16,9 +18,10 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 public class ServerAction {
 
     protected static MissionTree findMissionTree(MissionLadder missionLadder, Long missionTreeId) {
-        for (MissionTree missionTree : missionLadder.getMissionTrees()) {
-            if (missionTree.getId().equals(missionTreeId)) {
-                return missionTree;
+        // TODO: Convert this to a query!
+        for (Ref<MissionTree> missionTreeRef : missionLadder.getMissionTreeRefs()) {
+            if (missionTreeId.equals(missionTreeRef.getKey().getId())) {
+                return missionTreeRef.getValue();
             }
         }
         return null;
@@ -27,7 +30,6 @@ public class ServerAction {
     protected static OxygenUser loadUserById(Long userId) throws UnauthorizedException {
         OxygenUser oxygenUser = ofy()
                 .load()
-//                .group(UserPoints.class)
                 .type(OxygenUser.class)
                 .id(userId)
                 .now();
@@ -40,7 +42,6 @@ public class ServerAction {
     public static OxygenUser loadUserBySessionId(Long sessionId) throws UnauthorizedException {
         List<OxygenUser> oxygenUsers = ofy()
                 .load()
-//                .group(UserPoints.class)
                 .type(OxygenUser.class)
                 .filter("sessionId", sessionId)
                 .list();
@@ -65,5 +66,16 @@ public class ServerAction {
         }
 
         return userBeans;
+    }
+
+    protected static LevelCompletion getLevelCompletion(OxygenUser user, Long missionTreeId) {
+        if (user.getLevelCompletions() != null) {
+            for (LevelCompletion levelCompletion : user.getLevelCompletions()) {
+                if (missionTreeId.equals(levelCompletion.getMissionTreeRef().getKey().getId())) {
+                    return levelCompletion;
+                }
+            }
+        }
+        return null;
     }
 }

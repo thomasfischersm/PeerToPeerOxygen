@@ -5,15 +5,21 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
 import com.playposse.peertopeeroxygen.backend.firebase.FirebaseUtil;
+import com.playposse.peertopeeroxygen.backend.schema.LevelCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.MentoringAuditLog;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
 import com.playposse.peertopeeroxygen.backend.schema.MissionCompletion;
+import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 import com.playposse.peertopeeroxygen.backend.schema.PointsTransferAuditLog;
 import com.playposse.peertopeeroxygen.backend.schema.UserPoints;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
+
+import javax.annotation.Nullable;
 
 import static com.googlecode.objectify.ObjectifyService.factory;
 import static com.googlecode.objectify.ObjectifyService.ofy;
@@ -23,6 +29,8 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
  * student's Android device is notified with Firebase message.
  */
 public class ReportMissionCompleteAction extends ServerAction {
+
+    private static final Logger log = Logger.getLogger(ReportMissionCompleteAction.class.getName());
 
     public static void reportMissionComplete(
             Long sessionId,
@@ -38,10 +46,18 @@ public class ReportMissionCompleteAction extends ServerAction {
         Ref<OxygenUser> studentRef = Ref.create(Key.create(OxygenUser.class, student.getId()));
         Mission mission = ofy().load().type(Mission.class).id(missionId).now();
 
+        List<MissionTree> missionTreeQueryResult = ofy()
+                .load()
+                .type(MissionTree.class)
+                .filter("bossMissionRef", Key.create(Mission.class, mission.getId()))
+                .list();
+        MissionTree missionTree = (missionTreeQueryResult.size() > 0) ? missionTreeQueryResult.get(0) : null;
+        log.info("Found mission tree: " + missionTree);
+
         // Check if the buddy is allowed to teach the mission.
         // Update buddy first because this includes checks if the buddy is allowed to teach.
         updateBuddy(missionId, buddy, missionRef);
-        updateStudent(missionId, student, missionRef, buddyRef, studentRef, mission);
+        updateStudent(missionId, student, missionRef, buddyRef, studentRef, mission, missionTree);
         updatePointTransferLogForBuddy(buddyRef, studentRef);
         updateMentoringLog(studentId, buddy, missionRef);
 
@@ -59,7 +75,8 @@ public class ReportMissionCompleteAction extends ServerAction {
             Ref<Mission> missionRef,
             Ref<OxygenUser> buddyRef,
             Ref<OxygenUser> studentRef,
-            Mission mission) {
+            Mission mission,
+            @Nullable MissionTree missionTree) {
 
         final MissionCompletion completion;
         if (student.getMissionCompletions().containsKey(missionId)) {
@@ -71,11 +88,28 @@ public class ReportMissionCompleteAction extends ServerAction {
                     new MissionCompletion(completionId, missionRef, 1, 0, false, false);
             student.getMissionCompletions().put(missionId, completion);
         }
+
         chargePoints(student, mission, buddyRef, studentRef);
+
         if (completion.getStudyCount() >= mission.getMinimumStudyCount()) {
             // Be sure to avoid accidentally setting studyComplete to false if the mission study
             // minimum was raised after the student completed the old minimum.
             completion.setStudyComplete(true);
+
+            if ((missionTree != null)
+                    && (missionTree.getBossMissionRef() != null)
+                    && (mission.getId().equals(missionTree.getBossMissionRef().getKey().getId()))) {
+                LevelCompletion levelCompletion = getLevelCompletion(student, missionTree.getId());
+
+                // A user can complete the boss mission multiple times.
+                if (levelCompletion == null) {
+                    Ref<MissionTree> missionTreeRef =
+                            Ref.create(Key.create(MissionTree.class, missionTree.getId()));
+                    LevelCompletion newLevelCompletion =
+                            new LevelCompletion(System.currentTimeMillis(), missionTreeRef);
+                    student.getLevelCompletions().add(newLevelCompletion);
+                }
+            }
         }
         ofy().save().entity(student).now();
     }

@@ -8,6 +8,7 @@ import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.android.util.MathUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.JsonMap;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
 import java.util.Map;
@@ -34,12 +35,15 @@ public class MissionAvailabilityChecker {
      */
     public enum LockReason {
         NONE,
+        LEVEL_LOCKED,
         MISSING_MISSION,
         MISSING_POINTS,
     }
 
     public static MissionAvailability determineAvailability(
             MissionPlaceHolder holder,
+            Long missionLadderId,
+            MissionTreeBean missionTreeBean,
             DataRepository dataRepository) {
 
         // Admins can always teach a mission.
@@ -50,16 +54,18 @@ public class MissionAvailabilityChecker {
         }
 
         // Check if the mission has already been completed.
-        // TODO: Handle completion of mission boss. (The holder could be a MissionTree.)
-        if (holder.getMissionBean() != null) {
-            MissionCompletionBean missionCompletion =
-                    dataRepository.getMissionCompletion(holder.getMissionBean().getId());
+        MissionCompletionBean missionCompletion =
+                dataRepository.getMissionCompletion(holder.getMissionBean().getId());
 
-            if (missionCompletion.getMentorCheckoutComplete()) {
-                return MissionAvailability.TEACHABLE;
-            } else if (missionCompletion.getStudyComplete()) {
-                return MissionAvailability.COMPLETED;
-            }
+        if (missionCompletion.getMentorCheckoutComplete()) {
+            return MissionAvailability.TEACHABLE;
+        } else if (missionCompletion.getStudyComplete()) {
+            return MissionAvailability.COMPLETED;
+        }
+
+        // Check if the level ha sbeen unlocked.
+        if (isLevelLocked(missionLadderId, missionTreeBean, dataRepository)) {
+            return MissionAvailability.LOCKED;
         }
 
         // Check if the mission has missing pre-requisites.
@@ -72,6 +78,22 @@ public class MissionAvailabilityChecker {
         }
 
         return MissionAvailability.UNLOCKED;
+    }
+
+    private static boolean isLevelLocked(
+            Long missionLadderId,
+            MissionTreeBean missionTreeBean,
+            DataRepository dataRepository) {
+
+        // The first level is always unlocked.
+        if (missionTreeBean.getLevel() <= 1) {
+            return false;
+        }
+
+        int previousLevel = missionTreeBean.getLevel() - 1;
+        MissionTreeBean previousMissionTreeBean = dataRepository.getMissionTreeBeanByLevel(missionLadderId, previousLevel);
+        return (missionTreeBean.getLevel() > 1)
+                && (dataRepository.getLevelCompletionByMissionTreeId(previousMissionTreeBean.getId()) == null);
     }
 
     private static boolean hasUserCompletedPrerequisiteMissions(
@@ -106,9 +128,13 @@ public class MissionAvailabilityChecker {
 
     private static LockReason determineLockReason(
             DataRepository dataRepository,
+            Long missionLadderId,
+            MissionTreeBean missionTreeBean,
             MissionPlaceHolder holder) {
 
-        if (!hasUserCompletedPrerequisiteMissions(holder, dataRepository)) {
+        if (isLevelLocked(missionLadderId, missionTreeBean, dataRepository)) {
+            return LockReason.LEVEL_LOCKED;
+        } else if (!hasUserCompletedPrerequisiteMissions(holder, dataRepository)) {
             return LockReason.MISSING_MISSION;
         } else if (!doesUserHaveEnoughPoints(holder, dataRepository.getUserBean())) {
             return LockReason.MISSING_POINTS;
@@ -123,10 +149,19 @@ public class MissionAvailabilityChecker {
     public static String getLockReasonMessage(
             Context context,
             DataRepository dataRepository,
-            MissionPlaceHolder holder) {
+            MissionPlaceHolder holder,
+            Long missionLadderId,
+            MissionTreeBean missionTreeBean) {
 
-        LockReason lockReason = determineLockReason(dataRepository, holder);
+        LockReason lockReason = determineLockReason(
+                dataRepository,
+                missionLadderId,
+                missionTreeBean,
+                holder);
+
         switch (lockReason) {
+            case LEVEL_LOCKED:
+                return context.getString(R.string.locked_level_mission_lock_reason);
             case MISSING_MISSION:
                 return context.getString(R.string.prerequisites_mission_lock_reason);
             case MISSING_POINTS:

@@ -12,9 +12,12 @@ import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
 import com.playposse.peertopeeroxygen.android.student.StudentMissionTreeActivity;
 import com.playposse.peertopeeroxygen.android.util.MathUtil;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.LevelCompletionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -43,6 +46,22 @@ public class MissionCompletionAction extends FirebaseAction {
         missionCompletion.setStudyCount(missionCompletion.getStudyCount() + 1);
         if (missionCompletion.getStudyCount() >= missionBean.getMinimumStudyCount()) {
             missionCompletion.setStudyComplete(true);
+        }
+
+        // Update level completion if necessary.
+        MissionTreeBean missionTreeBean =
+                getDataRepository().getMissionTreeBeanByMissionId(missionId);
+        LevelCompletionBean levelCompletionBean =
+                getDataRepository().getLevelCompletionByMissionTreeId(missionTreeBean.getId());
+        if (levelCompletionBean == null) {
+            if (getDataRepository().getUserBean().getLevelCompletionBeans() == null) {
+                getDataRepository().getUserBean().setLevelCompletionBeans(
+                        new ArrayList<LevelCompletionBean>());
+            }
+
+            levelCompletionBean = new LevelCompletionBean();
+            levelCompletionBean.setMissionTreeId(missionTreeBean.getId());
+            getDataRepository().getUserBean().getLevelCompletionBeans().add(levelCompletionBean);
         }
 
         // Update local point counts.

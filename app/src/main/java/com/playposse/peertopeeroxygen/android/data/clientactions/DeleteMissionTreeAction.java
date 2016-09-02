@@ -27,14 +27,18 @@ public class DeleteMissionTreeAction extends ClientAction {
     }
 
     @Override
-    public void executeAsync() throws IOException {
+    protected void preExecute() {
         MissionLadderBean missionLadderBean =
                 getDataRepository().getMissionLadderBean(missionLadderId);
         MissionTreeBean missionTreeBean =
                 getDataRepository().getMissionTreeBean(missionLadderId, missionTreeId);
         missionLadderBean.getMissionTreeBeans().remove(missionTreeBean);
+    }
+
+    @Override
+    public void executeAsync() throws IOException {
         getBinder().getApi()
-                .saveMissionLadder(getBinder().getSessionId(), missionLadderBean)
+                .deleteMissionTree(getBinder().getSessionId(), missionTreeId)
                 .execute();
     }
 }

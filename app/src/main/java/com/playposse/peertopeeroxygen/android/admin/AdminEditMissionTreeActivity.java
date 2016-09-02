@@ -31,6 +31,8 @@ import java.util.List;
  */
 public class AdminEditMissionTreeActivity extends AdminParentActivity {
 
+    public static final int DEFAULT_LEVEL = 1;
+
     private Long missionLadderId;
     private Long missionTreeId;
     private MissionLadderBean missionLadderBean;
@@ -193,7 +195,7 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
      * Checks the current levels an determines what the next level would be.
      */
     private int determineNextLevel() {
-        int level = 1;
+        int level = DEFAULT_LEVEL;
         for (MissionTreeBean missionTreeBean : missionLadderBean.getMissionTreeBeans()) {
             level = Math.max(level, missionTreeBean.getLevel() + 1);
         }

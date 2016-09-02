@@ -1,13 +1,14 @@
 package com.playposse.peertopeeroxygen.backend.serveractions;
 
 import com.google.api.server.spi.response.UnauthorizedException;
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.beans.MissionTreeBean;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 
 import java.util.logging.Logger;
 
-import static com.googlecode.objectify.ObjectifyService.factory;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
@@ -30,29 +31,30 @@ public class SaveMissionTreeAction {
                 + ")");
 
         MissionTree missionTree = missionTreeBean.toEntity();
-
-        if (missionTree.getId() == null) {
-            missionTree.setId(factory().allocateId(MissionTree.class).getId());
-        }
+        ofy().save().entity(missionTree).now();
 
         MissionLadder missionLadder = ofy().load()
                 .type(MissionLadder.class)
                 .id(missionLadderId)
                 .now();
 
-        if (missionTreeBean.getId() == null) {
-            missionLadder.getMissionTrees().add(missionTree);
-        } else {
-            for (int i = 0; i < missionLadder.getMissionTrees().size(); i++) {
-                if (missionLadder.getMissionTrees().get(i).getId().equals(missionTreeBean.getId())) {
-                    missionLadder.getMissionTrees().set(i, missionTree);
+        boolean needsToBeAdded = true;
+        if (missionLadder.getMissionTreeRefs() != null) {
+            for (Ref<MissionTree> otherMissionTreeRef : missionLadder.getMissionTreeRefs()) {
+                if (missionTree.getId().equals(otherMissionTreeRef.getKey().getId())) {
+                    needsToBeAdded = false;
                     break;
                 }
+            }
+            if (needsToBeAdded) {
+                Ref<MissionTree> missionTreeRef =
+                        Ref.create(Key.create(MissionTree.class, missionTree.getId()));
+                missionLadder.getMissionTreeRefs().add(missionTreeRef);
+                ofy().save().entity(missionLadder).now();
             }
         }
 
         log.info("Saving required mission count: " + missionTree.getRequiredMissions().size());
-        ofy().save().entity(missionLadder).now();
 
         return new MissionTreeBean(missionTree);
     }

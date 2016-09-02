@@ -18,9 +18,8 @@ public class LevelCompletion {
     public LevelCompletion() {
     }
 
-    public LevelCompletion(Long date, Long id, Ref<MissionTree> missionTreeRef) {
+    public LevelCompletion(Long date, Ref<MissionTree> missionTreeRef) {
         this.date = date;
-        this.id = id;
         this.missionTreeRef = missionTreeRef;
     }
 

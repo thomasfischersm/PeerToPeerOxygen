@@ -79,6 +79,7 @@
     <string name="debug_menu_title">Debug</string>
 
     <!-- Explanations why missions are locked -->
+    <string name="locked_level_mission_lock_reason">The level is still locked.</string>
     <string name="prerequisites_mission_lock_reason">You have to complete prerequisite missions.</string>
     <string name="missing_points_lock_reason">You don\'t have enough points.</string>
 

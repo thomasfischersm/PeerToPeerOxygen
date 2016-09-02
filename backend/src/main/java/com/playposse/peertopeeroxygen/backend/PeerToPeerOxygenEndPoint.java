@@ -21,6 +21,7 @@ import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 import com.playposse.peertopeeroxygen.backend.serveractions.AddPointsByAdminAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionLadderAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionTreeAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetMissionDataAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetStudentRosterAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.InviteBuddyToMissionAction;
@@ -81,7 +82,7 @@ public class PeerToPeerOxygenEndPoint {
 
         protectByAdminCheck(sessionId);
 
-        DeleteMissionLadderAction.deleteMissionLadder(sessionId, missionLadderId);
+        DeleteMissionLadderAction.deleteMissionLadder(missionLadderId);
     }
 
     @ApiMethod(name = "saveMissionTree")
@@ -93,6 +94,16 @@ public class PeerToPeerOxygenEndPoint {
         protectByAdminCheck(sessionId);
 
         return SaveMissionTreeAction.saveMissionTree(sessionId, missionLadderId, missionTreeBean);
+    }
+
+    @ApiMethod(name = "deleteMissionTree")
+    public void deleteMissionTree(
+            @Named("sessionId") Long sessionId,
+            @Named("missionTreeId") Long missionTreeId) throws UnauthorizedException {
+
+        protectByAdminCheck(sessionId);
+
+        DeleteMissionTreeAction.deleteMissionTree(missionTreeId);
     }
 
     @ApiMethod(name = "saveMission")

@@ -1,5 +1,7 @@
 package com.playposse.peertopeeroxygen.backend.beans;
 
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 
@@ -24,8 +26,8 @@ public class MissionLadderBean {
         this.name = missionLadder.getName();
         this.description = missionLadder.getDescription();
 
-        for (MissionTree missionTree : missionLadder.getMissionTrees()) {
-            missionTreeBeans.add(new MissionTreeBean(missionTree));
+        for (Ref<MissionTree> missionTreeRef : missionLadder.getMissionTreeRefs()) {
+            missionTreeBeans.add(new MissionTreeBean(missionTreeRef.get()));
         }
     }
 
@@ -64,7 +66,9 @@ public class MissionLadderBean {
     public MissionLadder toEntity() {
         MissionLadder missionLadder = new MissionLadder(id, name, description);
         for (MissionTreeBean missionTreeBean : missionTreeBeans) {
-            missionLadder.getMissionTrees().add(missionTreeBean.toEntity());
+            Ref<MissionTree> missionTreeBeanRef =
+                    Ref.create(Key.create(MissionTree.class, missionTreeBean.getId()));
+            missionLadder.getMissionTreeRefs().add(missionTreeBeanRef);
         }
         return missionLadder;
     }

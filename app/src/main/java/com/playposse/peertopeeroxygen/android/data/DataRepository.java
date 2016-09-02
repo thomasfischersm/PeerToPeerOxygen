@@ -7,6 +7,7 @@ import com.playposse.peertopeeroxygen.android.data.facebook.FacebookProfilePhoto
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.JsonMap;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.LevelCompletionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
@@ -15,6 +16,8 @@ import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * A class that contains local data and provides helper methods around it.
@@ -76,6 +79,11 @@ public class DataRepository {
             }
         }
         return null;
+    }
+
+    public MissionTreeBean getMissionTreeBeanByMissionId(Long missionId) {
+        Long[] missionPath = getMissionPath(missionId);
+        return getMissionTreeBean(missionPath[0], missionPath[1]);
     }
 
     public MissionBean getMissionBean(
@@ -182,6 +190,21 @@ public class DataRepository {
             }
         }
 
+        return null;
+    }
+
+    @Nullable
+    public LevelCompletionBean getLevelCompletionByMissionTreeId(Long missionTreeId) {
+        List<LevelCompletionBean> levelCompletionBeans =
+                getUserBean().getLevelCompletionBeans();
+
+        if (levelCompletionBeans != null) {
+            for (LevelCompletionBean levelCompletionBean : levelCompletionBeans) {
+                if (missionTreeId.equals(levelCompletionBean.getMissionTreeId())) {
+                    return levelCompletionBean;
+                }
+            }
+        }
         return null;
     }
 }

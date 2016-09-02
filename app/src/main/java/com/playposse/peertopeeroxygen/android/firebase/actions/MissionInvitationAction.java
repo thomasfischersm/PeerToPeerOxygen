@@ -26,8 +26,9 @@ public class MissionInvitationAction extends FirebaseAction {
         MissionInviteMessage message = new MissionInviteMessage(remoteMessage);
         MissionCompletionBean completion =
                 getDataRepository().getMissionCompletion(message.getMissionId());
+        Boolean isAdmin = getDataRepository().getUserBean().getAdmin();
 
-        if (completion.getStudyComplete()) {
+        if (isAdmin || completion.getStudyComplete()) {
             Intent intent = ExtraConstants.createIntent(
                     getApplicationContext(),
                     StudentBuddyMissionActivity.class,

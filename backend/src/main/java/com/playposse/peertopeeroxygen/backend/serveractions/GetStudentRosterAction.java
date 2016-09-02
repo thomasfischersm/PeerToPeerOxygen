@@ -15,7 +15,6 @@ public class GetStudentRosterAction extends ServerAction {
     public List<UserBean> getStudentRoster() {
         List<OxygenUser> users = ofy()
                 .load()
-//                .group(UserPoints.class)
                 .type(OxygenUser.class)
                 .list();
 
