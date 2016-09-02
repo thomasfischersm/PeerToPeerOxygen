@@ -1,6 +1,7 @@
 package com.playposse.peertopeeroxygen.backend.schema;
 
 import com.googlecode.objectify.Ref;
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Load;
@@ -14,6 +15,7 @@ import java.util.Map;
  * Objectify entity that describes a mission.
  */
 @Entity
+@Cache
 public class Mission {
 
     @Id private Long id;

@@ -1,6 +1,7 @@
 package com.playposse.peertopeeroxygen.backend.schema;
 
 import com.googlecode.objectify.Ref;
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Load;
@@ -19,6 +20,7 @@ import java.util.List;
  * missions that have to be completed order by their prerequisites.
  */
 @Entity
+@Cache
 public class MissionLadder {
 
     @Id private Long id;

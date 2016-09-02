@@ -1,6 +1,7 @@
 package com.playposse.peertopeeroxygen.backend.schema;
 
 import com.googlecode.objectify.Ref;
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -17,6 +18,7 @@ import javax.annotation.Nullable;
  * levels of mission trees. Each level is represented with its own mission tree.
  */
 @Entity
+@Cache
 public class MissionTree {
 
     @Id private Long id;
