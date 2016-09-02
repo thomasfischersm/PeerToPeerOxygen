@@ -131,15 +131,6 @@ public class MissionTreeWidget extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return gestureDetector.onTouchEvent(event);
-//        if (rows == null) {
-//            return false;
-//        }
-//
-//        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//            if (handleClick(event)) return true;
-//        }
-//
-//        return false;
     }
 
     private boolean handleClick(MotionEvent event) {
@@ -187,6 +178,8 @@ public class MissionTreeWidget extends View {
 
         @Override
         protected Bitmap doInBackground(MissionTreeBean[] missionTreeBeans) {
+            long start = System.currentTimeMillis();
+
             MissionTreeBean missionTreeBean = missionTreeBeans[0];
             rows = MissionTreeUntangler.untangle(missionTreeBean);
             MissionTreeUntangler.debugDump(rows);
@@ -207,6 +200,8 @@ public class MissionTreeWidget extends View {
             drawArrows(canvas, rows);
             drawBoxes(canvas, rows, missionTreeBean.getBossMissionId());
 
+            long end = System.currentTimeMillis();
+            Log.i(LOG_CAT, "Rendering mission tree to Bitmap took " + (end - start) + "ms");
             return bitmap;
         }
 

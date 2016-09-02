@@ -16,7 +16,6 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 public class SaveMissionAction extends ServerAction {
 
     public static MissionBean saveMission(
-            Long sessionId,
             Long missionLadderId,
             Long missionTreeId,
             MissionBean missionBean)
@@ -25,7 +24,6 @@ public class SaveMissionAction extends ServerAction {
         Mission mission = missionBean.toEntity();
 
         MissionLadder missionLadder = ofy().load()
-//                .group(MissionTree.class, Mission.class)
                 .type(MissionLadder.class)
                 .id(missionLadderId)
                 .now();
@@ -36,7 +34,7 @@ public class SaveMissionAction extends ServerAction {
 
         if (missionBean.getId() == null) {
             missionTree.getMissions().add(Ref.create(Key.create(Mission.class, mission.getId())));
-            ofy().save().entity(missionLadder).now();
+            ofy().save().entity(missionTree).now();
         }
 
         return new MissionBean(mission);

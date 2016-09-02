@@ -117,7 +117,6 @@ public class PeerToPeerOxygenEndPoint {
         protectByAdminCheck(sessionId);
 
         return SaveMissionAction.saveMission(
-                sessionId,
                 missionLadderId,
                 missionTreeId,
                 missionBean);

@@ -18,7 +18,6 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 public class ServerAction {
 
     protected static MissionTree findMissionTree(MissionLadder missionLadder, Long missionTreeId) {
-        // TODO: Convert this to a query!
         for (Ref<MissionTree> missionTreeRef : missionLadder.getMissionTreeRefs()) {
             if (missionTreeId.equals(missionTreeRef.getKey().getId())) {
                 return missionTreeRef.getValue();
