@@ -116,7 +116,7 @@ public class InstructionPagerAdapter extends FragmentStatePagerAdapter {
             instruction = "";
         }
 
-        Pattern pattern = Pattern.compile("<[hH]1>(.*)</[hH]1>");
+        Pattern pattern = Pattern.compile("<[hH]1>([^>]*)</[hH]1>");
         Matcher matcher = pattern.matcher(instruction);
 
         String heading = null;
