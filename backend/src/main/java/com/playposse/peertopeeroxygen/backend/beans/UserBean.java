@@ -113,6 +113,10 @@ public class UserBean {
         return missionCompletionBeans;
     }
 
+    public void setMissionCompletionBeans(List<MissionCompletionBean> missionCompletionBeans) {
+        this.missionCompletionBeans = missionCompletionBeans;
+    }
+
     public List<LevelCompletionBean> getLevelCompletionBeans() {
         return levelCompletionBeans;
     }

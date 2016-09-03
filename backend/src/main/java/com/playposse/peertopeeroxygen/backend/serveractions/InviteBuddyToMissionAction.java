@@ -38,7 +38,7 @@ public class InviteBuddyToMissionAction extends ServerAction {
 
         FirebaseUtil.sendMissionInviteToBuddy(
                 buddy.getFirebaseToken(),
-                stripForSafety(new UserBean(student)),
+                student,
                 missionLadderId,
                 missionTreeId,
                 missionId);

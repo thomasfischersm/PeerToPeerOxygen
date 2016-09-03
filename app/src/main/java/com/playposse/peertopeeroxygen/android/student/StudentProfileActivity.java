@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
-import com.playposse.peertopeeroxygen.android.widgets.RenderQrCodeAsyncTask;
+import com.playposse.peertopeeroxygen.android.ui.RenderQrCodeAsyncTask;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
 /**

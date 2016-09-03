@@ -20,37 +20,14 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <ScrollView
+    <android.support.v4.view.ViewPager
+        android:id="@+id/instructionPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <android.support.design.widget.TabLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/missionNameTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/missionInstructionsTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <Button
-                android:id="@+id/startScanButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/start_scan_button" />
-
-            <SurfaceView
-                android:id="@+id/surfaceView"
-                android:layout_width="320dp"
-                android:layout_height="240dp" />
-
-        </LinearLayout>
-    </ScrollView>
+            android:layout_gravity="top" />
+    </android.support.v4.view.ViewPager>
 </LinearLayout>

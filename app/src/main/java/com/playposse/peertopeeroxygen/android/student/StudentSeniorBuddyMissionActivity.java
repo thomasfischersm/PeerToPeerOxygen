@@ -2,19 +2,15 @@ package com.playposse.peertopeeroxygen.android.student;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
-import com.playposse.peertopeeroxygen.android.util.TextFormatter;
+import com.playposse.peertopeeroxygen.android.ui.adapters.InstructionPagerAdapter;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
-import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
 
 /**
  * An activity that shows the mission to a buddy.
@@ -30,13 +26,7 @@ public class StudentSeniorBuddyMissionActivity extends StudentParentActivity {
     private UserBeanParcelable studentBean;
     private UserBeanParcelable buddyBean;
 
-    private TextView invitationTextView;
-    private ImageView studentPhotoImageView;
-    private ImageView buddyPhotoImageView;
-    private TextView missionNameTextView;
-    private TextView missionBuddyDescriptionTextView;
-    private Button cancelButton;
-    private Button graduateButton;
+    private ViewPager instructionPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,64 +40,30 @@ public class StudentSeniorBuddyMissionActivity extends StudentParentActivity {
         studentBean = intent.getParcelableExtra(ExtraConstants.EXTRA_STUDENT_BEAN);
         buddyBean = intent.getParcelableExtra(ExtraConstants.EXTRA_BUDDY_BEAN);
 
-        invitationTextView = (TextView) findViewById(R.id.invitationTextView);
-        studentPhotoImageView = (ImageView) findViewById(R.id.studentPhotoImageView);
-        buddyPhotoImageView = (ImageView) findViewById(R.id.buddyPhotoImageView);
-        missionNameTextView = (TextView) findViewById(R.id.missionNameTextView);
-        missionBuddyDescriptionTextView =
-                (TextView) findViewById(R.id.missionBuddyDescriptionTextView);
-        cancelButton = (Button) findViewById(R.id.cancelButton);
-        graduateButton = (Button) findViewById(R.id.graduateButton);
-
-        String studentName = studentBean.getFirstName() + " " + studentBean.getLastName();
-        String buddyName = buddyBean.getFirstName() + " " + buddyBean.getLastName();
-        String invitation = String.format(
-                getString(R.string.mission_senior_invitation_message),
-                buddyName,
-                studentName);
-        invitationTextView.setText(invitation);
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
-        graduateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dataServiceConnection
-                        .getLocalBinder()
-                        .reportMissionCheckoutComplete(
-                                studentBean.getId(),
-                                buddyBean.getId(),
-                                missionId);
-                startActivity(new Intent(getApplicationContext(), StudentMainActivity.class));
-            }
-        });
+        instructionPager = (ViewPager) findViewById(R.id.instructionPager);
     }
 
     @Override
     public void receiveData(DataRepository dataRepository) {
-        loadProfilePhoto(
-                studentPhotoImageView,
-                studentBean.getFbProfileId(),
-                studentBean.getProfilePictureUrl());
+        missionBean = dataRepository.getMissionBean(missionLadderId, missionTreeId, missionId);
 
-        loadProfilePhoto(
-                buddyPhotoImageView,
-                buddyBean.getFbProfileId(),
-                buddyBean.getProfilePictureUrl());
+        // Instantiate invitation fragment.
+        Fragment invitationFragment = StudentSeniorBuddyMissionInvitationFragment.newInstance(
+                missionLadderId,
+                missionTreeId,
+                missionId,
+                studentBean,
+                buddyBean);
 
-        missionBean = dataRepository
-                .getMissionBean(missionLadderId, missionTreeId, missionId);
-
-        Log.i(LOG_CAT, "Mission bean: " + missionLadderId + " " + missionTreeId + " " + missionId + " " + missionBean);
-        missionNameTextView.setText(missionBean.getName());
-        missionBuddyDescriptionTextView.setText(
-                TextFormatter.format(missionBean.getBuddyInstruction()));
-
-        MissionCompletionBean completion = dataRepository.getMissionCompletion(missionId);
+        // Initiate the instruction ViewPager.
+        if (instructionPager.getHandler() != null) {// Ensure that the fragments are still attached.
+            InstructionPagerAdapter instructionPagerAdapter = new InstructionPagerAdapter(
+                    getSupportFragmentManager(),
+                    missionBean.getBuddyInstruction(),
+                    invitationFragment,
+                    false,
+                    this);
+            instructionPager.setAdapter(instructionPagerAdapter);
+        }
     }
 }

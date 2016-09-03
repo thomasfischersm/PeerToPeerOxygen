@@ -54,7 +54,7 @@ public class ServerAction {
     /**
      * Clears any data that could be a security issue.
      */
-    protected static UserBean stripForSafety(UserBean userBean) {
+    public static UserBean stripForSafety(UserBean userBean) {
         userBean.setSessionId(null);
         return userBean;
     }

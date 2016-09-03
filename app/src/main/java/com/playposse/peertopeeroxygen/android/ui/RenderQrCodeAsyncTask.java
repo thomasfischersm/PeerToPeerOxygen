@@ -1,4 +1,4 @@
-package com.playposse.peertopeeroxygen.android.widgets;
+package com.playposse.peertopeeroxygen.android.ui;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;

@@ -20,74 +20,14 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <ScrollView
+    <android.support.v4.view.ViewPager
+        android:id="@+id/instructionPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <android.support.design.widget.TabLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/invitationTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <ImageView
-                android:id="@+id/studentPhotoImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/missionNameTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/seniorBuddyRequiredTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/senior_buddy_required_message"
-                android:visibility="gone" />
-
-            <Button
-                android:id="@+id/startScanButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/start_scan_button"
-                android:visibility="gone" />
-
-            <SurfaceView
-                android:id="@+id/surfaceView"
-                android:layout_width="320dp"
-                android:layout_height="240dp"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/missionBuddyDescriptionTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:id="@+id/cancelButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/cancel_button_label" />
-
-
-                <Button
-                    android:id="@+id/graduateButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/graduate_button_label" />
-
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+            android:layout_gravity="top" />
+    </android.support.v4.view.ViewPager>
 </LinearLayout>

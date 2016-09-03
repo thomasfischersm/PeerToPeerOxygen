@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <com.playposse.peertopeeroxygen.android.widgets.MissionTreeWidget
+                <com.playposse.peertopeeroxygen.android.ui.widgets.MissionTreeWidget
                     android:id="@+id/missionTreeWidget"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />

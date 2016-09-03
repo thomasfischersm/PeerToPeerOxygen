@@ -41,6 +41,7 @@ public class DataServiceConnection implements ServiceConnection {
 
     @Override
     public void onServiceDisconnected(ComponentName componentName) {
+        localBinder.unregisterDataReceivedCallback(dataReceivedCallback);
         bound = false;
     }
 

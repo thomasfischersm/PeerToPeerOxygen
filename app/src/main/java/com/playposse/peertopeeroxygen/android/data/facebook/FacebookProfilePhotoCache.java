@@ -47,6 +47,7 @@ public class FacebookProfilePhotoCache {
             String fbProfileId,
             String photoUrlString) {
 
+        Log.i(LOG_CAT, "loadImage(" + fbProfileId + ")");
         new LoadProfilePhotoAsyncTask(context, imageView, fbProfileId, photoUrlString).execute();
     }
 

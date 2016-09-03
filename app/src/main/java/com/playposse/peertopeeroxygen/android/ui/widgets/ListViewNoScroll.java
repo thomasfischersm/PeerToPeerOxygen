@@ -1,4 +1,4 @@
-package com.playposse.peertopeeroxygen.android.widgets;
+package com.playposse.peertopeeroxygen.android.ui.widgets;
 
 import android.content.Context;
 import android.database.DataSetObserver;

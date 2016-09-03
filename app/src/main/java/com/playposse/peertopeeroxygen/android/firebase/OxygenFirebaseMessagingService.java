@@ -105,8 +105,8 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
 
         while (pendingActions.size() > 0) {
             FirebaseAction action = pendingActions.get(0);
-            action.execute(this, dataServiceConnection);
             pendingActions.remove(action);
+            action.execute(this, dataServiceConnection);
         }
     }
 

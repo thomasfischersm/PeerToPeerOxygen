@@ -156,7 +156,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/required_missions_label" />
 
-            <com.playposse.peertopeeroxygen.android.widgets.RequiredMissionListView
+            <com.playposse.peertopeeroxygen.android.ui.widgets.RequiredMissionListView
                 android:id="@+id/requiredMissionsListView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

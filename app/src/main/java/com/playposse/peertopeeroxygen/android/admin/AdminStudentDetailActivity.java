@@ -12,7 +12,7 @@ import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
-import com.playposse.peertopeeroxygen.android.widgets.NumberPickerDialogBuilder;
+import com.playposse.peertopeeroxygen.android.ui.dialogs.NumberPickerDialogBuilder;
 
 import java.text.DateFormat;
 import java.util.Date;

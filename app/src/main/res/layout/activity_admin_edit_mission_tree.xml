@@ -86,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/missions_label" />
 
-                <com.playposse.peertopeeroxygen.android.widgets.ListViewNoScroll
+                <com.playposse.peertopeeroxygen.android.ui.widgets.ListViewNoScroll
                     android:id="@+id/missionsListView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -102,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/required_missions_label" />
 
-                <com.playposse.peertopeeroxygen.android.widgets.RequiredMissionListView
+                <com.playposse.peertopeeroxygen.android.ui.widgets.RequiredMissionListView
                     android:id="@+id/requiredMissionsListView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

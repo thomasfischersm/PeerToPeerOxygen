@@ -2,22 +2,18 @@ package com.playposse.peertopeeroxygen.android.student;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.SurfaceView;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.support.v4.view.ViewPager;
 
 import com.google.android.gms.vision.barcode.Barcode;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
-import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
-import com.playposse.peertopeeroxygen.android.util.TextFormatter;
-import com.playposse.peertopeeroxygen.android.widgets.debug.SelectDebugUserDialogBuilder;
+import com.playposse.peertopeeroxygen.android.ui.adapters.InstructionPagerAdapter;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 
-public class StudentMissionActivity extends StudentParentActivityWithCameraSource {
+public class StudentMissionActivity
+        extends StudentParentActivity
+        implements QrCodeScannerFragment.QrCodeScannerCallback{
 
     private static final String LOG_CAT = StudentMissionActivity.class.getSimpleName();
 
@@ -26,10 +22,7 @@ public class StudentMissionActivity extends StudentParentActivityWithCameraSourc
     private Long missionId;
     private MissionBean missionBean;
 
-    private TextView missionNameTextView;
-    private TextView missionInstructionsTextView;
-    private Button startScanButton;
-    private SurfaceView surfaceView;
+    private ViewPager instructionPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,31 +34,13 @@ public class StudentMissionActivity extends StudentParentActivityWithCameraSourc
         missionTreeId = intent.getLongExtra(ExtraConstants.EXTRA_MISSION_TREE_ID, -1);
         missionId = intent.getLongExtra(ExtraConstants.EXTRA_MISSION_ID, -1);
 
-        missionNameTextView = (TextView) findViewById(R.id.missionNameTextView);
-        missionInstructionsTextView = (TextView) findViewById(R.id.missionInstructionsTextView);
-        startScanButton = (Button) findViewById(R.id.startScanButton);
-        surfaceView = (SurfaceView) findViewById(R.id.surfaceView);
-
-        startScanButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (!OxygenSharedPreferences.getDebugFlag(getApplicationContext())) {
-                            scanForQrCode(surfaceView);
-                        } else {
-                            pickDebugUser();
-                        }
-                    }
-                }
-        );
+        instructionPager = (ViewPager) findViewById(R.id.instructionPager);
     }
 
     @Override
     public void receiveData(DataRepository dataRepository) {
         missionBean = dataRepository
                 .getMissionBean(missionLadderId, missionTreeId, missionId);
-
-        missionNameTextView.setText(missionBean.getName());
 
         final String instruction;
         if (dataRepository.getMissionCompletion(missionId).getStudyComplete()
@@ -74,33 +49,25 @@ public class StudentMissionActivity extends StudentParentActivityWithCameraSourc
         } else {
             instruction = missionBean.getStudentInstruction();
         }
-        missionInstructionsTextView.setText(TextFormatter.format(instruction));
+
+        if (instructionPager.getHandler() != null) {// Ensure that the fragments are still attached.
+            instructionPager.setAdapter(new InstructionPagerAdapter(
+                    getSupportFragmentManager(),
+                    instruction,
+                    null, /* invitiationFragment */
+                    true, /* enableScanner */
+                    this));
+        }
 
         setTitle("" + missionBean.getName());
     }
 
     @Override
-    protected void receivedBarcode(Barcode barcode) {
-        Log.i(LOG_CAT, "Found bar code: " + barcode.displayValue);
-        stopCameraSource();
-
+    public void receivedBarcode(Barcode barcode) {
         dataServiceConnection.getLocalBinder().inviteBuddyToMission(
                 new Long(barcode.displayValue),
                 missionLadderId,
                 missionTreeId,
                 missionId);
-    }
-
-    private void pickDebugUser() {
-        SelectDebugUserDialogBuilder.build(
-                this,
-                new SelectDebugUserDialogBuilder.DebugUserPickerDialogCallback() {
-                    @Override
-                    public void onPickedDebugUser(long userId) {
-                        Barcode barcode = new Barcode();
-                        barcode.displayValue = "" + userId;
-                        receivedBarcode(barcode);
-                    }
-                });
     }
 }

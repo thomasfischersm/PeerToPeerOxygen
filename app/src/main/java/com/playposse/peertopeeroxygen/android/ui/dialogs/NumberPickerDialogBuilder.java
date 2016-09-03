@@ -1,4 +1,4 @@
-package com.playposse.peertopeeroxygen.android.widgets;
+package com.playposse.peertopeeroxygen.android.ui.dialogs;
 
 import android.content.Context;
 import android.content.DialogInterface;

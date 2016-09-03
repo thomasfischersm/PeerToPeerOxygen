@@ -2,14 +2,13 @@ package com.playposse.peertopeeroxygen.android.student;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.IntentCompat;
 import android.view.View;
 import android.widget.ImageButton;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
-import com.playposse.peertopeeroxygen.android.widgets.MissionTreeWidget;
+import com.playposse.peertopeeroxygen.android.ui.widgets.MissionTreeWidget;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
 /**
@@ -65,13 +64,13 @@ public class StudentMissionTreeActivity extends StudentParentActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                finish();
                 Intent intent = ExtraConstants.createIntent(
                         getApplicationContext(),
                         StudentMissionTreeActivity.class,
                         missionLadderId,
                         otherMissionTreeBean.getId(),
                         null);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         });

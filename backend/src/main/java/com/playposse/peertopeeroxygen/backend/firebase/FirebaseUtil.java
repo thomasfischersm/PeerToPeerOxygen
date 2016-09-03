@@ -1,7 +1,10 @@
 package com.playposse.peertopeeroxygen.backend.firebase;
 
 import com.google.appengine.repackaged.com.google.gson.Gson;
+import com.playposse.peertopeeroxygen.backend.beans.LevelCompletionBean;
+import com.playposse.peertopeeroxygen.backend.beans.MissionCompletionBean;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
+import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 
 import org.json.JSONObject;
 
@@ -12,7 +15,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.logging.Logger;
+
+import static com.playposse.peertopeeroxygen.backend.serveractions.ServerAction.stripForSafety;
 
 /**
  * A class with utility methods for dealing with Firebase.
@@ -41,20 +47,20 @@ public class FirebaseUtil {
 
     public static String sendMissionInviteToBuddy(
             String firebaseToken,
-            UserBean studentBean,
+            OxygenUser student,
             Long missionLadderId,
             Long missionTreeId,
             Long missionId)
             throws IOException {
 
         Gson gson = new Gson();
-        String studentBeanJson = gson.toJson(studentBean);
+        String studentBeanJson = gson.toJson(stripCompletions(student));
         log.info("The student translated to JSON: " + studentBeanJson);
-        log.info("The student id is " + studentBean.getId());
+        log.info("The student id is " + student.getId());
 
         JSONObject rootNode = new JSONObject();
         rootNode.put(TYPE_KEY, MISSION_INVITE_TYPE);
-        rootNode.put(FROM_STUDENT_ID, studentBean.getId());
+        rootNode.put(FROM_STUDENT_ID, student.getId());
         rootNode.put(FROM_STUDENT_BEAN, studentBeanJson);
         rootNode.put(MISSION_LADDER_KEY, missionLadderId);
         rootNode.put(MISSION_TREE_KEY, missionTreeId);
@@ -65,22 +71,20 @@ public class FirebaseUtil {
 
     public static String sendMissionInviteToSeniorBuddy(
             String firebaseToken,
-            UserBean studentBean,
-            UserBean buddyBean,
+            OxygenUser student,
+            OxygenUser buddy,
             Long missionLadderId,
             Long missionTreeId,
             Long missionId)
             throws IOException {
 
         Gson gson = new Gson();
-        String studentBeanJson = gson.toJson(studentBean);
-        String buddyBeanJson = gson.toJson(buddyBean);
-        log.info("The student translated to JSON: " + studentBeanJson);
-        log.info("The student id is " + studentBean.getId());
+        String studentBeanJson = gson.toJson(stripCompletions(student));
+        String buddyBeanJson = gson.toJson(stripCompletions(buddy));
 
         JSONObject rootNode = new JSONObject();
         rootNode.put(TYPE_KEY, MISSION_SENIOR_INVITE_TYPE);
-        rootNode.put(FROM_STUDENT_ID, studentBean.getId());
+        rootNode.put(FROM_STUDENT_ID, student.getId());
         rootNode.put(FROM_STUDENT_BEAN, studentBeanJson);
         rootNode.put(BUDDY_BEAN, buddyBeanJson);
         rootNode.put(MISSION_LADDER_KEY, missionLadderId);
@@ -92,12 +96,12 @@ public class FirebaseUtil {
 
     public static String sendMissionCompletionToStudent(
             String firebaseToken,
-            UserBean buddyBean,
+            OxygenUser buddy,
             Long missionId)
             throws IOException {
 
         Gson gson = new Gson();
-        String buddyBeanJson = gson.toJson(buddyBean);
+        String buddyBeanJson = gson.toJson(stripCompletions(buddy));
 
         JSONObject rootNode = new JSONObject();
         rootNode.put(TYPE_KEY, MISSION_COMPLETION_TYPE);
@@ -109,12 +113,12 @@ public class FirebaseUtil {
 
     public static String sendMissionCompletionToBuddy(
             String firebaseToken,
-            UserBean studentBean,
+            OxygenUser student,
             Long missionId)
             throws IOException {
 
         Gson gson = new Gson();
-        String studentBeanJson = gson.toJson(studentBean);
+        String studentBeanJson = gson.toJson(stripCompletions(student));
 
         JSONObject rootNode = new JSONObject();
         rootNode.put(TYPE_KEY, MISSION_CHECKOUT_COMPLETION_TYPE);
@@ -124,15 +128,15 @@ public class FirebaseUtil {
         return sendMessageToDevice(firebaseToken, rootNode);
     }
 
-    public static String sendPointsUpdateToStudent(UserBean studentBean) throws IOException {
+    public static String sendPointsUpdateToStudent(OxygenUser student) throws IOException {
         Gson gson = new Gson();
-        String studentBeanJson = gson.toJson(studentBean);
+        String studentBeanJson = gson.toJson(stripCompletions(student));
 
         JSONObject rootNode = new JSONObject();
         rootNode.put(TYPE_KEY, UPDATE_STUDENT_POINTS_TYPE);
         rootNode.put(STUDENT_BEAN, studentBeanJson);
 
-        return sendMessageToDevice(studentBean.getFirebaseToken(), rootNode);
+        return sendMessageToDevice(student.getFirebaseToken(), rootNode);
     }
 
     private static String sendMessageToDevice(String firebaseToken, JSONObject data)
@@ -183,5 +187,17 @@ public class FirebaseUtil {
         }
         reader.close();
         return sb.toString();
+    }
+
+    /**
+     * Removes level and mission completions. Firebase limits the size of the payload to 4K. The
+     * completion data can easily make the bean size larger.
+     */
+    private static UserBean stripCompletions(OxygenUser user) {
+        UserBean userBean = new UserBean(user);
+        stripForSafety(userBean);
+        userBean.setLevelCompletionBeans(new ArrayList<LevelCompletionBean>());
+        userBean.setMissionCompletionBeans(new ArrayList<MissionCompletionBean>());
+        return userBean;
     }
 }

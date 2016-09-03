@@ -1,4 +1,4 @@
-package com.playposse.peertopeeroxygen.android.widgets;
+package com.playposse.peertopeeroxygen.android.ui.widgets;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +26,7 @@ import com.playposse.peertopeeroxygen.android.missiondependencies.MissionPlaceHo
 import com.playposse.peertopeeroxygen.android.missiondependencies.MissionTreeUntangler;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.student.StudentMissionActivity;
+import com.playposse.peertopeeroxygen.android.ui.CanvasHelper;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;

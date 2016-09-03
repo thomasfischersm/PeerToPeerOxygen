@@ -1,4 +1,4 @@
-package com.playposse.peertopeeroxygen.android.widgets;
+package com.playposse.peertopeeroxygen.android.ui.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

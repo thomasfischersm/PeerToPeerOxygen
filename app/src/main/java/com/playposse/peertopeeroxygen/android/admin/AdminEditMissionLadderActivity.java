@@ -15,8 +15,8 @@ import android.widget.TextView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
-import com.playposse.peertopeeroxygen.android.widgets.ConfirmationDialogBuilder;
-import com.playposse.peertopeeroxygen.android.widgets.ListViewNoScroll;
+import com.playposse.peertopeeroxygen.android.ui.dialogs.ConfirmationDialogBuilder;
+import com.playposse.peertopeeroxygen.android.ui.widgets.ListViewNoScroll;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 

@@ -1,4 +1,4 @@
-package com.playposse.peertopeeroxygen.android.widgets;
+package com.playposse.peertopeeroxygen.android.ui.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -11,6 +11,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.ui.adapters.MissionSpinnerArrayAdapter;
+import com.playposse.peertopeeroxygen.android.ui.dialogs.ConfirmationDialogBuilder;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 
 import java.util.ArrayList;
