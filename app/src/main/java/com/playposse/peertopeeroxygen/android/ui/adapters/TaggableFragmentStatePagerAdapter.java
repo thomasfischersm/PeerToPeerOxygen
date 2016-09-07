@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
@@ -15,10 +16,12 @@ import java.util.ArrayList;
 import javax.annotation.Nullable;
 
 /**
- * Created by Thomas on 9/7/2016.
+ * A copy and pasted version of {@link FragmentStatePagerAdapter} that sets tags on the fragments.
+ * The version included in the Android code doesn't set tags. So, the state of the {@link Fragment}
+ * is not restored. This one does it.
  */
-public abstract class TaggableFragmentStatePageAdapter extends PagerAdapter {
-    private static final String TAG = TaggableFragmentStatePageAdapter.class.getSimpleName();
+public abstract class TaggableFragmentStatePagerAdapter extends PagerAdapter {
+    private static final String TAG = TaggableFragmentStatePagerAdapter.class.getSimpleName();
     private static final boolean DEBUG = false;
 
     private final FragmentManager mFragmentManager;
@@ -28,7 +31,7 @@ public abstract class TaggableFragmentStatePageAdapter extends PagerAdapter {
     private ArrayList<Fragment> mFragments = new ArrayList<Fragment>();
     private Fragment mCurrentPrimaryItem = null;
 
-    public TaggableFragmentStatePageAdapter(FragmentManager fm) {
+    public TaggableFragmentStatePagerAdapter(FragmentManager fm) {
         mFragmentManager = fm;
     }
 

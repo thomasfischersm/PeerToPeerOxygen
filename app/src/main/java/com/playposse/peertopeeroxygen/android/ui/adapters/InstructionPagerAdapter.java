@@ -29,13 +29,13 @@ import javax.annotation.Nullable;
  * Each H1 HTML tag receives its on page. The user sees all the headings in the tab navigation
  * and can click to the different chapters of the instruction.
  */
-public class InstructionPagerAdapter extends TaggableFragmentStatePageAdapter {
+public class InstructionPagerAdapter extends TaggableFragmentStatePagerAdapter {
 
     private static final String LOG_CAT = InstructionPagerAdapter.class.getSimpleName();
 
     private final List<Section> sections;
-    private Fragment invitationFragment;
-    private final String youTubeVideoId;
+    @Nullable private Fragment invitationFragment;
+    @Nullable private final String youTubeVideoId;
     private final boolean enableScanner;
     private final Context context;
 
@@ -43,7 +43,7 @@ public class InstructionPagerAdapter extends TaggableFragmentStatePageAdapter {
             FragmentManager fm,
             String instruction,
             @Nullable Fragment invitationFragment,
-            String youTubeVideoId,
+            @Nullable String youTubeVideoId,
             boolean enableScanner,
             Context context) {
 

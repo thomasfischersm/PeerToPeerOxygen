@@ -115,7 +115,6 @@ public class BugFreeYouTubeFragment extends YouTubePlayerSupportFragment {
                     player.cueVideo(videoId, (position != null)? position : 0);
                 }
             }
-            Log.i(LOG_CAT, "Requested orientation: " + getActivity().getRequestedOrientation());
 
             // The YouTube player has a bug where it doesn't release the horizontal orientation
             // after exiting full screen mode.
