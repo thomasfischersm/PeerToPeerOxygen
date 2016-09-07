@@ -55,6 +55,7 @@ public class StudentMissionActivity
                     getSupportFragmentManager(),
                     instruction,
                     null, /* invitiationFragment */
+                    "srH-2pQdKhg",
                     true, /* enableScanner */
                     this));
         }

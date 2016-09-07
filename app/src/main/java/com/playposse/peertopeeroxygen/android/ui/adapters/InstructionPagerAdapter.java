@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.student.QrCodeScannerFragment;
 import com.playposse.peertopeeroxygen.android.util.TextFormatter;
+import com.playposse.peertopeeroxygen.android.youtube.BugFreeYouTubeFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +29,13 @@ import javax.annotation.Nullable;
  * Each H1 HTML tag receives its on page. The user sees all the headings in the tab navigation
  * and can click to the different chapters of the instruction.
  */
-public class InstructionPagerAdapter extends FragmentStatePagerAdapter {
+public class InstructionPagerAdapter extends TaggableFragmentStatePageAdapter {
 
     private static final String LOG_CAT = InstructionPagerAdapter.class.getSimpleName();
 
     private final List<Section> sections;
     private Fragment invitationFragment;
+    private final String youTubeVideoId;
     private final boolean enableScanner;
     private final Context context;
 
@@ -41,12 +43,14 @@ public class InstructionPagerAdapter extends FragmentStatePagerAdapter {
             FragmentManager fm,
             String instruction,
             @Nullable Fragment invitationFragment,
+            String youTubeVideoId,
             boolean enableScanner,
             Context context) {
 
         super(fm);
 
         this.invitationFragment = invitationFragment;
+        this.youTubeVideoId = youTubeVideoId;
         this.enableScanner = enableScanner;
         this.context = context;
 
@@ -65,11 +69,33 @@ public class InstructionPagerAdapter extends FragmentStatePagerAdapter {
             }
         }
 
-        if ((position == sections.size()) && (enableScanner)) {
-            return createQrCodeScannerFragment();
-        } else {
+        if (position < sections.size()) {
             return createInstructionFragment(position);
+        } else {
+            position -= sections.size();
         }
+
+        if (youTubeVideoId != null) {
+            if (position == 0) {
+                return BugFreeYouTubeFragment.newInstance(youTubeVideoId);
+            } else {
+                position -= 1;
+            }
+        }
+
+        if (enableScanner) {
+            if (position == 0) {
+                return createQrCodeScannerFragment();
+            }
+        }
+
+        throw new RuntimeException("Unexpected fragment requested: " + position);
+    }
+
+    @Nullable
+    @Override
+    public String getItemTag(int position) {
+        return "very-unique-" + position;
     }
 
     private Fragment createQrCodeScannerFragment() {
@@ -90,23 +116,34 @@ public class InstructionPagerAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         int invitationFragmentSize = (invitationFragment != null) ? 1 : 0;
         int scannerFragmentSize = enableScanner ? 1 : 0;
-        return sections.size() + invitationFragmentSize + scannerFragmentSize;
+        int youTubeVideoSize = (youTubeVideoId != null) ? 1 : 0;
+        return sections.size() + invitationFragmentSize + scannerFragmentSize + youTubeVideoSize;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        if (invitationFragment != null) {
-            if (position == 0) {
-                return context.getString(R.string.invitation_title);
-            } else {
-                position -= 1;
-            }
+        if ((position == 0) && (invitationFragment != null)) {
+            return context.getString(R.string.invitation_title);
+        } else if (invitationFragment != null) {
+            position -= 1;
         }
 
-        if ((position == sections.size()) && (enableScanner)) {
+        if (position < sections.size()) {
+            return sections.get(position).getHeading();
+        } else {
+            position -= sections.size();
+        }
+
+        if ((position == 0) && (youTubeVideoId != null)) {
+            return context.getString(R.string.youtube_title);
+        } else if (youTubeVideoId != null) {
+            position -= 1;
+        }
+
+        if ((position == 0) && enableScanner) {
             return context.getString(R.string.link_buddy_title);
         } else {
-            return sections.get(position).getHeading();
+            throw new RuntimeException("Requested unexpected fragment: " + position);
         }
     }
 

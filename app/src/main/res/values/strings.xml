@@ -76,6 +76,7 @@
     <string name="link_buddy_title">Buddy</string>
     <string name="link_senior_buddy_title">Super buddy</string>
     <string name="invitation_title">Invitation</string>
+    <string name="youtube_title">YouTube</string>
 
     <!-- Admin and student menu -->
     <string name="admin_home_menu_title">Admin home</string>
