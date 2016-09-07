@@ -2,6 +2,8 @@ package com.playposse.peertopeeroxygen.android.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.EditText;
 
 import com.playposse.peertopeeroxygen.android.R;
@@ -13,10 +15,17 @@ import com.playposse.peertopeeroxygen.android.util.MathUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * {@link android.app.Activity} that shows, edits, and creates a specific mission.
  */
 public class AdminEditMissionActivity extends AdminParentActivity {
+
+    private static Pattern YOUTUBE_URL_PATTERN = Pattern.compile("https://[^v]+v=([a-zA-Z0-9-]+)");
+    private static Pattern MOBILE_YOUTUBE_URL_PATTERN =
+            Pattern.compile("https://youtu.be/([a-zA-Z0-9-]+)");
 
     private Long missionLadderId;
     private Long missionTreeId;
@@ -29,6 +38,8 @@ public class AdminEditMissionActivity extends AdminParentActivity {
     EditText teachPointEditText;
     EditText practicePointEditText;
     EditText heartPointEditText;
+    EditText studentVideoIdEditText;
+    EditText buddyVideoIdEditText;
     EditText studentInstructionEditText;
     EditText buddyInstructionEditText;
     private RequiredMissionListView requiredMissionsListView;
@@ -49,10 +60,15 @@ public class AdminEditMissionActivity extends AdminParentActivity {
         teachPointEditText = (EditText) findViewById(R.id.teachPointEditText);
         practicePointEditText = (EditText) findViewById(R.id.practicePointEditText);
         heartPointEditText = (EditText) findViewById(R.id.heartPointEditText);
+        studentVideoIdEditText = (EditText) findViewById(R.id.studentVideoIdEditText);
+        buddyVideoIdEditText = (EditText) findViewById(R.id.buddyVideoIdEditText);
         studentInstructionEditText = (EditText) findViewById(R.id.studentInstructionsEditText);
         buddyInstructionEditText = (EditText) findViewById(R.id.buddyInstructionsEditText);
         requiredMissionsListView =
                 (RequiredMissionListView) findViewById(R.id.requiredMissionsListView);
+
+        studentVideoIdEditText.addTextChangedListener(new RemoveYouTubeUrlTextWatcher());
+        buddyVideoIdEditText.addTextChangedListener(new RemoveYouTubeUrlTextWatcher());
     }
 
     @Override
@@ -71,6 +87,8 @@ public class AdminEditMissionActivity extends AdminParentActivity {
             teachPointEditText.setText("1");
             practicePointEditText.setText("0");
             heartPointEditText.setText("0");
+            studentVideoIdEditText.setText("");
+            buddyVideoIdEditText.setText("");
             studentInstructionEditText.setText("");
             buddyInstructionEditText.setText("");
 
@@ -95,6 +113,8 @@ public class AdminEditMissionActivity extends AdminParentActivity {
                     "" + DataRepository.getPointByType(missionBean, PointType.practice));
             heartPointEditText.setText(
                     "" + DataRepository.getPointByType(missionBean, PointType.heart));
+            studentVideoIdEditText.setText(missionBean.getStudentYouTubeVideoId());
+            buddyVideoIdEditText.setText(missionBean.getBuddyYouTubeVideoId());
             studentInstructionEditText.setText(missionBean.getStudentInstruction());
             buddyInstructionEditText.setText(missionBean.getBuddyInstruction());
 
@@ -124,6 +144,8 @@ public class AdminEditMissionActivity extends AdminParentActivity {
                             || hasPointCountChanged(teachPointEditText, PointType.teach)
                             || hasPointCountChanged(practicePointEditText, PointType.practice)
                             || hasPointCountChanged(heartPointEditText, PointType.heart)
+                            || !studentVideoIdEditText.getText().toString().equals(missionBean.getStudentYouTubeVideoId())
+                            || !buddyVideoIdEditText.getText().toString().equals(missionBean.getBuddyYouTubeVideoId())
                             || !studentInstructionEditText.getText().toString().equals(missionBean.getStudentInstruction())
                             || !buddyInstructionEditText.getText().toString().equals(missionBean.getBuddyInstruction())
                             || requiredMissionsListView.isDirty();
@@ -136,6 +158,8 @@ public class AdminEditMissionActivity extends AdminParentActivity {
             setPointOnMissionBean(teachPointEditText, PointType.teach);
             setPointOnMissionBean(practicePointEditText, PointType.practice);
             setPointOnMissionBean(heartPointEditText, PointType.heart);
+            missionBean.setStudentYouTubeVideoId(studentVideoIdEditText.getText().toString());
+            missionBean.setBuddyYouTubeVideoId(buddyVideoIdEditText.getText().toString());
             missionBean.setStudentInstruction(studentInstructionEditText.getText().toString());
             missionBean.setBuddyInstruction(buddyInstructionEditText.getText().toString());
             missionBean.setRequiredMissionIds(requiredMissionsListView.getRequiredMissionIds());
@@ -155,5 +179,37 @@ public class AdminEditMissionActivity extends AdminParentActivity {
         int originalCount = DataRepository.getPointByType(missionBean, pointType);
         int newCount = MathUtil.tryParseInt(editText.getText().toString(), 0);
         return originalCount != newCount;
+    }
+
+    /**
+     * A {@link TextWatcher} that removes the URL part from YouTube strings. The data store only
+     * stores the id. A user however may copy and past the whole URL. So, this {@link TextWatcher}
+     * removes the URL pieces.
+     */
+    private static class RemoveYouTubeUrlTextWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            // Nothing to do.
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            // Nothing to do.
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            extractVideoId(editable, YOUTUBE_URL_PATTERN);
+            extractVideoId(editable, MOBILE_YOUTUBE_URL_PATTERN);
+        }
+
+        private static void extractVideoId(Editable editable, Pattern pattern) {
+            Matcher matcher = pattern.matcher(editable);
+            if (matcher.find()) {
+                editable.clear();
+                editable.append(matcher.group(1));
+            }
+        }
     }
 }

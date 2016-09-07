@@ -71,7 +71,7 @@ public class StudentBuddyMissionActivity
                     getSupportFragmentManager(),
                     missionBean.getBuddyInstruction(),
                     invitationFragment,
-                    "srH-2pQdKhg",
+                    missionBean.getBuddyYouTubeVideoId(),
                     requiresSeniorBuddy,
                     this);
             instructionPager.setAdapter(instructionPagerAdapter);

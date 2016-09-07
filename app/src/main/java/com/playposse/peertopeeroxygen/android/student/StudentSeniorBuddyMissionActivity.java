@@ -61,7 +61,7 @@ public class StudentSeniorBuddyMissionActivity extends StudentParentActivity {
                     getSupportFragmentManager(),
                     missionBean.getBuddyInstruction(),
                     invitationFragment,
-                    "srH-2pQdKhg",
+                    missionBean.getBuddyYouTubeVideoId(),
                     false,
                     this);
             instructionPager.setAdapter(instructionPagerAdapter);

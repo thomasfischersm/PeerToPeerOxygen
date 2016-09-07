@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 /**
  * Equivalent of {@link Mission} for transport across the network.
  */
@@ -21,6 +23,8 @@ public class MissionBean {
     private String studentInstruction;
     private String buddyInstruction;
     private int minimumStudyCount;
+    @Nullable private String studentYouTubeVideoId;
+    @Nullable private String buddyYouTubeVideoId;
     private List<Long> requiredMissionIds = new ArrayList<>();
     private Map<String, Integer> pointCostMap = new HashMap<>();
 
@@ -33,6 +37,8 @@ public class MissionBean {
         this.studentInstruction = mission.getStudentInstruction();
         this.buddyInstruction = mission.getBuddyInstruction();
         this.minimumStudyCount = mission.getMinimumStudyCount();
+        this.studentYouTubeVideoId = mission.getStudentYouTubeVideoId();
+        this.buddyYouTubeVideoId = mission.getBuddyYouTubeVideoId();
 
         for (Ref<Mission> requiredMissionRef : mission.getRequiredMissions()) {
             if (requiredMissionRef.get() != null) {
@@ -89,6 +95,24 @@ public class MissionBean {
         this.minimumStudyCount = minimumStudyCount;
     }
 
+    @Nullable
+    public String getBuddyYouTubeVideoId() {
+        return buddyYouTubeVideoId;
+    }
+
+    public void setBuddyYouTubeVideoId(@Nullable String buddyYouTubeVideoId) {
+        this.buddyYouTubeVideoId = buddyYouTubeVideoId;
+    }
+
+    @Nullable
+    public String getStudentYouTubeVideoId() {
+        return studentYouTubeVideoId;
+    }
+
+    public void setStudentYouTubeVideoId(@Nullable String studentYouTubeVideoId) {
+        this.studentYouTubeVideoId = studentYouTubeVideoId;
+    }
+
     public List<Long> getRequiredMissionIds() {
         return requiredMissionIds;
     }
@@ -103,7 +127,9 @@ public class MissionBean {
                 name,
                 studentInstruction,
                 buddyInstruction,
-                minimumStudyCount);
+                minimumStudyCount,
+                studentYouTubeVideoId,
+                buddyYouTubeVideoId);
 
         for (Long requiredMissionId : requiredMissionIds) {
             Key<Mission> requiredMissionKey = Key.create(Mission.class, requiredMissionId);

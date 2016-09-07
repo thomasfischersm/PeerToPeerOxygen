@@ -43,11 +43,14 @@ public class StudentMissionActivity
                 .getMissionBean(missionLadderId, missionTreeId, missionId);
 
         final String instruction;
+        final String videoId;
         if (dataRepository.getMissionCompletion(missionId).getStudyComplete()
                 || dataRepository.getUserBean().getAdmin()) {
             instruction = missionBean.getBuddyInstruction();
+            videoId = missionBean.getBuddyYouTubeVideoId();
         } else {
             instruction = missionBean.getStudentInstruction();
+            videoId = missionBean.getStudentYouTubeVideoId();
         }
 
         if (instructionPager.getHandler() != null) {// Ensure that the fragments are still attached.
@@ -55,7 +58,7 @@ public class StudentMissionActivity
                     getSupportFragmentManager(),
                     instruction,
                     null, /* invitiationFragment */
-                    "srH-2pQdKhg",
+                    videoId,
                     true, /* enableScanner */
                     this));
         }

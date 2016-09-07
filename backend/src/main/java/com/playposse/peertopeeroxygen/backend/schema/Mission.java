@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 /**
  * Objectify entity that describes a mission.
  */
@@ -23,6 +25,8 @@ public class Mission {
     private String studentInstruction;
     private String buddyInstruction;
     private int minimumStudyCount = 1;
+    @Nullable private String studentYouTubeVideoId;
+    @Nullable private String buddyYouTubeVideoId;
     @Load private List<Ref<Mission>> requiredMissions = new ArrayList<>();
     private Map<UserPoints.PointType, Integer> pointCostMap = new HashMap<>();
 //    private byte[] icon;
@@ -41,13 +45,17 @@ public class Mission {
             String name,
             String studentInstruction,
             String buddyInstruction,
-            int minimumStudyCount) {
+            int minimumStudyCount,
+            String studentYouTubeVideoId,
+            String buddyYouTubeVideoId) {
 
         this.id = id;
         this.buddyInstruction = buddyInstruction;
         this.name = name;
         this.studentInstruction = studentInstruction;
         this.minimumStudyCount = minimumStudyCount;
+        this.studentYouTubeVideoId = studentYouTubeVideoId;
+        this.buddyYouTubeVideoId = buddyYouTubeVideoId;
     }
 
     public Long getId() {
@@ -84,6 +92,24 @@ public class Mission {
 
     public void setMinimumStudyCount(int minimumStudyCount) {
         this.minimumStudyCount = minimumStudyCount;
+    }
+
+    @Nullable
+    public String getBuddyYouTubeVideoId() {
+        return buddyYouTubeVideoId;
+    }
+
+    public void setBuddyYouTubeVideoId(@Nullable String buddyYouTubeVideoId) {
+        this.buddyYouTubeVideoId = buddyYouTubeVideoId;
+    }
+
+    @Nullable
+    public String getStudentYouTubeVideoId() {
+        return studentYouTubeVideoId;
+    }
+
+    public void setStudentYouTubeVideoId(@Nullable String studentYouTubeVideoId) {
+        this.studentYouTubeVideoId = studentYouTubeVideoId;
     }
 
     public List<Ref<Mission>> getRequiredMissions() {

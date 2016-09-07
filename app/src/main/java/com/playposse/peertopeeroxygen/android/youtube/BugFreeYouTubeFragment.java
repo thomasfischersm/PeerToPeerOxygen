@@ -58,6 +58,7 @@ public class BugFreeYouTubeFragment extends YouTubePlayerSupportFragment {
         View rootView = super.onCreateView(layoutInflater, viewGroup, args);
 
         Log.i(LOG_CAT, "Got args in onCreateView " + args);
+        Log.i(LOG_CAT, "Got arguments from getArguments " + getArguments());
         if (getArguments() != null) {
             videoId = getArguments().getString(VIDEO_ID_ARG);
         }
@@ -69,9 +70,9 @@ public class BugFreeYouTubeFragment extends YouTubePlayerSupportFragment {
             position = args.getInt(VIDEO_POSITION_ARG, -1);
             position = (position == -1) ? null : position;
             isPlaying = args.getBoolean(VIDEO_IS_PLAYING_ARG, false);
-
-            initialize(API_KEY, new YouTubeInitializedListener());
         }
+
+        initialize(API_KEY, new YouTubeInitializedListener());
 
         return rootView;
     }
