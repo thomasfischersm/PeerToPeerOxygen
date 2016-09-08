@@ -1,5 +1,6 @@
 package com.playposse.peertopeeroxygen.android.admin;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -7,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.playposse.peertopeeroxygen.android.R;
@@ -38,9 +40,13 @@ public class AdminMissionBasicsFragment
     private EditText heartPointEditText;
     private EditText studentVideoIdEditText;
     private EditText buddyVideoIdEditText;
+    private Button importButton;
+    private Button exportButton;
 
     private MissionTreeBean missionTreeBean;
     private MissionBean missionBean;
+
+    private GoogleDriveActivity googleDriveActivity;
 
     public AdminMissionBasicsFragment() {
         // Required empty public constructor
@@ -68,9 +74,27 @@ public class AdminMissionBasicsFragment
         heartPointEditText = (EditText) rootView.findViewById(R.id.heartPointEditText);
         studentVideoIdEditText = (EditText) rootView.findViewById(R.id.studentVideoIdEditText);
         buddyVideoIdEditText = (EditText) rootView.findViewById(R.id.buddyVideoIdEditText);
+        importButton = (Button) rootView.findViewById(R.id.importButton);
+        exportButton = (Button) rootView.findViewById(R.id.exportButton);
 
         studentVideoIdEditText.addTextChangedListener(new RemoveYouTubeUrlTextWatcher());
         buddyVideoIdEditText.addTextChangedListener(new RemoveYouTubeUrlTextWatcher());
+        importButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (googleDriveActivity != null) {
+                    googleDriveActivity.importFromDrive();
+                }
+            }
+        });
+        exportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (googleDriveActivity != null) {
+                    googleDriveActivity.exportToDrive();
+                }
+            }
+        });
 
         refreshMission();
 
@@ -193,6 +217,22 @@ public class AdminMissionBasicsFragment
         int originalCount = DataRepository.getPointByType(missionBean, pointType);
         int newCount = MathUtil.tryParseInt(editText.getText().toString(), 0);
         return originalCount != newCount;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof GoogleDriveActivity) {
+            googleDriveActivity = (GoogleDriveActivity) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        googleDriveActivity = null;
     }
 
     /**

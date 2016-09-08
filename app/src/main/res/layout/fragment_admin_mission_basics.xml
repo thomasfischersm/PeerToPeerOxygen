@@ -147,5 +147,23 @@
                 android:layout_weight="1.5"
                 android:inputType="textNoSuggestions" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/importButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/import_button_label"/>
+
+            <Button
+                android:id="@+id/exportButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/export_button_label"/>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

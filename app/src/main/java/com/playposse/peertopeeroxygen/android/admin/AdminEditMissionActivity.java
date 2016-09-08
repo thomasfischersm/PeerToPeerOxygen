@@ -4,9 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
+import com.playposse.peertopeeroxygen.android.googledrive.GoogleDriveInitializer;
+import com.playposse.peertopeeroxygen.android.googledrive.GoogleDriveReader;
+import com.playposse.peertopeeroxygen.android.googledrive.GoogleDriveWriter;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.ui.adapters.EditMissionPagerAdapter;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
@@ -17,7 +22,13 @@ import javax.annotation.Nullable;
 /**
  * {@link android.app.Activity} that shows, edits, and creates a specific mission.
  */
-public class AdminEditMissionActivity extends AdminParentActivity {
+public class AdminEditMissionActivity
+        extends AdminParentActivity
+        implements GoogleDriveActivity, GoogleDriveReader.GoogleDriveReaderCallback {
+
+    private static final String LOG_TAG = AdminEditMissionActivity.class.getSimpleName();
+
+    private static final String SEPARATOR = "------";
 
     private Long missionLadderId;
     private Long missionTreeId;
@@ -27,6 +38,8 @@ public class AdminEditMissionActivity extends AdminParentActivity {
 
     private ViewPager editMissionPager;
     private EditMissionPagerAdapter missionPagerAdapter;
+
+    private GoogleApiClient googleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +58,43 @@ public class AdminEditMissionActivity extends AdminParentActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (googleApiClient == null) {
+            googleApiClient = GoogleDriveInitializer.initialize(this);
+        }
+
+        googleApiClient.connect();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
 
+        if (googleApiClient != null) {
+            googleApiClient.disconnect();
+        }
+
         saveIfNecessary();
+    }
+
+    @Override
+    protected void onActivityResult(
+            int requestCode,
+            int resultCode,
+            Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        GoogleDriveInitializer.onActivityResult(requestCode, resultCode, googleApiClient);
+        GoogleDriveReader.onActivityResult(requestCode, data,googleApiClient, this);
+        GoogleDriveWriter.onActivityResult(
+                requestCode,
+                resultCode,
+                data,
+                googleApiClient,
+                missionBean);
     }
 
     @Override
@@ -84,7 +130,7 @@ public class AdminEditMissionActivity extends AdminParentActivity {
         boolean shouldSave = missionPagerAdapter.isDirty(missionBean);
 
         if ((shouldSave) && (missionBean == null)) {
-                missionBean = new MissionBean();
+            missionBean = new MissionBean();
         }
 
         // Save mission.
@@ -97,13 +143,48 @@ public class AdminEditMissionActivity extends AdminParentActivity {
         }
     }
 
+    @Override
+    public void importFromDrive() {
+        GoogleDriveReader.initiate(googleApiClient, this);
+    }
+
+    @Override
+    public void exportToDrive() {
+        saveIfNecessary();
+        GoogleDriveWriter.initiate(googleApiClient, this, missionBean.getName());
+    }
+
+    @Override
+    public void receiveFileContent(String fileContent) {
+        String[] strings = fileContent.split(SEPARATOR);
+
+        if (strings.length != 3) {
+            Toast.makeText(
+                    this,
+                    R.string.import_mission_parse_error_toast,
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (missionBean != null) {
+            missionBean.setName(strings[0]);
+            missionBean.setStudentInstruction(strings[1]);
+            missionBean.setBuddyInstruction(strings[2]);
+
+            missionPagerAdapter.showMission(missionTreeBean, missionBean);
+        }
+        // TODO: Handle a new mission and import.
+    }
+
     /**
      * An interface for fragments inside of this {@link Activity} to implement. Each fragment
      * stores part of the mission data.
      */
     public interface EditMissionFragment {
         void showMission(MissionTreeBean missionTreeBean, @Nullable MissionBean missionBean);
+
         boolean isDirty(MissionBean missionBean);
+
         void save(MissionBean missionBean);
     }
 }

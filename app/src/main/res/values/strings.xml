@@ -43,6 +43,8 @@
     <string name="heart_point_cost_label">Heart point cost</string>
     <string name="student_youtube_label">Student YouTube</string>
     <string name="buddy_youtube_label">Buddy YouTube</string>
+    <string name="import_button_label">Import</string>
+    <string name="export_button_label">Export</string>
     <string name="confirm_delete_mission_message">Do you want to delete mission: %1$s?</string>
 
     <!-- Student roster -->
@@ -101,6 +103,7 @@
     <string name="cant_mentor_mission_toast">%1$s invited you to mentor \'%2$s\'. You have to learn that mission yourself first!</string>
     <string name="cant_supervise_mission_toast">%1$s invited you to supervise teaching  \'%2$s\'. You have to teach the mission under supervision yourself before you can supervise another buddy!</string>
     <string name="mentor_not_ready_toast">%1$s isn\'t ready to mentor that mission yet.</string>
+    <string name="import_mission_parse_error_toast">The file could not be parsed.</string>
 
     <!-- Reusable strings -->
     <string name="name_form_label">Name</string>
