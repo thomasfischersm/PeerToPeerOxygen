@@ -28,8 +28,8 @@ public final class OxygenSharedPreferences {
     public static boolean getDebugFlag(Context context) {
         SharedPreferences sharedPreferences =
                 context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-//        return sharedPreferences.getBoolean(DEBUG_FLAG_KEY, false) /*|| true*/; // TODO: REMOVE LAST TRUE!
-        return true;
+        return sharedPreferences.getBoolean(DEBUG_FLAG_KEY, false) /*|| true*/; // TODO: REMOVE LAST TRUE!
+//        return true;
     }
 
     public static void setDebugFlag(Context context, boolean debugFlag) {
