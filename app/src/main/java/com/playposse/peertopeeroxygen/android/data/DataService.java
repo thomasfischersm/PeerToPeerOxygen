@@ -205,7 +205,6 @@ public class DataService extends Service {
                 final Long missionId) {
 
             new InviteBuddyToMissionAction(
-                    getApplicationContext(),
                     this,
                     buddyId,
                     missionLadderId,
@@ -222,7 +221,6 @@ public class DataService extends Service {
                 final Long missionId) {
 
             new InviteSeniorBuddyToMissionAction(
-                    getApplicationContext(),
                     this,
                     studentId,
                     seniorBuddyId,

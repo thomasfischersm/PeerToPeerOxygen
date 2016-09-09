@@ -1,5 +1,7 @@
 package com.playposse.peertopeeroxygen.android.data.clientactions;
 
+import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.util.ToastUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
@@ -47,5 +49,7 @@ public class SaveMissionTreeAction extends ClientAction {
             missionTreeBean.setMissionBeans(new ArrayList<MissionBean>());
             missionLadderBean.getMissionTreeBeans().add(missionTreeBean);
         }
+
+        ToastUtil.sendToast(getContext(), R.string.mission_tree_save_confirmation_toast);
     }
 }

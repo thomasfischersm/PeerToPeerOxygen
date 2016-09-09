@@ -18,4 +18,14 @@ public class ToastUtil {
             }
         });
     }
+
+    public static void sendToast(final Context context, final int resId) {
+        Handler h = new Handler(context.getMainLooper());
+        h.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, resId, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 }

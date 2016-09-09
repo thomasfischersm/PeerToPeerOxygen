@@ -2,6 +2,8 @@ package com.playposse.peertopeeroxygen.android.data.clientactions;
 
 import android.util.Log;
 
+import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.util.ToastUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
@@ -49,6 +51,7 @@ public class SaveMissionAction extends ClientAction {
             missionTreeBean.getMissionBeans().add(missionBean);
         }
 
+        ToastUtil.sendToast(getContext(), R.string.mission_save_confirmation_toast);
         Log.i(LOG_CAT, "Mission has been saved.");
     }
 }

@@ -1,7 +1,5 @@
 package com.playposse.peertopeeroxygen.android.data.clientactions;
 
-import android.content.Context;
-
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.util.ToastUtil;
@@ -15,7 +13,6 @@ public class InviteSeniorBuddyToMissionAction extends ClientAction {
 
     private static final String LOG_CAT = InviteSeniorBuddyToMissionAction.class.getSimpleName();
 
-    private final Context context;
     private final Long studentId;
     private final Long seniorBuddyId;
     private final Long missionLadderId;
@@ -23,7 +20,6 @@ public class InviteSeniorBuddyToMissionAction extends ClientAction {
     private final Long missionId;
 
     public InviteSeniorBuddyToMissionAction(
-            Context context,
             BinderForActions binder,
             Long studentId,
             Long seniorBuddyId,
@@ -33,7 +29,6 @@ public class InviteSeniorBuddyToMissionAction extends ClientAction {
 
         super(binder, false);
 
-        this.context = context;
         this.studentId = studentId;
         this.seniorBuddyId = seniorBuddyId;
         this.missionLadderId = missionLadderId;
@@ -56,9 +51,9 @@ public class InviteSeniorBuddyToMissionAction extends ClientAction {
                 // A server check determined that the buddy isn't ready to teach. Show the user a
                 // toast about this.
                 String msg = String.format(
-                        context.getString(R.string.mentor_not_ready_toast),
+                        getContext().getString(R.string.mentor_not_ready_toast),
                         ex.getDetails().getMessage());
-                ToastUtil.sendToast(context, msg);
+                ToastUtil.sendToast(getContext(), msg);
             } else {
                 // The error is something else. Throw it back.
                 throw ex;

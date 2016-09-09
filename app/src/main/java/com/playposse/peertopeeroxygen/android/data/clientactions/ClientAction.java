@@ -1,5 +1,6 @@
 package com.playposse.peertopeeroxygen.android.data.clientactions;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
@@ -27,6 +28,10 @@ public abstract class ClientAction {
 
     protected DataRepository getDataRepository() {
         return binder.getDataRepository();
+    }
+
+    protected Context getContext() {
+        return binder.getApplicationContext();
     }
 
     public final void execute() {

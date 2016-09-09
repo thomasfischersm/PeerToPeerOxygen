@@ -36,9 +36,7 @@ public class RegisterOrLoginAction extends ClientAction {
                 getBinder().getApi()
                         .registerOrLogin(accessToken, firebaseToken)
                         .execute();
-        OxygenSharedPreferences.setSessionId(
-                getBinder().getApplicationContext(),
-                userBean.getSessionId());
+        OxygenSharedPreferences.setSessionId(getContext(), userBean.getSessionId());
         signInSuccessCallback.onSuccess();
     }
 }
