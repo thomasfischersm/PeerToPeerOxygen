@@ -1,6 +1,7 @@
 package com.playposse.peertopeeroxygen.android.util;
 
 import android.text.Editable;
+import android.widget.EditText;
 
 import javax.annotation.Nullable;
 
@@ -25,5 +26,9 @@ public final class StringUtil {
         } else {
             return cleanStr.equals(str);
         }
+    }
+
+    public static boolean equals(EditText editText, @Nullable String str) {
+        return equals(editText.getText(), str);
     }
 }

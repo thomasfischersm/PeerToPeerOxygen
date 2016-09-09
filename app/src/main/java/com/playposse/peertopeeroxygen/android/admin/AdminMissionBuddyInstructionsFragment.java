@@ -81,7 +81,7 @@ public class AdminMissionBuddyInstructionsFragment
         } else if (missionBean == null) {
             return false; // Don't save unless a name is specified for the mission.
         } else {
-            return !buddyInstructionEditText.getText().toString().equals(missionBean.getBuddyInstruction());
+            return !buddyInstructionEditText.toString().equals(missionBean.getBuddyInstruction());
         }
     }
 

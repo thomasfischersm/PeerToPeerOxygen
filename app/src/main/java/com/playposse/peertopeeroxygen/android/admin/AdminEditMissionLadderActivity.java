@@ -17,6 +17,7 @@ import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.ui.dialogs.ConfirmationDialogBuilder;
 import com.playposse.peertopeeroxygen.android.ui.widgets.ListViewNoScroll;
+import com.playposse.peertopeeroxygen.android.util.StringUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
@@ -88,8 +89,8 @@ public class AdminEditMissionLadderActivity extends AdminParentActivity {
             }
         } else {
             // Check if changes have been made.
-            shouldSave = !nameEditText.getText().toString().equals(missionLadderBean.getName())
-                    || !descriptionEditText.getText().toString().equals(missionLadderBean.getDescription());
+            shouldSave = !StringUtil.equals(nameEditText, missionLadderBean.getName())
+                    || !StringUtil.equals(descriptionEditText, missionLadderBean.getDescription());
         }
 
         // Save if necessary.

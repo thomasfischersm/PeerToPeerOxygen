@@ -19,6 +19,7 @@ import com.playposse.peertopeeroxygen.android.ui.adapters.MissionSpinnerArrayAda
 import com.playposse.peertopeeroxygen.android.ui.dialogs.ConfirmationDialogBuilder;
 import com.playposse.peertopeeroxygen.android.ui.widgets.ListViewNoScroll;
 import com.playposse.peertopeeroxygen.android.ui.widgets.RequiredMissionListView;
+import com.playposse.peertopeeroxygen.android.util.StringUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
@@ -100,15 +101,15 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
             // Check if changes have been made.
             boolean isBossMissionDirty;
             if ((bossMissionBean == null) && (missionTreeBean.getBossMissionId() == null)) {
-                isBossMissionDirty = true;
+                isBossMissionDirty = false;
             } else if (bossMissionBean == null) {
                 isBossMissionDirty = true;
             } else {
                 isBossMissionDirty = !bossMissionBean.getId().equals(missionTreeBean.getBossMissionId());
             }
 
-            shouldSave = !nameEditText.getText().toString().equals(missionTreeBean.getName())
-                    || !descriptionEditText.getText().toString().equals(missionTreeBean.getDescription())
+            shouldSave = !StringUtil.equals(nameEditText, missionTreeBean.getName())
+                    || !StringUtil.equals(descriptionEditText, missionTreeBean.getDescription())
                     || isBossMissionDirty
                     || requiredMissionsListView.isDirty();
         }
