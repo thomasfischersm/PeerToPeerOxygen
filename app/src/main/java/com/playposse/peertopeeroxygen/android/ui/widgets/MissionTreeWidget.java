@@ -90,7 +90,7 @@ public class MissionTreeWidget extends View {
         this.missionTreeBean = missionTreeBean;
         this.dataRepository = dataRepository;
 
-        post(new Runnable() { // TODO: Need to delay this more until the width is non-zero.
+        post(new Runnable() {
             @Override
             public void run() {
                 MissionTreeBean[] missionTreeBeans = {missionTreeBean};
@@ -187,6 +187,13 @@ public class MissionTreeWidget extends View {
 
             desiredWidth = MissionTreeUntangler.getMaxColumns(rows) * COLUMN_WIDTH;
             desiredHeight = rows.size() * ROW_HEIGHT;
+
+            if ((desiredHeight == 0) || (desiredWidth == 0)) {
+                // There are no missions in this tree. We need a sensible minimum to avoid
+                // exceptions.
+                desiredHeight = 1;
+                desiredWidth = 1;
+            }
 
             Bitmap bitmap =
                     Bitmap.createBitmap(
