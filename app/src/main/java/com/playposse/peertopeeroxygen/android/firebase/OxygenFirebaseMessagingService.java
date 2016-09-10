@@ -50,7 +50,8 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
 
         Log.i(LOG_CAT, "OxygenFirebaseMessagingService.onCreate is called");
         Intent intent = new Intent(this, DataService.class);
-        dataServiceConnection = new DataServiceConnection(new EmptyDataReceivedCallback(), false);
+        dataServiceConnection =
+                new DataServiceConnection(new EmptyDataReceivedCallback(), false, false);
         bindService(intent, dataServiceConnection, Context.BIND_AUTO_CREATE);
 
         FirebaseMessaging.getInstance().subscribeToTopic(ALL_DEVICES_TOPIC);

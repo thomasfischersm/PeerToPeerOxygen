@@ -13,24 +13,33 @@ public class DataServiceConnection implements ServiceConnection {
     private static final String LOG_CAT = DataServiceConnection.class.getSimpleName();
 
     private final DataReceivedCallback dataReceivedCallback;
+    private final boolean shouldAutoInit;
+    private final boolean checkCacheStale;
 
     private boolean bound = false;
     private DataService.LocalBinder localBinder;
-    private boolean shouldAutoInit;
 
     public DataServiceConnection(
             DataReceivedCallback dataReceivedCallback,
             boolean shouldAutoInit) {
 
+        this(dataReceivedCallback, shouldAutoInit, true);
+    }
+    public DataServiceConnection(
+            DataReceivedCallback dataReceivedCallback,
+            boolean shouldAutoInit,
+            boolean checkCacheStale) {
+
         this.dataReceivedCallback = dataReceivedCallback;
         this.shouldAutoInit = shouldAutoInit;
+        this.checkCacheStale = checkCacheStale;
     }
 
     @Override
     public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
         bound = true;
         localBinder = (DataService.LocalBinder) iBinder;
-        localBinder.registerDataReceivedCallback(dataReceivedCallback);
+        localBinder.registerDataReceivedCallback(dataReceivedCallback, checkCacheStale);
 
         if (shouldAutoInit) {
             localBinder.init();

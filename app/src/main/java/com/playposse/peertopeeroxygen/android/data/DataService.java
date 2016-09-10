@@ -91,13 +91,21 @@ public class DataService extends Service {
     public class LocalBinder extends Binder implements BinderForActions {
 
         public void registerDataReceivedCallback(DataReceivedCallback callback) {
+            registerDataReceivedCallback(callback, true);
+        }
+
+        public void registerDataReceivedCallback(
+                DataReceivedCallback callback,
+                boolean checkStale) {
             dataReceivedCallbacks.add(callback);
 
             if ((dataRepository != null) && (dataRepository.getCompleteMissionDataBean() != null)) {
                 callback.receiveData(dataRepository);
             }
 
-            CompleteMissionDataCache.checkStale(this);
+            if (checkStale) {
+                CompleteMissionDataCache.checkStale(this);
+            }
         }
 
         public void unregisterDataReceivedCallback(final DataReceivedCallback callback) {

@@ -90,7 +90,7 @@ public class MissionTreeWidget extends View {
         this.missionTreeBean = missionTreeBean;
         this.dataRepository = dataRepository;
 
-        post(new Runnable() {
+        post(new Runnable() { // TODO: Need to delay this more until the width is non-zero.
             @Override
             public void run() {
                 MissionTreeBean[] missionTreeBeans = {missionTreeBean};
