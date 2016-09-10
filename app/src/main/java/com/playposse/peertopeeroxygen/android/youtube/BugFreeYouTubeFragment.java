@@ -134,6 +134,7 @@ public class BugFreeYouTubeFragment extends YouTubePlayerSupportFragment {
                 YouTubePlayer.Provider provider,
                 YouTubeInitializationResult result) {
 
+            Log.e(LOG_CAT, "Failed to initialize YouTube fragment " + result.name());
         }
     }
 }

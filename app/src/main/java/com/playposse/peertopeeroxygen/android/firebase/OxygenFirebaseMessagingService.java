@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.playposse.peertopeeroxygen.android.data.DataReceivedCallback;
@@ -11,6 +12,7 @@ import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
 import com.playposse.peertopeeroxygen.android.firebase.actions.FirebaseAction;
+import com.playposse.peertopeeroxygen.android.firebase.actions.InvalidateMissionDataAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.MissionCheckoutCompletionAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.MissionCompletionAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.MissionInvitationAction;
@@ -35,6 +37,9 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
     private static final String MISSION_COMPLETION_TYPE = "missionCompletion";
     private static final String MISSION_CHECKOUT_COMPLETION_TYPE = "missionCheckoutCompletion";
     private static final String UPDATE_STUDENT_POINTS_TYPE = "updateStudentPoints";
+    private static final String INVALIDATE_MISSION_DATA_TYPE = "invalidateMissionData";
+
+    private static final String ALL_DEVICES_TOPIC = "allDevices";
 
     protected DataServiceConnection dataServiceConnection;
     private List<FirebaseAction> pendingActions = new ArrayList<>();
@@ -47,6 +52,8 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
         Intent intent = new Intent(this, DataService.class);
         dataServiceConnection = new DataServiceConnection(new EmptyDataReceivedCallback(), false);
         bindService(intent, dataServiceConnection, Context.BIND_AUTO_CREATE);
+
+        FirebaseMessaging.getInstance().subscribeToTopic(ALL_DEVICES_TOPIC);
     }
 
     @Override
@@ -83,6 +90,9 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
             case UPDATE_STUDENT_POINTS_TYPE:
                 execute(new UpdatePointsAction(remoteMessage));
                 break;
+            case INVALIDATE_MISSION_DATA_TYPE:
+                execute(new InvalidateMissionDataAction(remoteMessage));
+                break;
             default:
                 Log.w(LOG_CAT, "Received an unknown message type from Firebase: "
                         + data.get(TYPE_KEY));
@@ -107,6 +117,7 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
             FirebaseAction action = pendingActions.get(0);
             pendingActions.remove(action);
             action.execute(this, dataServiceConnection);
+            Log.i(LOG_CAT, "Executed Firebase action " + action.getClass().getSimpleName());
         }
     }
 

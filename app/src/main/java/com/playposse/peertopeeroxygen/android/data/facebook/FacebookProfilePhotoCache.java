@@ -7,10 +7,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
-import java.io.ByteArrayOutputStream;
+import com.playposse.peertopeeroxygen.android.util.StreamUtil;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -54,23 +53,7 @@ public class FacebookProfilePhotoCache {
     private static byte[] loadPhotoFromFacebook(String photoUrlString) throws IOException {
         URL photoUrl = new URL(photoUrlString);
         InputStream inputStream = photoUrl.openConnection().getInputStream();
-        return readStream(inputStream);
-    }
-
-    private static byte[] readStream(InputStream inputStream) throws IOException {
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-
-        try {
-            int readSize;
-            byte[] data = new byte[1024];
-            while ((readSize = inputStream.read(data, 0, data.length)) != -1) {
-                buffer.write(data, 0, readSize);
-            }
-        } finally {
-            inputStream.close();
-        }
-
-        return buffer.toByteArray();
+        return StreamUtil.readByteStream(inputStream);
     }
 
     private static void savePhotoToDevice(Context context, String fbProfileId, byte[] photoData)
@@ -84,13 +67,7 @@ public class FacebookProfilePhotoCache {
 
         String fileName = dir + File.separator + fbProfileId + FILE_SUFFIX;
         Log.i(LOG_CAT, "Saving photo to cache: " + fileName);
-        FileOutputStream outputStream
-                = new FileOutputStream(fileName, true);
-        try {
-            outputStream.write(photoData);
-        } finally {
-            outputStream.close();
-        }
+        StreamUtil.writeByteStream(photoData, fileName);
     }
 
     private static boolean isPhotoOnDevice(Context context, String fbProfileId) {
@@ -115,8 +92,7 @@ public class FacebookProfilePhotoCache {
             throws IOException {
 
         String filePath = context.getCacheDir() + PRIVATE_PATH + fbProfileId + FILE_SUFFIX;
-        FileInputStream inputStream = new FileInputStream(filePath);
-        return readStream(inputStream);
+        return StreamUtil.readByteStream(filePath);
     }
 
     private static void clearCacheAsync(final Context context) {

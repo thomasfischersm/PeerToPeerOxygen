@@ -14,7 +14,9 @@ import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.OpenFileActivityBuilder;
+import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.util.StreamUtil;
+import com.playposse.peertopeeroxygen.android.util.ToastUtil;
 
 import java.io.IOException;
 
@@ -44,12 +46,21 @@ public class GoogleDriveReader {
 
     public static void onActivityResult(
             int requestCode,
+            int resultCode,
             Intent data,
             final GoogleApiClient googleApiClient,
             final GoogleDriveReaderCallback callback) {
 
         if (requestCode == REQUEST_CODE_OPENER) {
-            DriveId driveId = (DriveId) data.getParcelableExtra(
+            if (resultCode != Activity.RESULT_OK) {
+                ToastUtil.sendToast(
+                        googleApiClient.getContext(),
+                        R.string.google_drive_import_failed_toast,
+                        resultCode);
+                return;
+            }
+
+            DriveId driveId = data.getParcelableExtra(
                     OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
             DriveFile driveFile = driveId.asDriveFile();
             driveFile.open(googleApiClient, DriveFile.MODE_READ_ONLY, null)
@@ -61,16 +72,25 @@ public class GoogleDriveReader {
                             if (!driveContentsResult.getStatus().isSuccess()) {
                                 Log.e(LOG_TAG, "Failed to open drive file: "
                                         + driveContentsResult.getStatus().getStatusMessage());
+                                ToastUtil.sendToast(
+                                        googleApiClient.getContext(),
+                                        R.string.google_drive_read_open_failed_toast,
+                                        driveContentsResult.getStatus().getStatusMessage());
+                                return;
                             }
 
                             DriveContents contents = driveContentsResult.getDriveContents();
 
                             try {
-                                String text = StreamUtil.readStream(contents.getInputStream());
+                                String text = StreamUtil.readTextStream(contents.getInputStream());
                                 Log.i(LOG_TAG, "Got text from google drive: " + text);
                                 callback.receiveFileContent(text);
                             } catch (IOException ex) {
                                 Log.e(LOG_TAG, "Failed to read Google drive file.", ex);
+                                ToastUtil.sendToast(
+                                        googleApiClient.getContext(),
+                                        R.string.google_drive_read_failed_toast,
+                                        ex.getMessage());
                             }
 
                             contents.discard(googleApiClient);

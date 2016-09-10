@@ -2,6 +2,8 @@ package com.playposse.peertopeeroxygen.android.data.clientactions;
 
 import android.util.Log;
 
+import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.util.ToastUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
@@ -11,6 +13,8 @@ import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.annotation.Nullable;
+
 /**
  * A client action that is called on startup to retrieve the mission data from the server.
  */
@@ -18,8 +22,16 @@ public class MissionDataRetrieverAction extends ClientAction {
 
     private static final String LOG_CAT = MissionDataRetrieverAction.class.getSimpleName();
 
-    public MissionDataRetrieverAction(BinderForActions binder) {
+    @Nullable
+    private final MissionDataRetrieverCallback callback;
+
+    public MissionDataRetrieverAction(
+            BinderForActions binder,
+            @Nullable MissionDataRetrieverCallback callback) {
+
         super(binder, true);
+
+        this.callback = callback;
     }
 
     @Override
@@ -42,6 +54,12 @@ public class MissionDataRetrieverAction extends ClientAction {
         getBinder().getDataRepository()
                 .setCompleteMissionDataBean(completeMissionDataBean);
         getBinder().makeDataReceivedCallbacks();
+
+        if (callback != null) {
+            callback.onComplete(completeMissionDataBean);
+        }
+
+        ToastUtil.sendShortToast(getContext(), R.string.mission_data_refreshed_toast);
         Log.i(LOG_CAT, "The data has been loaded.");
     }
 
@@ -111,5 +129,12 @@ public class MissionDataRetrieverAction extends ClientAction {
                 }
             }
         }
+    }
+
+    /**
+     * Callback that is called when the mission data has been loaded.
+     */
+    public interface MissionDataRetrieverCallback {
+        void onComplete(CompleteMissionDataBean completeMissionDataBean);
     }
 }

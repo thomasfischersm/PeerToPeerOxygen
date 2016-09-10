@@ -23,6 +23,14 @@ public abstract class DataServiceParentFragment extends Fragment implements Data
         getActivity().bindService(intent, dataServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (dataServiceConnection != null) {
+            CompleteMissionDataCache.checkStale(dataServiceConnection.getLocalBinder());
+        }
+    }
 
     @Override
     public void onStop() {

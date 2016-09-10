@@ -68,7 +68,7 @@ public class PeerToPeerOxygenEndPoint {
     @ApiMethod(name = "saveMissionLadder")
     public MissionLadderBean saveMissionLadder(
             @Named("sessionId") Long sessionId,
-            MissionLadderBean missionLadderBean) throws UnauthorizedException {
+            MissionLadderBean missionLadderBean) throws UnauthorizedException, IOException {
 
         protectByAdminCheck(sessionId);
 
@@ -89,7 +89,7 @@ public class PeerToPeerOxygenEndPoint {
     public MissionTreeBean saveMissionTree(
             @Named("sessionId") Long sessionId,
             @Named("missionLadderId") Long missionLadderId,
-            MissionTreeBean missionTreeBean) throws UnauthorizedException {
+            MissionTreeBean missionTreeBean) throws UnauthorizedException, IOException {
 
         protectByAdminCheck(sessionId);
 
@@ -112,7 +112,7 @@ public class PeerToPeerOxygenEndPoint {
             @Named("missionLadderId") Long missionLadderId,
             @Named("missionTreeId") Long missionTreeId,
             MissionBean missionBean)
-            throws UnauthorizedException {
+            throws UnauthorizedException, IOException {
 
         protectByAdminCheck(sessionId);
 

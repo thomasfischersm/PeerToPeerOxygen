@@ -88,7 +88,7 @@ public class AdminEditMissionActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         GoogleDriveInitializer.onActivityResult(requestCode, resultCode, googleApiClient);
-        GoogleDriveReader.onActivityResult(requestCode, data,googleApiClient, this);
+        GoogleDriveReader.onActivityResult(requestCode, resultCode, data,googleApiClient, this);
         GoogleDriveWriter.onActivityResult(
                 requestCode,
                 resultCode,

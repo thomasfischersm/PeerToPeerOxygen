@@ -96,6 +96,8 @@ public class DataService extends Service {
             if ((dataRepository != null) && (dataRepository.getCompleteMissionDataBean() != null)) {
                 callback.receiveData(dataRepository);
             }
+
+            CompleteMissionDataCache.checkStale(this);
         }
 
         public void unregisterDataReceivedCallback(final DataReceivedCallback callback) {
@@ -111,7 +113,7 @@ public class DataService extends Service {
 
         public void init() {
             if ((dataRepository == null) || (dataRepository.getCompleteMissionDataBean() == null)) {
-                new MissionDataRetrieverAction(this).execute();
+                CompleteMissionDataCache.getCompleteMissionDataBean(this, getApplicationContext());
             }
         }
 
@@ -248,7 +250,9 @@ public class DataService extends Service {
         }
 
         public void reload() {
-            new MissionDataRetrieverAction(this).execute();
+            CompleteMissionDataCache.LoadRemotelyCallback cacheCallback =
+                    new CompleteMissionDataCache.LoadRemotelyCallback(getApplicationContext());
+            new MissionDataRetrieverAction(this, cacheCallback).execute();
         }
     }
 

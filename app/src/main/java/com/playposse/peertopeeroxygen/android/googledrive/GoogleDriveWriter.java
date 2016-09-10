@@ -74,7 +74,7 @@ public class GoogleDriveWriter {
                             FileOutputStream fileOutputStream =
                                     new FileOutputStream(parcelFileDescriptor.getFileDescriptor());
                             try {
-                                StreamUtil.writeStream(fileOutputStream, missionStr);
+                                StreamUtil.writeTextStream(fileOutputStream, missionStr);
                             } catch (IOException ex) {
                                 Log.e(LOG_TAG, "Failed to write mission to Google drive.", ex);
                                 driveContents.discard(googleApiClient);

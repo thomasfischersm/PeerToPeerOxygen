@@ -30,12 +30,15 @@ public class FirebaseUtil {
     private static final String FIREBASE_URL = "https://fcm.googleapis.com/fcm/send";
     private static final String APP_ID = "AIzaSyDMTDhV84ZdiacBCm9vN2z0q5BM3vJccgs";
 
+    private static final String ALL_DEVICES_DESTINATION = "/topics/allDevices";
+
     private static final String TYPE_KEY = "type";
     private static final String MISSION_INVITE_TYPE = "missionInvite";
     private static final String MISSION_SENIOR_INVITE_TYPE = "missionSeniorInvite";
     private static final String MISSION_COMPLETION_TYPE = "missionCompletion";
     private static final String MISSION_CHECKOUT_COMPLETION_TYPE = "missionCheckoutCompletion";
     private static final String UPDATE_STUDENT_POINTS_TYPE = "updateStudentPoints";
+    private static final String INVALIDATE_MISSION_DATA_TYPE = "invalidateMissionData";
 
     private static final String FROM_STUDENT_ID = "fromStudentId";
     private static final String FROM_STUDENT_BEAN = "fromStudentBean";
@@ -43,7 +46,7 @@ public class FirebaseUtil {
     private static final String STUDENT_BEAN = "studentBean";
     private static final String MISSION_LADDER_KEY = "missionLadderId";
     private static final String MISSION_TREE_KEY = "missionTreeId";
-    private static final String MISSION_KEY = "missionid";
+    private static final String MISSION_KEY = "missionId";
 
     public static String sendMissionInviteToBuddy(
             String firebaseToken,
@@ -139,6 +142,20 @@ public class FirebaseUtil {
         return sendMessageToDevice(student.getFirebaseToken(), rootNode);
     }
 
+    /**
+     * Sends a message to all devices to tell them to invalidate the mission data cache.
+     */
+    public static String sendMissionDataInvalidation() throws IOException {
+        JSONObject rootNode = new JSONObject();
+        rootNode.put(TYPE_KEY, INVALIDATE_MISSION_DATA_TYPE);
+
+        return sendMessageToAllDevices(rootNode);
+    }
+
+    private static String sendMessageToAllDevices(JSONObject data) throws IOException {
+        return sendMessageToDevice(ALL_DEVICES_DESTINATION, data);
+    }
+
     private static String sendMessageToDevice(String firebaseToken, JSONObject data)
             throws IOException {
 
@@ -147,7 +164,9 @@ public class FirebaseUtil {
         rootNode.put("data", data);
 
         log.info("Firebase payload: " + rootNode.toString());
-        return sendMessage(rootNode.toString());
+        String response = sendMessage(rootNode.toString());
+        log.info("Firebase response: " + response);
+        return response;
     }
 
     private static String sendMessage(String httpPayload) throws IOException {

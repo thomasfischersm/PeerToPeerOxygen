@@ -4,9 +4,12 @@ import com.google.api.server.spi.response.UnauthorizedException;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.beans.MissionBean;
+import com.playposse.peertopeeroxygen.backend.firebase.FirebaseUtil;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
+
+import java.io.IOException;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -19,7 +22,7 @@ public class SaveMissionAction extends ServerAction {
             Long missionLadderId,
             Long missionTreeId,
             MissionBean missionBean)
-            throws UnauthorizedException {
+            throws UnauthorizedException, IOException {
 
         Mission mission = missionBean.toEntity();
 
@@ -36,6 +39,8 @@ public class SaveMissionAction extends ServerAction {
             missionTree.getMissions().add(Ref.create(Key.create(Mission.class, mission.getId())));
             ofy().save().entity(missionTree).now();
         }
+
+        FirebaseUtil.sendMissionDataInvalidation();
 
         return new MissionBean(mission);
     }
