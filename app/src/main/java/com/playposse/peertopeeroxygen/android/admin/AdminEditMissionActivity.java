@@ -157,13 +157,29 @@ public class AdminEditMissionActivity
         } else {
             afterAction.run();
         }
-
     }
 
     @Override
     public void exportToDrive() {
         saveIfNecessary();
-        GoogleDriveWriter.initiate(googleApiClient, this, missionBean.getName());
+
+        Runnable afterAction = new Runnable() {
+            @Override
+            public void run() {
+                GoogleDriveWriter.initiate(
+                        googleApiClient,
+                        AdminEditMissionActivity.this,
+                        missionBean.getName());
+            }
+        };
+
+        if ((googleApiClient == null) || !googleApiClient.isConnected()) {
+            googleApiClient = GoogleDriveInitializer.initialize(
+                    this,
+                    afterAction);
+        } else {
+            afterAction.run();
+        }
     }
 
     @Override
