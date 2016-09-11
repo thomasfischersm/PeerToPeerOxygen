@@ -11,6 +11,8 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.Drive;
 
+import javax.annotation.Nullable;
+
 /**
  * A helper class that initializes a connection to Google Drive.
  */
@@ -23,13 +25,15 @@ public class GoogleDriveInitializer {
      */
     protected static final int REQUEST_CODE_RESOLUTION = 1;
 
-    public static GoogleApiClient initialize(Activity activity) {
-        return new GoogleApiClient.Builder(activity)
+    public static GoogleApiClient initialize(Activity activity, @Nullable Runnable afterAction) {
+        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(activity)
                 .addApi(Drive.API)
                 .addScope(Drive.SCOPE_FILE)
-                .addConnectionCallbacks(new Callback())
+                .addConnectionCallbacks(new Callback(afterAction))
                 .addOnConnectionFailedListener(new FailedListener(activity))
                 .build();
+        googleApiClient.connect();
+        return googleApiClient;
     }
 
     public static void onActivityResult(
@@ -46,9 +50,20 @@ public class GoogleDriveInitializer {
 
     private static class Callback implements GoogleApiClient.ConnectionCallbacks {
 
+        @Nullable
+        private Runnable afterAction;
+
+        public Callback(@Nullable Runnable afterAction) {
+            this.afterAction = afterAction;
+        }
+
         @Override
         public void onConnected(@android.support.annotation.Nullable Bundle bundle) {
             Log.i(LOG_TAG, "API client connected.");
+            if (afterAction != null) {
+                afterAction.run();
+                afterAction = null;
+            }
         }
 
         @Override

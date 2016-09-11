@@ -61,11 +61,9 @@ public class AdminEditMissionActivity
     protected void onResume() {
         super.onResume();
 
-        if (googleApiClient == null) {
-            googleApiClient = GoogleDriveInitializer.initialize(this);
+        if (googleApiClient != null) {
+            googleApiClient.connect();
         }
-
-        googleApiClient.connect();
     }
 
     @Override
@@ -88,7 +86,7 @@ public class AdminEditMissionActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         GoogleDriveInitializer.onActivityResult(requestCode, resultCode, googleApiClient);
-        GoogleDriveReader.onActivityResult(requestCode, resultCode, data,googleApiClient, this);
+        GoogleDriveReader.onActivityResult(requestCode, resultCode, data, googleApiClient, this);
         GoogleDriveWriter.onActivityResult(
                 requestCode,
                 resultCode,
@@ -145,7 +143,21 @@ public class AdminEditMissionActivity
 
     @Override
     public void importFromDrive() {
-        GoogleDriveReader.initiate(googleApiClient, this);
+        Runnable afterAction = new Runnable() {
+            @Override
+            public void run() {
+                GoogleDriveReader.initiate(googleApiClient, AdminEditMissionActivity.this);
+            }
+        };
+
+        if ((googleApiClient == null) || !googleApiClient.isConnected()) {
+            googleApiClient = GoogleDriveInitializer.initialize(
+                    this,
+                    afterAction);
+        } else {
+            afterAction.run();
+        }
+
     }
 
     @Override
