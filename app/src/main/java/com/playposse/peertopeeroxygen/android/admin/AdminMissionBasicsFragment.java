@@ -150,6 +150,9 @@ public class AdminMissionBasicsFragment
             heartPointEditText.setText("0");
             studentVideoIdEditText.setText("");
             buddyVideoIdEditText.setText("");
+        } else if  (missionBean.getId() == null) {
+            // Refreshing with data from a Google Drive import.
+            nameEditText.setText(missionBean.getName());
         } else {
             nameEditText.setText(missionBean.getName());
             minimumStudyCountEditText.setText("" + missionBean.getMinimumStudyCount());

@@ -94,6 +94,7 @@ public class GoogleDriveReader {
                             }
 
                             contents.discard(googleApiClient);
+                            Log.i(LOG_TAG, "Closed file connection to Google Drive");
                         }
                     });
         }

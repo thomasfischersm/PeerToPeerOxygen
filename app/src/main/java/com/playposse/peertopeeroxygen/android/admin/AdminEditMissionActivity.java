@@ -194,14 +194,15 @@ public class AdminEditMissionActivity
             return;
         }
 
-        if (missionBean != null) {
-            missionBean.setName(strings[0]);
-            missionBean.setStudentInstruction(strings[1]);
-            missionBean.setBuddyInstruction(strings[2]);
-
-            missionPagerAdapter.showMission(missionTreeBean, missionBean);
+        if (missionBean == null) {
+            missionBean = new MissionBean();
         }
-        // TODO: Handle a new mission and import.
+
+        missionBean.setName(strings[0]);
+        missionBean.setStudentInstruction(strings[1]);
+        missionBean.setBuddyInstruction(strings[2]);
+
+        missionPagerAdapter.showMission(missionTreeBean, missionBean);
     }
 
     /**
