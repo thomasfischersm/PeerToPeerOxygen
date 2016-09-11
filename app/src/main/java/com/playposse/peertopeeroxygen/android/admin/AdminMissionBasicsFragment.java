@@ -175,7 +175,7 @@ public class AdminMissionBasicsFragment
             return nameEditText.getText().length() > 0;
         } else {
             return
-                    !nameEditText.getText().toString().equals(missionBean.getName())
+                    !StringUtil.equals(nameEditText, missionBean.getName())
                             || (missionBean.getMinimumStudyCount() != MathUtil.tryParseInt(minimumStudyCountEditText.getText().toString(), 1))
                             || hasPointCountChanged(missionBean, teachPointEditText, PointType.teach)
                             || hasPointCountChanged(missionBean, practicePointEditText, PointType.practice)

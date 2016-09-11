@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.admin.AdminEditMissionActivity;
@@ -26,6 +27,8 @@ import javax.annotation.Nullable;
 public class EditMissionPagerAdapter
         extends FragmentPagerAdapter
         implements AdminEditMissionActivity.EditMissionFragment{
+
+    private static final String LOG_CAT = EditMissionPagerAdapter.class.getSimpleName();
 
     private final List<Fragment> fragments = new ArrayList<>();
     private final Context context;
@@ -81,7 +84,10 @@ public class EditMissionPagerAdapter
         for (Fragment fragment : fragments) {
             AdminEditMissionActivity.EditMissionFragment editMissionFragment =
                     (AdminEditMissionActivity.EditMissionFragment) fragment;
-            if (editMissionFragment.isDirty(missionBean)) {
+            boolean isDirty = editMissionFragment.isDirty(missionBean);
+            Log.i(LOG_CAT, "Checking " + fragment.getClass().getSimpleName()
+                    + " isDirty: " + isDirty);
+            if (isDirty) {
                 return true;
             }
         }

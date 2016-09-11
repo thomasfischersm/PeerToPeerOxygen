@@ -12,19 +12,28 @@ public final class StringUtil {
 
     @Nullable
     public static String getCleanString(Editable editable) {
-        String str = editable.toString().trim();
-        return (str.length() > 0) ? str : null;
+        return getCleanString(editable.toString());
+    }
+
+    @Nullable static String getCleanString(String str) {
+        if (str == null) {
+            return null;
+        } else {
+            str = str.trim();
+            return (str.length() > 0) ? str : null;
+        }
     }
 
     public static boolean equals(Editable editable, @Nullable String str) {
-        String cleanStr = getCleanString(editable);
+        String editableStr = getCleanString(editable);
+        str = getCleanString(str);
 
-        if ((cleanStr == null) && (str == null)) {
+        if ((editableStr == null) && (str == null)) {
             return true;
-        } else if ((cleanStr == null) || (str == null)) {
+        } else if ((editableStr == null) || (str == null)) {
             return false;
         } else {
-            return cleanStr.equals(str);
+            return editableStr.equals(str);
         }
     }
 

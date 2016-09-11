@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.util.StringUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
@@ -84,7 +85,7 @@ public class AdminMissionStudentInstructionsFragment
         } else if (missionBean == null) {
             return false; // Don't save unless a name is specified for the mission.
         } else {
-            return !studentInstructionEditText.getText().toString().equals(missionBean.getStudentInstruction());
+            return !StringUtil.equals(studentInstructionEditText, missionBean.getStudentInstruction());
         }
     }
 
