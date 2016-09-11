@@ -114,6 +114,11 @@ public class AdminEditMissionActivity
                     missionTreeId,
                     missionId);
 
+            if (missionBean == null) {
+                // There is a special case where this activity could still hang around in the
+                // background when the user deletes the mission in the mission tree activity.
+                return;
+            }
 
             setTitle(String.format(
                     getString(R.string.edit_mission_title),
