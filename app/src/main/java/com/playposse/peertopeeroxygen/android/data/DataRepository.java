@@ -73,9 +73,12 @@ public class DataRepository {
     }
 
     public MissionTreeBean getMissionTreeBean(Long missionLadderId, Long missionTreeId) {
-        for (MissionTreeBean missionTreeBean : getMissionLadderBean(missionLadderId).getMissionTreeBeans()) {
-            if (missionTreeBean.getId().equals(missionTreeId)) {
-                return missionTreeBean;
+        MissionLadderBean missionLadderBean = getMissionLadderBean(missionLadderId);
+        if (missionLadderBean != null) {
+            for (MissionTreeBean missionTreeBean : missionLadderBean.getMissionTreeBeans()) {
+                if (missionTreeBean.getId().equals(missionTreeId)) {
+                    return missionTreeBean;
+                }
             }
         }
         return null;

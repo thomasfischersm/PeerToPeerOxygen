@@ -3,6 +3,7 @@ package com.playposse.peertopeeroxygen.android.student;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 
 import com.google.android.gms.vision.barcode.Barcode;
 import com.playposse.peertopeeroxygen.android.R;
@@ -57,10 +58,12 @@ public class StudentMissionActivity
             instructionPager.setAdapter(new InstructionPagerAdapter(
                     getSupportFragmentManager(),
                     instruction,
-                    null, /* invitiationFragment */
+                    null, /* invitationFragment */
                     videoId,
                     true, /* enableScanner */
                     this));
+        } else {
+            Log.i(LOG_CAT, "instructionPager.getHandler() is NOT attached during receiveData.");
         }
 
         setTitle("" + missionBean.getName());
