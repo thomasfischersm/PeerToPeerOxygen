@@ -31,9 +31,12 @@ public class QrCodeScannerFragment extends Fragment {
 
     private static final String LOG_CAT = QrCodeScannerFragment.class.getSimpleName();
 
+    private static final int CAMERA_PERMISSION_REQUEST = 1;
+
     private CameraSource cameraSource;
     private QrCodeScannerCallback qrCodeScannerCallback;
     private SurfaceView surfaceView;
+    private boolean hasRequestedCameraPermission = false;
 
     /**
      * The {@link Fragment#getUserVisibleHint()} has a bug. It doesn't always show the right value.
@@ -137,9 +140,7 @@ public class QrCodeScannerFragment extends Fragment {
         } else {
             // Continue paused camera.
             try {
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    Log.e(LOG_CAT, "Mission camera permissions!");
+                if (!checkCameraPermission()) {
                     return;
                 }
                 cameraSource.start(surfaceView.getHolder());
@@ -148,6 +149,22 @@ public class QrCodeScannerFragment extends Fragment {
                 Log.e(LOG_CAT, "Failed to start camera!", ex);
             }
         }
+    }
+
+    private boolean checkCameraPermission() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.e(LOG_CAT, "Mission camera permissions!");
+            if (!hasRequestedCameraPermission) {
+                ActivityCompat.requestPermissions(
+                        getActivity(),
+                        new String[]{Manifest.permission.CAMERA},
+                        CAMERA_PERMISSION_REQUEST);
+                hasRequestedCameraPermission = true;
+            }
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -244,9 +261,7 @@ public class QrCodeScannerFragment extends Fragment {
                         .setFacing(CameraSource.CAMERA_FACING_BACK)
                         .setRequestedPreviewSize(width, height)
                         .build());
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    Log.e(LOG_CAT, "Mission camera permissions!");
+                if (!checkCameraPermission()) {
                     return;
                 }
 
