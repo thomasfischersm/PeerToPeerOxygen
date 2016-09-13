@@ -26,6 +26,7 @@ public class AdminMainActivity extends AdminParentActivity {
 
     private TextView openMissionLaddersTextView;
     private TextView openStudentRosterTextView;
+    private TextView backupTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,14 @@ public class AdminMainActivity extends AdminParentActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(AdminMainActivity.this, AdminStudentRosterActivity.class));
+            }
+        });
+
+        backupTextView = (TextView) findViewById(R.id.backupLink);
+        backupTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(AdminMainActivity.this, AdminBackupActivity.class));
             }
         });
 

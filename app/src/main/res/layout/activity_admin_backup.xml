@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".admin.AdminMainActivity">
+    tools:context="com.playposse.peertopeeroxygen.android.admin.AdminBackupActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -25,27 +25,11 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
-        <TextView
-            android:id="@+id/openMissionLaddersLink"
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/backupButton"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/show_mission_ladders_link"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-
-        <TextView
-            android:id="@+id/openStudentRosterLink"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/student_roster_link"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <TextView
-            android:id="@+id/backupLink"
-            android:text="@string/backup_link"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"  />
+            android:text="@string/backup_to_google_drive_button"/>
 
     </LinearLayout>
 </LinearLayout>

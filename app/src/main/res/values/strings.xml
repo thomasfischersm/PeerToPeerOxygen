@@ -7,6 +7,7 @@
     <string name="admin_home_title">Admin home</string>
     <string name="show_mission_ladders_link">Show mission ladders</string>
     <string name="student_roster_link">Show student roster</string>
+    <string name="backup_link">Backup</string>
 
     <!-- Show mission ladders -->
     <string name="show_mission_ladders_title">Show mission ladders</string>
@@ -46,6 +47,10 @@
     <string name="import_button_label">Import</string>
     <string name="export_button_label">Export</string>
     <string name="confirm_delete_mission_message">Do you want to delete mission: %1$s?</string>
+
+    <!-- Admin backup activity -->
+    <string name="backup_to_google_drive_button">Backup mission data to Google Drive</string>
+    <string name="backup_mission_data_file_name">Backup of mission data %1$s-%2$s-%3$s.txt</string>
 
     <!-- Student roster -->
     <string name="student_roster_title">Student Roster</string>
@@ -134,7 +139,4 @@
 
     <!-- Error messages -->
     <string name="network_error">Failed to retrieve data from the server.</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

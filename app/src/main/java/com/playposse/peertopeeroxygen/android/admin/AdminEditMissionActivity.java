@@ -10,8 +10,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.googledrive.GoogleDriveInitializer;
+import com.playposse.peertopeeroxygen.android.googledrive.GoogleDriveMissionWriter;
 import com.playposse.peertopeeroxygen.android.googledrive.GoogleDriveReader;
-import com.playposse.peertopeeroxygen.android.googledrive.GoogleDriveWriter;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.ui.adapters.EditMissionPagerAdapter;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
@@ -87,7 +87,7 @@ public class AdminEditMissionActivity
 
         GoogleDriveInitializer.onActivityResult(requestCode, resultCode, googleApiClient);
         GoogleDriveReader.onActivityResult(requestCode, resultCode, data, googleApiClient, this);
-        GoogleDriveWriter.onActivityResult(
+        GoogleDriveMissionWriter.onActivityResult(
                 requestCode,
                 resultCode,
                 data,
@@ -171,7 +171,7 @@ public class AdminEditMissionActivity
         Runnable afterAction = new Runnable() {
             @Override
             public void run() {
-                GoogleDriveWriter.initiate(
+                GoogleDriveMissionWriter.initiate(
                         googleApiClient,
                         AdminEditMissionActivity.this,
                         missionBean.getName());

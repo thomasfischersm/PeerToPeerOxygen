@@ -77,7 +77,7 @@ public class CompleteMissionDataCache {
         return jsonParser.parseAndClose(new StringReader(json), CompleteMissionDataBean.class);
     }
 
-    private static String toJson(CompleteMissionDataBean completeMissionDataBean)
+    public static String toJson(CompleteMissionDataBean completeMissionDataBean)
             throws IOException {
 
         String json = completeMissionDataBean.getFactory().toString(completeMissionDataBean);

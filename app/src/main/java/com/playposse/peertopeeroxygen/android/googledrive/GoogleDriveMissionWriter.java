@@ -26,9 +26,9 @@ import java.io.IOException;
 /**
  * A helper that writes a file to Google Drive.
  */
-public class GoogleDriveWriter {
+public class GoogleDriveMissionWriter {
 
-    private static final String LOG_TAG = GoogleDriveWriter.class.getSimpleName();
+    private static final String LOG_TAG = GoogleDriveMissionWriter.class.getSimpleName();
 
     private static final int REQUEST_CODE_CREATOR = 3;
     private static final String TEXT_FILE_SUFFIX = ".txt";

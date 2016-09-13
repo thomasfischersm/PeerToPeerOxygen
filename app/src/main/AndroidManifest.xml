@@ -98,6 +98,7 @@
             android:launchMode="singleTop"
             android:parentActivityName=".student.StudentMainActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+        <activity android:name=".admin.AdminBackupActivity"></activity>
     </application>
 
 </manifest>
