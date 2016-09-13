@@ -10,8 +10,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.CompleteMissionDataCache;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
-import com.playposse.peertopeeroxygen.android.googledrive.GoogleDriveBackupWriter;
 import com.playposse.peertopeeroxygen.android.googledrive.GoogleDriveInitializer;
+import com.playposse.peertopeeroxygen.android.googledrive.GoogleDriveWriter;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 
 import java.io.IOException;
@@ -71,7 +71,7 @@ public class AdminBackupActivity extends AdminParentActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         GoogleDriveInitializer.onActivityResult(requestCode, resultCode, googleApiClient);
-        GoogleDriveBackupWriter.onActivityResult(
+        GoogleDriveWriter.onActivityResult(
                 requestCode,
                 resultCode,
                 data,
@@ -88,7 +88,7 @@ public class AdminBackupActivity extends AdminParentActivity {
         Runnable afterAction = new Runnable() {
             @Override
             public void run() {
-                GoogleDriveBackupWriter.initiate(
+                GoogleDriveWriter.initiate(
                         googleApiClient,
                         AdminBackupActivity.this,
                         fileGenerator);
@@ -105,9 +105,9 @@ public class AdminBackupActivity extends AdminParentActivity {
     }
 
     /**
-     * {@link GoogleDriveBackupWriter.FileGenerator} that converts all the mission data to JSON.
+     * {@link GoogleDriveWriter.FileGenerator} that converts all the mission data to JSON.
      */
-    private class BackupFileGenerator implements GoogleDriveBackupWriter.FileGenerator {
+    private class BackupFileGenerator implements GoogleDriveWriter.FileGenerator {
 
         @Override
         public String getFileTitle() {

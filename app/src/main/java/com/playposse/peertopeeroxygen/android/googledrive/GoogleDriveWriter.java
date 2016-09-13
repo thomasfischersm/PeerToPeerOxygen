@@ -18,7 +18,6 @@ import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.MetadataChangeSet;
 import com.google.android.gms.drive.OpenFileActivityBuilder;
 import com.playposse.peertopeeroxygen.android.util.StreamUtil;
-import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,21 +25,19 @@ import java.io.IOException;
 /**
  * A helper that writes a file to Google Drive.
  */
-public class GoogleDriveMissionWriter {
+public class GoogleDriveWriter {
 
-    private static final String LOG_TAG = GoogleDriveMissionWriter.class.getSimpleName();
+    private static final String LOG_TAG = GoogleDriveWriter.class.getSimpleName();
 
     private static final int REQUEST_CODE_CREATOR = 3;
-    private static final String TEXT_FILE_SUFFIX = ".txt";
-    private static final String SEPARATOR = "\n------\n";
 
     public static void initiate(
             GoogleApiClient googleApiClient,
             Activity activity,
-            String missionName) {
+            FileGenerator fileGenerator) {
 
         DriveContentsCallback driveContentsCallback =
-                new DriveContentsCallback(activity, googleApiClient, missionName);
+                new DriveContentsCallback(activity, googleApiClient, fileGenerator);
 
         Drive.DriveApi.newDriveContents(googleApiClient)
                 .setResultCallback(driveContentsCallback);
@@ -51,7 +48,7 @@ public class GoogleDriveMissionWriter {
             int resultCode,
             Intent data,
             final GoogleApiClient googleApiClient,
-            final MissionBean missionBean) {
+            final FileGenerator fileGenerator) {
 
         if ((requestCode == REQUEST_CODE_CREATOR) && (resultCode == Activity.RESULT_OK)) {
             DriveId driveId = (DriveId) data.getParcelableExtra(
@@ -66,7 +63,7 @@ public class GoogleDriveMissionWriter {
                                 return;
                             }
 
-                            String missionStr = encodeMission(missionBean);
+                            String fileContent = fileGenerator.getFileContent();
 
                             DriveContents driveContents = result.getDriveContents();
                             ParcelFileDescriptor parcelFileDescriptor =
@@ -74,16 +71,16 @@ public class GoogleDriveMissionWriter {
                             FileOutputStream fileOutputStream =
                                     new FileOutputStream(parcelFileDescriptor.getFileDescriptor());
                             try {
-                                StreamUtil.writeTextStream(fileOutputStream, missionStr);
+                                StreamUtil.writeTextStream(fileOutputStream, fileContent);
                             } catch (IOException ex) {
-                                Log.e(LOG_TAG, "Failed to write mission to Google drive.", ex);
+                                Log.e(LOG_TAG, "Failed to writeto Google drive.", ex);
                                 driveContents.discard(googleApiClient);
                             }
                             driveContents.commit(googleApiClient, null).setResultCallback(
                                     new ResultCallback<Status>() {
                                         @Override
                                         public void onResult(Status result) {
-                                            Log.i(LOG_TAG, "Succeeded in exporting mission.");
+                                            Log.i(LOG_TAG, "Succeeded in exporting to G-Drive.");
                                         }
                                     });
                         }
@@ -91,34 +88,28 @@ public class GoogleDriveMissionWriter {
         }
     }
 
-    private static String encodeMission(MissionBean missionBean) {
-        return missionBean.getName()
-                + SEPARATOR + missionBean.getStudentInstruction()
-                + SEPARATOR + missionBean.getBuddyInstruction();
-    }
-
     private static class DriveContentsCallback
             implements ResultCallback<DriveApi.DriveContentsResult> {
 
         private final GoogleApiClient googleApiClient;
         private final Activity activity;
-        private final String missionName;
+        private final FileGenerator fileGenerator;
 
         public DriveContentsCallback(
                 Activity activity,
                 GoogleApiClient googleApiClient,
-                String missionName) {
+                FileGenerator fileGenerator) {
 
             this.activity = activity;
             this.googleApiClient = googleApiClient;
-            this.missionName = missionName;
+            this.fileGenerator = fileGenerator;
         }
 
         @Override
         public void onResult(@NonNull DriveApi.DriveContentsResult result) {
             MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
                     .setMimeType("text/plain")
-                    .setTitle(missionName + TEXT_FILE_SUFFIX)
+                    .setTitle(fileGenerator.getFileTitle())
                     .build();
             IntentSender intentSender = Drive.DriveApi
                     .newCreateFileActivityBuilder()
@@ -132,5 +123,13 @@ public class GoogleDriveMissionWriter {
                 Log.w(LOG_TAG, "Unable to send intent", e);
             }
         }
+    }
+
+    /**
+     * An interface that generates the file that should be written to GoogleDrive.
+     */
+    public interface FileGenerator {
+        String getFileTitle();
+        String getFileContent();
     }
 }

@@ -10,8 +10,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.googledrive.GoogleDriveInitializer;
-import com.playposse.peertopeeroxygen.android.googledrive.GoogleDriveMissionWriter;
 import com.playposse.peertopeeroxygen.android.googledrive.GoogleDriveReader;
+import com.playposse.peertopeeroxygen.android.googledrive.GoogleDriveWriter;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.ui.adapters.EditMissionPagerAdapter;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
@@ -29,6 +29,8 @@ public class AdminEditMissionActivity
     private static final String LOG_TAG = AdminEditMissionActivity.class.getSimpleName();
 
     private static final String SEPARATOR = "------";
+
+    private final MissionFileGenerator missionFileGenerator = new MissionFileGenerator();
 
     private Long missionLadderId;
     private Long missionTreeId;
@@ -87,12 +89,12 @@ public class AdminEditMissionActivity
 
         GoogleDriveInitializer.onActivityResult(requestCode, resultCode, googleApiClient);
         GoogleDriveReader.onActivityResult(requestCode, resultCode, data, googleApiClient, this);
-        GoogleDriveMissionWriter.onActivityResult(
+        GoogleDriveWriter.onActivityResult(
                 requestCode,
                 resultCode,
                 data,
                 googleApiClient,
-                missionBean);
+                missionFileGenerator);
     }
 
     @Override
@@ -171,10 +173,10 @@ public class AdminEditMissionActivity
         Runnable afterAction = new Runnable() {
             @Override
             public void run() {
-                GoogleDriveMissionWriter.initiate(
+                GoogleDriveWriter.initiate(
                         googleApiClient,
                         AdminEditMissionActivity.this,
-                        missionBean.getName());
+                        missionFileGenerator);
             }
         };
 
@@ -220,5 +222,26 @@ public class AdminEditMissionActivity
         boolean isDirty(MissionBean missionBean);
 
         void save(MissionBean missionBean);
+    }
+
+    /**
+     * {@link GoogleDriveWriter.FileGenerator} to generate a file with the data of a mission.
+     */
+    private class MissionFileGenerator implements GoogleDriveWriter.FileGenerator {
+
+        private static final String TEXT_FILE_SUFFIX = ".txt";
+        private static final String SEPARATOR = "\n------\n";
+
+        @Override
+        public String getFileTitle() {
+            return missionBean.getName() + TEXT_FILE_SUFFIX;
+        }
+
+        @Override
+        public String getFileContent() {
+            return missionBean.getName()
+                    + SEPARATOR + missionBean.getStudentInstruction()
+                    + SEPARATOR + missionBean.getBuddyInstruction();
+        }
     }
 }
