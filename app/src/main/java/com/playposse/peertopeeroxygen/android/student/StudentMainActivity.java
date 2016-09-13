@@ -1,14 +1,12 @@
 package com.playposse.peertopeeroxygen.android.student;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
@@ -26,8 +24,9 @@ public class StudentMainActivity extends StudentParentActivity {
 
     public static final String LOG_TAG = StudentMainActivity.class.getSimpleName();
 
-    private GridView studentHomeGridView;
-    private TextView studentProfileLink;
+    LinearLayout rootView;
+    private TextView missionHeadingTextView;
+    private Button studentProfileLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +35,9 @@ public class StudentMainActivity extends StudentParentActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        studentHomeGridView = (GridView) findViewById(R.id.studentHomeGridView);
-        studentProfileLink = (TextView) findViewById(R.id.studentProfileLink);
+        rootView = (LinearLayout) findViewById(R.id.rootView);
+        missionHeadingTextView = (TextView) findViewById(R.id.missionHeadingTextView);
+        studentProfileLink = (Button) findViewById(R.id.studentProfileLink);
 
         studentProfileLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,47 +51,59 @@ public class StudentMainActivity extends StudentParentActivity {
     public void receiveData(final DataRepository dataRepository) {
         List<MissionLadderBean> missionLadderBeans =
                 dataRepository.getMissionLadderBeans();
-        studentHomeGridView.setAdapter(
-                new MissionLadderBeansArrayAdapter(missionLadderBeans));
+
+        View afterView = missionHeadingTextView;
+        clearButtons(afterView);
+        for (MissionLadderBean missionLadderBean : missionLadderBeans) {
+            afterView = addMissionLadderButton(missionLadderBean, afterView);
+        }
     }
 
-    private final class MissionLadderBeansArrayAdapter extends ArrayAdapter<MissionLadderBean> {
+    /**
+     * Removes all the buttons following a {@link TextView} until a non-Button {@link View} is
+     * encountered.
+     */
+    private void clearButtons(View afterView) {
+        int index = rootView.indexOfChild(afterView) + 1;
 
-        public MissionLadderBeansArrayAdapter(List<MissionLadderBean> missionLadderBeans) {
-            super(StudentMainActivity.this, R.layout.list_item_student_home_grid, missionLadderBeans);
+        while (index < rootView.getChildCount()) {
+            if (rootView.getChildAt(index) instanceof Button) {
+                rootView.removeViewAt(index);
+            } else {
+                break;
+            }
         }
+    }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) StudentMainActivity.this
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(R.layout.list_item_student_home_grid, parent, false);
+    private View addMissionLadderButton(final MissionLadderBean missionLadderBean, View afterView) {
+        Button button = new Button(this);
+        button.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        button.setText(missionLadderBean.getName());
 
-            TextView missionLadderNameLink =
-                    (TextView) rowView.findViewById(R.id.missionLadderNameLink);
-            final MissionLadderBean missionLadderBean = getItem(position);
-            missionLadderNameLink.setText(missionLadderBean.getName());
+        rootView.addView(button, rootView.indexOfChild(afterView) + 1);
 
-            rowView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (missionLadderBean.getMissionTreeBeans().size() == 0) {
-                        Log.i(LOG_TAG, "The mission ladder doesn't have a mission tree yet.");
-                        return;
-                    }
-
-                    Intent intent =
-                            new Intent(getApplicationContext(), StudentMissionTreeActivity.class);
-                    intent.putExtra(
-                            ExtraConstants.EXTRA_MISSION_LADDER_ID,
-                            missionLadderBean.getId());
-                    intent.putExtra(
-                            ExtraConstants.EXTRA_MISSION_TREE_ID,
-                            missionLadderBean.getMissionTreeBeans().get(0).getId());
-                    startActivity(intent);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (missionLadderBean.getMissionTreeBeans().size() == 0) {
+                    Log.i(LOG_TAG, "The mission ladder doesn't have a mission tree yet.");
+                    return;
                 }
-            });
-            return rowView;
-        }
+
+                Intent intent =
+                        new Intent(getApplicationContext(), StudentMissionTreeActivity.class);
+                intent.putExtra(
+                        ExtraConstants.EXTRA_MISSION_LADDER_ID,
+                        missionLadderBean.getId());
+                intent.putExtra(
+                        ExtraConstants.EXTRA_MISSION_TREE_ID,
+                        missionLadderBean.getMissionTreeBeans().get(0).getId());
+                startActivity(intent);
+            }
+        });
+
+        return button;
     }
 }

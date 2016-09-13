@@ -20,17 +20,32 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <GridView
-        android:id="@+id/studentHomeGridView"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnWidth="200dp"
-        android:numColumns="3" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/studentProfileLink"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/student_profile_link" />
+        <LinearLayout
+            android:id="@+id/rootView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/missionHeadingTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/student_learning_mission_heading" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/student_functions_heading" />
+
+            <Button
+                android:id="@+id/studentProfileLink"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/student_profile_link" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
