@@ -292,9 +292,9 @@ public class MissionTreeWidget extends View {
                     if (holder.getMissionBean().getId().equals(bossMissionId)) {
                         txt = String.format(
                                 getContext().getString(R.string.boss_label),
-                                holder.getMissionBean().getName());
+                                holder.getMissionBean().getName().trim());
                     } else {
-                        txt = holder.getMissionBean().getName();
+                        txt = holder.getMissionBean().getName().trim();
 
                     }
                     txt += formatCostString(holder.getMissionBean())

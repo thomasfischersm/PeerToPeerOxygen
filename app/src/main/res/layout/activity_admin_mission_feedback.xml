@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.playposse.peertopeeroxygen.android.admin.AdminStudentRosterActivity">
+    tools:context="com.playposse.peertopeeroxygen.android.admin.AdminMissionFeedbackActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -26,7 +26,7 @@
         android:paddingTop="@dimen/activity_vertical_margin">
 
         <ListView
-            android:id="@+id/studentListView"
+            android:id="@+id/feedbackListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

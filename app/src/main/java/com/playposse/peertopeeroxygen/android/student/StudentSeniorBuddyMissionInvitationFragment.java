@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataServiceParentFragment;
+import com.playposse.peertopeeroxygen.android.data.types.UserMissionRoleType;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
@@ -110,13 +111,7 @@ public class StudentSeniorBuddyMissionInvitationFragment extends DataServicePare
         graduateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dataServiceConnection
-                        .getLocalBinder()
-                        .reportMissionCheckoutComplete(
-                                studentBean.getId(),
-                                buddyBean.getId(),
-                                missionId);
-                startActivity(new Intent(getActivity(), StudentMainActivity.class));
+                graduateBuddy();
             }
         });
 
@@ -134,5 +129,21 @@ public class StudentSeniorBuddyMissionInvitationFragment extends DataServicePare
                 buddyPhotoImageView,
                 buddyBean.getFbProfileId(),
                 buddyBean.getProfilePictureUrl());
+    }
+
+    private void graduateBuddy() {
+        dataServiceConnection
+                .getLocalBinder()
+                .reportMissionCheckoutComplete(
+                        studentBean.getId(),
+                        buddyBean.getId(),
+                        missionId);
+
+        Intent intent = new Intent(getActivity(), StudentMissionRatingActivity.class);
+        intent.putExtra(ExtraConstants.EXTRA_MISSION_ID, missionId);
+        intent.putExtra(
+                ExtraConstants.EXTRA_USER_MISSION_ROLE,
+                UserMissionRoleType.superBuddy.name());
+        startActivity(intent);
     }
 }

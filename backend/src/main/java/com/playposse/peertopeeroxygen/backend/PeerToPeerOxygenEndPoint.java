@@ -13,7 +13,9 @@ import com.google.api.server.spi.config.Named;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.playposse.peertopeeroxygen.backend.beans.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionBean;
+import com.playposse.peertopeeroxygen.backend.beans.MissionFeedbackBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionLadderBean;
+import com.playposse.peertopeeroxygen.backend.beans.MissionStatsBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionTreeBean;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
 import com.playposse.peertopeeroxygen.backend.exceptions.BuddyLacksMissionExperienceException;
@@ -22,6 +24,8 @@ import com.playposse.peertopeeroxygen.backend.serveractions.AddPointsByAdminActi
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionLadderAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionTreeAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.GetAllMissionFeedbackAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.GetAllMissionStatsAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetMissionDataAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetStudentRosterAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.InviteBuddyToMissionAction;
@@ -33,11 +37,14 @@ import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionLadderAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionTreeAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.ServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.SubmitMissionFeedbackAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.UpdateFirebaseTokenAction;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
+
+import javax.annotation.Nullable;
 
 /**
  * An endpoint class we are exposing
@@ -251,5 +258,34 @@ public class PeerToPeerOxygenEndPoint {
         OxygenUser adminUser = protectByAdminCheck(sessionId);
 
         new AddPointsByAdminAction().addPointsByAdmin(adminUser, studentId, pointType, addedPoints);
+    }
+
+    @ApiMethod(name = "submitMissionFeedback")
+    public void submitMissionFeedback(
+            @Named("sessionId") Long sessionId,
+            @Named("missionId") Long missionId,
+            @Named("rating") int rating,
+            @Named("comment") @Nullable String comment) throws UnauthorizedException {
+
+        new SubmitMissionFeedbackAction()
+                .submitMissionFeedback(sessionId, missionId, rating, comment);
+    }
+
+    @ApiMethod(name = "getAllMissionFeedback")
+    public List<MissionFeedbackBean> getAllMissionFeedback(@Named("sessionId") Long sessionId)
+            throws UnauthorizedException {
+
+        protectByAdminCheck(sessionId);
+
+        return GetAllMissionFeedbackAction.getAllMissionFeedback();
+    }
+
+    @ApiMethod(name = "getAllMissionStats")
+    public List<MissionStatsBean> getAllMissionStats(@Named("sessionId") Long sessionId)
+            throws UnauthorizedException {
+
+        protectByAdminCheck(sessionId);
+
+        return GetAllMissionStatsAction.getAllMissionStats();
     }
 }

@@ -43,10 +43,6 @@ public class StudentBuddyMissionActivity
         studentBean = intent.getParcelableExtra(ExtraConstants.EXTRA_STUDENT_BEAN);
 
         instructionPager = (ViewPager) findViewById(R.id.instructionPager);
-
-        String studentName = studentBean.getFirstName() + " " + studentBean.getLastName();
-        String invitation =
-                String.format(getString(R.string.mission_invitation_message), studentName);
     }
 
     @Override

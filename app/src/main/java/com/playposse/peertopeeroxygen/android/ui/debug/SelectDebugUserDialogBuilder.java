@@ -26,6 +26,7 @@ public class SelectDebugUserDialogBuilder {
         put("Sharon Doe", Long.valueOf("5712536552865792"));
         put("Thomas Fischer", Long.valueOf("5685265389584384"));
         put("Mitra Martin", Long.valueOf("5730082031140864"));
+        put("Liz Doe", Long.valueOf("6329546185900032"));
     }};
 
     private static List<String> userNames = new ArrayList<>(userMap.keySet());

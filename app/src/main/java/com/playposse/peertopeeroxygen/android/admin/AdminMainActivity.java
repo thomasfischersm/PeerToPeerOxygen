@@ -26,6 +26,8 @@ public class AdminMainActivity extends AdminParentActivity {
 
     private TextView openMissionLaddersTextView;
     private TextView openStudentRosterTextView;
+    private TextView statsTextView;
+    private TextView feedbackTextView;
     private TextView backupTextView;
 
     @Override
@@ -58,6 +60,23 @@ public class AdminMainActivity extends AdminParentActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(AdminMainActivity.this, AdminBackupActivity.class));
+            }
+        });
+
+        statsTextView = (TextView) findViewById(R.id.statsLink);
+        statsTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(AdminMainActivity.this, AdminMissionStatsActivity.class));
+            }
+        });
+
+
+        feedbackTextView = (TextView) findViewById(R.id.feedbackLink);
+        feedbackTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(AdminMainActivity.this, AdminMissionFeedbackActivity.class));
             }
         });
 

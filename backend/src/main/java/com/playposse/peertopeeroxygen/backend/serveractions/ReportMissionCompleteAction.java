@@ -8,6 +8,7 @@ import com.playposse.peertopeeroxygen.backend.schema.LevelCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.MentoringAuditLog;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
 import com.playposse.peertopeeroxygen.backend.schema.MissionCompletion;
+import com.playposse.peertopeeroxygen.backend.schema.MissionStats;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 import com.playposse.peertopeeroxygen.backend.schema.PointsTransferAuditLog;
@@ -60,6 +61,7 @@ public class ReportMissionCompleteAction extends ServerAction {
         updatePointTransferLogForBuddy(buddyRef, studentRef);
         updateMentoringLog(studentId, buddy, missionRef);
 
+        updateMissionStats(missionId);
 
         // Send a Firebase message to the student to confirm completion.
         FirebaseUtil.sendMissionCompletionToStudent(
@@ -186,5 +188,13 @@ public class ReportMissionCompleteAction extends ServerAction {
                 ofy().save().entity(auditLog);
             }
         }
+    }
+
+    private static void updateMissionStats(Long missionId) {
+        final MissionStats missionStats = getMissionStats(missionId);
+
+        missionStats.incrementCompletion();
+
+        ofy().save().entity(missionStats);
     }
 }

@@ -102,6 +102,11 @@ public class DataRepository {
         return null;
     }
 
+    public MissionBean getMissionBean(Long missionId) {
+        Long[] missionPath = getMissionPath(missionId);
+        return getMissionBean(missionPath[0], missionPath[1], missionPath[2]);
+    }
+
     public MissionCompletionBean getMissionCompletion(Long missionId) {
         if (getUserBean().getMissionCompletionBeans() != null) {
             for (MissionCompletionBean completionBean : getUserBean().getMissionCompletionBeans()) {

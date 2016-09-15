@@ -7,10 +7,11 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
+import com.playposse.peertopeeroxygen.android.data.types.UserMissionRoleType;
 import com.playposse.peertopeeroxygen.android.firebase.FirebaseMessage;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
-import com.playposse.peertopeeroxygen.android.student.StudentMissionTreeActivity;
+import com.playposse.peertopeeroxygen.android.student.StudentMissionRatingActivity;
 import com.playposse.peertopeeroxygen.android.util.MathUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.LevelCompletionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
@@ -81,13 +82,14 @@ public class MissionCompletionAction extends FirebaseAction {
                 buddyBean.getFirstName() + " " + buddyBean.getLastName());
         sendToast(message);
 
-        // Re-direct user back to the tree activity.
+        // Send user to the feedback activity.
         Intent intent = ExtraConstants.createIntent(
                 context,
-                StudentMissionTreeActivity.class,
+                StudentMissionRatingActivity.class,
                 ids[0], /* missionLadderId */
                 ids[1], /* missionTreeId */
-                null); /* missionId */
+                ids[2]); /* missionId */
+        intent.putExtra(ExtraConstants.EXTRA_USER_MISSION_ROLE, UserMissionRoleType.student.name());
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

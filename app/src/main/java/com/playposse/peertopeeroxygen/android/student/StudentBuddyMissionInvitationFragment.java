@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataServiceParentFragment;
+import com.playposse.peertopeeroxygen.android.data.types.UserMissionRoleType;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
@@ -102,10 +103,7 @@ public class StudentBuddyMissionInvitationFragment extends DataServiceParentFrag
         graduateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dataServiceConnection
-                        .getLocalBinder()
-                        .reportMissionComplete(studentBean.getId(), missionId);
-                startActivity(new Intent(getActivity(), StudentMainActivity.class));
+                graduateStudent();
             }
         });
 
@@ -131,5 +129,16 @@ public class StudentBuddyMissionInvitationFragment extends DataServiceParentFrag
             graduateButton.setEnabled(false);
             seniorBuddyRequiredTextView.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void graduateStudent() {
+        dataServiceConnection
+                .getLocalBinder()
+                .reportMissionComplete(studentBean.getId(), missionId);
+
+        Intent intent = new Intent(getActivity(), StudentMissionRatingActivity.class);
+        intent.putExtra(ExtraConstants.EXTRA_MISSION_ID, missionId);
+        intent.putExtra(ExtraConstants.EXTRA_USER_MISSION_ROLE, UserMissionRoleType.buddy.name());
+        startActivity(intent);
     }
 }

@@ -41,6 +41,20 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
+            android:id="@+id/statsLink"
+            android:text="@string/stats_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"  />
+
+        <TextView
+            android:id="@+id/feedbackLink"
+            android:text="@string/feedback_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"  />
+
+        <TextView
             android:id="@+id/backupLink"
             android:text="@string/backup_link"
             android:layout_width="wrap_content"

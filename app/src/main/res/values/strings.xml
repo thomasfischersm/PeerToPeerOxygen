@@ -7,6 +7,8 @@
     <string name="admin_home_title">Admin home</string>
     <string name="show_mission_ladders_link">Show mission ladders</string>
     <string name="student_roster_link">Show student roster</string>
+    <string name="stats_link">Mission stats</string>
+    <string name="feedback_link">Mission feedback</string>
     <string name="backup_link">Backup</string>
 
     <!-- Show mission ladders -->
@@ -94,6 +96,12 @@
     <string name="invitation_title">Invitation</string>
     <string name="youtube_title">YouTube</string>
 
+    <!-- Student mission feedback activity -->
+    <string name="student_mission_feedback_title">Mission feedback</string>
+    <string name="student_mission_feedback_heading">Rating for: %1$s</string>
+    <string name="comment_label">Feedback (optional)</string>
+    <string name="rating_required_error">Select a star rating.</string>
+
     <!-- Admin and student menu -->
     <string name="admin_home_menu_title">Admin home</string>
     <string name="student_home_menu_title">Student home</string>
@@ -136,6 +144,8 @@
     <string name="teach_points_label">Teach points: %1$s</string>
     <string name="practice_points_label">Practice points: %1$s</string>
     <string name="heart_points_label">Heart points: %1$s</string>
+    <string name="continue_button_label">Continue</string>
+    <string name="skip_button_label">Skip</string>
 
     <!-- Error messages -->
     <string name="network_error">Failed to retrieve data from the server.</string>

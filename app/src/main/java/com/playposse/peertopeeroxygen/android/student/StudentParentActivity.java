@@ -89,7 +89,7 @@ public abstract class StudentParentActivity extends DataServiceParentActivity {
     }
 
     @Override
-    public void receiveData(final DataRepository dataRepository) {
+    public void receiveData(DataRepository dataRepository) {
         if (isWaitingToInvalidateOptionsMenu) {
             invalidateOptionsMenu();
             isWaitingToInvalidateOptionsMenu = false;

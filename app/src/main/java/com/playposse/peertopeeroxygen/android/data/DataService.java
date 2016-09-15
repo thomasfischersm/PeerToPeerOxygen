@@ -16,6 +16,8 @@ import com.playposse.peertopeeroxygen.android.data.clientactions.BinderForAction
 import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionLadderAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionTreeAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionFeedbackAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionStatsAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetStudentRosterAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.InviteBuddyToMissionAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.InviteSeniorBuddyToMissionAction;
@@ -26,6 +28,7 @@ import com.playposse.peertopeeroxygen.android.data.clientactions.ReportMissionCo
 import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionLadderAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionTreeAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.SubmitMissionFeedbackAction;
 import com.playposse.peertopeeroxygen.android.student.StudentLoginActivity;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxygenApi;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
@@ -255,6 +258,18 @@ public class DataService extends Service {
         public void addPointsByAdmin(Long studentId, String pointType, int addedPoints) {
             new AddPointsByAdminAction(this, getSessionId(), studentId, pointType, addedPoints)
                     .execute();
+        }
+
+        public void submitMissionFeedback(Long missionId, int rating, @Nullable String comment) {
+            new SubmitMissionFeedbackAction(this, missionId, rating, comment).execute();
+        }
+
+        public void getAllMissionFeedback(GetAllMissionFeedbackAction.Callback callback) {
+            new GetAllMissionFeedbackAction(this, callback).execute();
+        }
+
+        public void getAllMissionStats(GetAllMissionStatsAction.Callback callback) {
+            new GetAllMissionStatsAction(this, callback).execute();
         }
 
         public void reload() {

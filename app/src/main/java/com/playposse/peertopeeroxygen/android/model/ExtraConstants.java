@@ -18,6 +18,8 @@ public final class ExtraConstants {
             "com.playposse.peertopeeroxygen.android.studentBean";
     public static final String EXTRA_BUDDY_BEAN =
             "com.playposse.peertopeeroxygen.android.buddyBean";
+    public static final String EXTRA_USER_MISSION_ROLE =
+            "com.playposse.peertopeeroxygen.android.userMissionRole";
 
     public static Intent createIntent(
             Context context,

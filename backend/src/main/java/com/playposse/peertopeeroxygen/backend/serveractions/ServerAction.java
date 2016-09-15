@@ -1,10 +1,13 @@
 package com.playposse.peertopeeroxygen.backend.serveractions;
 
 import com.google.api.server.spi.response.UnauthorizedException;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
 import com.playposse.peertopeeroxygen.backend.schema.LevelCompletion;
+import com.playposse.peertopeeroxygen.backend.schema.Mission;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
+import com.playposse.peertopeeroxygen.backend.schema.MissionStats;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 
@@ -76,5 +79,17 @@ public class ServerAction {
             }
         }
         return null;
+    }
+
+    protected static MissionStats getMissionStats(Long missionId) {
+        Key<Mission> missionKey = Key.create(Mission.class, missionId);
+        List<MissionStats> missionStatsList =
+                ofy().load().type(MissionStats.class).filter("missionRef", missionKey).list();
+
+        if ((missionStatsList == null) || (missionStatsList.size() == 0)) {
+            return new MissionStats(0, Ref.create(missionKey), 0, 0);
+        } else {
+            return missionStatsList.get(0);
+        }
     }
 }

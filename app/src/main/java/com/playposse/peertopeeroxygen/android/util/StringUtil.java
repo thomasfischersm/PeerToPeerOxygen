@@ -15,7 +15,8 @@ public final class StringUtil {
         return getCleanString(editable.toString());
     }
 
-    @Nullable static String getCleanString(String str) {
+    @Nullable
+    public static String getCleanString(String str) {
         if (str == null) {
             return null;
         } else {

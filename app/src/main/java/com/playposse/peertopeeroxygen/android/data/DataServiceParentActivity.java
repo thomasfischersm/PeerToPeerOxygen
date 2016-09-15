@@ -28,15 +28,6 @@ public abstract class DataServiceParentActivity
         bindService(intent, dataServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//
-//        if (dataServiceConnection != null) {
-//            CompleteMissionDataCache.checkStale(dataServiceConnection.getLocalBinder());
-//        }
-//    }
-
     @Override
     protected void onStop() {
         super.onStop();
