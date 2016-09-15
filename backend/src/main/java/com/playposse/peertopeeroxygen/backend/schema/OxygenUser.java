@@ -31,6 +31,7 @@ public class OxygenUser {
     private String lastName;
     private String name;
     private String profilePictureUrl;
+    private String email;
     @Load private Map<UserPoints.PointType, UserPoints> points = new HashMap<>();
     @Load private List<LevelCompletion> levelCompletions = new ArrayList<>();
 
@@ -54,6 +55,7 @@ public class OxygenUser {
             String firstName,
             String lastName,
             String profilePictureUrl,
+            String email,
             Long lastLogin,
             boolean isAdmin) {
 
@@ -65,6 +67,7 @@ public class OxygenUser {
         this.name = name;
         this.fbProfileId = fbProfileId;
         this.firebaseToken = firebaseToken;
+        this.email = email;
         this.isAdmin = isAdmin;
     }
 
@@ -170,6 +173,14 @@ public class OxygenUser {
 
     public void setFirebaseToken(String firebaseToken) {
         this.firebaseToken = firebaseToken;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void addPoints(UserPoints.PointType pointType, int pointCount) {

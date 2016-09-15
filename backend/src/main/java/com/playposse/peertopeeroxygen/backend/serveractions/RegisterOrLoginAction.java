@@ -45,6 +45,7 @@ public class RegisterOrLoginAction extends ServerAction {
                     fbUser.getFirstName(),
                     fbUser.getLastName(),
                     fbUser.getPicture().getUrl(),
+                    fbUser.getEmail(),
                     System.currentTimeMillis(),
                     false);
             Key<OxygenUser> oxygenUserKey = ofy().save().entity(oxygenUser).now();
@@ -58,6 +59,9 @@ public class RegisterOrLoginAction extends ServerAction {
             oxygenUser.setSessionId(sessionId);
             oxygenUser.setFirebaseToken(firebaseToken);
             oxygenUser.setLastLogin(System.currentTimeMillis());
+            if (oxygenUser.getEmail() == null) {
+                oxygenUser.setEmail(fbUser.getEmail());
+            }
             ofy().save().entity(oxygenUser).now();
         }
 
@@ -69,6 +73,8 @@ public class RegisterOrLoginAction extends ServerAction {
         return facebookClient.fetchObject(
                 "me",
                 User.class,
-                Parameter.with("fields", "id,name,link,first_name, last_name,cover,picture.type(large)"));
+                Parameter.with(
+                        "fields",
+                        "id,name,link,first_name,last_name,cover,picture.type(large),email"));
     }
 }

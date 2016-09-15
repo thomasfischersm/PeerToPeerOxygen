@@ -20,7 +20,12 @@ public class GetAllMissionFeedbackAction extends ServerAction {
         ArrayList<MissionFeedbackBean> missionFeedbackBeanList =
                 new ArrayList<>(missionFeedbackList.size());
         for (MissionFeedback missionFeedback : missionFeedbackList) {
-            missionFeedbackBeanList.add(new MissionFeedbackBean(missionFeedback));
+            MissionFeedbackBean missionFeedbackBean = new MissionFeedbackBean(missionFeedback);
+
+            // Clear sensitive data
+            missionFeedbackBean.getUserBean().setSessionId(null);
+
+            missionFeedbackBeanList.add(missionFeedbackBean);
         }
 
         return missionFeedbackBeanList;

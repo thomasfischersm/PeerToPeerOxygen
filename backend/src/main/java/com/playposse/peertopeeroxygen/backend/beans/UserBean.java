@@ -23,6 +23,7 @@ public class UserBean {
     private String firstName;
     private String lastName;
     private String name;
+    private String email;
     private String profilePictureUrl;
     private Long created;
     private List<MissionCompletionBean> missionCompletionBeans = new ArrayList<>();
@@ -42,6 +43,7 @@ public class UserBean {
         lastName = oxygenUser.getLastName();
         name = oxygenUser.getLastName();
         profilePictureUrl = oxygenUser.getProfilePictureUrl();
+        email = oxygenUser.getEmail();
         created = oxygenUser.getCreated();
 
         for (MissionCompletion missionCompletion : oxygenUser.getMissionCompletions().values()) {
@@ -99,6 +101,14 @@ public class UserBean {
 
     public void setFirebaseToken(String firebaseToken) {
         this.firebaseToken = firebaseToken;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Map<String, Integer> getPointsMap() {

@@ -15,6 +15,7 @@ import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionFeedbackAction;
 import com.playposse.peertopeeroxygen.android.ui.widgets.StarRatingView;
+import com.playposse.peertopeeroxygen.android.util.EmailUtil;
 import com.playposse.peertopeeroxygen.android.util.StringUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionFeedbackBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
@@ -30,6 +31,7 @@ public class AdminMissionFeedbackActivity
         implements LoaderManager.LoaderCallbacks<List<MissionFeedbackBean>> {
 
     private static final int LOADER_ID = 1;
+    private static final String COMMENT_PREFIX = "> ";
 
     private ListView feedbackListView;
 
@@ -84,6 +86,22 @@ public class AdminMissionFeedbackActivity
 
     }
 
+    private void sendEmail(MissionFeedbackBean missionFeedbackBean) {
+        String emailBody =
+                COMMENT_PREFIX
+                        + missionFeedbackBean.getComment()
+                        .trim()
+                        .replaceAll(
+                                System.lineSeparator(),
+                                System.lineSeparator() + COMMENT_PREFIX);
+
+        EmailUtil.sendEmail(
+                this,
+                missionFeedbackBean.getUserBean().getEmail(),
+                R.string.feedback_email_subject,
+                emailBody);
+    }
+
     /**
      * Simple loader for the mission feedback data. Because the data service uses a different
      * threading model, the actual loading happens externally to the loader.
@@ -128,7 +146,7 @@ public class AdminMissionFeedbackActivity
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            MissionFeedbackBean missionFeedbackBean = getItem(position);
+            final MissionFeedbackBean missionFeedbackBean = getItem(position);
             UserBean userBean = missionFeedbackBean.getUserBean();
             String studentName = userBean.getFirstName() + " " + userBean.getLastName();
             String comment = StringUtil.getCleanString(missionFeedbackBean.getComment());
@@ -145,6 +163,13 @@ public class AdminMissionFeedbackActivity
             } else {
                 viewHolder.commentTextView.setVisibility(View.GONE);
             }
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    sendEmail(missionFeedbackBean);
+                }
+            });
 
             return convertView;
         }

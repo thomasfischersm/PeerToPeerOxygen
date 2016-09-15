@@ -59,6 +59,7 @@ public class ServerAction {
      */
     public static UserBean stripForSafety(UserBean userBean) {
         userBean.setSessionId(null);
+        userBean.setEmail(null);
         return userBean;
     }
 

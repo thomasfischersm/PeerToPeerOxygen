@@ -56,6 +56,12 @@ public abstract class DataServiceParentActivity
             String fbProfileId,
             String photoUrlString) {
 
+        if ((dataServiceConnection == null)
+                || (dataServiceConnection.getLocalBinder() == null)
+                || (dataServiceConnection.getLocalBinder().getDataRepository() == null)) {
+            return;
+        }
+
         FacebookProfilePhotoCache photoCache = dataServiceConnection
                 .getLocalBinder()
                 .getDataRepository()
