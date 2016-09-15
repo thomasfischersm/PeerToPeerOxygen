@@ -18,13 +18,15 @@ public abstract class DataServiceParentActivity
 
     protected DataServiceConnection dataServiceConnection;
     protected boolean shouldAutoInit = true;
+    protected boolean shouldRegisterCallback = true;
 
     @Override
     protected void onStart() {
         super.onStart();
 
         Intent intent = new Intent(this, DataService.class);
-        dataServiceConnection = new DataServiceConnection(this, shouldAutoInit);
+        dataServiceConnection =
+                new DataServiceConnection(this, shouldAutoInit, true, shouldRegisterCallback);
         bindService(intent, dataServiceConnection, Context.BIND_AUTO_CREATE);
     }
 

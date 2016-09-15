@@ -18,6 +18,7 @@ public class PeerToPeerOxygenApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.i(LOG_CAT, "PeerToPeerOxygenApplication.onCreate is called.");
 
         startService(new Intent(this, DataService.class));
 

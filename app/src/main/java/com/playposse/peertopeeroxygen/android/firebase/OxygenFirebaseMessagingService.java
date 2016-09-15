@@ -106,6 +106,7 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void executePendingActions() {
+        Log.i(LOG_CAT, "Checking for pending Firebase actions.");
         if ((dataServiceConnection == null)
                 || (dataServiceConnection.getLocalBinder() == null)
                 || (dataServiceConnection.getLocalBinder().getDataRepository() == null)

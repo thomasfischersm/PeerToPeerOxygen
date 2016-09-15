@@ -14,6 +14,7 @@ public class DataServiceConnection implements ServiceConnection {
 
     private final DataReceivedCallback dataReceivedCallback;
     private final boolean shouldAutoInit;
+    private final boolean shouldRegisterCallback;
     private final boolean checkCacheStale;
 
     private boolean bound = false;
@@ -25,14 +26,25 @@ public class DataServiceConnection implements ServiceConnection {
 
         this(dataReceivedCallback, shouldAutoInit, true);
     }
+
     public DataServiceConnection(
             DataReceivedCallback dataReceivedCallback,
             boolean shouldAutoInit,
             boolean checkCacheStale) {
 
+        this(dataReceivedCallback, shouldAutoInit, checkCacheStale, true);
+    }
+
+    public DataServiceConnection(
+            DataReceivedCallback dataReceivedCallback,
+            boolean shouldAutoInit,
+            boolean checkCacheStale,
+            boolean shouldRegisterCallback) {
+
         this.dataReceivedCallback = dataReceivedCallback;
         this.shouldAutoInit = shouldAutoInit;
         this.checkCacheStale = checkCacheStale;
+        this.shouldRegisterCallback = shouldRegisterCallback;
     }
 
     @Override
@@ -42,9 +54,11 @@ public class DataServiceConnection implements ServiceConnection {
 
         if (shouldAutoInit) {
             localBinder.init();
-            localBinder.registerDataReceivedCallback(dataReceivedCallback, checkCacheStale);
         }
 
+        if (shouldRegisterCallback) {
+            localBinder.registerDataReceivedCallback(dataReceivedCallback, checkCacheStale);
+        }
 
         Log.i(LOG_CAT, "The service is now connected.");
     }

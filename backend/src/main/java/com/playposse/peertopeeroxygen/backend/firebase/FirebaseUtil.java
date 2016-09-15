@@ -25,6 +25,11 @@ import static com.playposse.peertopeeroxygen.backend.serveractions.ServerAction.
  */
 public class FirebaseUtil {
 
+    public enum FirebasePriority {
+        normal,
+        high,
+    }
+
     private static final Logger log = Logger.getLogger(FirebaseUtil.class.getName());
 
     private static final String FIREBASE_URL = "https://fcm.googleapis.com/fcm/send";
@@ -69,7 +74,7 @@ public class FirebaseUtil {
         rootNode.put(MISSION_TREE_KEY, missionTreeId);
         rootNode.put(MISSION_KEY, missionId);
 
-        return sendMessageToDevice(firebaseToken, rootNode);
+        return sendMessageToDevice(firebaseToken, rootNode, FirebasePriority.high);
     }
 
     public static String sendMissionInviteToSeniorBuddy(
@@ -155,13 +160,24 @@ public class FirebaseUtil {
     private static String sendMessageToAllDevices(JSONObject data) throws IOException {
         return sendMessageToDevice(ALL_DEVICES_DESTINATION, data);
     }
+    private static String sendMessageToDevice(
+            String firebaseToken,
+            JSONObject data)
+            throws IOException {
 
-    private static String sendMessageToDevice(String firebaseToken, JSONObject data)
+        return sendMessageToDevice(firebaseToken, data, FirebasePriority.normal);
+    }
+
+    private static String sendMessageToDevice(
+            String firebaseToken,
+            JSONObject data,
+            FirebasePriority priority)
             throws IOException {
 
         JSONObject rootNode = new JSONObject();
         rootNode.put("to", firebaseToken);
         rootNode.put("data", data);
+        rootNode.put("priority", priority.name());
 
         log.info("Firebase payload: " + rootNode.toString());
         String response = sendMessage(rootNode.toString());

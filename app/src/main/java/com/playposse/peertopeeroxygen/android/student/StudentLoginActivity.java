@@ -28,6 +28,7 @@ public class StudentLoginActivity extends DataServiceParentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.shouldAutoInit = false;
+        this.shouldRegisterCallback = false;
 
         Log.i(LOG_CAT, "Before Facebook SDK init");
         FacebookSdk.sdkInitialize(getApplicationContext());
