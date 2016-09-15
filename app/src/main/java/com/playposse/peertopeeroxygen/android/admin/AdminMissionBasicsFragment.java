@@ -29,9 +29,10 @@ public class AdminMissionBasicsFragment
         extends Fragment
         implements AdminEditMissionActivity.EditMissionFragment {
 
-    private static Pattern YOUTUBE_URL_PATTERN = Pattern.compile("https://[^v]+v=([a-zA-Z0-9-]+)");
+    private static Pattern YOUTUBE_URL_PATTERN =
+            Pattern.compile("https://[^v]+v=([a-zA-Z0-9-_]{11})");
     private static Pattern MOBILE_YOUTUBE_URL_PATTERN =
-            Pattern.compile("https://youtu.be/([a-zA-Z0-9-]+)");
+            Pattern.compile("https://youtu.be/([a-zA-Z0-9-_]{11})");
 
     private EditText nameEditText;
     private EditText minimumStudyCountEditText;
