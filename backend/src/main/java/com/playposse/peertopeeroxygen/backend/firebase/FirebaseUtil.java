@@ -18,6 +18,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import javax.annotation.Nullable;
+
 import static com.playposse.peertopeeroxygen.backend.serveractions.ServerAction.stripForSafety;
 
 /**
@@ -52,6 +54,9 @@ public class FirebaseUtil {
     private static final String MISSION_LADDER_KEY = "missionLadderId";
     private static final String MISSION_TREE_KEY = "missionTreeId";
     private static final String MISSION_KEY = "missionId";
+
+    private static final String INVALIDATE_MISSION_DATA_COLLAPSE_KEY =
+            "invalidateMissionDataCollapseKey";
 
     public static String sendMissionInviteToBuddy(
             String firebaseToken,
@@ -154,12 +159,20 @@ public class FirebaseUtil {
         JSONObject rootNode = new JSONObject();
         rootNode.put(TYPE_KEY, INVALIDATE_MISSION_DATA_TYPE);
 
-        return sendMessageToAllDevices(rootNode);
+        return sendMessageToAllDevices(
+                rootNode,
+                FirebasePriority.normal,
+                INVALIDATE_MISSION_DATA_COLLAPSE_KEY);
     }
 
-    private static String sendMessageToAllDevices(JSONObject data) throws IOException {
-        return sendMessageToDevice(ALL_DEVICES_DESTINATION, data);
+    private static String sendMessageToAllDevices(
+            JSONObject data,
+            FirebasePriority priority,
+            @Nullable String collapseKey)
+            throws IOException {
+        return sendMessageToDevice(ALL_DEVICES_DESTINATION, data, priority, collapseKey);
     }
+
     private static String sendMessageToDevice(
             String firebaseToken,
             JSONObject data)
@@ -174,10 +187,23 @@ public class FirebaseUtil {
             FirebasePriority priority)
             throws IOException {
 
+        return sendMessageToDevice(firebaseToken, data, priority, null);
+    }
+
+    private static String sendMessageToDevice(
+            String firebaseToken,
+            JSONObject data,
+            FirebasePriority priority,
+            @Nullable String collapseKey)
+            throws IOException {
+
         JSONObject rootNode = new JSONObject();
         rootNode.put("to", firebaseToken);
         rootNode.put("data", data);
         rootNode.put("priority", priority.name());
+        if (collapseKey != null) {
+            rootNode.put("collapse_key", collapseKey);
+        }
 
         log.info("Firebase payload: " + rootNode.toString());
         String response = sendMessage(rootNode.toString());
@@ -216,9 +242,10 @@ public class FirebaseUtil {
         StringBuilder sb = new StringBuilder();
         BufferedReader reader = new BufferedReader(new InputStreamReader(input, "utf-8"));
 
-        String line = null;
+        String line;
         while ((line = reader.readLine()) != null) {
-            sb.append(line + "\n");
+            sb.append(line);
+            sb.append("\n");
         }
         reader.close();
         return sb.toString();
