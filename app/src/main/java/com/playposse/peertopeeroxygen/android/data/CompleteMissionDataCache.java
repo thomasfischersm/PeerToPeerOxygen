@@ -36,6 +36,7 @@ public class CompleteMissionDataCache {
             BinderForActions binderForActions,
             Context context) {
 
+        isStale = false;
         if (isLocalCacheAvailable(context)) {
             getLocally(binderForActions, context);
         } else {

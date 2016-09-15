@@ -39,11 +39,12 @@ public class DataServiceConnection implements ServiceConnection {
     public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
         bound = true;
         localBinder = (DataService.LocalBinder) iBinder;
-        localBinder.registerDataReceivedCallback(dataReceivedCallback, checkCacheStale);
 
         if (shouldAutoInit) {
             localBinder.init();
+            localBinder.registerDataReceivedCallback(dataReceivedCallback, checkCacheStale);
         }
+
 
         Log.i(LOG_CAT, "The service is now connected.");
     }
