@@ -39,6 +39,7 @@ public class RegisterOrLoginAction extends ClientAction {
                         .setLoanerDeviceId(loanerDeviceId)
                         .execute();
         OxygenSharedPreferences.setSessionId(getContext(), userBean.getSessionId());
+        getDataRepository().getCompleteMissionDataBean().setUserBean(userBean);
         signInSuccessCallback.onSuccess();
     }
 }
