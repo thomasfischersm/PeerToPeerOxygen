@@ -42,10 +42,16 @@
                 android:text="@string/student_functions_heading" />
 
             <Button
-                android:id="@+id/studentProfileLink"
+                android:id="@+id/studentProfileButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/student_profile_link" />
+
+            <Button
+                android:id="@+id/logoutButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/logout_button_label" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

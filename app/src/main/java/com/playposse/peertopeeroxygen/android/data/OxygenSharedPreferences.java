@@ -23,7 +23,11 @@ public final class OxygenSharedPreferences {
     public static void setSessionId(Context context, Long sessionId) {
         SharedPreferences sharedPreferences =
                 context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        sharedPreferences.edit().putLong(SESSION_KEY, sessionId).apply();
+        if (sessionId != null) {
+            sharedPreferences.edit().putLong(SESSION_KEY, sessionId).apply();
+        } else {
+            sharedPreferences.edit().remove(SESSION_KEY).apply();
+        }
     }
 
     public static boolean getDebugFlag(Context context) {
@@ -47,9 +51,12 @@ public final class OxygenSharedPreferences {
     }
 
     public static void setLoanerDeviceId(Context context, Long loanerDeviceId) {
-        loanerDeviceId = (loanerDeviceId != null) ? loanerDeviceId : -1;
         SharedPreferences sharedPreferences =
                 context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        sharedPreferences.edit().putLong(LOANER_DEVICE_KEY, loanerDeviceId).apply();
+        if (loanerDeviceId != null) {
+            sharedPreferences.edit().putLong(LOANER_DEVICE_KEY, loanerDeviceId).apply();
+        } else {
+            sharedPreferences.edit().remove(LOANER_DEVICE_KEY).apply();
+        }
     }
 }

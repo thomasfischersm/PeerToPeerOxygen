@@ -32,9 +32,11 @@ public class RegisterOrLoginAction extends ClientAction {
     @Override
     protected void executeAsync() throws IOException {
         String firebaseToken = FirebaseInstanceId.getInstance().getToken();
+        Long loanerDeviceId = OxygenSharedPreferences.getLoanerDeviceId(getContext());
         UserBean userBean =
                 getBinder().getApi()
                         .registerOrLogin(accessToken, firebaseToken)
+                        .setLoanerDeviceId(loanerDeviceId)
                         .execute();
         OxygenSharedPreferences.setSessionId(getContext(), userBean.getSessionId());
         signInSuccessCallback.onSuccess();

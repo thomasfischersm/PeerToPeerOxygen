@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
+import com.playposse.peertopeeroxygen.android.util.LogoutUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 
 import java.util.List;
@@ -26,7 +27,8 @@ public class StudentMainActivity extends StudentParentActivity {
 
     LinearLayout rootView;
     private TextView missionHeadingTextView;
-    private Button studentProfileLink;
+    private Button studentProfileButton;
+    private Button logoutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +39,20 @@ public class StudentMainActivity extends StudentParentActivity {
 
         rootView = (LinearLayout) findViewById(R.id.rootView);
         missionHeadingTextView = (TextView) findViewById(R.id.missionHeadingTextView);
-        studentProfileLink = (Button) findViewById(R.id.studentProfileLink);
+        studentProfileButton = (Button) findViewById(R.id.studentProfileButton);
+        logoutButton = (Button) findViewById(R.id.logoutButton);
 
-        studentProfileLink.setOnClickListener(new View.OnClickListener() {
+        studentProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(), StudentProfileActivity.class));
+            }
+        });
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LogoutUtil.logout(getApplicationContext());
             }
         });
     }

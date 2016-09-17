@@ -80,6 +80,7 @@
     <string name="student_learning_mission_heading">Learning missions</string>
     <string name="student_functions_heading">Functions</string>
     <string name="student_profile_link">View profile</string>
+    <string name="logout_button_label">Logout</string>
 
     <!-- Student mission activity -->
     <string name="default_instruction_tab_label">Instruction</string>

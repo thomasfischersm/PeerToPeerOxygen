@@ -2,8 +2,10 @@ package com.playposse.peertopeeroxygen.android;
 
 import android.app.Application;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.util.Log;
 
+import com.playposse.peertopeeroxygen.android.broadcastreceivers.ScreenOffBroadcastReceiver;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.firebase.OxygenFirebaseMessagingService;
 
@@ -25,6 +27,9 @@ public class PeerToPeerOxygenApplication extends Application {
         // Fixes a timing bug where the OxygenFirebaseMessagingService isn't ready when a message
         // comes in.
         startService(new Intent(this, OxygenFirebaseMessagingService.class));
+
+        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(new ScreenOffBroadcastReceiver(), intentFilter);
     }
 
     @Override
