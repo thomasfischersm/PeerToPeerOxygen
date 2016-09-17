@@ -11,6 +11,11 @@ import javax.annotation.Nullable;
 public final class StringUtil {
 
     @Nullable
+    public static String getCleanString(EditText editText) {
+        return getCleanString(editText.getText());
+    }
+
+    @Nullable
     public static String getCleanString(Editable editable) {
         return getCleanString(editable.toString());
     }
@@ -40,5 +45,9 @@ public final class StringUtil {
 
     public static boolean equals(EditText editText, @Nullable String str) {
         return equals(editText.getText(), str);
+    }
+
+    public static boolean isEmpty(EditText editText) {
+        return editText.getText().toString().trim().length() == 0;
     }
 }

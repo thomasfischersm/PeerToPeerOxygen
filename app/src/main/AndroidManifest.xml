@@ -118,6 +118,11 @@
             android:launchMode="singleTop"
             android:parentActivityName=".admin.AdminMainActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+        <activity
+            android:name=".admin.AdminLoanerDeviceActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".admin.AdminMainActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

@@ -29,6 +29,7 @@ public class AdminMainActivity extends AdminParentActivity {
     private TextView statsTextView;
     private TextView feedbackTextView;
     private TextView backupTextView;
+    private TextView loanerDevicesTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +77,16 @@ public class AdminMainActivity extends AdminParentActivity {
         feedbackTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(AdminMainActivity.this, AdminMissionFeedbackActivity.class));
+                startActivity(
+                        new Intent(AdminMainActivity.this, AdminMissionFeedbackActivity.class));
+            }
+        });
+
+        loanerDevicesTextView = (TextView) findViewById(R.id.loanerDevicesLink);
+        loanerDevicesTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(AdminMainActivity.this, AdminLoanerDeviceActivity.class));
             }
         });
 

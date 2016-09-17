@@ -12,6 +12,7 @@ public final class OxygenSharedPreferences {
 
     private static final String SESSION_KEY = "sessionId";
     private static final String DEBUG_FLAG_KEY = "debug";
+    private static final String LOANER_DEVICE_KEY = "loanderDeviceID";
 
     public static Long getSessionId(Context context) {
         SharedPreferences sharedPreferences =
@@ -36,5 +37,19 @@ public final class OxygenSharedPreferences {
         SharedPreferences sharedPreferences =
                 context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         sharedPreferences.edit().putBoolean(DEBUG_FLAG_KEY, debugFlag).apply();
+    }
+
+    public static Long getLoanerDeviceId(Context context) {
+        SharedPreferences sharedPreferences =
+                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        long loanerDeviceId = sharedPreferences.getLong(LOANER_DEVICE_KEY, -1);
+        return (loanerDeviceId != -1) ? loanerDeviceId : null;
+    }
+
+    public static void setLoanerDeviceId(Context context, Long loanerDeviceId) {
+        loanerDeviceId = (loanerDeviceId != null) ? loanerDeviceId : -1;
+        SharedPreferences sharedPreferences =
+                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putLong(LOANER_DEVICE_KEY, loanerDeviceId).apply();
     }
 }

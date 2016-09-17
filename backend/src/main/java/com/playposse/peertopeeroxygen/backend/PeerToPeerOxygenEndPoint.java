@@ -12,6 +12,7 @@ import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.config.Named;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.playposse.peertopeeroxygen.backend.beans.CompleteMissionDataBean;
+import com.playposse.peertopeeroxygen.backend.beans.LoanerDeviceBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionFeedbackBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionLadderBean;
@@ -24,12 +25,14 @@ import com.playposse.peertopeeroxygen.backend.serveractions.AddPointsByAdminActi
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionLadderAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionTreeAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.GetAllLoanerDevicesAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetAllMissionFeedbackAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetAllMissionStatsAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetMissionDataAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetStudentRosterAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.InviteBuddyToMissionAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.InviteSeniorBuddyToMissionAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.MarkLoanerDeviceAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.RegisterOrLoginAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.ReportMissionCheckoutCompleteAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.ReportMissionCompleteAction;
@@ -38,6 +41,7 @@ import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionLadderAct
 import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionTreeAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.ServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.SubmitMissionFeedbackAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.UnmarkLoanerDeviceAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.UpdateFirebaseTokenAction;
 
 import java.io.IOException;
@@ -154,9 +158,10 @@ public class PeerToPeerOxygenEndPoint {
     @ApiMethod(name = "registerOrLogin")
     public UserBean registerOrLogin(
             @Named("accessToken") String accessToken,
-            @Named("firebaseToken") String firebaseToken) {
+            @Named("firebaseToken") String firebaseToken,
+            @Named("loanerDeviceId") @Nullable Long loanerDeviceId) {
 
-        return RegisterOrLoginAction.registerOrLogin(accessToken, firebaseToken);
+        return RegisterOrLoginAction.registerOrLogin(accessToken, firebaseToken, loanerDeviceId);
     }
 
     @ApiMethod(name = "updateFirebaseToken")
@@ -287,5 +292,36 @@ public class PeerToPeerOxygenEndPoint {
         protectByAdminCheck(sessionId);
 
         return GetAllMissionStatsAction.getAllMissionStats();
+    }
+
+    @ApiMethod(name = "markLoanerDevice")
+    public LoanerDeviceBean markLoanerDevice(
+            @Named("sessionId") Long sessionId,
+            @Named("friendlyName") String friendlyName)
+            throws UnauthorizedException {
+
+        protectByAdminCheck(sessionId);
+
+        return MarkLoanerDeviceAction.markLoanerDevice(sessionId, friendlyName);
+    }
+
+    @ApiMethod(name = "unmarkLoanerDevice")
+    public void unmarkLoanerDevice(
+            @Named("sessionId") Long sessionId,
+            @Named("loanerDeviceId") Long loanerDeviceId)
+            throws UnauthorizedException {
+
+        protectByAdminCheck(sessionId);
+
+        UnmarkLoanerDeviceAction.unmarkLoanerDevice(loanerDeviceId);
+    }
+
+    @ApiMethod(name = "getAllLoanerDevices")
+    public List<LoanerDeviceBean> getAllLoanerDevices(@Named("sessionId") Long sessionId)
+            throws UnauthorizedException {
+
+        protectByAdminCheck(sessionId);
+
+        return GetAllLoanerDevicesAction.getAllLoanerDevices();
     }
 }

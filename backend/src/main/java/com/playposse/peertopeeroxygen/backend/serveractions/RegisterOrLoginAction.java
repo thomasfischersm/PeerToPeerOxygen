@@ -2,6 +2,7 @@ package com.playposse.peertopeeroxygen.backend.serveractions;
 
 import com.googlecode.objectify.Key;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
+import com.playposse.peertopeeroxygen.backend.schema.LoanerDevice;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
@@ -13,6 +14,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
+import javax.annotation.Nullable;
+
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
@@ -22,7 +25,10 @@ public class RegisterOrLoginAction extends ServerAction {
 
     private static final Logger log = Logger.getLogger(RegisterOrLoginAction.class.getName());
 
-    public static UserBean registerOrLogin(String accessToken, String firebaseToken) {
+    public static UserBean registerOrLogin(
+            String accessToken,
+            String firebaseToken,
+            @Nullable Long loanerDeviceId) {
 
         Long sessionId = new Random().nextLong();
 
@@ -65,6 +71,8 @@ public class RegisterOrLoginAction extends ServerAction {
             ofy().save().entity(oxygenUser).now();
         }
 
+        updateLoanerDevice(loanerDeviceId, oxygenUser);
+
         return new UserBean(oxygenUser);
     }
 
@@ -76,5 +84,15 @@ public class RegisterOrLoginAction extends ServerAction {
                 Parameter.with(
                         "fields",
                         "id,name,link,first_name,last_name,cover,picture.type(large),email"));
+    }
+
+    private static void updateLoanerDevice(@Nullable Long loanerDeviceId, OxygenUser oxygenUser) {
+        if (loanerDeviceId == null) {
+            return;
+        }
+
+        LoanerDevice loanerDevice = ofy().load().type(LoanerDevice.class).id(loanerDeviceId).now();
+        loanerDevice.changeUser(oxygenUser);
+        ofy().save().entity(loanerDevice);
     }
 }

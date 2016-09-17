@@ -13,14 +13,17 @@ import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.clientactions.AddPointsByAdminAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.BinderForActions;
+import com.playposse.peertopeeroxygen.android.data.clientactions.ClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionLadderAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionTreeAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllLoanerDevicesAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionFeedbackAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionStatsAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetStudentRosterAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.InviteBuddyToMissionAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.InviteSeniorBuddyToMissionAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.MarkLoanerDeviceAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.MissionDataRetrieverAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.RegisterOrLoginAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.ReportMissionCheckoutCompleteAction;
@@ -29,6 +32,7 @@ import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionActi
 import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionLadderAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionTreeAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.SubmitMissionFeedbackAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.UnmarkLoanerDeviceAction;
 import com.playposse.peertopeeroxygen.android.student.StudentLoginActivity;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxygenApi;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
@@ -270,6 +274,23 @@ public class DataService extends Service {
 
         public void getAllMissionStats(GetAllMissionStatsAction.Callback callback) {
             new GetAllMissionStatsAction(this, callback).execute();
+        }
+
+        public void markLoanerDevice(
+                String friendlyName,
+                @Nullable ClientAction.CompletionCallback completionCallback) {
+
+            new MarkLoanerDeviceAction(this, friendlyName, completionCallback).execute();
+        }
+
+        public void unmarkLoanerDevice(
+                @Nullable ClientAction.CompletionCallback completionCallback) {
+
+            new UnmarkLoanerDeviceAction(this, completionCallback).execute();
+        }
+
+        public void getAllLoanerDevices(GetAllLoanerDevicesAction.Callback callback) {
+            new GetAllLoanerDevicesAction(this, callback).execute();
         }
 
         public void reload() {

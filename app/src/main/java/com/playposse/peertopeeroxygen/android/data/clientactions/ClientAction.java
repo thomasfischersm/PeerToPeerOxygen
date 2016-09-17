@@ -8,6 +8,8 @@ import com.playposse.peertopeeroxygen.android.data.DataRepository;
 
 import java.io.IOException;
 
+import javax.annotation.Nullable;
+
 /**
  * A base class for client actions to implement. It provides useful methods.
  */
@@ -17,10 +19,20 @@ public abstract class ClientAction {
 
     private final BinderForActions binder;
     private final boolean notifyDataReceivedCallbacks;
+    @Nullable private final CompletionCallback completionCallback;
 
     public ClientAction(BinderForActions binder, boolean notifyDataReceivedCallbacks) {
+
+        this(binder, notifyDataReceivedCallbacks, null);
+    }
+    public ClientAction(
+            BinderForActions binder,
+            boolean notifyDataReceivedCallbacks,
+            @Nullable CompletionCallback completionCallback) {
+
         this.binder = binder;
         this.notifyDataReceivedCallbacks = notifyDataReceivedCallbacks;
+        this.completionCallback = completionCallback;
     }
 
     protected BinderForActions getBinder() {
@@ -85,6 +97,18 @@ public abstract class ClientAction {
         @Override
         protected void onPostExecute(Void aVoid) {
             postExecute();
+
+            if (completionCallback != null) {
+                completionCallback.onComplete();
+            }
         }
+    }
+
+    /**
+     * An optional interface that is called when the {@link ClientAction} has completed.
+     */
+    public interface CompletionCallback {
+
+        void onComplete();
     }
 }

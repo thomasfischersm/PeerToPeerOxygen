@@ -10,6 +10,7 @@
     <string name="stats_link">Mission stats</string>
     <string name="feedback_link">Mission feedback</string>
     <string name="backup_link">Backup</string>
+    <string name="loaner_devices_link">Loaner devices</string>
 
     <!-- Show mission ladders -->
     <string name="show_mission_ladders_title">Show mission ladders</string>
@@ -53,6 +54,12 @@
     <!-- Admin backup activity -->
     <string name="backup_to_google_drive_button">Backup mission data to Google Drive</string>
     <string name="backup_mission_data_file_name">Backup of mission data %1$s-%2$s-%3$s.txt</string>
+
+    <!-- Admin loaner devices activity -->
+    <string name="loaner_devices_title">Loaner devices</string>
+    <string name="mark_loaner_device">Mark current device as a loaner</string>
+    <string name="unmark_loaner_device">Unmark current device as a loaner</string>
+    <string name="friendly_device_name_dialog_title">Enter a friendly device name:</string>
 
     <!-- Student roster -->
     <string name="student_roster_title">Student Roster</string>
@@ -147,6 +154,7 @@
     <string name="heart_points_label">Heart points: %1$s</string>
     <string name="continue_button_label">Continue</string>
     <string name="skip_button_label">Skip</string>
+    <string name="empty_string_error">Enter something, pretty please :)</string>
 
     <!-- Emails -->
     <string name="feedback_email_subject">Thank you for your feedback!</string>
