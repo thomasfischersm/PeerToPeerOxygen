@@ -110,11 +110,19 @@
     <string name="comment_label">Feedback (optional)</string>
     <string name="rating_required_error">Select a star rating.</string>
 
+    <!-- Student about activity -->
+    <string name="student_about_heading">About</string>
+    <string name="student_about_text">Today, limitless amounts of incredible content is freely available in the form of books, videos and MOOCs. But real learning, deep learning, and the motivation to keep learning, often has a social component that\'s not yet well-facilitated. There\'s this huge untapped potential for peer-to-peer learning: practitioners helping each other learn. And while there\'s a lot of willingness to be helpful, there is hesitation that comes from a lack of knowledge about HOW exactly to help, a lack of confidence in whether what you have to offer is \"right,\" and social norms that doesn\'t facilitate this kind of learning. We can improve this and unlock the peer-to-peer learning potential with this social learning app !</string>
+    <string name="student_about_copyright_heading">Copyright</string>
+    <string name="student_about_copyright_text">(C) Copyright 2016 Mitra Martin, Stefan Fabry, and Thomas Fischer. All rights reserved.\n</string>
+    <string name="student_about_play_services_attribution_heading">Google Play Services Attribution</string>
+
     <!-- Admin and student menu -->
     <string name="admin_home_menu_title">Admin home</string>
     <string name="student_home_menu_title">Student home</string>
     <string name="refresh_menu_title">Refresh</string>
     <string name="debug_menu_title">Debug</string>
+    <string name="about_menu_title">About</string>
 
     <!-- Explanations why missions are locked -->
     <string name="locked_level_mission_lock_reason">The level is still locked.</string>

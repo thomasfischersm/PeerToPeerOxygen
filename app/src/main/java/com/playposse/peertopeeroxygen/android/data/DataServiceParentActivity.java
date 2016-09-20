@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.facebook.FacebookProfilePhotoCache;
+import com.playposse.peertopeeroxygen.android.student.StudentAboutActivity;
 
 /**
  * An activity that connects to the {@link DataService}.
@@ -47,6 +48,9 @@ public abstract class DataServiceParentActivity
                 boolean debugFlag = !item.isChecked();
                 item.setChecked(debugFlag);
                 OxygenSharedPreferences.setDebugFlag(this, debugFlag);
+                return true;
+            case R.id.aboutMenuItem:
+                startActivity(new Intent(this, StudentAboutActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

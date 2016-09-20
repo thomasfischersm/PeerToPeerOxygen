@@ -2,15 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/adminHomeMenuItem"
-        android:title="@string/admin_home_menu_title" />
-
-    <item
-        android:id="@+id/refreshMenuItem"
-        android:title="@string/refresh_menu_title" />
-
-    <item
-        android:id="@+id/debugMenuItem"
-        android:checkable="true"
-        android:title="@string/debug_menu_title" />
+        android:id="@+id/aboutMenuItem"
+        android:title="@string/about_menu_title" />
 </menu>
