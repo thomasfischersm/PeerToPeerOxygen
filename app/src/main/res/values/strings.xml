@@ -137,6 +137,7 @@
     <string name="google_drive_read_open_failed_toast">Failed open file from Google Drive with error: %1$s.</string>
     <string name="mission_data_refreshed_toast">The mission data has been refreshed.</string>
     <string name="no_email_client_found_toast">No installed app can handle e-mail.</string>
+    <string name="no_camera_detected_toast">No camera detected.</string>
 
     <!-- Reusable strings -->
     <string name="name_form_label">Name</string>

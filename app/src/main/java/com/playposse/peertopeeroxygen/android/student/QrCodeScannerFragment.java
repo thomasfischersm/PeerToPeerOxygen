@@ -3,6 +3,7 @@ package com.playposse.peertopeeroxygen.android.student;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -21,6 +22,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.ui.debug.SelectDebugUserDialogBuilder;
+import com.playposse.peertopeeroxygen.android.util.ToastUtil;
 
 import java.io.IOException;
 
@@ -231,6 +233,11 @@ public class QrCodeScannerFragment extends Fragment {
             return;
         }
 
+        if (!hasCamera()) {
+            ToastUtil.sendToast(getContext(), R.string.no_camera_detected_toast);
+            return;
+        }
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -258,7 +265,7 @@ public class QrCodeScannerFragment extends Fragment {
                 detector.setProcessor(multiProcessor);
 
                 setCameraSource(new CameraSource.Builder(getActivity(), detector)
-                        .setFacing(CameraSource.CAMERA_FACING_BACK)
+                        .setFacing(getPreferredCameraFacing())
                         .setRequestedPreviewSize(width, height)
                         .build());
                 if (!checkCameraPermission()) {
@@ -273,6 +280,29 @@ public class QrCodeScannerFragment extends Fragment {
 
             }
         }).start();
+    }
+
+    /**
+     * Determines if the preferred camera facing (= back) is available. If not, it fails back to
+     * front facing.
+     */
+    private int getPreferredCameraFacing() {
+        PackageManager packageManager = getContext().getPackageManager();
+        boolean hasFrontCamera =
+                packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
+        int cameraCount = Camera.getNumberOfCameras();
+
+        if ((cameraCount > 1) || (!hasFrontCamera)) {
+            return CameraSource.CAMERA_FACING_BACK;
+        } else {
+            return CameraSource.CAMERA_FACING_FRONT;
+        }
+    }
+
+    private boolean hasCamera() {
+        PackageManager packageManager = getContext().getPackageManager();
+        return packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
+                && (Camera.getNumberOfCameras() > 0);
     }
 
     private void pickDebugUser() {
