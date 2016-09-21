@@ -1,6 +1,5 @@
 package com.playposse.peertopeeroxygen.android.student;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -8,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.playposse.peertopeeroxygen.android.R;
-import com.playposse.peertopeeroxygen.android.admin.AdminMainActivity;
 import com.playposse.peertopeeroxygen.android.data.DataReceivedCallback;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataServiceParentActivity;
@@ -75,17 +73,6 @@ public abstract class StudentParentActivity extends DataServiceParentActivity {
                         StudentParentActivity.this.runOnUiThread(runnable);
                     }
                 });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.adminHomeMenuItem:
-                startActivity(new Intent(this, AdminMainActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override

@@ -89,7 +89,8 @@ public class PeerToPeerOxygenEndPoint {
     @ApiMethod(name = "deleteMissionLadder")
     public void deleteMissionLadder(
             @Named("sessionId") Long sessionId,
-            @Named("missionLadderId") Long missionLadderId) throws UnauthorizedException {
+            @Named("missionLadderId") Long missionLadderId)
+            throws UnauthorizedException, IOException {
 
         protectByAdminCheck(sessionId);
 
@@ -110,11 +111,12 @@ public class PeerToPeerOxygenEndPoint {
     @ApiMethod(name = "deleteMissionTree")
     public void deleteMissionTree(
             @Named("sessionId") Long sessionId,
-            @Named("missionTreeId") Long missionTreeId) throws UnauthorizedException {
+            @Named("missionLadderId") Long missionLadderId,
+            @Named("missionTreeId") Long missionTreeId) throws UnauthorizedException, IOException {
 
         protectByAdminCheck(sessionId);
 
-        DeleteMissionTreeAction.deleteMissionTree(missionTreeId);
+        DeleteMissionTreeAction.deleteMissionTree(missionLadderId, missionTreeId);
     }
 
     @ApiMethod(name = "saveMission")
@@ -139,7 +141,7 @@ public class PeerToPeerOxygenEndPoint {
             @Named("missionLadderId") Long missionLadderId,
             @Named("missionTreeId") Long missionTreeId,
             @Named("missionId") Long missionId)
-            throws UnauthorizedException {
+            throws UnauthorizedException, IOException {
 
         protectByAdminCheck(sessionId);
 

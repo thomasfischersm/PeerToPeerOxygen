@@ -1,6 +1,5 @@
 package com.playposse.peertopeeroxygen.android.admin;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -10,7 +9,6 @@ import android.view.MenuItem;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataServiceParentActivity;
 import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
-import com.playposse.peertopeeroxygen.android.student.StudentMainActivity;
 
 /**
  * A base activity that implements common functionality for admin activities.
@@ -35,16 +33,5 @@ public abstract class AdminParentActivity extends DataServiceParentActivity {
         debugMenuItem.setChecked(debugFlag);
 
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.studentHomeMenuItem:
-                startActivity(new Intent(this, StudentMainActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 }

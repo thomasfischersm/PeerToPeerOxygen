@@ -7,8 +7,10 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.admin.AdminMainActivity;
 import com.playposse.peertopeeroxygen.android.data.facebook.FacebookProfilePhotoCache;
 import com.playposse.peertopeeroxygen.android.student.StudentAboutActivity;
+import com.playposse.peertopeeroxygen.android.student.StudentMainActivity;
 
 /**
  * An activity that connects to the {@link DataService}.
@@ -41,6 +43,12 @@ public abstract class DataServiceParentActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.studentHomeMenuItem:
+                startActivity(new Intent(this, StudentMainActivity.class));
+                return true;
+            case R.id.adminHomeMenuItem:
+                startActivity(new Intent(this, AdminMainActivity.class));
+                return true;
             case R.id.refreshMenuItem:
                 dataServiceConnection.getLocalBinder().reload();
                 return true;
