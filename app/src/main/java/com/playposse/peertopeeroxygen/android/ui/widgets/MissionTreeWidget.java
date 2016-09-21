@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.text.TextPaint;
 import android.util.AttributeSet;
@@ -16,6 +17,7 @@ import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.playposse.peertopeeroxygen.android.R;
@@ -177,12 +179,24 @@ public class MissionTreeWidget extends View {
      */
     private final class DrawAsyncTask extends AsyncTask<MissionTreeBean, Void, Bitmap> {
 
+        final int displayWidth;
+
+        public DrawAsyncTask() {
+            Context context = MissionTreeWidget.this.getContext();
+            WindowManager windowManager =
+                    (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            Point point = new Point();
+            windowManager.getDefaultDisplay().getSize(point);
+            displayWidth = point.x;
+        }
+
         @Override
         protected Bitmap doInBackground(MissionTreeBean[] missionTreeBeans) {
             long start = System.currentTimeMillis();
 
             MissionTreeBean missionTreeBean = missionTreeBeans[0];
-            rows = MissionTreeUntangler.untangle(missionTreeBean);
+            int maxHoldersPerColumn = (int) (displayWidth / toPx(COLUMN_WIDTH));
+            rows = MissionTreeUntangler.untangle(missionTreeBean, maxHoldersPerColumn);
             MissionTreeUntangler.debugDump(rows);
 
             desiredWidth = MissionTreeUntangler.getMaxColumns(rows) * COLUMN_WIDTH;

@@ -18,8 +18,11 @@ public class MissionTreeUntangler {
 
     private static final String LOG_CAT = MissionTreeUntangler.class.getSimpleName();
 
-    public static List<List<MissionPlaceHolder>> untangle(MissionTreeBean missionTreeBean) {
-        return moveChildrenUnderParent(sortIntoRows(sortIntoList(missionTreeBean)));
+    public static List<List<MissionPlaceHolder>> untangle(
+            MissionTreeBean missionTreeBean,
+            int maxColumnWidth) {
+
+        return compactToMaxWidth(moveChildrenUnderParent(sortIntoRows(sortIntoList(missionTreeBean))), maxColumnWidth);
     }
 
     private static List<MissionPlaceHolder> sortIntoList(MissionTreeBean missionTreeBean) {
@@ -142,10 +145,56 @@ public class MissionTreeUntangler {
         return rows;
     }
 
+    /**
+     * Tries to make the column width match the width of the screen. If there is a mission that
+     * has no children or parent (an optional mission) and it would extend passed the visible screen
+     * horizontally, it'll be moved down.
+     */
+    private static List<List<MissionPlaceHolder>> compactToMaxWidth(
+            List<List<MissionPlaceHolder>> rows,
+            int maxColumnWidth) {
+
+        for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
+            List<MissionPlaceHolder> row = rows.get(rowIndex);
+            for (int columnIndex = row.size() - 1; columnIndex >= maxColumnWidth; columnIndex--) {
+                if (columnIndex >= maxColumnWidth) {
+                    // Find free slot father down
+                    MissionPlaceHolder holder = row.get(columnIndex);
+                    int targetRow = findRowWithFreeSlot(rows, rowIndex, maxColumnWidth);
+                    moveToRowEnd(rows, holder, targetRow);
+                }
+            }
+        }
+
+        return rows;
+    }
+
+    private static int findRowWithFreeSlot(
+            List<List<MissionPlaceHolder>> rows,
+            int rowIndex,
+            int maxColumnWidth) {
+
+        if (rows.get(rowIndex).size() < maxColumnWidth) {
+            return rowIndex;
+        }
+
+        for (++rowIndex; rowIndex < rows.size(); rowIndex++) {
+            List<MissionPlaceHolder> row = rows.get(rowIndex);
+            if (row.size() < maxColumnWidth) {
+                return rowIndex;
+            }
+        }
+        return rowIndex;
+    }
+
     private static void moveToRowEnd(
             List<List<MissionPlaceHolder>> rows,
             MissionPlaceHolder holder,
             int newRowIndex) {
+
+        if (newRowIndex == rows.size()) {
+            rows.add(new ArrayList<MissionPlaceHolder>());
+        }
 
         move(rows, holder, newRowIndex, rows.get(newRowIndex).size());
     }
@@ -183,6 +232,9 @@ public class MissionTreeUntangler {
         }
 
         // Move into new row
+        if (newRowIndex == rows.size()) {
+            rows.add(new ArrayList<MissionPlaceHolder>());
+        }
         List<MissionPlaceHolder> newRow = rows.get(newRowIndex);
         newRow.add(newColumnIndex, holder);
         holder.setRow(newRowIndex);
