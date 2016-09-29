@@ -14,9 +14,9 @@ import java.io.IOException;
 /**
  * A service that is required by Firebase to monitor changes to its access token.
  */
-public class OxygenFirebaseInstanceIdService extends FirebaseInstanceIdService {
+public class OxygenFirebaseInstanceId2Service extends FirebaseInstanceIdService {
 
-    private static final String LOG_CAT = OxygenFirebaseInstanceIdService.class.getSimpleName();
+    private static final String LOG_CAT = OxygenFirebaseInstanceId2Service.class.getSimpleName();
 
     @Override
     public void onTokenRefresh() {
