@@ -28,7 +28,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".firebase.OxygenFirebaseInstanceId2Service">
+        <service android:name=".firebase.OxygenFirebaseInstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
