@@ -20,6 +20,10 @@ public class GetAllMissionStatsServerAction extends ServerAction {
         ArrayList<MissionStatsBean> missionStatsBeanList =
                 new ArrayList<>(missionStatsList.size());
         for (MissionStats missionStats : missionStatsList) {
+            if (missionStats.getMissionRef().get() == null) {
+                // The mission must have been deleted.
+                continue;
+            }
             missionStatsBeanList.add(new MissionStatsBean(missionStats));
         }
 
