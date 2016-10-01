@@ -7,11 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.missiondependencies.MissionCycleDetector;
 import com.playposse.peertopeeroxygen.android.ui.widgets.RequiredMissionListView;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A {@link Fragment} that edits prerequisite missions.
@@ -74,8 +76,10 @@ public class AdminMissionPrerequisitesFragment
                     new ArrayList<Long>(),
                     missionBean);
         } else {
+            List<MissionBean> availableMissions =
+                    MissionCycleDetector.findPossibleChildren(missionBean, missionTreeBean);
             requiredMissionsListView.setAdapter(
-                    missionTreeBean.getMissionBeans(),
+                    availableMissions,
                     missionBean.getRequiredMissionIds(),
                     missionBean);
         }
