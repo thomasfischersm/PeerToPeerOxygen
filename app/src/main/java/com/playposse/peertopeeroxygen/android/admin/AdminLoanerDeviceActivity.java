@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,19 +136,20 @@ public class AdminLoanerDeviceActivity
     }
 
     private static class LoanerDevicesLoader extends Loader<List<LoanerDeviceBean>> {
-        public LoanerDevicesLoader(Context context) {
+        private LoanerDevicesLoader(Context context) {
             super(context);
         }
     }
 
     private class LoanerDeviceAdapter extends ArrayAdapter<LoanerDeviceBean> {
 
-        public LoanerDeviceAdapter(Context context, List<LoanerDeviceBean> loanerDeviceBeans) {
+        private LoanerDeviceAdapter(Context context, List<LoanerDeviceBean> loanerDeviceBeans) {
             super(context, R.layout.list_item_loaner_device, loanerDeviceBeans);
         }
 
+        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             final ViewHolder viewHolder;
             if (convertView == null) {
                 convertView = getLayoutInflater().inflate(

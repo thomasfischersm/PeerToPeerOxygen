@@ -4,6 +4,7 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Loader;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,22 +99,23 @@ public class AdminMissionStatsActivity
      */
     private static class MissionStatsLoader extends Loader<List<MissionStatsBean>> {
 
-        public MissionStatsLoader(Context context) {
+        private MissionStatsLoader(Context context) {
             super(context);
         }
     }
 
     private class MissionStatsArrayAdapter extends ArrayAdapter<MissionStatsBean> {
 
-        public MissionStatsArrayAdapter(List<MissionStatsBean> missionStatsBeanList) {
+        private MissionStatsArrayAdapter(List<MissionStatsBean> missionStatsBeanList) {
             super(
                     AdminMissionStatsActivity.this,
                     R.layout.list_item_mission_stats,
                     missionStatsBeanList);
         }
 
+        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             final ViewHolder viewHolder;
 
             if (convertView == null) {

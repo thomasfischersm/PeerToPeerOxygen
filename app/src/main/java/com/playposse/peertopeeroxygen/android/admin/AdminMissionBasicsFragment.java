@@ -102,34 +102,6 @@ public class AdminMissionBasicsFragment
         return rootView;
     }
 
-    public EditText getBuddyVideoIdEditText() {
-        return buddyVideoIdEditText;
-    }
-
-    public EditText getHeartPointEditText() {
-        return heartPointEditText;
-    }
-
-    public EditText getMinimumStudyCountEditText() {
-        return minimumStudyCountEditText;
-    }
-
-    public EditText getNameEditText() {
-        return nameEditText;
-    }
-
-    public EditText getPracticePointEditText() {
-        return practicePointEditText;
-    }
-
-    public EditText getStudentVideoIdEditText() {
-        return studentVideoIdEditText;
-    }
-
-    public EditText getTeachPointEditText() {
-        return teachPointEditText;
-    }
-
     @Override
     public void showMission(MissionTreeBean missionTreeBean, MissionBean missionBean) {
         this.missionTreeBean = missionTreeBean;

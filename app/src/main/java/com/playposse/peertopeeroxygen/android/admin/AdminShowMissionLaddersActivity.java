@@ -3,6 +3,7 @@ package com.playposse.peertopeeroxygen.android.admin;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,19 +57,22 @@ public class AdminShowMissionLaddersActivity extends AdminParentActivity {
     private final class MissionLadderBeanArrayAdapter
             extends ArrayAdapter<MissionLadderBean> {
 
-        public MissionLadderBeanArrayAdapter(List<MissionLadderBean> objects) {
+        private MissionLadderBeanArrayAdapter(List<MissionLadderBean> objects) {
             super(getApplicationContext(), R.layout.list_item_mission_ladder, objects);
         }
 
+        @NonNull
         @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) AdminShowMissionLaddersActivity.this
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(R.layout.list_item_mission_ladder, parent, false);
+        public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) AdminShowMissionLaddersActivity.this
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.list_item_mission_ladder, parent, false);
+            }
 
             final MissionLadderBean missionLadderBean = getItem(position);
             TextView missionLadderNameLink =
-                    (TextView) rowView.findViewById(R.id.missionLadderNameLink);
+                    (TextView) convertView.findViewById(R.id.missionLadderNameLink);
             missionLadderNameLink.setText(missionLadderBean.getName());
             missionLadderNameLink.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -84,7 +88,7 @@ public class AdminShowMissionLaddersActivity extends AdminParentActivity {
             });
 
             TextView missionLadderDeleteLink =
-                    (TextView) rowView.findViewById(R.id.missionLadderDeleteLink);
+                    (TextView) convertView.findViewById(R.id.missionLadderDeleteLink);
             missionLadderDeleteLink.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -104,7 +108,7 @@ public class AdminShowMissionLaddersActivity extends AdminParentActivity {
                 }
             });
 
-            return rowView;
+            return convertView;
         }
     }
 }

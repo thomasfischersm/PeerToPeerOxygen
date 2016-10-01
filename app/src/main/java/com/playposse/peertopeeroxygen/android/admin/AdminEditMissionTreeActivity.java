@@ -3,6 +3,7 @@ package com.playposse.peertopeeroxygen.android.admin;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -230,25 +231,27 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
     private final class MissionBeanArrayAdapter
             extends ArrayAdapter<MissionBean> {
 
-        public MissionBeanArrayAdapter(List<MissionBean> objects) {
+        private MissionBeanArrayAdapter(List<MissionBean> objects) {
             super(getApplicationContext(), R.layout.list_item_mission, objects);
         }
 
         @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) AdminEditMissionTreeActivity.this
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(R.layout.list_item_mission, parent, false);
+        public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) AdminEditMissionTreeActivity.this
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.list_item_mission, parent, false);
+            }
 
             final MissionBean missionBean = getItem(position);
-            TextView missionNameLink = (TextView) rowView.findViewById(R.id.missionNameLink);
+            TextView missionNameLink = (TextView) convertView.findViewById(R.id.missionNameLink);
             missionNameLink.setText(missionBean.getName());
             missionNameLink.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     saveIfNecessary();
 
-                    Long missionId = Long.valueOf(missionBean.getId());
+                    Long missionId = missionBean.getId();
                     Intent intent = new Intent(
                             getApplicationContext(),
                             AdminEditMissionActivity.class);
@@ -260,7 +263,7 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
             });
 
             TextView missionDeleteLink =
-                    (TextView) rowView.findViewById(R.id.missionDeleteLink);
+                    (TextView) convertView.findViewById(R.id.missionDeleteLink);
             missionDeleteLink.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -279,7 +282,7 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
                 }
             });
 
-            return rowView;
+            return convertView;
         }
     }
 }

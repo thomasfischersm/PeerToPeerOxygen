@@ -87,11 +87,7 @@ public class AdminMissionPrerequisitesFragment
 
     @Override
     public boolean isDirty(MissionBean missionBean) {
-        if (requiredMissionsListView == null) {
-            return false;
-        } else {
-            return requiredMissionsListView.isDirty();
-        }
+        return (requiredMissionsListView != null) && requiredMissionsListView.isDirty();
     }
 
     @Override

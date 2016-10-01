@@ -2,6 +2,7 @@ package com.playposse.peertopeeroxygen.android.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -54,12 +55,13 @@ public class AdminStudentRosterActivity
      */
     private class StudentArrayAdapter extends ArrayAdapter<UserBean> {
 
-        public StudentArrayAdapter(List<UserBean> objects) {
+        private StudentArrayAdapter(List<UserBean> objects) {
             super(getApplicationContext(), R.layout.list_item_student, objects);
         }
 
+        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             // Create list_item view if needed.
             final ViewHolder viewHolder;
             if (convertView == null) {
@@ -79,9 +81,9 @@ public class AdminStudentRosterActivity
 
             viewHolder.firstNameTextView.setText(student.getFirstName());
             viewHolder.lastNameTextView.setText(student.getLastName());
-            viewHolder.teachPointsTextView.setText("" + teachPoints);
-            viewHolder.practicePointsTextView.setText("" + practicePoints);
-            viewHolder.heartPointsTextView.setText("" + heartPoints);
+            viewHolder.teachPointsTextView.setText(Integer.toString(teachPoints));
+            viewHolder.practicePointsTextView.setText(Integer.toString(practicePoints));
+            viewHolder.heartPointsTextView.setText(Integer.toString(heartPoints));
 
             // Add click handler to open student detail activity.
             convertView.setOnClickListener(new View.OnClickListener() {

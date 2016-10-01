@@ -53,7 +53,7 @@
 
     <!-- Admin backup activity -->
     <string name="backup_to_google_drive_button">Backup mission data to Google Drive</string>
-    <string name="backup_mission_data_file_name">Backup of mission data %1$s-%2$s-%3$s.txt</string>
+    <string name="backup_mission_data_file_name">Backup of mission data %1$d-%2$d-%3$d.txt</string>
 
     <!-- Admin loaner devices activity -->
     <string name="loaner_devices_title">Loaner devices</string>

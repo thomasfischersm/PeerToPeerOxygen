@@ -3,6 +3,7 @@ package com.playposse.peertopeeroxygen.android.admin;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -132,15 +133,17 @@ public class AdminEditMissionLadderActivity extends AdminParentActivity {
     private final class MissionTreeBeanArrayAdapter
             extends ArrayAdapter<MissionTreeBean> {
 
-        public MissionTreeBeanArrayAdapter(List<MissionTreeBean> objects) {
+        private MissionTreeBeanArrayAdapter(List<MissionTreeBean> objects) {
             super(getApplicationContext(), R.layout.list_item_mission_tree, objects);
         }
 
         @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) AdminEditMissionLadderActivity.this
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(R.layout.list_item_mission_tree, parent, false);
+        public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) AdminEditMissionLadderActivity.this
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.list_item_mission_tree, parent, false);
+            }
 
             final MissionTreeBean missionTreeBean = getItem(position);
             final String missionTreeNameLabel = String.format(
@@ -148,14 +151,14 @@ public class AdminEditMissionLadderActivity extends AdminParentActivity {
                     missionTreeBean.getLevel(),
                     missionTreeBean.getName());
             TextView missionTreeNameLink =
-                    (TextView) rowView.findViewById(R.id.missionTreeNameLink);
+                    (TextView) convertView.findViewById(R.id.missionTreeNameLink);
             missionTreeNameLink.setText(missionTreeNameLabel);
             missionTreeNameLink.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     saveIfNecessary();
 
-                    Long missionTreeId = new Long(missionTreeBean.getId());
+                    Long missionTreeId = missionTreeBean.getId();
                     Intent intent = new Intent(
                             getApplicationContext(),
                             AdminEditMissionTreeActivity.class);
@@ -166,7 +169,7 @@ public class AdminEditMissionLadderActivity extends AdminParentActivity {
             });
 
             TextView missionTreeDeleteLink =
-                    (TextView) rowView.findViewById(R.id.missionTreeDeleteLink);
+                    (TextView) convertView.findViewById(R.id.missionTreeDeleteLink);
             missionTreeDeleteLink.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -186,7 +189,7 @@ public class AdminEditMissionLadderActivity extends AdminParentActivity {
                 }
             });
 
-            return rowView;
+            return convertView;
         }
     }
 }
