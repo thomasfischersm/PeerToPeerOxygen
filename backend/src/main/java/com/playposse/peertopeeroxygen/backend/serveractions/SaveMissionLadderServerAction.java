@@ -2,7 +2,8 @@ package com.playposse.peertopeeroxygen.backend.serveractions;
 
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.playposse.peertopeeroxygen.backend.beans.MissionLadderBean;
-import com.playposse.peertopeeroxygen.backend.firebase.FirebaseUtil;
+import com.playposse.peertopeeroxygen.backend.firebase.FirebaseServerAction;
+import com.playposse.peertopeeroxygen.backend.firebase.SendMissionDataInvalidationServerAction;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
 
 import java.io.IOException;
@@ -22,7 +23,7 @@ public class SaveMissionLadderServerAction {
         MissionLadder missionLadder = missionLadderBean.toEntity();
         ofy().save().entity(missionLadder).now();
 
-        FirebaseUtil.sendMissionDataInvalidation();
+        SendMissionDataInvalidationServerAction.sendMissionDataInvalidation();
 
         return new MissionLadderBean(missionLadder);
     }

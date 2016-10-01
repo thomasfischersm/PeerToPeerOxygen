@@ -3,7 +3,8 @@ package com.playposse.peertopeeroxygen.backend.serveractions;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
-import com.playposse.peertopeeroxygen.backend.firebase.FirebaseUtil;
+import com.playposse.peertopeeroxygen.backend.firebase.FirebaseServerAction;
+import com.playposse.peertopeeroxygen.backend.firebase.SendPointsUpdateToStudentServerAction;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 import com.playposse.peertopeeroxygen.backend.schema.PointsTransferAuditLog;
 import com.playposse.peertopeeroxygen.backend.schema.UserPoints;
@@ -57,6 +58,6 @@ public class AddPointsByAdminServerAction extends ServerAction {
         ofy().save().entity(auditLog).now();
 
         // Send notification to the student via Firebase message.
-        FirebaseUtil.sendPointsUpdateToStudent(student);
+        SendPointsUpdateToStudentServerAction.sendPointsUpdateToStudent(student);
     }
 }

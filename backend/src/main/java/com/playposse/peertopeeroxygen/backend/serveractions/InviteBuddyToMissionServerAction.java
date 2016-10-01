@@ -3,7 +3,8 @@ package com.playposse.peertopeeroxygen.backend.serveractions;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
 import com.playposse.peertopeeroxygen.backend.exceptions.BuddyLacksMissionExperienceException;
-import com.playposse.peertopeeroxygen.backend.firebase.FirebaseUtil;
+import com.playposse.peertopeeroxygen.backend.firebase.FirebaseServerAction;
+import com.playposse.peertopeeroxygen.backend.firebase.SendMissionInviteToBuddyServerAction;
 import com.playposse.peertopeeroxygen.backend.schema.MissionCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 
@@ -36,7 +37,7 @@ public class InviteBuddyToMissionServerAction extends ServerAction {
             }
         }
 
-        FirebaseUtil.sendMissionInviteToBuddy(
+        SendMissionInviteToBuddyServerAction.sendMissionInviteToBuddy(
                 buddy.getFirebaseToken(),
                 student,
                 missionLadderId,

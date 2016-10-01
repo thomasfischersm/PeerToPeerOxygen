@@ -4,7 +4,8 @@ import com.google.api.server.spi.response.UnauthorizedException;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.beans.MissionTreeBean;
-import com.playposse.peertopeeroxygen.backend.firebase.FirebaseUtil;
+import com.playposse.peertopeeroxygen.backend.firebase.FirebaseServerAction;
+import com.playposse.peertopeeroxygen.backend.firebase.SendMissionDataInvalidationServerAction;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 
@@ -58,7 +59,7 @@ public class SaveMissionTreeServerAction {
 
         log.info("Saving required mission count: " + missionTree.getRequiredMissions().size());
 
-        FirebaseUtil.sendMissionDataInvalidation();
+        SendMissionDataInvalidationServerAction.sendMissionDataInvalidation();
 
         return new MissionTreeBean(missionTree);
     }

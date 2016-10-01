@@ -3,7 +3,8 @@ package com.playposse.peertopeeroxygen.backend.serveractions;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
-import com.playposse.peertopeeroxygen.backend.firebase.FirebaseUtil;
+import com.playposse.peertopeeroxygen.backend.firebase.FirebaseServerAction;
+import com.playposse.peertopeeroxygen.backend.firebase.SendMissionCompletionToBuddyServerAction;
 import com.playposse.peertopeeroxygen.backend.schema.MentoringAuditLog;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
 import com.playposse.peertopeeroxygen.backend.schema.MissionCompletion;
@@ -46,7 +47,7 @@ public class ReportMissionCheckoutCompleteServerAction extends ServerAction {
 
 
         // Send a Firebase message to the student to confirm completion.
-        FirebaseUtil.sendMissionCompletionToBuddy(
+        SendMissionCompletionToBuddyServerAction.sendMissionCompletionToBuddy(
                 buddy.getFirebaseToken(),
                 student,
                 missionId);

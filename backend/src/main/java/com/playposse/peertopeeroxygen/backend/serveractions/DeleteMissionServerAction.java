@@ -3,7 +3,8 @@ package com.playposse.peertopeeroxygen.backend.serveractions;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
-import com.playposse.peertopeeroxygen.backend.firebase.FirebaseUtil;
+import com.playposse.peertopeeroxygen.backend.firebase.FirebaseServerAction;
+import com.playposse.peertopeeroxygen.backend.firebase.SendMissionDataInvalidationServerAction;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
@@ -41,6 +42,6 @@ public class DeleteMissionServerAction extends ServerAction {
 
         ofy().delete().key(missionKey).now();
 
-        FirebaseUtil.sendMissionDataInvalidation();
+        SendMissionDataInvalidationServerAction.sendMissionDataInvalidation();
     }
 }
