@@ -66,7 +66,7 @@ public class MissionCheckoutCompletionClientAction extends FirebaseClientAction 
      */
     private static final class MissionCheckoutCompletionMessage extends FirebaseMessage {
 
-        public MissionCheckoutCompletionMessage(RemoteMessage message) {
+        private MissionCheckoutCompletionMessage(RemoteMessage message) {
             super(message);
         }
 
@@ -74,7 +74,7 @@ public class MissionCheckoutCompletionClientAction extends FirebaseClientAction 
             return Long.valueOf(data.get(MISSION_KEY));
         }
 
-        public UserBeanParcelable getStudentBean() {
+        private UserBeanParcelable getStudentBean() {
             return UserBeanParcelable.fromJson(data.get(STUDENT_BEAN));
         }
     }

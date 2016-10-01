@@ -45,11 +45,11 @@ public class UpdatePointsClientAction extends FirebaseClientAction {
      */
     private static final class UpdatePointsMessage extends FirebaseMessage {
 
-        public UpdatePointsMessage(RemoteMessage message) {
+        private UpdatePointsMessage(RemoteMessage message) {
             super(message);
         }
 
-        public UserBeanParcelable getStudentBean() {
+        private UserBeanParcelable getStudentBean() {
             return UserBeanParcelable.fromJson(data.get(STUDENT_BEAN));
         }
     }

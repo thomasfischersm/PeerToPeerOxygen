@@ -9,14 +9,11 @@ public interface DataReceivedCallback {
 
     /**
      * Called when data is available. It's the job of this method to switch to the UI thread.
-     *
-     * @param dataRepository
      */
     void receiveData(DataRepository dataRepository);
 
     /**
      * Used to switch to the UI Thread of the actitivy implementing this interface.
-     * @param runnable
      */
     void runOnUiThread(Runnable runnable);
 }

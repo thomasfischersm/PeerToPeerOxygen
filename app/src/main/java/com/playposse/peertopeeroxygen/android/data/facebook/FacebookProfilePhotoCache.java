@@ -122,7 +122,7 @@ public class FacebookProfilePhotoCache {
         private final String fbProfileId;
         private final String photoUrlString;
 
-        public LoadProfilePhotoAsyncTask(
+        private LoadProfilePhotoAsyncTask(
                 Context context,
                 ImageView imageView,
                 String fbProfileId,

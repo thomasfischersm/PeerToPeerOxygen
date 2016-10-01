@@ -61,7 +61,7 @@ public class MissionSeniorInvitationClientAction extends FirebaseClientAction {
     private static final class MissionSeniorInviteMessage
             extends FirebaseMessage {
 
-        public MissionSeniorInviteMessage(RemoteMessage message) {
+        private MissionSeniorInviteMessage(RemoteMessage message) {
             super(message);
         }
 
@@ -77,11 +77,11 @@ public class MissionSeniorInvitationClientAction extends FirebaseClientAction {
             return Long.valueOf(data.get(MISSION_KEY));
         }
 
-        public UserBeanParcelable getStudentBean() {
+        private UserBeanParcelable getStudentBean() {
             return UserBeanParcelable.fromJson(data.get(FROM_STUDENT_BEAN));
         }
 
-        public UserBeanParcelable getBuddyBean() {
+        private UserBeanParcelable getBuddyBean() {
             return UserBeanParcelable.fromJson(data.get(BUDDY_BEAN));
         }
     }

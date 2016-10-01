@@ -60,7 +60,7 @@ public class MissionInvitationClientAction extends FirebaseClientAction {
     private static final class MissionInviteMessage
             extends FirebaseMessage {
 
-        public MissionInviteMessage(RemoteMessage message) {
+        private MissionInviteMessage(RemoteMessage message) {
             super(message);
         }
 
@@ -76,7 +76,7 @@ public class MissionInvitationClientAction extends FirebaseClientAction {
             return Long.valueOf(data.get(MISSION_KEY));
         }
 
-        public UserBeanParcelable getStudentBean() {
+        private UserBeanParcelable getStudentBean() {
             return UserBeanParcelable.fromJson(data.get(FROM_STUDENT_BEAN));
         }
     }

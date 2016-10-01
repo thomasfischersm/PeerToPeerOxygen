@@ -99,7 +99,7 @@ public class MissionCompletionClientAction extends FirebaseClientAction {
      */
     private static final class MissionCompletionMessage extends FirebaseMessage {
 
-        public MissionCompletionMessage(RemoteMessage message) {
+        private MissionCompletionMessage(RemoteMessage message) {
             super(message);
         }
 
@@ -107,7 +107,7 @@ public class MissionCompletionClientAction extends FirebaseClientAction {
             return Long.valueOf(data.get(MISSION_KEY));
         }
 
-        public UserBeanParcelable getBuddyBean() {
+        private UserBeanParcelable getBuddyBean() {
             return UserBeanParcelable.fromJson(data.get(BUDDY_BEAN));
         }
     }
