@@ -21,28 +21,28 @@ import com.playposse.peertopeeroxygen.backend.beans.MissionTreeBean;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
 import com.playposse.peertopeeroxygen.backend.exceptions.BuddyLacksMissionExperienceException;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
-import com.playposse.peertopeeroxygen.backend.serveractions.AddPointsByAdminAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionLadderAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionTreeAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.GetAllLoanerDevicesAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.GetAllMissionFeedbackAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.GetAllMissionStatsAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.GetMissionDataAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.GetStudentRosterAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.InviteBuddyToMissionAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.InviteSeniorBuddyToMissionAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.MarkLoanerDeviceAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.RegisterOrLoginAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.ReportMissionCheckoutCompleteAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.ReportMissionCompleteAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionLadderAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionTreeAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.AddPointsByAdminServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionLadderServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionTreeServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.GetAllLoanerDevicesServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.GetAllMissionFeedbackServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.GetAllMissionStatsServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.GetMissionDataServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.GetStudentRosterServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.InviteBuddyToMissionServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.InviteSeniorBuddyToMissionServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.MarkLoanerDeviceServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.RegisterOrLoginServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.ReportMissionCheckoutCompleteServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.ReportMissionCompleteServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionLadderServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionTreeServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.ServerAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.SubmitMissionFeedbackAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.UnmarkLoanerDeviceAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.UpdateFirebaseTokenAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.SubmitMissionFeedbackServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.UnmarkLoanerDeviceServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.UpdateFirebaseTokenServerAction;
 
 import java.io.IOException;
 import java.util.List;
@@ -73,7 +73,7 @@ public class PeerToPeerOxygenEndPoint {
     public CompleteMissionDataBean getMissionData(@Named("sessionId") Long sessionId)
             throws UnauthorizedException {
 
-        return GetMissionDataAction.getMissionData(sessionId);
+        return GetMissionDataServerAction.getMissionData(sessionId);
     }
 
     @ApiMethod(name = "saveMissionLadder")
@@ -83,7 +83,7 @@ public class PeerToPeerOxygenEndPoint {
 
         protectByAdminCheck(sessionId);
 
-        return SaveMissionLadderAction.saveMissionLadder(sessionId, missionLadderBean);
+        return SaveMissionLadderServerAction.saveMissionLadder(sessionId, missionLadderBean);
     }
 
     @ApiMethod(name = "deleteMissionLadder")
@@ -94,7 +94,7 @@ public class PeerToPeerOxygenEndPoint {
 
         protectByAdminCheck(sessionId);
 
-        DeleteMissionLadderAction.deleteMissionLadder(missionLadderId);
+        DeleteMissionLadderServerAction.deleteMissionLadder(missionLadderId);
     }
 
     @ApiMethod(name = "saveMissionTree")
@@ -105,7 +105,7 @@ public class PeerToPeerOxygenEndPoint {
 
         protectByAdminCheck(sessionId);
 
-        return SaveMissionTreeAction.saveMissionTree(sessionId, missionLadderId, missionTreeBean);
+        return SaveMissionTreeServerAction.saveMissionTree(sessionId, missionLadderId, missionTreeBean);
     }
 
     @ApiMethod(name = "deleteMissionTree")
@@ -116,7 +116,7 @@ public class PeerToPeerOxygenEndPoint {
 
         protectByAdminCheck(sessionId);
 
-        DeleteMissionTreeAction.deleteMissionTree(missionLadderId, missionTreeId);
+        DeleteMissionTreeServerAction.deleteMissionTree(missionLadderId, missionTreeId);
     }
 
     @ApiMethod(name = "saveMission")
@@ -129,7 +129,7 @@ public class PeerToPeerOxygenEndPoint {
 
         protectByAdminCheck(sessionId);
 
-        return SaveMissionAction.saveMission(
+        return SaveMissionServerAction.saveMission(
                 missionLadderId,
                 missionTreeId,
                 missionBean);
@@ -145,7 +145,7 @@ public class PeerToPeerOxygenEndPoint {
 
         protectByAdminCheck(sessionId);
 
-        DeleteMissionAction.deleteMission(sessionId, missionLadderId, missionTreeId, missionId);
+        DeleteMissionServerAction.deleteMission(sessionId, missionLadderId, missionTreeId, missionId);
     }
 
     private OxygenUser protectByAdminCheck(Long sessionId) throws UnauthorizedException {
@@ -163,7 +163,7 @@ public class PeerToPeerOxygenEndPoint {
             @Named("firebaseToken") String firebaseToken,
             @Named("loanerDeviceId") @Nullable Long loanerDeviceId) {
 
-        return RegisterOrLoginAction.registerOrLogin(accessToken, firebaseToken, loanerDeviceId);
+        return RegisterOrLoginServerAction.registerOrLogin(accessToken, firebaseToken, loanerDeviceId);
     }
 
     @ApiMethod(name = "updateFirebaseToken")
@@ -172,7 +172,7 @@ public class PeerToPeerOxygenEndPoint {
             @Named("firebaseToken") String firebaseToken)
             throws UnauthorizedException {
 
-        UpdateFirebaseTokenAction.updateFirebaseToken(sessionId, firebaseToken);
+        UpdateFirebaseTokenServerAction.updateFirebaseToken(sessionId, firebaseToken);
     }
 
     /**
@@ -189,7 +189,7 @@ public class PeerToPeerOxygenEndPoint {
             @Named("missionId") Long missionId)
             throws UnauthorizedException, IOException, BuddyLacksMissionExperienceException {
 
-        return InviteBuddyToMissionAction.inviteBuddyToMission(
+        return InviteBuddyToMissionServerAction.inviteBuddyToMission(
                 sessionId,
                 buddyId,
                 missionLadderId,
@@ -214,7 +214,7 @@ public class PeerToPeerOxygenEndPoint {
             @Named("missionId") Long missionId)
             throws UnauthorizedException, IOException, BuddyLacksMissionExperienceException {
 
-        return InviteSeniorBuddyToMissionAction.inviteSeniorBuddyToMission(
+        return InviteSeniorBuddyToMissionServerAction.inviteSeniorBuddyToMission(
                 sessionId,
                 studentId,
                 seniorBuddyId,
@@ -230,7 +230,7 @@ public class PeerToPeerOxygenEndPoint {
             @Named("missionId") Long missionId)
             throws UnauthorizedException, IOException {
 
-        ReportMissionCompleteAction.reportMissionComplete(sessionId, studentId, missionId);
+        ReportMissionCompleteServerAction.reportMissionComplete(sessionId, studentId, missionId);
     }
 
     @ApiMethod(name = "reportMissionCheckoutComplete")
@@ -241,7 +241,7 @@ public class PeerToPeerOxygenEndPoint {
             @Named("missionId") Long missionId)
             throws UnauthorizedException, IOException {
 
-        ReportMissionCheckoutCompleteAction
+        ReportMissionCheckoutCompleteServerAction
                 .reportMissionCheckoutComplete(sessionId, studentId, buddyId, missionId);
     }
 
@@ -251,7 +251,7 @@ public class PeerToPeerOxygenEndPoint {
 
         protectByAdminCheck(sessionId);
 
-        return new GetStudentRosterAction().getStudentRoster();
+        return new GetStudentRosterServerAction().getStudentRoster();
     }
 
     @ApiMethod(name = "addPointsByAdmin")
@@ -264,7 +264,7 @@ public class PeerToPeerOxygenEndPoint {
 
         OxygenUser adminUser = protectByAdminCheck(sessionId);
 
-        new AddPointsByAdminAction().addPointsByAdmin(adminUser, studentId, pointType, addedPoints);
+        new AddPointsByAdminServerAction().addPointsByAdmin(adminUser, studentId, pointType, addedPoints);
     }
 
     @ApiMethod(name = "submitMissionFeedback")
@@ -274,7 +274,7 @@ public class PeerToPeerOxygenEndPoint {
             @Named("rating") int rating,
             @Named("comment") @Nullable String comment) throws UnauthorizedException {
 
-        new SubmitMissionFeedbackAction()
+        new SubmitMissionFeedbackServerAction()
                 .submitMissionFeedback(sessionId, missionId, rating, comment);
     }
 
@@ -284,7 +284,7 @@ public class PeerToPeerOxygenEndPoint {
 
         protectByAdminCheck(sessionId);
 
-        return GetAllMissionFeedbackAction.getAllMissionFeedback();
+        return GetAllMissionFeedbackServerAction.getAllMissionFeedback();
     }
 
     @ApiMethod(name = "getAllMissionStats")
@@ -293,7 +293,7 @@ public class PeerToPeerOxygenEndPoint {
 
         protectByAdminCheck(sessionId);
 
-        return GetAllMissionStatsAction.getAllMissionStats();
+        return GetAllMissionStatsServerAction.getAllMissionStats();
     }
 
     @ApiMethod(name = "markLoanerDevice")
@@ -304,7 +304,7 @@ public class PeerToPeerOxygenEndPoint {
 
         protectByAdminCheck(sessionId);
 
-        return MarkLoanerDeviceAction.markLoanerDevice(sessionId, friendlyName);
+        return MarkLoanerDeviceServerAction.markLoanerDevice(sessionId, friendlyName);
     }
 
     @ApiMethod(name = "unmarkLoanerDevice")
@@ -315,7 +315,7 @@ public class PeerToPeerOxygenEndPoint {
 
         protectByAdminCheck(sessionId);
 
-        UnmarkLoanerDeviceAction.unmarkLoanerDevice(loanerDeviceId);
+        UnmarkLoanerDeviceServerAction.unmarkLoanerDevice(loanerDeviceId);
     }
 
     @ApiMethod(name = "getAllLoanerDevices")
@@ -324,6 +324,6 @@ public class PeerToPeerOxygenEndPoint {
 
         protectByAdminCheck(sessionId);
 
-        return GetAllLoanerDevicesAction.getAllLoanerDevices();
+        return GetAllLoanerDevicesServerAction.getAllLoanerDevices();
     }
 }

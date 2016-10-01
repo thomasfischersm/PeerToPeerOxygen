@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
-import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionStatsAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionStatsClientAction;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionStatsBean;
 
 import java.util.Collections;
@@ -54,7 +54,7 @@ public class AdminMissionStatsActivity
         Log.i(LOG_CAT, "receiveData is called");
 
         dataServiceConnection.getLocalBinder().getAllMissionStats(
-                new GetAllMissionStatsAction.Callback() {
+                new GetAllMissionStatsClientAction.Callback() {
                     @Override
                     public void onResult(List<MissionStatsBean> missionStatsBeanList) {
                         Log.i(LOG_CAT, "stats callback is called.");

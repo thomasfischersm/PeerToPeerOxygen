@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
-import com.playposse.peertopeeroxygen.android.data.clientactions.GetStudentRosterAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.GetStudentRosterClientAction;
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class AdminStudentRosterActivity
         extends AdminParentActivity
-        implements GetStudentRosterAction.StudentRosterCallback {
+        implements GetStudentRosterClientAction.StudentRosterCallback {
 
     private static final String LOG_CAT = AdminStudentRosterActivity.class.getSimpleName();
 

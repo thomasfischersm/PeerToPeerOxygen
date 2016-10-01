@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
-import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionFeedbackAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionFeedbackClientAction;
 import com.playposse.peertopeeroxygen.android.ui.widgets.StarRatingView;
 import com.playposse.peertopeeroxygen.android.util.EmailUtil;
 import com.playposse.peertopeeroxygen.android.util.StringUtil;
@@ -51,7 +51,7 @@ public class AdminMissionFeedbackActivity
     @Override
     public void receiveData(DataRepository dataRepository) {
         dataServiceConnection.getLocalBinder().getAllMissionFeedback(
-                new GetAllMissionFeedbackAction.Callback() {
+                new GetAllMissionFeedbackClientAction.Callback() {
                     @Override
                     public void onResult(List<MissionFeedbackBean> missionFeedbackBeanList) {
                         missionFeedbackLoader.commitContentChanged();

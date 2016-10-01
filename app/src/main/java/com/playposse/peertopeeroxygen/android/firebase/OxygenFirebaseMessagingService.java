@@ -11,13 +11,13 @@ import com.playposse.peertopeeroxygen.android.data.DataReceivedCallback;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
-import com.playposse.peertopeeroxygen.android.firebase.actions.FirebaseAction;
-import com.playposse.peertopeeroxygen.android.firebase.actions.InvalidateMissionDataAction;
-import com.playposse.peertopeeroxygen.android.firebase.actions.MissionCheckoutCompletionAction;
-import com.playposse.peertopeeroxygen.android.firebase.actions.MissionCompletionAction;
-import com.playposse.peertopeeroxygen.android.firebase.actions.MissionInvitationAction;
-import com.playposse.peertopeeroxygen.android.firebase.actions.MissionSeniorInvitationAction;
-import com.playposse.peertopeeroxygen.android.firebase.actions.UpdatePointsAction;
+import com.playposse.peertopeeroxygen.android.firebase.actions.FirebaseClientAction;
+import com.playposse.peertopeeroxygen.android.firebase.actions.InvalidateMissionDataClientAction;
+import com.playposse.peertopeeroxygen.android.firebase.actions.MissionCheckoutCompletionClientAction;
+import com.playposse.peertopeeroxygen.android.firebase.actions.MissionCompletionClientAction;
+import com.playposse.peertopeeroxygen.android.firebase.actions.MissionInvitationClientAction;
+import com.playposse.peertopeeroxygen.android.firebase.actions.MissionSeniorInvitationClientAction;
+import com.playposse.peertopeeroxygen.android.firebase.actions.UpdatePointsClientAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
     private static final String ALL_DEVICES_TOPIC = "allDevices";
 
     protected DataServiceConnection dataServiceConnection;
-    private List<FirebaseAction> pendingActions = new ArrayList<>();
+    private List<FirebaseClientAction> pendingActions = new ArrayList<>();
 
     @Override
     public void onCreate() {
@@ -77,22 +77,22 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
 
         switch (data.get(TYPE_KEY)) {
             case MISSION_INVITE_TYPE:
-                execute(new MissionInvitationAction(remoteMessage));
+                execute(new MissionInvitationClientAction(remoteMessage));
                 break;
             case MISSION_SENIOR_INVITE_TYPE:
-                execute(new MissionSeniorInvitationAction(remoteMessage));
+                execute(new MissionSeniorInvitationClientAction(remoteMessage));
                 break;
             case MISSION_COMPLETION_TYPE:
-                execute(new MissionCompletionAction(remoteMessage));
+                execute(new MissionCompletionClientAction(remoteMessage));
                 break;
             case MISSION_CHECKOUT_COMPLETION_TYPE:
-                execute(new MissionCheckoutCompletionAction(remoteMessage));
+                execute(new MissionCheckoutCompletionClientAction(remoteMessage));
                 break;
             case UPDATE_STUDENT_POINTS_TYPE:
-                execute(new UpdatePointsAction(remoteMessage));
+                execute(new UpdatePointsClientAction(remoteMessage));
                 break;
             case INVALIDATE_MISSION_DATA_TYPE:
-                execute(new InvalidateMissionDataAction(remoteMessage));
+                execute(new InvalidateMissionDataClientAction(remoteMessage));
                 break;
             default:
                 Log.w(LOG_CAT, "Received an unknown message type from Firebase: "
@@ -100,7 +100,7 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void execute(FirebaseAction action) {
+    private void execute(FirebaseClientAction action) {
         pendingActions.add(action);
         executePendingActions();
     }
@@ -116,7 +116,7 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
         }
 
         while (pendingActions.size() > 0) {
-            FirebaseAction action = pendingActions.get(0);
+            FirebaseClientAction action = pendingActions.get(0);
             pendingActions.remove(action);
             action.execute(this, dataServiceConnection);
             Log.i(LOG_CAT, "Executed Firebase action " + action.getClass().getSimpleName());

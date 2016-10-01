@@ -16,8 +16,8 @@ import android.widget.TextView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
-import com.playposse.peertopeeroxygen.android.data.clientactions.ClientAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllLoanerDevicesAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.ApiClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllLoanerDevicesClientAction;
 import com.playposse.peertopeeroxygen.android.ui.dialogs.StringPickerDialog;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.LoanerDeviceBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class AdminLoanerDeviceActivity
         extends AdminParentActivity
-        implements LoaderManager.LoaderCallbacks<List<LoanerDeviceBean>>,ClientAction.CompletionCallback {
+        implements LoaderManager.LoaderCallbacks<List<LoanerDeviceBean>>,ApiClientAction.CompletionCallback {
 
     private static final String LOG_CAT = AdminLoanerDeviceActivity.class.getSimpleName();
 
@@ -93,7 +93,7 @@ public class AdminLoanerDeviceActivity
     @Override
     public void receiveData(DataRepository dataRepository) {
         dataServiceConnection.getLocalBinder().getAllLoanerDevices(
-                new GetAllLoanerDevicesAction.Callback() {
+                new GetAllLoanerDevicesClientAction.Callback() {
                     @Override
                     public void onResult(List<LoanerDeviceBean> loanerDeviceBeanList) {
                         Log.i(LOG_CAT, "Received loaner device data.");

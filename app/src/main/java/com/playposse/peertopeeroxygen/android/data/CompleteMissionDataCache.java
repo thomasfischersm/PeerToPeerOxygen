@@ -7,7 +7,7 @@ import android.util.Log;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.playposse.peertopeeroxygen.android.data.clientactions.BinderForActions;
-import com.playposse.peertopeeroxygen.android.data.clientactions.MissionDataRetrieverAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.MissionDataRetrieverClientAction;
 import com.playposse.peertopeeroxygen.android.util.StreamUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 
@@ -50,7 +50,7 @@ public class CompleteMissionDataCache {
 
     private static void getRemotely(BinderForActions binderForActions, Context context) {
         LoadRemotelyCallback callback = new LoadRemotelyCallback(context);
-        new MissionDataRetrieverAction(binderForActions, callback).execute();
+        new MissionDataRetrieverClientAction(binderForActions, callback).execute();
     }
 
     private static File getCacheFile(Context context) {
@@ -180,7 +180,7 @@ public class CompleteMissionDataCache {
      * Callback that the data retrieval action calls when the cloud has returned the mission data.
      */
     public static class LoadRemotelyCallback
-            implements MissionDataRetrieverAction.MissionDataRetrieverCallback {
+            implements MissionDataRetrieverClientAction.MissionDataRetrieverCallback {
 
         private final Context context;
 

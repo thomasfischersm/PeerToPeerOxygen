@@ -11,28 +11,28 @@ import android.widget.Toast;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.playposse.peertopeeroxygen.android.R;
-import com.playposse.peertopeeroxygen.android.data.clientactions.AddPointsByAdminAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.AddPointsByAdminClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.BinderForActions;
-import com.playposse.peertopeeroxygen.android.data.clientactions.ClientAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionLadderAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionTreeAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllLoanerDevicesAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionFeedbackAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionStatsAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.GetStudentRosterAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.InviteBuddyToMissionAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.InviteSeniorBuddyToMissionAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.MarkLoanerDeviceAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.MissionDataRetrieverAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.RegisterOrLoginAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.ReportMissionCheckoutCompleteAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.ReportMissionCompleteAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionLadderAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionTreeAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.SubmitMissionFeedbackAction;
-import com.playposse.peertopeeroxygen.android.data.clientactions.UnmarkLoanerDeviceAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.ApiClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionLadderClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionTreeClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllLoanerDevicesClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionFeedbackClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionStatsClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.GetStudentRosterClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.InviteBuddyToMissionClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.InviteSeniorBuddyToMissionClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.MarkLoanerDeviceClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.MissionDataRetrieverClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.RegisterOrLoginClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.ReportMissionCheckoutCompleteClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.ReportMissionCompleteClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionLadderClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionTreeClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.SubmitMissionFeedbackClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.UnmarkLoanerDeviceClientAction;
 import com.playposse.peertopeeroxygen.android.student.StudentLoginActivity;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxygenApi;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
@@ -180,15 +180,15 @@ public class DataService extends Service {
                 final String accessToken,
                 final SignInSuccessCallback signInSuccessCallback) {
 
-            new RegisterOrLoginAction(this, accessToken, signInSuccessCallback).execute();
+            new RegisterOrLoginClientAction(this, accessToken, signInSuccessCallback).execute();
         }
 
         public void save(final MissionLadderBean missionLadderBean) {
-            new SaveMissionLadderAction(this, missionLadderBean).execute();
+            new SaveMissionLadderClientAction(this, missionLadderBean).execute();
         }
 
         public void save(final Long missionLadderId, final MissionTreeBean missionTreeBean) {
-            new SaveMissionTreeAction(this, missionLadderId, missionTreeBean).execute();
+            new SaveMissionTreeClientAction(this, missionLadderId, missionTreeBean).execute();
         }
 
         public void save(
@@ -196,15 +196,15 @@ public class DataService extends Service {
                 final Long missionTreeId,
                 final MissionBean missionBean) {
 
-            new SaveMissionAction(this, missionLadderId, missionTreeId, missionBean).execute();
+            new SaveMissionClientAction(this, missionLadderId, missionTreeId, missionBean).execute();
         }
 
         public void deleteMissionLadder(final Long missionLadderId) {
-            new DeleteMissionLadderAction(this, missionLadderId).execute();
+            new DeleteMissionLadderClientAction(this, missionLadderId).execute();
         }
 
         public void deleteMissionTree(final Long missionLadderId, final Long missionTreeId) {
-            new DeleteMissionTreeAction(this, missionLadderId, missionTreeId).execute();
+            new DeleteMissionTreeClientAction(this, missionLadderId, missionTreeId).execute();
         }
 
         public void deleteMission(
@@ -212,7 +212,7 @@ public class DataService extends Service {
                 final Long missionTreeId,
                 final Long missionId) {
 
-            new DeleteMissionAction(this, missionLadderId, missionTreeId, missionId).execute();
+            new DeleteMissionClientAction(this, missionLadderId, missionTreeId, missionId).execute();
         }
 
         public void inviteBuddyToMission(
@@ -221,7 +221,7 @@ public class DataService extends Service {
                 final Long missionTreeId,
                 final Long missionId) {
 
-            new InviteBuddyToMissionAction(
+            new InviteBuddyToMissionClientAction(
                     this,
                     buddyId,
                     missionLadderId,
@@ -237,7 +237,7 @@ public class DataService extends Service {
                 final Long missionTreeId,
                 final Long missionId) {
 
-            new InviteSeniorBuddyToMissionAction(
+            new InviteSeniorBuddyToMissionClientAction(
                     this,
                     studentId,
                     seniorBuddyId,
@@ -248,55 +248,55 @@ public class DataService extends Service {
         }
 
         public void reportMissionComplete(Long studentId, Long missionId) {
-            new ReportMissionCompleteAction(this, studentId, missionId).execute();
+            new ReportMissionCompleteClientAction(this, studentId, missionId).execute();
         }
 
         public void reportMissionCheckoutComplete(Long studentId, Long buddyId, Long missionId) {
-            new ReportMissionCheckoutCompleteAction(this, studentId, buddyId, missionId).execute();
+            new ReportMissionCheckoutCompleteClientAction(this, studentId, buddyId, missionId).execute();
         }
 
-        public void getStudentRoster(GetStudentRosterAction.StudentRosterCallback callback) {
-            new GetStudentRosterAction(this, callback).execute();
+        public void getStudentRoster(GetStudentRosterClientAction.StudentRosterCallback callback) {
+            new GetStudentRosterClientAction(this, callback).execute();
         }
 
         public void addPointsByAdmin(Long studentId, String pointType, int addedPoints) {
-            new AddPointsByAdminAction(this, getSessionId(), studentId, pointType, addedPoints)
+            new AddPointsByAdminClientAction(this, getSessionId(), studentId, pointType, addedPoints)
                     .execute();
         }
 
         public void submitMissionFeedback(Long missionId, int rating, @Nullable String comment) {
-            new SubmitMissionFeedbackAction(this, missionId, rating, comment).execute();
+            new SubmitMissionFeedbackClientAction(this, missionId, rating, comment).execute();
         }
 
-        public void getAllMissionFeedback(GetAllMissionFeedbackAction.Callback callback) {
-            new GetAllMissionFeedbackAction(this, callback).execute();
+        public void getAllMissionFeedback(GetAllMissionFeedbackClientAction.Callback callback) {
+            new GetAllMissionFeedbackClientAction(this, callback).execute();
         }
 
-        public void getAllMissionStats(GetAllMissionStatsAction.Callback callback) {
-            new GetAllMissionStatsAction(this, callback).execute();
+        public void getAllMissionStats(GetAllMissionStatsClientAction.Callback callback) {
+            new GetAllMissionStatsClientAction(this, callback).execute();
         }
 
         public void markLoanerDevice(
                 String friendlyName,
-                @Nullable ClientAction.CompletionCallback completionCallback) {
+                @Nullable ApiClientAction.CompletionCallback completionCallback) {
 
-            new MarkLoanerDeviceAction(this, friendlyName, completionCallback).execute();
+            new MarkLoanerDeviceClientAction(this, friendlyName, completionCallback).execute();
         }
 
         public void unmarkLoanerDevice(
-                @Nullable ClientAction.CompletionCallback completionCallback) {
+                @Nullable ApiClientAction.CompletionCallback completionCallback) {
 
-            new UnmarkLoanerDeviceAction(this, completionCallback).execute();
+            new UnmarkLoanerDeviceClientAction(this, completionCallback).execute();
         }
 
-        public void getAllLoanerDevices(GetAllLoanerDevicesAction.Callback callback) {
-            new GetAllLoanerDevicesAction(this, callback).execute();
+        public void getAllLoanerDevices(GetAllLoanerDevicesClientAction.Callback callback) {
+            new GetAllLoanerDevicesClientAction(this, callback).execute();
         }
 
         public void reload() {
             CompleteMissionDataCache.LoadRemotelyCallback cacheCallback =
                     new CompleteMissionDataCache.LoadRemotelyCallback(getApplicationContext());
-            new MissionDataRetrieverAction(this, cacheCallback).execute();
+            new MissionDataRetrieverClientAction(this, cacheCallback).execute();
         }
     }
 
