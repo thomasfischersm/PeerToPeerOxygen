@@ -20,6 +20,10 @@ public class GetAllMissionFeedbackServerAction extends ServerAction {
         ArrayList<MissionFeedbackBean> missionFeedbackBeanList =
                 new ArrayList<>(missionFeedbackList.size());
         for (MissionFeedback missionFeedback : missionFeedbackList) {
+            if (missionFeedback.getMissionRef().get() == null) {
+                // The mission must have been deleted.
+                continue;
+            }
             MissionFeedbackBean missionFeedbackBean = new MissionFeedbackBean(missionFeedback);
 
             // Clear sensitive data
