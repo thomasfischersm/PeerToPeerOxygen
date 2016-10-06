@@ -10,6 +10,7 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.config.Named;
+import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.playposse.peertopeeroxygen.backend.beans.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.beans.LoanerDeviceBean;
@@ -18,6 +19,7 @@ import com.playposse.peertopeeroxygen.backend.beans.MissionFeedbackBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionStatsBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionTreeBean;
+import com.playposse.peertopeeroxygen.backend.beans.PracticaBean;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
 import com.playposse.peertopeeroxygen.backend.exceptions.BuddyLacksMissionExperienceException;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
@@ -29,6 +31,7 @@ import com.playposse.peertopeeroxygen.backend.serveractions.GetAllLoanerDevicesS
 import com.playposse.peertopeeroxygen.backend.serveractions.GetAllMissionFeedbackServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetAllMissionStatsServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetMissionDataServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.GetPracticaServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetStudentRosterServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.InviteBuddyToMissionServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.InviteSeniorBuddyToMissionServerAction;
@@ -39,6 +42,7 @@ import com.playposse.peertopeeroxygen.backend.serveractions.ReportMissionComplet
 import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionLadderServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionTreeServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.SavePracticaServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.ServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.SubmitMissionFeedbackServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.UnmarkLoanerDeviceServerAction;
@@ -325,5 +329,24 @@ public class PeerToPeerOxygenEndPoint {
         protectByAdminCheck(sessionId);
 
         return GetAllLoanerDevicesServerAction.getAllLoanerDevices();
+    }
+
+    @ApiMethod(name = "savePractica")
+    public PracticaBean savePractica(
+            @Named("sessionId") Long sessionId,
+            PracticaBean practicaBean)
+            throws UnauthorizedException {
+
+        protectByAdminCheck(sessionId);
+
+        return SavePracticaServerAction.save(practicaBean);
+    }
+
+    @ApiMethod(name = "getPractica")
+    public List<PracticaBean> getPractica(
+            @Named("practicaDates") GetPracticaServerAction.PracticaDates practicaDates)
+            throws BadRequestException {
+
+        return GetPracticaServerAction.getPractica(practicaDates);
     }
 }

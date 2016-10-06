@@ -25,6 +25,7 @@ public class AdminMainActivity extends AdminParentActivity {
     public static final String LOG_TAG = AdminMainActivity.class.getSimpleName();
 
     private TextView openMissionLaddersTextView;
+    private TextView openPracticasTextView;
     private TextView openStudentRosterTextView;
     private TextView statsTextView;
     private TextView feedbackTextView;
@@ -45,6 +46,14 @@ public class AdminMainActivity extends AdminParentActivity {
             public void onClick(View view) {
                 startActivity(
                         new Intent(AdminMainActivity.this, AdminShowMissionLaddersActivity.class));
+            }
+        });
+
+        openPracticasTextView = (TextView) findViewById(R.id.openPracticasLink);
+        openPracticasTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AdminMainActivity.this, AdminShowPracticasActivity.class));
             }
         });
 

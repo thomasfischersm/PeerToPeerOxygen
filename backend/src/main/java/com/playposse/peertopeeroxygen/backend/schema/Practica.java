@@ -1,0 +1,121 @@
+package com.playposse.peertopeeroxygen.backend.schema;
+
+import com.googlecode.objectify.Ref;
+import com.googlecode.objectify.annotation.Cache;
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Load;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * An Objectify instance that represents a practica event.
+ */
+@Entity
+@Cache
+public class Practica {
+
+    @Id private Long id;
+    private String name;
+    @Index private Long start;
+    @Index private Long end;
+    private String address;
+    private String gpsLocation;
+    @Index @Load private Ref<OxygenUser> hostUser;
+    @Load private List<Ref<OxygenUser>> attendeeUsers = new ArrayList<>();
+    private Long created = System.currentTimeMillis();
+    private String timezone;
+
+    public Practica() {
+    }
+
+    public Practica(
+            String name,
+            Long start,
+            Long end,
+            String address,
+            String gpsLocation,
+            Ref<OxygenUser> hostUser,
+            List<Ref<OxygenUser>> attendeeUsers,
+            String timezone) {
+
+        this.name = name;
+        this.start = start;
+        this.end = end;
+        this.address = address;
+        this.gpsLocation = gpsLocation;
+        this.hostUser = hostUser;
+        this.attendeeUsers = attendeeUsers;
+        this.timezone = timezone;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Long getCreated() {
+        return created;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Long getStart() {
+        return start;
+    }
+
+    public void setStart(Long start) {
+        this.start = start;
+    }
+
+    public Long getEnd() {
+        return end;
+    }
+
+    public void setEnd(Long end) {
+        this.end = end;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getGpsLocation() {
+        return gpsLocation;
+    }
+
+    public void setGpsLocation(String gpsLocation) {
+        this.gpsLocation = gpsLocation;
+    }
+
+    public Ref<OxygenUser> getHostUser() {
+        return hostUser;
+    }
+
+    public void setHostUser(Ref<OxygenUser> hostUser) {
+        this.hostUser = hostUser;
+    }
+
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
+
+    public List<Ref<OxygenUser>> getAttendeeUsers() {
+        return attendeeUsers;
+    }
+}

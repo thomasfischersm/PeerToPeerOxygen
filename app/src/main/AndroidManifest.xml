@@ -24,7 +24,7 @@
             android:value="barcode" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAGZa6CeGvxFe1cazi9CReKLXnzoh-QgHY"/>
+            android:value="AIzaSyAGZa6CeGvxFe1cazi9CReKLXnzoh-QgHY" />
 
         <service android:name=".firebase.OxygenFirebaseMessagingService">
             <intent-filter>
@@ -133,6 +133,16 @@
             android:name=".student.StudentAboutActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".admin.AdminMainActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".admin.AdminShowPracticasActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".admin.AdminMainActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".admin.AdminEditPracticaActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".admin.AdminShowPracticasActivity"
             android:windowSoftInputMode="adjustResize" />
     </application>
 

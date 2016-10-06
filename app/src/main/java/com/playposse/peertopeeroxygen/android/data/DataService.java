@@ -20,6 +20,7 @@ import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionTr
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllLoanerDevicesClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionFeedbackClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionStatsClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.GetPracticaClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetStudentRosterClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.InviteBuddyToMissionClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.InviteSeniorBuddyToMissionClientAction;
@@ -31,6 +32,7 @@ import com.playposse.peertopeeroxygen.android.data.clientactions.ReportMissionCo
 import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionLadderClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionTreeClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.SavePracticaClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.SubmitMissionFeedbackClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.UnmarkLoanerDeviceClientAction;
 import com.playposse.peertopeeroxygen.android.student.StudentLoginActivity;
@@ -38,6 +40,7 @@ import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxyg
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.PracticaBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -291,6 +294,16 @@ public class DataService extends Service {
 
         public void getAllLoanerDevices(GetAllLoanerDevicesClientAction.Callback callback) {
             new GetAllLoanerDevicesClientAction(this, callback).execute();
+        }
+
+        public void getPractica(
+                GetPracticaClientAction.PracticaDates practicaDates,
+                GetPracticaClientAction.Callback callback) {
+            new GetPracticaClientAction(this, practicaDates, callback).execute();
+        }
+
+        public void save(PracticaBean practicaBean) {
+            new SavePracticaClientAction(this, practicaBean).execute();
         }
 
         public void reload() {

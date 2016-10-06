@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 /**
  * Objectify entity that represents a user.
  */
@@ -34,6 +36,7 @@ public class OxygenUser {
     private String email;
     @Load private Map<UserPoints.PointType, UserPoints> points = new HashMap<>();
     @Load private List<LevelCompletion> levelCompletions = new ArrayList<>();
+    @Load @Nullable private Practica activePractica;
 
     @Stringify(LongStringifier.class)
     private Map<Long, MissionCompletion> missionCompletions = new HashMap<>();
@@ -194,5 +197,9 @@ public class OxygenUser {
 
     public List<LevelCompletion> getLevelCompletions() {
         return levelCompletions;
+    }
+
+    public Practica getActivePractica() {
+        return activePractica;
     }
 }

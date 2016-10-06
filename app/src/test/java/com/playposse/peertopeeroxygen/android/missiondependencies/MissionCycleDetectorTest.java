@@ -13,7 +13,6 @@ import static org.junit.Assert.assertEquals;
 /**
  * Unit test for {@link MissionCycleDetector}.
  */
-
 public class MissionCycleDetectorTest {
 
     @Test

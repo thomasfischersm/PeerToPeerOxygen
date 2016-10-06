@@ -2,6 +2,7 @@ package com.playposse.peertopeeroxygen.android.util;
 
 import android.text.Editable;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import javax.annotation.Nullable;
 
@@ -9,6 +10,11 @@ import javax.annotation.Nullable;
  * A utility class for dealing with
  */
 public final class StringUtil {
+
+    @Nullable
+    public static String getCleanString(TextView textView) {
+        return getCleanString(textView.getText().toString());
+    }
 
     @Nullable
     public static String getCleanString(EditText editText) {

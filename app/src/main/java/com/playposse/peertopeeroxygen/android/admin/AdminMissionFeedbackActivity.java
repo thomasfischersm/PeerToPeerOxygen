@@ -31,7 +31,7 @@ public class AdminMissionFeedbackActivity
         extends AdminParentActivity
         implements LoaderManager.LoaderCallbacks<List<MissionFeedbackBean>> {
 
-    private static final int LOADER_ID = 1;
+    private static final int LOADER_ID = 2;
     private static final String COMMENT_PREFIX = "> ";
 
     private ListView feedbackListView;

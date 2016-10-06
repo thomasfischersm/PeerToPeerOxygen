@@ -6,6 +6,7 @@
     <!-- Admin home -->
     <string name="admin_home_title">Admin home</string>
     <string name="show_mission_ladders_link">Show mission ladders</string>
+    <string name="show_practicas_link">Show practicas</string>
     <string name="student_roster_link">Show student roster</string>
     <string name="stats_link">Mission stats</string>
     <string name="feedback_link">Mission feedback</string>
@@ -50,6 +51,22 @@
     <string name="import_button_label">Import</string>
     <string name="export_button_label">Export</string>
     <string name="confirm_delete_mission_message">Do you want to delete mission: %1$s?</string>
+
+    <!-- Show practicas to admin -->
+    <string name="admin_show_practicas_title">Show practicas</string>
+    <string name="create_practica_button_label">Create practica</string>
+    <string name="past_practicas_tab_title">Past practicas</string>
+    <string name="future_practicas_tab_title">Future practicas</string>
+
+    <!-- Edit practica admin page -->
+    <string name="admin_edit_practica_title">Edit practica</string>
+    <string name="practica_name_label">Name</string>
+    <string name="start_date_time_label">Start date/time</string>
+    <string name="end_date_time_label">End date/time</string>
+    <string name="address_label">Address</string>
+    <string name="gps_location_label">GPS location</string>
+    <string name="practica_host_label">Host</string>
+    <string name="timezone">Time zone</string>
 
     <!-- Admin backup activity -->
     <string name="backup_to_google_drive_button">Backup mission data to Google Drive</string>
@@ -129,6 +146,10 @@
     <string name="prerequisites_mission_lock_reason">You have to complete prerequisite missions.</string>
     <string name="missing_points_lock_reason">You don\'t have enough points.</string>
 
+    <!-- Dialogs -->
+    <string name="date_dialog_title">Pick a date</string>
+    <string name="time_dialog_title">Pick a time</string>
+
     <!-- Toasts -->
     <string name="mission_completion_toast">Congratulation on completing "%1$s"! %2$s graduated you.</string>
     <string name="mission_checkout_completion_toast">Congratulation! You can teach \'%1$s\' on your own.</string>
@@ -165,10 +186,15 @@
     <string name="continue_button_label">Continue</string>
     <string name="skip_button_label">Skip</string>
     <string name="empty_string_error">Enter something, pretty please :)</string>
+    <string name="set_time">Set time</string>
+    <string name="set_date">Set date</string>
 
     <!-- Emails -->
     <string name="feedback_email_subject">Thank you for your feedback!</string>
 
     <!-- Error messages -->
     <string name="network_error">Failed to retrieve data from the server.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -30,7 +30,7 @@ public class AdminMissionStatsActivity
 
     private static final String LOG_CAT = AdminMissionStatsActivity.class.getSimpleName();
 
-    private static final int LOADER_ID = 1;
+    private static final int LOADER_ID = 3;
 
     private ListView statsListView;
 
