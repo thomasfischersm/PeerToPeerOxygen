@@ -335,7 +335,7 @@ public class PeerToPeerOxygenEndPoint {
     public PracticaBean savePractica(
             @Named("sessionId") Long sessionId,
             PracticaBean practicaBean)
-            throws UnauthorizedException {
+            throws UnauthorizedException, IOException {
 
         protectByAdminCheck(sessionId);
 

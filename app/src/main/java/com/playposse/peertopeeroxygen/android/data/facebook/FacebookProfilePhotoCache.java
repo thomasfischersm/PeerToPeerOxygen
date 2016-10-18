@@ -17,10 +17,10 @@ import java.net.URL;
 /**
  * A cache that stores Facebook profile photos and retrieves them from Facebook when they aren't
  * found in the cache.
- * <p/>
+ *
  * <p>The files are stored in the device's temp directory. When the app is closed, all the cached
  * files are disposed off. That way profile photos don't get too old.
- * <p/>
+ *
  * <p>The file name has the Facebook profile ID encoded.
  */
 public class FacebookProfilePhotoCache {

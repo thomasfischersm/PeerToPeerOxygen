@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.playposse.peertopeeroxygen.android.data.facebook.FacebookProfilePhotoCache;
+import com.playposse.peertopeeroxygen.android.data.practicas.PracticaRepository;
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.JsonMap;
@@ -28,10 +29,13 @@ public class DataRepository {
 
     private CompleteMissionDataBean completeMissionDataBean;
     private FacebookProfilePhotoCache facebookProfilePhotoCache;
+    private PracticaRepository practicaRepository;
 
-    public void onStart(Context context) {
+    public void onStart(Context context, DataService.LocalBinder localBinder) {
         facebookProfilePhotoCache = new FacebookProfilePhotoCache();
         facebookProfilePhotoCache.onStart(context);
+
+        practicaRepository = new PracticaRepository(context, localBinder);
     }
 
     public void onStop(Context context) {
@@ -49,6 +53,10 @@ public class DataRepository {
 
     public FacebookProfilePhotoCache getFacebookProfilePhotoCache() {
         return facebookProfilePhotoCache;
+    }
+
+    public PracticaRepository getPracticaRepository() {
+        return practicaRepository;
     }
 
     public UserBean getUserBean() {

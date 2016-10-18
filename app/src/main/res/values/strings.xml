@@ -167,6 +167,7 @@
     <string name="mission_data_refreshed_toast">The mission data has been refreshed.</string>
     <string name="no_email_client_found_toast">No installed app can handle e-mail.</string>
     <string name="no_camera_detected_toast">No camera detected.</string>
+    <string name="received_practica_update">Received practica update.</string>
 
     <!-- Reusable strings -->
     <string name="name_form_label">Name</string>

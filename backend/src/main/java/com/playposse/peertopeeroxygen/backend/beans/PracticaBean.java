@@ -1,5 +1,6 @@
 package com.playposse.peertopeeroxygen.backend.beans;
 
+import com.google.api.client.json.JsonString;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;

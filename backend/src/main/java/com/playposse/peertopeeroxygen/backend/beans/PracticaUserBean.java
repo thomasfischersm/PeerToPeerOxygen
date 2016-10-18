@@ -1,5 +1,6 @@
 package com.playposse.peertopeeroxygen.backend.beans;
 
+import com.google.appengine.repackaged.com.google.api.client.json.JsonString;
 import com.playposse.peertopeeroxygen.backend.schema.LevelCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.MissionCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
@@ -15,7 +16,7 @@ import java.util.Map;
 
 public class PracticaUserBean {
 
-    private Long id;
+    @JsonString private Long id;
     private boolean isAdmin;
     private String firstName;
     private String lastName;

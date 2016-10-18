@@ -84,6 +84,7 @@ public class StudentLoginActivity extends DataServiceParentActivity {
         if (AccessToken.getCurrentAccessToken() != null) {
             LoginManager.getInstance().logOut();
         }
+        StudentMainActivity.debug(); // TODO: Remove!
     }
 
     @Override

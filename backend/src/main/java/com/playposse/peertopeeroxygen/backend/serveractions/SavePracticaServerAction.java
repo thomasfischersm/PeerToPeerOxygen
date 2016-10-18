@@ -3,8 +3,11 @@ package com.playposse.peertopeeroxygen.backend.serveractions;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.beans.PracticaBean;
+import com.playposse.peertopeeroxygen.backend.firebase.SendPracticaUpdateServerAction;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 import com.playposse.peertopeeroxygen.backend.schema.Practica;
+
+import java.io.IOException;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -14,7 +17,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 public class SavePracticaServerAction extends ServerAction {
 
-    public static PracticaBean save(PracticaBean practicaBean) {
+    public static PracticaBean save(PracticaBean practicaBean) throws IOException {
         final Practica practica;
         if (practicaBean.getId() == null) {
             practica = practicaBean.toEntity();
@@ -31,8 +34,10 @@ public class SavePracticaServerAction extends ServerAction {
                     practicaBean.getHostUserBean().getId())));
         }
 
-        ofy().save().entities(practica);
+        ofy().save().entities(practica).now();
 
-        return new PracticaBean(practica);
+        PracticaBean resultPracticaBean = new PracticaBean(practica);
+        SendPracticaUpdateServerAction.sendPracticaUpdate(resultPracticaBean);
+        return resultPracticaBean;
     }
 }

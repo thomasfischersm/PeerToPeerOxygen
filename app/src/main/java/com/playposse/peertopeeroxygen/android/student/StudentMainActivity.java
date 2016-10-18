@@ -2,6 +2,7 @@ package com.playposse.peertopeeroxygen.android.student;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.util.LogoutUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 /**
@@ -115,5 +117,21 @@ public class StudentMainActivity extends StudentParentActivity {
         });
 
         return button;
+    }
+
+    public static void debug() {
+        outputKey("AE:D6:52:11:CE:E2:FB:AC:3E:A9:ED:AF:C3:4B:DA:04:47:8C:84:74"); // Alienware
+        outputKey("68:9A:DB:72:ED:EF:94:06:66:53:15:61:17:25:31:37:85:69:13:06"); // old PC
+        outputKey("4E:3F:B0:9E:8B:2D:9E:D9:51:F2:57:3A:3A:9B:2B:63:C8:99:10:00"); // Mitra
+    }
+
+    private static void outputKey(String shaStr) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        for (String number : shaStr.split(":")) {
+            outputStream.write(Integer.parseInt(number, 16));
+        }
+        byte[] sha = outputStream.toByteArray();
+        String base64 = Base64.encodeToString(sha, 0);
+        Log.i(LOG_TAG, shaStr + " -> " + base64);
     }
 }

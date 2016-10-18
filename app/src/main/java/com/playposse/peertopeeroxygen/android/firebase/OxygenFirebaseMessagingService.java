@@ -17,6 +17,7 @@ import com.playposse.peertopeeroxygen.android.firebase.actions.MissionCheckoutCo
 import com.playposse.peertopeeroxygen.android.firebase.actions.MissionCompletionClientAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.MissionInvitationClientAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.MissionSeniorInvitationClientAction;
+import com.playposse.peertopeeroxygen.android.firebase.actions.PracticaUpdateClientAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.UpdatePointsClientAction;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
     private static final String MISSION_CHECKOUT_COMPLETION_TYPE = "missionCheckoutCompletion";
     private static final String UPDATE_STUDENT_POINTS_TYPE = "updateStudentPoints";
     private static final String INVALIDATE_MISSION_DATA_TYPE = "invalidateMissionData";
+    private static final String PRACTICA_UPDATE_TYPE = "practicaUpdate";
 
     private static final String ALL_DEVICES_TOPIC = "allDevices";
 
@@ -93,6 +95,9 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
                 break;
             case INVALIDATE_MISSION_DATA_TYPE:
                 execute(new InvalidateMissionDataClientAction(remoteMessage));
+                break;
+            case PRACTICA_UPDATE_TYPE:
+                execute(new PracticaUpdateClientAction(remoteMessage));
                 break;
             default:
                 Log.w(LOG_CAT, "Received an unknown message type from Firebase: "

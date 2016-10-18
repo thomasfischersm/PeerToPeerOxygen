@@ -65,12 +65,13 @@ public class DataService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        LocalBinder localBinder = new LocalBinder();
         if (dataRepository == null) {
             dataRepository = new DataRepository();
-            dataRepository.onStart(getApplicationContext());
+            dataRepository.onStart(getApplicationContext(), localBinder);
         }
 
-        return new LocalBinder();
+        return localBinder;
     }
 
     private void createApiIfNeeded() {
