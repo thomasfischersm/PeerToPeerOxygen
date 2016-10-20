@@ -3,32 +3,26 @@ package com.playposse.peertopeeroxygen.android.admin;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.gms.vision.barcode.Barcode;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.ui.widgets.EditDateTime;
-import com.playposse.peertopeeroxygen.android.util.GpsLocationUtil;
+import com.playposse.peertopeeroxygen.android.util.GeoUtil;
 import com.playposse.peertopeeroxygen.android.util.StringUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.PracticaBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.PracticaUserBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -90,7 +84,7 @@ public class AdminEditPracticaActivity extends AdminParentActivity {
 
                     if ((addressList != null) && (addressList.size() > 0)) {
                         Address address = addressList.get(0);
-                        String gpsString = GpsLocationUtil.toStr(address);
+                        String gpsString = GeoUtil.toStr(address);
                         gpsLocationTextView.setText(gpsString);
                     }
                 } catch (IOException ex) {

@@ -98,11 +98,30 @@ public class AdminMainActivity extends AdminParentActivity {
                 startActivity(new Intent(AdminMainActivity.this, AdminLoanerDeviceActivity.class));
             }
         });
+
+        printHashKey(); // TODO: Remove
     }
 
     @Override
     public void receiveData(DataRepository dataRepository) {
         // Nothing to do. Yet, calling the service ensures that the data is already there for other
         // activities.
+    }
+
+    public void printHashKey() {
+        try {
+            PackageManager pm = getPackageManager();
+            PackageInfo info = pm.getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String hashKey = new String(Base64.encode(md.digest(), 0));
+                Log.i(LOG_TAG, "printHashKey() Hash Key: " + hashKey);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            Log.e(LOG_TAG, "printHashKey()", e);
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "printHashKey()", e);
+        }
     }
 }

@@ -57,6 +57,8 @@ public class StudentMainActivity extends StudentParentActivity {
                 LogoutUtil.logout(getApplicationContext());
             }
         });
+
+        debug(); // TODO: Remove
     }
 
     @Override

@@ -8,7 +8,7 @@ import android.support.test.filters.MediumTest;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
-import com.playposse.peertopeeroxygen.android.util.GpsLocationUtil;
+import com.playposse.peertopeeroxygen.android.util.GeoUtil;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,11 +23,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * A unit test for {@link GpsLocationUtil}.
+ * A unit test for {@link GeoUtil}.
  */
 @RunWith(AndroidJUnit4.class)
 @MediumTest
-public class GpsLocationUtilTest {
+public class GeoUtilTest {
 
     public static final double DELTA_DOUBLE = 0.0002;
     private Context context;
@@ -53,7 +53,7 @@ public class GpsLocationUtilTest {
         List<Address> addressList = geocoder.getFromLocationName(address, 10);
         assertNotNull(addressList);
         assertEquals(1, addressList.size());
-        Assert.assertEquals(expectedGpsCoordinates, GpsLocationUtil.toStr(addressList.get(0)));
+        Assert.assertEquals(expectedGpsCoordinates, GeoUtil.toStr(addressList.get(0)));
     }
 
     @Test
@@ -67,7 +67,7 @@ public class GpsLocationUtilTest {
             double expectedLongitude,
             String gpsLocation) throws IOException {
 
-        Address address = GpsLocationUtil.fromStr(context, gpsLocation);
+        Address address = GeoUtil.fromStr(context, gpsLocation);
         Log.i("bla", gpsLocation + " -> " + address.getLatitude() + ", " + address.getLongitude());
         Log.e("bla", "dadsf");
         assertEquals(expectedLatitude, address.getLatitude(), DELTA_DOUBLE);

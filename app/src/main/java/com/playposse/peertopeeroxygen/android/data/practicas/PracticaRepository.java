@@ -33,6 +33,7 @@ public class PracticaRepository {
     private static final String CACHE_FILE = File.separator + "practicaCache.json";
 
     private List<PracticaBean> practicaBeanList = new ArrayList<>();
+    private PracticaBean currentPractica;
 
     public PracticaRepository(final Context context, DataService.LocalBinder localBinder) {
         // Try to load from JSON encoded cache file.
@@ -84,7 +85,7 @@ public class PracticaRepository {
         return null;
     }
 
-    private List<PracticaBean> getCurrentPracticas() {
+    public List<PracticaBean> getActivePracticas() {
         List<PracticaBean> result = new ArrayList<>();
         long currentMillis = System.currentTimeMillis();
         for (PracticaBean practicaBean : practicaBeanList) {
@@ -131,5 +132,13 @@ public class PracticaRepository {
 
     private File getCacheFile(Context context) {
         return new File(context.getCacheDir() + CACHE_FILE);
+    }
+
+    public PracticaBean getCurrentPractica() {
+        return currentPractica;
+    }
+
+    public void setCurrentPractica(PracticaBean currentPractica) {
+        this.currentPractica = currentPractica;
     }
 }
