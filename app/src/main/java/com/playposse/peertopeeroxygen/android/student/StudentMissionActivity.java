@@ -36,6 +36,7 @@ public class StudentMissionActivity
         missionId = intent.getLongExtra(ExtraConstants.EXTRA_MISSION_ID, -1);
 
         instructionPager = (ViewPager) findViewById(R.id.instructionPager);
+        Log.i(LOG_CAT, "onCreate is done");
     }
 
     @Override
@@ -54,19 +55,25 @@ public class StudentMissionActivity
             videoId = missionBean.getStudentYouTubeVideoId();
         }
 
-        if (instructionPager.getHandler() != null) {// Ensure that the fragments are still attached.
-            instructionPager.setAdapter(new InstructionPagerAdapter(
-                    getSupportFragmentManager(),
-                    instruction,
-                    null, /* invitationFragment */
-                    videoId,
-                    true, /* enableScanner */
-                    this));
-        } else {
-            Log.i(LOG_CAT, "instructionPager.getHandler() is NOT attached during receiveData.");
-        }
+        instructionPager.post(new Runnable() {
+            @Override
+            public void run() {
+                if (instructionPager.getHandler() != null) {// Ensure that the fragments are still attached.
+                    instructionPager.setAdapter(new InstructionPagerAdapter(
+                            StudentMissionActivity.this.getSupportFragmentManager(),
+                            instruction,
+                            null, /* invitationFragment */
+                            videoId,
+                            true, /* enableScanner */
+                            StudentMissionActivity.this));
+                } else {
+                    Log.i(LOG_CAT, "instructionPager.getHandler() is NOT attached during receiveData.");
+                }
+            }
+        });
 
         setTitle("" + missionBean.getName());
+        Log.i(LOG_CAT, "receiveData is done");
     }
 
     @Override
