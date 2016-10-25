@@ -16,6 +16,7 @@ public class PracticaBean {
 
     private Long id;
     private String name;
+    private String greeting;
     private Long start;
     private Long end;
     private String address;
@@ -31,6 +32,7 @@ public class PracticaBean {
     public PracticaBean(Practica practica) {
         this.id = practica.getId();
         this.name = practica.getName();
+        this.greeting = practica.getGreeting();
         this.start = practica.getStart();
         this.end = practica.getEnd();
         this.address = practica.getAddress();
@@ -58,6 +60,14 @@ public class PracticaBean {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getGreeting() {
+        return greeting;
+    }
+
+    public void setGreeting(String greeting) {
+        this.greeting = greeting;
     }
 
     public Long getStart() {
@@ -126,6 +136,7 @@ public class PracticaBean {
 
         return new Practica(
                 name,
+                greeting,
                 start,
                 end,
                 address,

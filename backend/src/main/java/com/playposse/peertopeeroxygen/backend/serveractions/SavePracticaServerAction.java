@@ -24,6 +24,7 @@ public class SavePracticaServerAction extends ServerAction {
         } else {
             practica = ofy().load().key(Key.create(Practica.class, practicaBean.getId())).now();
             practica.setName(practicaBean.getName());
+            practica.setGreeting(practicaBean.getGreeting());
             practica.setAddress(practicaBean.getAddress());
             practica.setGpsLocation(practicaBean.getGpsLocation());
             practica.setStart(practicaBean.getStart());

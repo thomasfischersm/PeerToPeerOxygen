@@ -61,6 +61,7 @@ public class PracticaUpdateClientAction extends FirebaseClientAction {
             PracticaBean practicaBean = new PracticaBean();
             practicaBean.setId(tempPracticaBean.getId());
             practicaBean.setName(tempPracticaBean.getName());
+            practicaBean.setGreeting(tempPracticaBean.getGreeting());
             practicaBean.setStart(tempPracticaBean.getStart());
             practicaBean.setEnd(tempPracticaBean.getEnd());
             practicaBean.setAddress(tempPracticaBean.getAddress());
@@ -92,6 +93,7 @@ public class PracticaUpdateClientAction extends FirebaseClientAction {
     private static class TempPracticaBean {
         private Long id;
         private String name;
+        private String greeting;
         private Long start;
         private Long end;
         private String address;
@@ -115,6 +117,14 @@ public class PracticaUpdateClientAction extends FirebaseClientAction {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        public String getGreeting() {
+            return greeting;
+        }
+
+        public void setGreeting(String greeting) {
+            this.greeting = greeting;
         }
 
         public Long getStart() {

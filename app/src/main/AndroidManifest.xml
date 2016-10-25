@@ -140,13 +140,17 @@
             android:name=".admin.AdminShowPracticasActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".admin.AdminMainActivity"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".admin.AdminEditPracticaActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".admin.AdminShowPracticasActivity"
-            android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".student.StudentPracticaCheckinActivity" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+        <activity
+            android:name=".student.StudentPracticaCheckinActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".admin.AdminMainActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
     </application>
 
 </manifest>

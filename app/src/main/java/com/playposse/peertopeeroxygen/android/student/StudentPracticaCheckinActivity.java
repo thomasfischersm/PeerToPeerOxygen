@@ -64,5 +64,6 @@ public class StudentPracticaCheckinActivity extends StudentParentActivity {
         practicaNameTextView.setText(practicaBean.getName());
         practicaHostTextView.setText(hostStr);
         practicaTimeTextView.setText(timeStr);
+        practicaGreetingTextView.setText(practicaBean.getGreeting());
     }
 }

@@ -43,6 +43,7 @@ public class AdminEditPracticaActivity extends AdminParentActivity {
     private EditText addressEditText;
     private TextView gpsLocationTextView;
     private TextView hostTextView;
+    private EditText greetingEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public class AdminEditPracticaActivity extends AdminParentActivity {
         addressEditText = (EditText) findViewById(R.id.addressEditText);
         gpsLocationTextView = (TextView) findViewById(R.id.gpsLocationTextView);
         hostTextView = (TextView) findViewById(R.id.hostTextView);
+        greetingEditText = (EditText) findViewById(R.id.greetingEditText);
 
         try {
             practicaId = getIntent().getLongExtra(ExtraConstants.EXTRA_PRACTICA_ID, -1);
@@ -109,6 +111,7 @@ public class AdminEditPracticaActivity extends AdminParentActivity {
             endEditDateTime.init(null);
             addressEditText.setText("");
             gpsLocationTextView.setText("");
+            greetingEditText.setText("");
         } else {
             // Edit existing practica.
             PracticaUserBean hostUserBean = practicaBean.getHostUserBean();
@@ -120,6 +123,7 @@ public class AdminEditPracticaActivity extends AdminParentActivity {
             addressEditText.setText(practicaBean.getAddress());
             gpsLocationTextView.setText(practicaBean.getGpsLocation());
             hostTextView.setText(hostName);
+            greetingEditText.setText(practicaBean.getGreeting());
         }
     }
 
@@ -153,6 +157,7 @@ public class AdminEditPracticaActivity extends AdminParentActivity {
         practicaBean.setEnd(endEditDateTime.getCalendar().getTimeInMillis());
         practicaBean.setAddress(addressEditText.getText().toString());
         practicaBean.setGpsLocation(gpsLocationTextView.getText().toString());
+        practicaBean.setGreeting(greetingEditText.getText().toString());
 
         if (practicaBean.getHostUserBean() == null) {
             UserBean userBean =

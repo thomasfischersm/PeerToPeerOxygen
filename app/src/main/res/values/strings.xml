@@ -61,6 +61,7 @@
     <!-- Edit practica admin page -->
     <string name="admin_edit_practica_title">Edit practica</string>
     <string name="practica_name_label">Name</string>
+    <string name="practica_greeting_label">Greeting</string>
     <string name="start_date_time_label">Start date/time</string>
     <string name="end_date_time_label">End date/time</string>
     <string name="address_label">Address</string>

@@ -15,6 +15,10 @@ import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
  */
 public abstract class AdminParentActivity extends DataServiceParentActivity {
 
+    public AdminParentActivity() {
+        shouldCheckPractica = false;
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

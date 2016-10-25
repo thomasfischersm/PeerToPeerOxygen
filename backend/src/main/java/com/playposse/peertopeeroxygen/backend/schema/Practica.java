@@ -19,6 +19,7 @@ public class Practica {
 
     @Id private Long id;
     private String name;
+    private String greeting;
     @Index private Long start;
     @Index private Long end;
     private String address;
@@ -33,6 +34,7 @@ public class Practica {
 
     public Practica(
             String name,
+            String greeting,
             Long start,
             Long end,
             String address,
@@ -42,6 +44,7 @@ public class Practica {
             String timezone) {
 
         this.name = name;
+        this.greeting = greeting;
         this.start = start;
         this.end = end;
         this.address = address;
@@ -65,6 +68,14 @@ public class Practica {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getGreeting() {
+        return greeting;
+    }
+
+    public void setGreeting(String greeting) {
+        this.greeting = greeting;
     }
 
     public Long getStart() {
