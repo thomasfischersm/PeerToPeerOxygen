@@ -1,5 +1,6 @@
 package com.playposse.peertopeeroxygen.backend.schema;
 
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -36,7 +37,7 @@ public class OxygenUser {
     private String email;
     @Load private Map<UserPoints.PointType, UserPoints> points = new HashMap<>();
     @Load private List<LevelCompletion> levelCompletions = new ArrayList<>();
-    @Load @Nullable private Practica activePractica;
+    @Load @Nullable private Ref<Practica> activePracticaRef;
 
     @Stringify(LongStringifier.class)
     private Map<Long, MissionCompletion> missionCompletions = new HashMap<>();
@@ -199,7 +200,11 @@ public class OxygenUser {
         return levelCompletions;
     }
 
-    public Practica getActivePractica() {
-        return activePractica;
+    public void setActivePracticaRef(@Nullable Ref<Practica> activePracticaRef) {
+        this.activePracticaRef = activePracticaRef;
+    }
+
+    public Ref<Practica> getActivePracticaRef() {
+        return activePracticaRef;
     }
 }

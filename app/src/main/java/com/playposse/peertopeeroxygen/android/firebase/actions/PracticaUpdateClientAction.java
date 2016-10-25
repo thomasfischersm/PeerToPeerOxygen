@@ -2,23 +2,16 @@ package com.playposse.peertopeeroxygen.android.firebase.actions;
 
 import android.util.Log;
 
-import com.google.api.client.extensions.android.json.AndroidJsonFactory;
-import com.google.api.client.json.JsonObjectParser;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.practicas.PracticaRepository;
 import com.playposse.peertopeeroxygen.android.firebase.FirebaseMessage;
-import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
 import com.playposse.peertopeeroxygen.android.util.ToastUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.PracticaBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.PracticaUserBean;
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Firebase client action that processes updates to practica meta information.
@@ -38,7 +31,7 @@ public class PracticaUpdateClientAction extends FirebaseClientAction {
         try {
             PracticaUpdateMessage message = new PracticaUpdateMessage(remoteMessage);
             PracticaRepository practicaRepository = getDataRepository().getPracticaRepository();
-            practicaRepository.addPractica(message.getPracticaBean(), getApplicationContext());
+            practicaRepository.updatePracticaNotAttendees(message.getPracticaBean(), getApplicationContext());
 
             if (getDataRepository().getUserBean().getAdmin()) {
                 ToastUtil.sendToast(getApplicationContext(), R.string.received_practica_update);

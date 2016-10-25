@@ -14,6 +14,7 @@ import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.clientactions.AddPointsByAdminClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.BinderForActions;
 import com.playposse.peertopeeroxygen.android.data.clientactions.ApiClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.CheckIntoPracticaClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionLadderClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionTreeClientAction;
@@ -305,6 +306,13 @@ public class DataService extends Service {
 
         public void save(PracticaBean practicaBean) {
             new SavePracticaClientAction(this, practicaBean).execute();
+        }
+
+        public void checkIntoPractica(
+                Long practicaId,
+                CheckIntoPracticaClientAction.Callback callback) {
+
+            new CheckIntoPracticaClientAction(this, practicaId, callback).execute();
         }
 
         public void reload() {

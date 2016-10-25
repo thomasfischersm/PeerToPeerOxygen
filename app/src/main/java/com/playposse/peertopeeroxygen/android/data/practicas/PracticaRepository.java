@@ -6,19 +6,19 @@ import android.util.Log;
 
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetPracticaClientAction;
 import com.playposse.peertopeeroxygen.android.util.StreamUtil;
-import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.PracticaBean;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A client repository that stores meta information about practicas.
@@ -32,7 +32,7 @@ public class PracticaRepository {
 
     private static final String CACHE_FILE = File.separator + "practicaCache.json";
 
-    private List<PracticaBean> practicaBeanList = new ArrayList<>();
+    private Map<Long, PracticaBean> practicaBeans = new HashMap<>();
     private PracticaBean currentPractica;
 
     public PracticaRepository(final Context context, DataService.LocalBinder localBinder) {
@@ -51,46 +51,46 @@ public class PracticaRepository {
                 GetPracticaClientAction.PracticaDates.future,
                 new GetPracticaClientAction.Callback() {
                     @Override
-                    public void onResult(List<PracticaBean> practicaBeans) {
+                    public void onResult(List<PracticaBean> result) {
                         if (practicaBeans == null) {
-                            practicaBeanList = new ArrayList<PracticaBean>();
+                            practicaBeans = new HashMap<Long, PracticaBean>();
                         } else {
-                            practicaBeanList = practicaBeans;
+                            replaceInternalData(result);
                         }
                         Log.i(LOG_CAT, "Loaded practicas from file server: "
-                                + practicaBeanList.size());
+                                + practicaBeans.size());
                         save(context);
                     }
                 });
     }
 
-    public void addPractica(PracticaBean practicaBean, Context context) {
-        PracticaBean existingPracticaBean = getPracticaById(practicaBean.getId());
+    private void replaceInternalData(List<PracticaBean> result) {
+        practicaBeans.clear();
+        for (PracticaBean practicaBean : result) {
+            practicaBeans.put(practicaBean.getId(), practicaBean);
+        }
+    }
+
+    public void updatePracticaNotAttendees(PracticaBean practicaBean, Context context) {
+        PracticaBean existingPracticaBean = practicaBeans.get(practicaBean.getId());
         if (existingPracticaBean != null) {
-            practicaBeanList.remove(existingPracticaBean);
+            practicaBean.setAttendeeUserBeans(existingPracticaBean.getAttendeeUserBeans());
         }
 
-        practicaBeanList.add(practicaBean);
+        practicaBeans.put(practicaBean.getId(), practicaBean);
 
         save(context);
     }
 
     @Nullable
     public PracticaBean getPracticaById(Long practicaId) {
-        if (practicaBeanList != null) {
-            for (PracticaBean practicaBean : practicaBeanList) {
-                if (practicaBean.getId().equals(practicaId)) {
-                    return practicaBean;
-                }
-            }
-        }
-        return null;
+        return practicaBeans.get(practicaId);
     }
 
     public List<PracticaBean> getActivePracticas() {
         List<PracticaBean> result = new ArrayList<>();
         long currentMillis = System.currentTimeMillis();
-        for (PracticaBean practicaBean : practicaBeanList) {
+        for (PracticaBean practicaBean : practicaBeans.values()) {
             if ((practicaBean.getStart() <= currentMillis)
                     && (practicaBean.getEnd() >= currentMillis)) {
                 result.add(practicaBean);
@@ -102,7 +102,8 @@ public class PracticaRepository {
 
     private void save(Context context) {
         try {
-            final String json;
+            List<PracticaBean> practicaBeanList = new ArrayList<>(practicaBeans.values());
+            String json;
             if (practicaBeanList.size() > 0) {
                 json = practicaBeanList.get(0).getFactory().toString(practicaBeanList);
             } else {
@@ -118,17 +119,19 @@ public class PracticaRepository {
 
     private boolean load(Context context) throws IOException {
         File file = getCacheFile(context);
-//        file.delete();
         if (!file.exists()) {
             return false;
         }
 
         String json = StreamUtil.readTextStream(file);
         JsonObjectParser jsonParser = new JacksonFactory().createJsonObjectParser();
-        practicaBeanList = (List<PracticaBean>) jsonParser.parseAndClose(new StringReader(json), new TypeToken<List<PracticaBean>>() {}.getType());
+        List<PracticaBean> practicaBeanList = (List<PracticaBean>) jsonParser.parseAndClose(new StringReader(json), new TypeToken<List<PracticaBean>>() {
+        }.getType());
         if (practicaBeanList == null) {
             practicaBeanList = new ArrayList<>();
         }
+
+        replaceInternalData(practicaBeanList);
         Log.i(LOG_CAT, "Loaded practicas from file cache: " + practicaBeanList.size());
         return true;
     }
@@ -143,5 +146,9 @@ public class PracticaRepository {
 
     public void setCurrentPractica(PracticaBean currentPractica) {
         this.currentPractica = currentPractica;
+    }
+
+    public void replacePractica(PracticaBean practicaBean) {
+        practicaBeans.put(practicaBean.getId(), practicaBean);
     }
 }

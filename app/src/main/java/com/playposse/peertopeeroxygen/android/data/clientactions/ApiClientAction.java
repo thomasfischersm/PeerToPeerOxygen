@@ -60,8 +60,7 @@ public abstract class ApiClientAction {
     /**
      * Child classes can override this to execute methods in a separate thread.
      */
-    protected void executeAsync() throws IOException {
-    }
+    protected abstract void executeAsync() throws IOException;
 
     /**
      * Child classes can override this to execute code on the UI thread after calling the server.

@@ -17,11 +17,17 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.data.DataService;
+import com.playposse.peertopeeroxygen.android.data.clientactions.CheckIntoPracticaClientAction;
 import com.playposse.peertopeeroxygen.android.data.practicas.PracticaRepository;
+import com.playposse.peertopeeroxygen.android.firebase.OxygenFirebaseMessagingService;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.student.StudentPracticaCheckinActivity;
 import com.playposse.peertopeeroxygen.android.util.GeoUtil;
 import com.playposse.peertopeeroxygen.android.util.PermissionUtil;
+import com.playposse.peertopeeroxygen.android.util.ToastUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.PracticaBean;
 
 import static com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY;
@@ -164,5 +170,35 @@ public class PracticaManager {
      */
     private static void checkEndOfPractica(PracticaRepository practicaRepository) {
         // TODO
+    }
+
+    public static void checkin(
+            PracticaBean practicaBean,
+            final DataService.LocalBinder localBinder) {
+
+        String topic = OxygenFirebaseMessagingService.PRACTICA_FIREBASE_TOPIC_PREFIX
+                + practicaBean.getId();
+        FirebaseMessaging.getInstance().subscribeToTopic(topic);
+
+        final PracticaRepository practicaRepository = localBinder
+                .getDataRepository()
+                .getPracticaRepository();
+        practicaRepository.setCurrentPractica(practicaBean);
+
+        localBinder.checkIntoPractica(
+                practicaBean.getId(),
+                new CheckIntoPracticaClientAction.Callback() {
+                    @Override
+                    public void onResult(PracticaBean practicaBean) {
+                        // Refresh with the latest data about the practica.
+
+                        practicaRepository.setCurrentPractica(practicaBean);
+
+                        practicaRepository.replacePractica(practicaBean);
+
+                        Context context = localBinder.getApplicationContext();
+                        ToastUtil.sendToast(context, R.string.successfully_signed_into_practica);
+                    }
+                });
     }
 }

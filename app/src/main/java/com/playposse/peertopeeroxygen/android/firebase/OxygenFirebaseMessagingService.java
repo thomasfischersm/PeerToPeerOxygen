@@ -42,6 +42,7 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
     private static final String PRACTICA_UPDATE_TYPE = "practicaUpdate";
 
     private static final String ALL_DEVICES_TOPIC = "allDevices";
+    public static final String PRACTICA_FIREBASE_TOPIC_PREFIX = "practica-";
 
     protected DataServiceConnection dataServiceConnection;
     private List<FirebaseClientAction> pendingActions = new ArrayList<>();

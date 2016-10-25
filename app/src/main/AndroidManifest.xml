@@ -44,7 +44,9 @@
             android:name=".admin.AdminShowMissionLaddersActivity"
             android:parentActivityName=".admin.AdminMainActivity" />
 
-        <service android:name=".data.DataService" />
+        <service
+            android:name=".data.DataService"
+            android:exported="false" />
 
         <activity
             android:name=".admin.AdminEditMissionLadderActivity"
