@@ -13,6 +13,7 @@ import com.playposse.peertopeeroxygen.android.firebase.FirebaseMessage;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
 import com.playposse.peertopeeroxygen.android.util.ToastUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.PracticaBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.PracticaUserBean;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -67,6 +68,20 @@ public class PracticaUpdateClientAction extends FirebaseClientAction {
             practicaBean.setCreated(tempPracticaBean.getCreated());
             practicaBean.setTimezone(tempPracticaBean.getTimezone());
 
+            if (tempPracticaBean.getHostUserBean() != null) {
+                TempPracticaUserBean tempHostBean = tempPracticaBean.getHostUserBean();
+                PracticaUserBean hostBean = new PracticaUserBean();
+                hostBean.setId(tempHostBean.getId());
+                hostBean.setAdmin(tempHostBean.isAdmin());
+                hostBean.setFirstName(tempHostBean.getFirstName());
+                hostBean.setLastName(tempHostBean.getLastName());
+                hostBean.setName(tempHostBean.getName());
+                hostBean.setProfilePictureUrl(tempHostBean.getProfilePictureUrl());
+                hostBean.setStudiedMissions(tempHostBean.getStudiedMissions());
+                hostBean.setCompletedLevels(tempHostBean.getCompletedLevels());
+                practicaBean.setHostUserBean(hostBean);
+            }
+
             return practicaBean;
         }
     }
@@ -81,7 +96,7 @@ public class PracticaUpdateClientAction extends FirebaseClientAction {
         private Long end;
         private String address;
         private String gpsLocation;
-//        private PracticaUserBean hostUserBean;
+        private TempPracticaUserBean hostUserBean;
 //        private List<PracticaUserBean> attendeeUserBeans = new ArrayList<>();
         private Long created;
         private String timezone;
@@ -148,6 +163,90 @@ public class PracticaUpdateClientAction extends FirebaseClientAction {
 
         public void setTimezone(String timezone) {
             this.timezone = timezone;
+        }
+
+        public TempPracticaUserBean getHostUserBean() {
+            return hostUserBean;
+        }
+
+        public void setHostUserBean(TempPracticaUserBean hostUserBean) {
+            this.hostUserBean = hostUserBean;
+        }
+    }
+
+    private static class TempPracticaUserBean {
+
+        private Long id;
+        private boolean isAdmin;
+        private String firstName;
+        private String lastName;
+        private String name;
+        private String profilePictureUrl;
+        private String studiedMissions;
+        private String completedLevels;
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public boolean isAdmin() {
+            return isAdmin;
+        }
+
+        public void setAdmin(boolean admin) {
+            isAdmin = admin;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getProfilePictureUrl() {
+            return profilePictureUrl;
+        }
+
+        public void setProfilePictureUrl(String profilePictureUrl) {
+            this.profilePictureUrl = profilePictureUrl;
+        }
+
+        public String getStudiedMissions() {
+            return studiedMissions;
+        }
+
+        public void setStudiedMissions(String studiedMissions) {
+            this.studiedMissions = studiedMissions;
+        }
+
+        public String getCompletedLevels() {
+            return completedLevels;
+        }
+
+        public void setCompletedLevels(String completedLevels) {
+            this.completedLevels = completedLevels;
         }
     }
 }

@@ -10,7 +10,9 @@ import com.playposse.peertopeeroxygen.android.data.facebook.FacebookProfilePhoto
 /**
  * An abstract {@link Fragment} that connects to the {@link DataService}.
  */
-public abstract class DataServiceParentFragment extends Fragment implements DataReceivedCallback {
+public abstract class DataServiceParentFragment
+        extends Fragment
+        implements DataReceivedCallback, DataServiceConnection.ServiceConnectionListener {
 
     protected DataServiceConnection dataServiceConnection;
 
@@ -69,5 +71,10 @@ public abstract class DataServiceParentFragment extends Fragment implements Data
         if (getActivity() != null) {
             getActivity().runOnUiThread(action);
         }
+    }
+
+    @Override
+    public void onServiceConnected() {
+        // Nothing to do.
     }
 }

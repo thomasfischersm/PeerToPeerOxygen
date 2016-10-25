@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.admin.AdminMainActivity;
 import com.playposse.peertopeeroxygen.android.data.facebook.FacebookProfilePhotoCache;
+import com.playposse.peertopeeroxygen.android.data.practicas.PracticaRepository;
+import com.playposse.peertopeeroxygen.android.practicamgmt.PracticaManager;
 import com.playposse.peertopeeroxygen.android.student.StudentAboutActivity;
 import com.playposse.peertopeeroxygen.android.student.StudentMainActivity;
 
@@ -17,11 +19,12 @@ import com.playposse.peertopeeroxygen.android.student.StudentMainActivity;
  */
 public abstract class DataServiceParentActivity
         extends AppCompatActivity
-        implements DataReceivedCallback {
+        implements DataReceivedCallback, DataServiceConnection.ServiceConnectionListener {
 
     protected DataServiceConnection dataServiceConnection;
     protected boolean shouldAutoInit = true;
     protected boolean shouldRegisterCallback = true;
+    protected boolean shouldCheckPractica = true;
 
     @Override
     protected void onStart() {
@@ -85,5 +88,17 @@ public abstract class DataServiceParentActivity
                 studentPhotoImageView,
                 fbProfileId,
                 photoUrlString);
+    }
+
+    @Override
+    public void onServiceConnected() {
+        if (shouldCheckPractica) {
+            PracticaRepository practicaRepository =
+                    dataServiceConnection
+                            .getLocalBinder()
+                            .getDataRepository()
+                            .getPracticaRepository();
+            PracticaManager.refresh(this, practicaRepository);
+        }
     }
 }

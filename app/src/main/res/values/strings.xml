@@ -134,6 +134,11 @@
     <string name="student_about_copyright_text">(C) Copyright 2016 Mitra Martin, Stefan Fabry, and Thomas Fischer. All rights reserved.\n</string>
     <string name="student_about_play_services_attribution_heading">Google Play Services Attribution</string>
 
+    <!-- Practica checkin activity -->
+    <string name="practica_host">by %1$s</string>
+    <string name="practica_time">%1$s - %2$s</string>
+    <string name="check_into_practica_button_label">Check-in</string>
+
     <!-- Admin and student menu -->
     <string name="admin_home_menu_title">Admin home</string>
     <string name="student_home_menu_title">Student home</string>

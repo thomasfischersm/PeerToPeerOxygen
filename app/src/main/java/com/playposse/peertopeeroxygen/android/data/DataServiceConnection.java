@@ -12,7 +12,7 @@ public class DataServiceConnection implements ServiceConnection {
 
     private static final String LOG_CAT = DataServiceConnection.class.getSimpleName();
 
-    private final DataReceivedCallback dataReceivedCallback;
+    private final ServiceConnectionListener dataReceivedCallback;
     private final boolean shouldAutoInit;
     private final boolean shouldRegisterCallback;
     private final boolean checkCacheStale;
@@ -21,14 +21,14 @@ public class DataServiceConnection implements ServiceConnection {
     private DataService.LocalBinder localBinder;
 
     public DataServiceConnection(
-            DataReceivedCallback dataReceivedCallback,
+            ServiceConnectionListener dataReceivedCallback,
             boolean shouldAutoInit) {
 
         this(dataReceivedCallback, shouldAutoInit, true);
     }
 
     public DataServiceConnection(
-            DataReceivedCallback dataReceivedCallback,
+            ServiceConnectionListener dataReceivedCallback,
             boolean shouldAutoInit,
             boolean checkCacheStale) {
 
@@ -36,7 +36,7 @@ public class DataServiceConnection implements ServiceConnection {
     }
 
     public DataServiceConnection(
-            DataReceivedCallback dataReceivedCallback,
+            ServiceConnectionListener dataReceivedCallback,
             boolean shouldAutoInit,
             boolean checkCacheStale,
             boolean shouldRegisterCallback) {
@@ -60,6 +60,8 @@ public class DataServiceConnection implements ServiceConnection {
             localBinder.registerDataReceivedCallback(dataReceivedCallback, checkCacheStale);
         }
 
+        dataReceivedCallback.onServiceConnected();
+
         Log.i(LOG_CAT, "The service is now connected.");
     }
 
@@ -75,5 +77,13 @@ public class DataServiceConnection implements ServiceConnection {
 
     public DataService.LocalBinder getLocalBinder() {
         return localBinder;
+    }
+
+    /**
+     * An interface that is called whenever the service has connected.
+     */
+    public interface ServiceConnectionListener extends DataReceivedCallback {
+
+        void onServiceConnected();
     }
 }

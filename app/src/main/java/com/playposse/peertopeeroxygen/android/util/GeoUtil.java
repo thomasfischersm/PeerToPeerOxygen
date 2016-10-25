@@ -5,6 +5,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,11 +16,22 @@ import java.util.List;
 
 public class GeoUtil {
 
-    public static final String COORDINATE_SEPARATOR = ", ";
+    private static final String LOG_CAT = GeoUtil.class.getSimpleName();
+
+    private static final String COORDINATE_SEPARATOR = ", ";
 
     public static String toStr(Address address) {
         String latitude = Location.convert(address.getLatitude(), Location.FORMAT_DEGREES);
         String longitude = Location.convert(address.getLongitude(), Location.FORMAT_DEGREES);
+
+        // start debug
+        Log.i(LOG_CAT, "GPS in degrees: " + (latitude +  COORDINATE_SEPARATOR + longitude));
+
+        String la = Location.convert(address.getLatitude(), Location.FORMAT_MINUTES);
+        String lo = Location.convert(address.getLongitude(), Location.FORMAT_MINUTES);
+        Log.i(LOG_CAT, "GPS in minutes: " + (latitude +  COORDINATE_SEPARATOR + longitude));
+        // end debug
+
         return latitude +  COORDINATE_SEPARATOR + longitude;
     }
 
@@ -73,5 +85,12 @@ public class GeoUtil {
         location.setLatitude(latitude);
         location.setLongitude(longitude);
         return location;
+    }
+
+    /**
+     * Formats a GPS string.
+     */
+    public static String formatGpsString(String latitude, String longitude) {
+        return latitude + COORDINATE_SEPARATOR + longitude;
     }
 }

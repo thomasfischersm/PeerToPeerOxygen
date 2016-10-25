@@ -128,7 +128,9 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private final class EmptyDataReceivedCallback implements DataReceivedCallback {
+    private final class EmptyDataReceivedCallback
+            implements DataReceivedCallback, DataServiceConnection.ServiceConnectionListener {
+
         @Override
         public void receiveData(DataRepository dataRepository) {
             executePendingActions();
@@ -137,6 +139,11 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
         @Override
         public void runOnUiThread(Runnable runnable) {
             runnable.run();
+        }
+
+        @Override
+        public void onServiceConnected() {
+            // Nothing to do.
         }
     }
 }

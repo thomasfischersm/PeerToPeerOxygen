@@ -1,8 +1,11 @@
 package com.playposse.peertopeeroxygen.android.util;
 
 import android.text.Editable;
+import android.text.format.DateFormat;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.util.Locale;
 
 import javax.annotation.Nullable;
 
@@ -10,6 +13,8 @@ import javax.annotation.Nullable;
  * A utility class for dealing with
  */
 public final class StringUtil {
+
+    private static final String DATE_TIME_SKELETON = "Mdyhm";
 
     @Nullable
     public static String getCleanString(TextView textView) {
@@ -55,5 +60,10 @@ public final class StringUtil {
 
     public static boolean isEmpty(EditText editText) {
         return editText.getText().toString().trim().length() == 0;
+    }
+
+    public static String formatDateTime(long timeInMillis) {
+        String pattern = DateFormat.getBestDateTimePattern(Locale.getDefault(), DATE_TIME_SKELETON);
+        return DateFormat.format(pattern, timeInMillis).toString();
     }
 }

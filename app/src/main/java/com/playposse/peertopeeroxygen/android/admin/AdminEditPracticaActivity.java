@@ -17,12 +17,14 @@ import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.ui.widgets.EditDateTime;
 import com.playposse.peertopeeroxygen.android.util.GeoUtil;
+import com.playposse.peertopeeroxygen.android.util.HttpGeoCoder;
 import com.playposse.peertopeeroxygen.android.util.StringUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.PracticaBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.PracticaUserBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -77,19 +79,7 @@ public class AdminEditPracticaActivity extends AdminParentActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                try {
-                    Geocoder geocoder = new Geocoder(getApplicationContext());
-                    String locationName = addressEditText.getText().toString();
-                    List<Address> addressList = geocoder.getFromLocationName(locationName, 1);
-
-                    if ((addressList != null) && (addressList.size() > 0)) {
-                        Address address = addressList.get(0);
-                        String gpsString = GeoUtil.toStr(address);
-                        gpsLocationTextView.setText(gpsString);
-                    }
-                } catch (IOException ex) {
-                    Log.e(LOG_CAT, "Failed to convert address into GPS coordinates.", ex);
-                }
+                updateGpsLocation();
             }
         });
 
@@ -97,12 +87,14 @@ public class AdminEditPracticaActivity extends AdminParentActivity {
             @Override
             public void onClick(View v) {
                 String gpsLocation = StringUtil.getCleanString(gpsLocationTextView);
+                gpsLocation.replaceAll(" ", "");
                 if (gpsLocation != null) {
-                    Uri gmmIntentUri = Uri.parse("geo:" + gpsLocation);
+                    Uri gmmIntentUri = Uri.parse("geo:" + gpsLocation + "?q=" + gpsLocation);
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
                     if (mapIntent.resolveActivity(getPackageManager()) != null) {
                         startActivity(mapIntent);
+                        Log.i(LOG_CAT, "Opened Google maps with: " + gmmIntentUri);
                     }
                 }
             }
@@ -170,5 +162,26 @@ public class AdminEditPracticaActivity extends AdminParentActivity {
         }
 
         dataServiceConnection.getLocalBinder().save(practicaBean);
+    }
+
+    /**
+     * Tries to resolve the current address into a GPS location.
+     */
+    private void updateGpsLocation() {
+        String locationName = addressEditText.getText().toString();
+
+        try {
+            HttpGeoCoder.geoCode(
+                    getApplicationContext(),
+                    locationName,
+                    new HttpGeoCoder.GeoCodeCallback() {
+                        @Override
+                        public void onGeoResponse(String gpsCoordinate) {
+                            gpsLocationTextView.setText(gpsCoordinate);
+                        }
+                    });
+        } catch (UnsupportedEncodingException ex) {
+            Log.e(LOG_CAT, "Failed to geocode: " + locationName, ex);
+        }
     }
 }

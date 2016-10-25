@@ -76,10 +76,12 @@ public class PracticaRepository {
     }
 
     @Nullable
-    private PracticaBean getPracticaById(Long practicaId) {
-        for (PracticaBean practicaBean : practicaBeanList) {
-            if (practicaId.equals(practicaBean.getId())) {
-                return practicaBean;
+    public PracticaBean getPracticaById(Long practicaId) {
+        if (practicaBeanList != null) {
+            for (PracticaBean practicaBean : practicaBeanList) {
+                if (practicaBean.getId().equals(practicaId)) {
+                    return practicaBean;
+                }
             }
         }
         return null;
@@ -94,6 +96,7 @@ public class PracticaRepository {
                 result.add(practicaBean);
             }
         }
+        Log.i(LOG_CAT, "Found active practicas: " + result.size());
         return result;
     }
 
