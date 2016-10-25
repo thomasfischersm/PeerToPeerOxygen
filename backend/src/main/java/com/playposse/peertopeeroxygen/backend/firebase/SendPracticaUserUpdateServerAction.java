@@ -15,6 +15,7 @@ import java.io.IOException;
 public class SendPracticaUserUpdateServerAction extends FirebaseServerAction {
 
     private static final String PRACTICA_USER_UPDATE_TYPE = "practicaUserUpdate";
+    private static final String PRACTICA_ID_KEY = "practicaId";
     private static final String PRACTICA_USER_BEAN = "practicaUserBean";
 
     private static final String PRACTICA_FIREBASE_TOPIC_PREFIX = "/topics/practica-";
@@ -29,6 +30,7 @@ public class SendPracticaUserUpdateServerAction extends FirebaseServerAction {
         JSONObject rootNode = new JSONObject();
         rootNode.put(TYPE_KEY, PRACTICA_USER_UPDATE_TYPE);
         rootNode.put(PRACTICA_USER_BEAN, practicaUserJson);
+        rootNode.put(PRACTICA_ID_KEY, practicaId);
 
         return sendMessageToDevice(firebaseGroup, rootNode, FirebasePriority.normal);
     }

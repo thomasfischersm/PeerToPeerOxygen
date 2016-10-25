@@ -11,6 +11,7 @@ import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetPracticaClientAction;
 import com.playposse.peertopeeroxygen.android.util.StreamUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.PracticaBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.PracticaUserBean;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,6 +81,22 @@ public class PracticaRepository {
         practicaBeans.put(practicaBean.getId(), practicaBean);
 
         save(context);
+    }
+
+    public void updateAttendee(Long practicaId, PracticaUserBean practicaUserBean) {
+        PracticaBean practicaBean = practicaBeans.get(practicaId);
+        if (practicaBean != null) {
+            List<PracticaUserBean> attendeeUserBeans = practicaBean.getAttendeeUserBeans();
+            for (int i = 0; i < attendeeUserBeans.size(); i++) {
+                PracticaUserBean otherUserBean = attendeeUserBeans.get(i);
+                if (otherUserBean.getId().equals(practicaUserBean.getId())) {
+                    attendeeUserBeans.set(i, practicaUserBean);
+                    return;
+                }
+            }
+        }
+
+        // TODO: Consider refreshing because something went wrong.
     }
 
     @Nullable
