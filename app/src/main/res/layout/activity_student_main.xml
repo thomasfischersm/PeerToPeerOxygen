@@ -45,7 +45,14 @@
                 android:id="@+id/studentProfileButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/student_profile_link" />
+                android:text="@string/student_profile_label" />
+
+            <Button
+                android:id="@+id/viewPracticaButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/view_practica_label"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/logoutButton"

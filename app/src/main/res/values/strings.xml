@@ -97,7 +97,8 @@
     <!-- Student home -->
     <string name="student_learning_mission_heading">Learning missions</string>
     <string name="student_functions_heading">Functions</string>
-    <string name="student_profile_link">View profile</string>
+    <string name="student_profile_label">View profile</string>
+    <string name="view_practica_label">View practica</string>
     <string name="logout_button_label">Logout</string>
 
     <!-- Student mission activity -->
@@ -139,6 +140,14 @@
     <string name="practica_host">by %1$s</string>
     <string name="practica_time">%1$s - %2$s</string>
     <string name="check_into_practica_button_label">Check-in</string>
+
+    <!-- View practica student activity -->
+    <string name="view_practica_student_activity_title">Practica: %1$s</string>
+    <string name="empty_practica_message">You are the first one!</string>
+    <string name="learnable_missions_heading">Learn missions:</string>
+    <string name="teachable_missions_heading">Teach missions:</string>
+    <string name="no_missions_available">Nada zilch</string>
+    <string name="admin_can_teach_everything">An admin can teach everything.</string>
 
     <!-- Admin and student menu -->
     <string name="admin_home_menu_title">Admin home</string>

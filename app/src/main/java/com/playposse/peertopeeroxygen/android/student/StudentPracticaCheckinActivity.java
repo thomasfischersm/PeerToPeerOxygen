@@ -1,5 +1,6 @@
 package com.playposse.peertopeeroxygen.android.student;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -79,6 +80,7 @@ public class StudentPracticaCheckinActivity extends StudentParentActivity {
     private void checkIntoPractica() {
         if ((dataServiceConnection.getLocalBinder() != null) && (practicaBean != null)) {
             PracticaManager.checkin(practicaBean, dataServiceConnection.getLocalBinder());
+            startActivity(new Intent(this, StudentMainActivity.class));
         }
     }
 }

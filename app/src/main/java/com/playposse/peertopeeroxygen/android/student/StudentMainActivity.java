@@ -30,6 +30,7 @@ public class StudentMainActivity extends StudentParentActivity {
     LinearLayout rootView;
     private TextView missionHeadingTextView;
     private Button studentProfileButton;
+    private Button viewPracticaButton;
     private Button logoutButton;
 
     @Override
@@ -42,12 +43,22 @@ public class StudentMainActivity extends StudentParentActivity {
         rootView = (LinearLayout) findViewById(R.id.rootView);
         missionHeadingTextView = (TextView) findViewById(R.id.missionHeadingTextView);
         studentProfileButton = (Button) findViewById(R.id.studentProfileButton);
+        viewPracticaButton = (Button) findViewById(R.id.viewPracticaButton);
         logoutButton = (Button) findViewById(R.id.logoutButton);
 
         studentProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(), StudentProfileActivity.class));
+            }
+        });
+
+        viewPracticaButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =
+                        new Intent(getApplicationContext(), StudentViewPracticaActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -70,6 +81,12 @@ public class StudentMainActivity extends StudentParentActivity {
         clearButtons(afterView);
         for (MissionLadderBean missionLadderBean : missionLadderBeans) {
             afterView = addMissionLadderButton(missionLadderBean, afterView);
+        }
+
+        if (dataRepository.getPracticaRepository().getCurrentPractica() != null) {
+            viewPracticaButton.setVisibility(View.VISIBLE);
+        } else {
+            viewPracticaButton.setVisibility(View.GONE);
         }
     }
 

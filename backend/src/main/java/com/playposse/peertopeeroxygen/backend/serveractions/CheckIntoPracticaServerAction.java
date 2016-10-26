@@ -33,12 +33,25 @@ public class CheckIntoPracticaServerAction extends ServerAction {
         ofy().save().entity(user);
 
         // Update practica
-        practica.getAttendeeUsers().add(Ref.create(Key.create(OxygenUser.class, user.getId())));
-        ofy().save().entity(practica);
+        if (!containsAttendee(practica, user)) {
+            practica.getAttendeeUsers().add(Ref.create(Key.create(OxygenUser.class, user.getId())));
+            ofy().save().entity(practica);
+        }
 
         // Broadcast change to other practica attendees.
         SendPracticaUserUpdateServerAction.sendPracticaUserUpdate(user, practicaId);
 
         return new PracticaBean(practica);
+    }
+
+    private static boolean containsAttendee(Practica practica, OxygenUser user) {
+        if (practica.getAttendeeUsers() != null) {
+            for (Ref<OxygenUser> userRef : practica.getAttendeeUsers()) {
+                if (user.getId().equals(userRef.getKey().getId())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

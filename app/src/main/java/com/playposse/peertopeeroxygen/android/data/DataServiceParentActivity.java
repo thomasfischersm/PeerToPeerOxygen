@@ -101,4 +101,15 @@ public abstract class DataServiceParentActivity
             PracticaManager.refresh(this, dataServiceConnection.getLocalBinder());
         }
     }
+
+    /**
+     * Provides convenience access to the {@link DataRepository}
+     */
+    protected DataRepository getDataRepository() {
+        if ((dataServiceConnection != null) && (dataServiceConnection.getLocalBinder() != null)) {
+            return dataServiceConnection.getLocalBinder().getDataRepository();
+        } else {
+            return null;
+        }
+    }
 }

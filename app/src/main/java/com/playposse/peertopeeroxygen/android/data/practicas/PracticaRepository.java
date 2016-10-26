@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.gson.reflect.TypeToken;
@@ -93,7 +94,12 @@ public class PracticaRepository {
     public void updateAttendee(Long practicaId, PracticaUserBean practicaUserBean) {
         PracticaBean practicaBean = practicaBeans.get(practicaId);
         if (practicaBean != null) {
+            if (practicaBean.getAttendeeUserBeans() == null) {
+                practicaBean.setAttendeeUserBeans(new ArrayList<PracticaUserBean>());
+            }
+
             List<PracticaUserBean> attendeeUserBeans = practicaBean.getAttendeeUserBeans();
+
             for (int i = 0; i < attendeeUserBeans.size(); i++) {
                 PracticaUserBean otherUserBean = attendeeUserBeans.get(i);
                 if (otherUserBean.getId().equals(practicaUserBean.getId())) {
@@ -129,7 +135,9 @@ public class PracticaRepository {
             List<PracticaBean> practicaBeanList = new ArrayList<>(practicaBeans.values());
             String json;
             if (practicaBeanList.size() > 0) {
-                json = practicaBeanList.get(0).getFactory().toString(practicaBeanList);
+//                JsonFactory factory = practicaBeanList.get(0).getFactory();
+                JsonFactory factory = new JacksonFactory();
+                json = factory.toString(practicaBeanList);
             } else {
                 json = "";
             }
