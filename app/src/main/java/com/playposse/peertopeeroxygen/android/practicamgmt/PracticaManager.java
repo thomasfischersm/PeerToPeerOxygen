@@ -18,6 +18,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.clientactions.CheckIntoPracticaClientAction;
@@ -86,8 +87,10 @@ public class PracticaManager {
      * <p>Note: As this check isn't critical, it can wait for the next activity to be opened if the
      * services aren't ready to use yet.
      */
-    public static void refresh(Activity activity, PracticaRepository practicaRepository) {
+    public static void refresh(Activity activity, DataService.LocalBinder localBinder) {
         Log.i(LOG_CAT, "PracticaManager.refresh called");
+        PracticaRepository practicaRepository =
+                localBinder.getDataRepository().getPracticaRepository();
         if (!isInit) {
             init(activity);
             return;
@@ -99,7 +102,7 @@ public class PracticaManager {
             checkPracticaGeoFence(activity, practicaRepository);
         }
 
-        checkEndOfPractica(practicaRepository);
+        checkEndOfPractica(localBinder);
     }
 
     /**
@@ -168,17 +171,27 @@ public class PracticaManager {
     /**
      * Checks if the current practica has ended.
      */
-    private static void checkEndOfPractica(PracticaRepository practicaRepository) {
-        // TODO
+    private static void checkEndOfPractica(DataService.LocalBinder localBinder) {
+        PracticaRepository practicaRepository =
+                localBinder.getDataRepository().getPracticaRepository();
+        PracticaBean practicaBean = practicaRepository.getCurrentPractica();
+        if (practicaBean == null) {
+            return;
+        }
+
+        if (practicaBean.getEnd() < System.currentTimeMillis()) {
+            practicaRepository.setCurrentPractica(null);
+            localBinder.checkOutOfPractica(practicaBean.getId());
+            OxygenFirebaseMessagingService.unsubscribeFromPracticaTopic(practicaBean.getId());
+            Log.i(LOG_CAT, "Student has been checked out of practica.");
+        }
     }
 
     public static void checkin(
             PracticaBean practicaBean,
             final DataService.LocalBinder localBinder) {
 
-        String topic = OxygenFirebaseMessagingService.PRACTICA_FIREBASE_TOPIC_PREFIX
-                + practicaBean.getId();
-        FirebaseMessaging.getInstance().subscribeToTopic(topic);
+        OxygenFirebaseMessagingService.subscribeToPracticaTopic(practicaBean.getId());
 
         final PracticaRepository practicaRepository = localBinder
                 .getDataRepository()

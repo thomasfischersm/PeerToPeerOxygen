@@ -75,10 +75,17 @@ public class PracticaRepository {
     public void updatePracticaNotAttendees(PracticaBean practicaBean, Context context) {
         PracticaBean existingPracticaBean = practicaBeans.get(practicaBean.getId());
         if (existingPracticaBean != null) {
+            // Copy the attendees over from the old PracticaBean instance. The Firebase messages
+            // are limited in space and can't include all the attendee information.
             practicaBean.setAttendeeUserBeans(existingPracticaBean.getAttendeeUserBeans());
         }
 
         practicaBeans.put(practicaBean.getId(), practicaBean);
+
+        // The current practica might have to be updated. Otherwise, it'll hold onto the old copy.
+        if ((currentPractica != null) && (currentPractica.getId().equals(practicaBean.getId()))) {
+            currentPractica = practicaBean;
+        }
 
         save(context);
     }

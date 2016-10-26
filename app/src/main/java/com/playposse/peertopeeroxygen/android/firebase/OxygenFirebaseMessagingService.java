@@ -133,6 +133,16 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
+    public static void subscribeToPracticaTopic(Long practicaId) {
+        String topic = PRACTICA_FIREBASE_TOPIC_PREFIX +practicaId;
+        FirebaseMessaging.getInstance().subscribeToTopic(topic);
+    }
+
+    public static void unsubscribeFromPracticaTopic(Long practicaId) {
+        String topic = PRACTICA_FIREBASE_TOPIC_PREFIX +practicaId;
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
+    }
+
     private final class EmptyDataReceivedCallback
             implements DataReceivedCallback, DataServiceConnection.ServiceConnectionListener {
 

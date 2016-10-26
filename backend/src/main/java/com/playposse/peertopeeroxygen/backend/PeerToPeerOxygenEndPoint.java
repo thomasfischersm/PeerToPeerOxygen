@@ -25,6 +25,7 @@ import com.playposse.peertopeeroxygen.backend.exceptions.BuddyLacksMissionExperi
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 import com.playposse.peertopeeroxygen.backend.serveractions.AddPointsByAdminServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.CheckIntoPracticaServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.CheckOutOfPracticaServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionLadderServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionTreeServerAction;
@@ -358,5 +359,14 @@ public class PeerToPeerOxygenEndPoint {
             throws UnauthorizedException, BadRequestException, IOException {
 
         return CheckIntoPracticaServerAction.checkin(sessionId, practicaId);
+    }
+
+    @ApiMethod(name = "checkOutOfPractica")
+    public void checkOutOfPractica(
+            @Named("sessionId") Long sessionId,
+            @Named("practicaId") Long practicaId)
+            throws UnauthorizedException, BadRequestException, IOException {
+
+        CheckOutOfPracticaServerAction.checkout(sessionId, practicaId);
     }
 }

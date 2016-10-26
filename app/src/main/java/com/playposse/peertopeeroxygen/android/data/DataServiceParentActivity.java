@@ -98,7 +98,7 @@ public abstract class DataServiceParentActivity
                             .getLocalBinder()
                             .getDataRepository()
                             .getPracticaRepository();
-            PracticaManager.refresh(this, practicaRepository);
+            PracticaManager.refresh(this, dataServiceConnection.getLocalBinder());
         }
     }
 }

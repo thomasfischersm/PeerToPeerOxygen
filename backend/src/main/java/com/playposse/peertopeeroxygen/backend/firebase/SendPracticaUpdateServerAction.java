@@ -7,6 +7,7 @@ import com.google.appengine.repackaged.com.google.gson.Gson;
 import com.google.appengine.repackaged.org.codehaus.jackson.map.ObjectMapper;
 import com.google.appengine.repackaged.org.codehaus.jackson.map.ObjectWriter;
 import com.playposse.peertopeeroxygen.backend.beans.PracticaBean;
+import com.playposse.peertopeeroxygen.backend.schema.Practica;
 
 import org.json.JSONObject;
 
@@ -22,7 +23,12 @@ public class SendPracticaUpdateServerAction extends FirebaseServerAction {
     private static final String PRACTICA_UPDATE_TYPE = "practicaUpdate";
     private static final String PRACTICA_BEAN = "practicaBean";
 
-    public static String sendPracticaUpdate(PracticaBean practicaBean) throws IOException {
+    public static String sendPracticaUpdate(Practica practica) throws IOException {
+        PracticaBean practicaBean = new PracticaBean(practica);
+
+        // Don't transmit this. It's too large for Firebase!
+        practicaBean.setAttendeeUserBeans(null);
+
         String practicaJson = new Gson().toJson(practicaBean);
 
         JSONObject rootNode = new JSONObject();

@@ -38,7 +38,7 @@ public class SavePracticaServerAction extends ServerAction {
         ofy().save().entities(practica).now();
 
         PracticaBean resultPracticaBean = new PracticaBean(practica);
-        SendPracticaUpdateServerAction.sendPracticaUpdate(resultPracticaBean);
+        SendPracticaUpdateServerAction.sendPracticaUpdate(practica);
         return resultPracticaBean;
     }
 }

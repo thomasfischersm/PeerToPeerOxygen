@@ -32,7 +32,9 @@ public class PracticaUserUpdateClientAction extends FirebaseClientAction {
             PracticaUpdateMessage message = new PracticaUpdateMessage(remoteMessage);
 
             PracticaRepository practicaRepository = getDataRepository().getPracticaRepository();
-            practicaRepository.updateAttendee(message.getPracticaId(), message.getPracticaUserBean());
+            Long practicaId = message.getPracticaId();
+            PracticaUserBean practicaUserBean = message.getPracticaUserBean();
+            practicaRepository.updateAttendee(practicaId, practicaUserBean);
         } catch (IOException ex) {
             Log.e(LOG_CAT, "Failed to update metadata about practica attendee.", ex);
             // TODO: Consider trying to update through the API.
