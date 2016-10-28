@@ -2,6 +2,7 @@ package com.playposse.peertopeeroxygen.android.firebase.actions;
 
 import com.google.firebase.messaging.RemoteMessage;
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.data.CompleteMissionDataCache;
 import com.playposse.peertopeeroxygen.android.firebase.FirebaseMessage;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.JsonMap;
@@ -33,6 +34,9 @@ public class UpdatePointsClientAction extends FirebaseClientAction {
                 userBean.getPointsMap().put(entry.getKey(), entry.getValue());
             }
         }
+
+        // Save changes to the davice storage.
+        CompleteMissionDataCache.save(getApplicationContext(), getDataRepository());
 
         makeDataReceivedCallbacks();
 

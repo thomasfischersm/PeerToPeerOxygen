@@ -111,6 +111,14 @@ public class CompleteMissionDataCache {
     }
 
     /**
+     * Save the cache to the device after the data has been changed, e.g. the student graduated
+     * from a mission.
+     */
+    public static void save(Context context, DataRepository dataRepository) {
+        new SaveLocallyAsyncTask(context, dataRepository.getCompleteMissionDataBean()).execute();
+    }
+
+    /**
      * {@link AsyncTask} that loads the mission data from the local file system and falls back
      * to the could if it fails.
      */

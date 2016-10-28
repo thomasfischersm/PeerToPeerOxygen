@@ -1,5 +1,6 @@
 package com.playposse.peertopeeroxygen.android.data.clientactions;
 
+import com.playposse.peertopeeroxygen.android.data.CompleteMissionDataCache;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
@@ -38,6 +39,9 @@ public class ReportMissionCheckoutCompleteClientAction extends ApiClientAction {
         completionBean.setMentorCount(completionBean.getMentorCount() + 1);
 
         DataRepository.addPoints(getDataRepository().getUserBean(), PointType.teach, 1);
+
+        // Save changes to the davice storage.
+        CompleteMissionDataCache.save(getContext(), getDataRepository());
     }
 
     @Override
