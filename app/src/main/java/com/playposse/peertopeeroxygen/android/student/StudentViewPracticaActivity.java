@@ -16,6 +16,7 @@ import com.playposse.peertopeeroxygen.android.util.CreateViewUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.LevelCompletionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.PracticaBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.PracticaUserBean;
@@ -113,15 +114,33 @@ public class StudentViewPracticaActivity extends StudentParentActivity {
         UserBean userBean = getDataRepository().getUserBean();
         PracticaUserBean practicaUserBean = createMinimalPracticaUserBean(userBean);
 
-        missionView.addView(createTextView(this, R.string.learnable_missions_heading));
-        List<MissionBean> learnableMissions =
-                determineTeachableMissions(practicaUserBean, attendeeBean);
-        addMissionList(missionView, learnableMissions);
+        if (userBean.getAdmin() && attendeeBean.getAdmin()) {
+            // Both people are admins.
+            missionView.addView(createTextView(this, R.string.both_admins_heading));
+        } else if (userBean.getAdmin()) {
+            // The current user is an admin.
+            missionView.addView(createTextView(this, R.string.teachable_missions_heading));
+            List<MissionBean> teachableMissions =
+                    determineLearnableMissionsByAdmin(attendeeBean);
+            addMissionList(missionView, teachableMissions);
+        } else if (attendeeBean.getAdmin()) {
+            // The other user is an admin.
+            missionView.addView(createTextView(this, R.string.learnable_missions_heading));
+            List<MissionBean> learnableMissions =
+                    determineLearnableMissionsByAdmin(practicaUserBean); // TODO: Consider caching this for multiple admins.
+            addMissionList(missionView, learnableMissions);
+        } else {
+            // Both users are students.
+            missionView.addView(createTextView(this, R.string.learnable_missions_heading));
+            List<MissionBean> learnableMissions =
+                    determineTeachableMissions(practicaUserBean, attendeeBean);
+            addMissionList(missionView, learnableMissions);
 
-        missionView.addView(createTextView(this, R.string.teachable_missions_heading));
-        List<MissionBean> teachableMissions =
-                determineTeachableMissions(attendeeBean, practicaUserBean);
-        addMissionList(missionView, teachableMissions);
+            missionView.addView(createTextView(this, R.string.teachable_missions_heading));
+            List<MissionBean> teachableMissions =
+                    determineTeachableMissions(attendeeBean, practicaUserBean);
+            addMissionList(missionView, teachableMissions);
+        }
 
         return missionView;
     }
@@ -189,6 +208,63 @@ public class StudentViewPracticaActivity extends StudentParentActivity {
             }
 
             result.add(missionBean);
+        }
+
+        return result;
+    }
+
+    /**
+     * Determines which missions the specified student could learn from an admin. The algorithm
+     * has to be smart to avoid checking every single possible mission.
+     */
+    private List<MissionBean> determineLearnableMissionsByAdmin(PracticaUserBean practicaUserBean) {
+        List<MissionBean> result = new ArrayList<>();
+
+        Set<Long> studentCompletedLevelIds = toSet(practicaUserBean.getCompletedLevels());
+        Set<Long> studentStudiedMissionIds = toSet(practicaUserBean.getStudiedMissions());
+
+        List<MissionLadderBean> missionLadderBeans = getDataRepository().getMissionLadderBeans();
+        if (missionLadderBeans != null) {
+            ladderLoop: for (MissionLadderBean missionLadderBean : missionLadderBeans) {
+                List<MissionTreeBean> missionTreeBeans = missionLadderBean.getMissionTreeBeans();
+                if (missionTreeBeans == null) {
+                    continue;
+                }
+
+                for (MissionTreeBean missionTreeBean : missionTreeBeans) {
+                    List<MissionBean> missionBeans = missionTreeBean.getMissionBeans();
+                    if (missionBeans == null) {
+                        continue;
+                    }
+
+                    missionLoop: for (MissionBean missionBean : missionBeans) {
+                        if (studentStudiedMissionIds.contains(missionBean.getId())) {
+                            // Already learned this mission.
+                            continue;
+                        }
+
+                        List<Long> requiredMissionIds = missionBean.getRequiredMissionIds();
+                        if (requiredMissionIds == null) {
+                            result.add(missionBean);
+                            continue;
+                        }
+
+                        for (Long requiredMissionId : requiredMissionIds) {
+                            if (!studentStudiedMissionIds.contains(requiredMissionId)) {
+                                continue missionLoop;
+                            }
+                        }
+
+                        result.add(missionBean);
+                    }
+
+                    if (!studentCompletedLevelIds.contains(missionTreeBean.getId())) {
+                        // Reached the level that the student is currently working on. We can skip
+                        // any higher levels.
+                        continue ladderLoop;
+                    }
+                }
+            }
         }
 
         return result;

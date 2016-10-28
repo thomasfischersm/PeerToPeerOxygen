@@ -107,6 +107,7 @@ public class PracticaRepository {
                     return;
                 }
             }
+            attendeeUserBeans.add(practicaUserBean);
         }
 
         // TODO: Consider refreshing because something went wrong.

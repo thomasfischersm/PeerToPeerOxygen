@@ -148,6 +148,7 @@
     <string name="teachable_missions_heading">Teach missions:</string>
     <string name="no_missions_available">Nada zilch</string>
     <string name="admin_can_teach_everything">An admin can teach everything.</string>
+    <string name="both_admins_heading">You are both admins.</string>
 
     <!-- Admin and student menu -->
     <string name="admin_home_menu_title">Admin home</string>
