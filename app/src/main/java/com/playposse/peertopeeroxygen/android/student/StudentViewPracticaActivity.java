@@ -60,6 +60,7 @@ public class StudentViewPracticaActivity extends StudentParentActivity {
             // Something went wrong. Send the user back to the main student activity.
             Log.w(LOG_CAT, "Can't open practica activity because there is no current practica.");
             startActivity(new Intent(this, StudentMainActivity.class));
+            return;
         }
 
         // Set activity title.
