@@ -183,5 +183,9 @@ public class PracticaRepository {
 
     public void replacePractica(PracticaBean practicaBean) {
         practicaBeans.put(practicaBean.getId(), practicaBean);
+
+        if ((currentPractica != null) && currentPractica.getId().equals(practicaBean.getId())) {
+            currentPractica = practicaBean;
+        }
     }
 }

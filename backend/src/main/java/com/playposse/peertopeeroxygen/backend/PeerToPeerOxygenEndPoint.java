@@ -33,6 +33,7 @@ import com.playposse.peertopeeroxygen.backend.serveractions.GetAllLoanerDevicesS
 import com.playposse.peertopeeroxygen.backend.serveractions.GetAllMissionFeedbackServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetAllMissionStatsServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetMissionDataServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.GetPracticaByIdServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetPracticaServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetStudentRosterServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.InviteBuddyToMissionServerAction;
@@ -350,6 +351,11 @@ public class PeerToPeerOxygenEndPoint {
             throws BadRequestException {
 
         return GetPracticaServerAction.getPractica(practicaDates);
+    }
+
+    @ApiMethod(name = "getPracticaById")
+    public PracticaBean getPracticaById(@Named("practicaId") Long practicaId) {
+        return GetPracticaByIdServerAction.getPracticaById(practicaId);
     }
 
     @ApiMethod(name = "checkIntoPractica")

@@ -2,6 +2,7 @@ package com.playposse.peertopeeroxygen.android.util;
 
 import android.content.Context;
 import android.text.Spanned;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,6 +14,8 @@ import com.playposse.peertopeeroxygen.android.R;
  * A utility class for creating common views.
  */
 public class CreateViewUtil {
+
+    public static final int DEFAULT_PADDING = 4;
 
     public static TextView createTextView(Context context, int resId) {
         TextView textView = new TextView(context);
@@ -66,5 +69,11 @@ public class CreateViewUtil {
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         networkImageView.setImageUrl(url, VolleySingleton.getInstance(context).getImageLoader());
         return networkImageView;
+    }
+
+    public static void setDefaultPadding(View view) {
+        float density = view.getContext().getResources().getDisplayMetrics().density;
+        int padding = (int) (DEFAULT_PADDING * density);
+        view.setPadding(padding, padding, padding, padding);
     }
 }

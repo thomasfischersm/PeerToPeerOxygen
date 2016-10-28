@@ -22,6 +22,7 @@ import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionTr
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllLoanerDevicesClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionFeedbackClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionStatsClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.GetPracticaByIdClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetPracticaClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetStudentRosterClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.InviteBuddyToMissionClientAction;
@@ -303,6 +304,13 @@ public class DataService extends Service {
                 GetPracticaClientAction.PracticaDates practicaDates,
                 GetPracticaClientAction.Callback callback) {
             new GetPracticaClientAction(this, practicaDates, callback).execute();
+        }
+
+        public void getPracticaById(
+                Long practicaId,
+                GetPracticaByIdClientAction.Callback callback) {
+
+            new GetPracticaByIdClientAction(this, practicaId, callback).execute();
         }
 
         public void save(PracticaBean practicaBean) {
