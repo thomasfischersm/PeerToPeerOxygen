@@ -300,9 +300,11 @@ public class StudentViewPracticaActivity extends StudentParentActivity {
     }
 
     private boolean hasPrerequisitesLearned(MissionBean missionBean, Set<Long> learnedMissionId) {
-        for (Long requiredMisisonId : missionBean.getRequiredMissionIds()) {
-            if (!learnedMissionId.contains(requiredMisisonId)) {
-                return false;
+        if (missionBean.getRequiredMissionIds() != null) {
+            for (Long requiredMisisonId : missionBean.getRequiredMissionIds()) {
+                if (!learnedMissionId.contains(requiredMisisonId)) {
+                    return false;
+                }
             }
         }
         return true;

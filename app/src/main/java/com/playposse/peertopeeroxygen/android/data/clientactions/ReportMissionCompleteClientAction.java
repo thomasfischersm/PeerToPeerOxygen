@@ -1,5 +1,7 @@
 package com.playposse.peertopeeroxygen.android.data.clientactions;
 
+import android.util.Log;
+
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
@@ -38,9 +40,11 @@ public class ReportMissionCompleteClientAction extends ApiClientAction {
 
     @Override
     protected void executeAsync() throws IOException {
+        Log.i(LOG_CAT, "Calling server to reportMissionComplete");
         getBinder().getApi().reportMissionComplete(
                 getBinder().getSessionId(),
                 studentId,
                 missionId).execute();
+        Log.i(LOG_CAT, "Succeeded calling server to reportMissionComplete");
     }
 }

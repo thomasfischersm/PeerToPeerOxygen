@@ -3,6 +3,7 @@ package com.playposse.peertopeeroxygen.android.student;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,9 @@ import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionC
  * he/she has just been invited to teach a mission.
  */
 public class StudentBuddyMissionInvitationFragment extends DataServiceParentFragment {
+
+    private final static String LOG_CAT =
+            StudentBuddyMissionInvitationFragment.class.getSimpleName();
 
     private Long missionLadderId;
     private Long missionTreeId;
@@ -132,6 +136,7 @@ public class StudentBuddyMissionInvitationFragment extends DataServiceParentFrag
     }
 
     private void graduateStudent() {
+        Log.i(LOG_CAT, "Button to graduate student has been pressed.");
         dataServiceConnection
                 .getLocalBinder()
                 .reportMissionComplete(studentBean.getId(), missionId);
