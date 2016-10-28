@@ -9,6 +9,7 @@ import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.gson.reflect.TypeToken;
 import com.playposse.peertopeeroxygen.android.data.DataService;
+import com.playposse.peertopeeroxygen.android.data.clientactions.GetPracticaByIdClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetPracticaClientAction;
 import com.playposse.peertopeeroxygen.android.util.StreamUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.PracticaBean;
@@ -91,26 +92,45 @@ public class PracticaRepository {
         save(context);
     }
 
-    public void updateAttendee(Long practicaId, PracticaUserBean practicaUserBean) {
+    public void updateAttendee(
+            Long practicaId,
+            PracticaUserBean practicaUserBean,
+            DataService.LocalBinder localBinder) {
+
         PracticaBean practicaBean = practicaBeans.get(practicaId);
-        if (practicaBean != null) {
-            if (practicaBean.getAttendeeUserBeans() == null) {
-                practicaBean.setAttendeeUserBeans(new ArrayList<PracticaUserBean>());
-            }
-
-            List<PracticaUserBean> attendeeUserBeans = practicaBean.getAttendeeUserBeans();
-
-            for (int i = 0; i < attendeeUserBeans.size(); i++) {
-                PracticaUserBean otherUserBean = attendeeUserBeans.get(i);
-                if (otherUserBean.getId().equals(practicaUserBean.getId())) {
-                    attendeeUserBeans.set(i, practicaUserBean);
-                    return;
-                }
-            }
-            attendeeUserBeans.add(practicaUserBean);
+        if (practicaBean == null) {
+            // Something went wrong to get an attendee for a non-existing practica. Try to get
+            // the latest data from the server.
+            forcePracticaUpdate(practicaId, localBinder);
+            return;
         }
 
-        // TODO: Consider refreshing because something went wrong.
+        if (practicaBean.getAttendeeUserBeans() == null) {
+            practicaBean.setAttendeeUserBeans(new ArrayList<PracticaUserBean>());
+        }
+
+        List<PracticaUserBean> attendeeUserBeans = practicaBean.getAttendeeUserBeans();
+
+        for (int i = 0; i < attendeeUserBeans.size(); i++) {
+            PracticaUserBean otherUserBean = attendeeUserBeans.get(i);
+            if (otherUserBean.getId().equals(practicaUserBean.getId())) {
+                attendeeUserBeans.set(i, practicaUserBean);
+                return;
+            }
+        }
+        attendeeUserBeans.add(practicaUserBean);
+    }
+
+    /**
+     * Attempts to call the cloud to get the latest data for the specified practica.
+     */
+    public void forcePracticaUpdate(Long practicaId, DataService.LocalBinder localBinder) {
+        localBinder.getPracticaById(practicaId, new GetPracticaByIdClientAction.Callback() {
+            @Override
+            public void onResult(PracticaBean practicaBean) {
+                // Nothing to do. The mechanism already saves the new bean on its own.
+            }
+        });
     }
 
     @Nullable

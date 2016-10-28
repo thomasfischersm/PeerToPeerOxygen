@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.google.firebase.messaging.RemoteMessage;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
+import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
 import com.playposse.peertopeeroxygen.android.util.ToastUtil;
 
@@ -45,6 +46,10 @@ public abstract class FirebaseClientAction {
 
     protected DataRepository getDataRepository() {
         return dataServiceConnection.getLocalBinder().getDataRepository();
+    }
+
+    protected DataService.LocalBinder getLocalBinder() {
+        return dataServiceConnection.getLocalBinder();
     }
 
     protected String getString(int resId) {

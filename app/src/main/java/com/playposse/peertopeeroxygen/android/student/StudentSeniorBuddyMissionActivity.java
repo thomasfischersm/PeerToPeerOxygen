@@ -47,24 +47,31 @@ public class StudentSeniorBuddyMissionActivity extends StudentParentActivity {
     public void receiveData(DataRepository dataRepository) {
         missionBean = dataRepository.getMissionBean(missionLadderId, missionTreeId, missionId);
 
-        // Instantiate invitation fragment.
-        Fragment invitationFragment = StudentSeniorBuddyMissionInvitationFragment.newInstance(
-                missionLadderId,
-                missionTreeId,
-                missionId,
-                studentBean,
-                buddyBean);
 
         // Initiate the instruction ViewPager.
-        if (instructionPager.getHandler() != null) {// Ensure that the fragments are still attached.
-            InstructionPagerAdapter instructionPagerAdapter = new InstructionPagerAdapter(
-                    getSupportFragmentManager(),
-                    missionBean.getBuddyInstruction(),
-                    invitationFragment,
-                    missionBean.getBuddyYouTubeVideoId(),
-                    false,
-                    this);
-            instructionPager.setAdapter(instructionPagerAdapter);
-        }
+        instructionPager.post(new Runnable() {
+            @Override
+            public void run() {
+                // Instantiate invitation fragment.
+                Fragment invitationFragment = StudentSeniorBuddyMissionInvitationFragment.newInstance(
+                        missionLadderId,
+                        missionTreeId,
+                        missionId,
+                        studentBean,
+                        buddyBean);
+
+                if (instructionPager.getHandler() != null) {// Ensure that the fragments are still attached.
+                    InstructionPagerAdapter instructionPagerAdapter = new InstructionPagerAdapter(
+                            getSupportFragmentManager(),
+                            missionBean.getBuddyInstruction(),
+                            invitationFragment,
+                            missionBean.getBuddyYouTubeVideoId(),
+                            false,
+                            StudentSeniorBuddyMissionActivity.this);
+                    instructionPager.setAdapter(instructionPagerAdapter);
+                }
+            }
+        });
+
     }
 }

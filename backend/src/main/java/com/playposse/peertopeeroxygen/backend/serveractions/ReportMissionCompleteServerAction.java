@@ -3,8 +3,8 @@ package com.playposse.peertopeeroxygen.backend.serveractions;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
-import com.playposse.peertopeeroxygen.backend.firebase.FirebaseServerAction;
 import com.playposse.peertopeeroxygen.backend.firebase.SendMissionCompletionToStudentServerAction;
+import com.playposse.peertopeeroxygen.backend.firebase.SendPracticaUserUpdateServerAction;
 import com.playposse.peertopeeroxygen.backend.schema.LevelCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.MentoringAuditLog;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
@@ -31,7 +31,8 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
  */
 public class ReportMissionCompleteServerAction extends ServerAction {
 
-    private static final Logger log = Logger.getLogger(ReportMissionCompleteServerAction.class.getName());
+    private static final Logger log =
+            Logger.getLogger(ReportMissionCompleteServerAction.class.getName());
 
     public static void reportMissionComplete(
             Long sessionId,
@@ -78,7 +79,7 @@ public class ReportMissionCompleteServerAction extends ServerAction {
             Ref<OxygenUser> buddyRef,
             Ref<OxygenUser> studentRef,
             Mission mission,
-            @Nullable MissionTree missionTree) {
+            @Nullable MissionTree missionTree) throws IOException {
 
         final MissionCompletion completion;
         if (student.getMissionCompletions().containsKey(missionId)) {
@@ -111,6 +112,11 @@ public class ReportMissionCompleteServerAction extends ServerAction {
                             new LevelCompletion(System.currentTimeMillis(), missionTreeRef);
                     student.getLevelCompletions().add(newLevelCompletion);
                 }
+            }
+
+            if (student.getActivePracticaRef() != null) {
+                long practicaId = student.getActivePracticaRef().getKey().getId();
+                SendPracticaUserUpdateServerAction.sendPracticaUserUpdate(student, practicaId);
             }
         }
         ofy().save().entity(student).now();

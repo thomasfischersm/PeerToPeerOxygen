@@ -28,17 +28,18 @@ public class PracticaUserUpdateClientAction extends FirebaseClientAction {
 
     @Override
     protected void execute(RemoteMessage remoteMessage) {
-        try {
-            PracticaUpdateMessage message = new PracticaUpdateMessage(remoteMessage);
+        PracticaUpdateMessage message = new PracticaUpdateMessage(remoteMessage);
 
-            PracticaRepository practicaRepository = getDataRepository().getPracticaRepository();
-            Long practicaId = message.getPracticaId();
+        PracticaRepository practicaRepository = getDataRepository().getPracticaRepository();
+        Long practicaId = message.getPracticaId();
+
+        try {
             PracticaUserBean practicaUserBean = message.getPracticaUserBean();
-            practicaRepository.updateAttendee(practicaId, practicaUserBean);
+            practicaRepository.updateAttendee(practicaId, practicaUserBean, getLocalBinder());
             Log.i(LOG_CAT, "Got update about practica user: " + practicaUserBean.getFirstName());
         } catch (IOException ex) {
             Log.e(LOG_CAT, "Failed to update metadata about practica attendee.", ex);
-            // TODO: Consider trying to update through the API.
+            practicaRepository.forcePracticaUpdate(practicaId, getLocalBinder());
         }
     }
 

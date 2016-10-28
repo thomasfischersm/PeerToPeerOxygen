@@ -49,30 +49,40 @@ public class StudentBuddyMissionActivity
     public void receiveData(DataRepository dataRepository) {
         missionBean = dataRepository.getMissionBean(missionLadderId, missionTreeId, missionId);
 
-        // Do necessary things for senior buddy requirement.
-        MissionCompletionBean completion = dataRepository.getMissionCompletion(missionId);
-        boolean requiresSeniorBuddy =
-                !completion.getMentorCheckoutComplete() && !dataRepository.getUserBean().getAdmin();
-
-        // Instantiate invitation fragment.
-        Fragment invitationFragment = StudentBuddyMissionInvitationFragment.newInstance(
-                missionLadderId,
-                missionTreeId,
-                missionId,
-                studentBean);
 
         // Initiate the instruction ViewPager.
-        if (instructionPager.getHandler() != null) {// Ensure that the fragments are still attached.
-            InstructionPagerAdapter instructionPagerAdapter = new InstructionPagerAdapter(
-                    getSupportFragmentManager(),
-                    missionBean.getBuddyInstruction(),
-                    invitationFragment,
-                    missionBean.getBuddyYouTubeVideoId(),
-                    requiresSeniorBuddy,
-                    this);
-            instructionPager.setAdapter(instructionPagerAdapter);
-        }
+        instructionPager.post(new Runnable() {
+            @Override
+            public void run() {
+                // Ensure that the fragments are still attached.
+                if (instructionPager.getHandler() != null) {
+                    // Do necessary things for senior buddy requirement.
+                    MissionCompletionBean completion =
+                            getDataRepository().getMissionCompletion(missionId);
+                    boolean requiresSeniorBuddy =
+                            !completion.getMentorCheckoutComplete()
+                                    && !getDataRepository().getUserBean().getAdmin();
+
+                    // Instantiate invitation fragment.
+                    Fragment invitationFragment = StudentBuddyMissionInvitationFragment.newInstance(
+                            missionLadderId,
+                            missionTreeId,
+                            missionId,
+                            studentBean);
+
+                    InstructionPagerAdapter instructionPagerAdapter = new InstructionPagerAdapter(
+                            getSupportFragmentManager(),
+                            missionBean.getBuddyInstruction(),
+                            invitationFragment,
+                            missionBean.getBuddyYouTubeVideoId(),
+                            requiresSeniorBuddy,
+                            StudentBuddyMissionActivity.this);
+                    instructionPager.setAdapter(instructionPagerAdapter);
+                }
+            }
+        });
     }
+
 
     @Override
     public void receivedBarcode(Barcode barcode) {
