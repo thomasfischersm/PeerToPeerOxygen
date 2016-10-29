@@ -47,6 +47,8 @@ public class AdminMissionFeedbackActivity
 
         missionFeedbackLoader = new MissionFeedbackLoader(this);
         getLoaderManager().initLoader(LOADER_ID, null,  this);
+
+        showLoadingProgress();
     }
 
     @Override
@@ -57,6 +59,8 @@ public class AdminMissionFeedbackActivity
                     public void onResult(List<MissionFeedbackBean> missionFeedbackBeanList) {
                         missionFeedbackLoader.commitContentChanged();
                         missionFeedbackLoader.deliverResult(missionFeedbackBeanList);
+
+                        dismissLoadingProgress();
                     }
                 });
     }

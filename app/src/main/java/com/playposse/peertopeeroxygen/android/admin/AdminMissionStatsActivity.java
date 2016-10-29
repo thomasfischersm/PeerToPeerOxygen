@@ -47,6 +47,8 @@ public class AdminMissionStatsActivity
 
         missionStatsLoader = new MissionStatsLoader(this);
         getLoaderManager().initLoader(LOADER_ID, null,  this);
+
+        showLoadingProgress();
         Log.i(LOG_CAT, "onCreate admin stats activity finished");
     }
 
@@ -62,6 +64,8 @@ public class AdminMissionStatsActivity
                         Collections.sort(missionStatsBeanList, missionStatsByRatingComparator);
                         missionStatsLoader.commitContentChanged();
                         missionStatsLoader.deliverResult(missionStatsBeanList);
+
+                        dismissLoadingProgress();
                     }
                 });
     }

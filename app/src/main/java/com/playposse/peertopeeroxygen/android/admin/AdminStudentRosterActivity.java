@@ -38,6 +38,8 @@ public class AdminStudentRosterActivity
         setTitle(getString(R.string.student_roster_title));
 
         studentListView = (ListView) findViewById(R.id.studentListView);
+
+        showLoadingProgress();
     }
 
     @Override
@@ -48,6 +50,8 @@ public class AdminStudentRosterActivity
     @Override
     public void receiveData(List<UserBean> userBeans) {
         studentListView.setAdapter(new StudentArrayAdapter(userBeans));
+
+        dismissLoadingProgress();
     }
 
     /**

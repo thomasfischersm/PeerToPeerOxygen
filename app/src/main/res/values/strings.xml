@@ -165,6 +165,8 @@
     <!-- Dialogs -->
     <string name="date_dialog_title">Pick a date</string>
     <string name="time_dialog_title">Pick a time</string>
+    <string name="progress_dialog_title">Fetching data</string>
+    <string name="progress_dialog_message">Birds are hard at work in the cloud...</string>
 
     <!-- Toasts -->
     <string name="mission_completion_toast">Congratulation on completing "%1$s"! %2$s graduated you.</string>

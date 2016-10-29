@@ -30,6 +30,8 @@ public class GetPracticaServerAction {
     public static List<PracticaBean> getPractica(PracticaDates practicaDates)
             throws BadRequestException {
 
+        long start = System.currentTimeMillis();
+        log.info("start getPractica 0ms");
         final List<Practica> practicas;
         switch (practicaDates) {
             case future:
@@ -48,7 +50,10 @@ public class GetPracticaServerAction {
                 throw new BadRequestException("Unexpected practica date: " + practicaDates);
         }
 
-        return convert(practicas);
+        log.info("done doing query " + (System.currentTimeMillis() - start));
+        List<PracticaBean> practicaBeans = convert(practicas);
+        log.info("done doing conversion " + (System.currentTimeMillis() - start));
+        return practicaBeans;
     }
 
     private static List<PracticaBean> convert(List<Practica> practicas) {
