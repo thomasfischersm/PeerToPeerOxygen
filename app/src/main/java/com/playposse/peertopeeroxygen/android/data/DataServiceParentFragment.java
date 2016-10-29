@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.widget.ImageView;
 
-import com.playposse.peertopeeroxygen.android.data.facebook.FacebookProfilePhotoCache;
-
 /**
  * An abstract {@link Fragment} that connects to the {@link DataService}.
  */
@@ -39,31 +37,6 @@ public abstract class DataServiceParentFragment
         super.onStop();
 
         getActivity().unbindService(dataServiceConnection);
-    }
-
-    protected void loadProfilePhoto(
-            final ImageView studentPhotoImageView,
-            final String fbProfileId,
-            final String photoUrlString) {
-
-        // Fragment loading can be squirelly. We have to make sure that the Activity is already
-        // attached.
-        studentPhotoImageView.post(new Runnable() {
-            @Override
-            public void run() {
-                if (getActivity() != null) {
-                    FacebookProfilePhotoCache photoCache = dataServiceConnection
-                            .getLocalBinder()
-                            .getDataRepository()
-                            .getFacebookProfilePhotoCache();
-                    photoCache.loadImage(
-                            getActivity(),
-                            studentPhotoImageView,
-                            fbProfileId,
-                            photoUrlString);
-                }
-            }
-        });
     }
 
     @Override

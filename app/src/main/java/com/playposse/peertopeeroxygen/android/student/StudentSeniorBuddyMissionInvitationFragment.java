@@ -10,12 +10,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataServiceParentFragment;
 import com.playposse.peertopeeroxygen.android.data.types.UserMissionRoleType;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
+import com.playposse.peertopeeroxygen.android.util.VolleySingleton;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 
 /**
@@ -36,8 +39,8 @@ public class StudentSeniorBuddyMissionInvitationFragment extends DataServicePare
     private MissionBean missionBean;
 
     private TextView invitationTextView;
-    private ImageView studentPhotoImageView;
-    private ImageView buddyPhotoImageView;
+    private NetworkImageView studentPhotoImageView;
+    private NetworkImageView buddyPhotoImageView;
     private Button cancelButton;
     private Button graduateButton;
 
@@ -88,8 +91,9 @@ public class StudentSeniorBuddyMissionInvitationFragment extends DataServicePare
                 false);
 
         invitationTextView = (TextView) rootView.findViewById(R.id.invitationTextView);
-        studentPhotoImageView = (ImageView) rootView.findViewById(R.id.studentPhotoImageView);
-        buddyPhotoImageView = (ImageView) rootView.findViewById(R.id.buddyPhotoImageView);
+        studentPhotoImageView =
+                (NetworkImageView) rootView.findViewById(R.id.studentPhotoImageView);
+        buddyPhotoImageView = (NetworkImageView) rootView.findViewById(R.id.buddyPhotoImageView);
         cancelButton = (Button) rootView.findViewById(R.id.cancelButton);
         graduateButton = (Button) rootView.findViewById(R.id.graduateButton);
 
@@ -120,15 +124,9 @@ public class StudentSeniorBuddyMissionInvitationFragment extends DataServicePare
 
     @Override
     public void receiveData(DataRepository dataRepository) {
-        loadProfilePhoto(
-                studentPhotoImageView,
-                studentBean.getFbProfileId(),
-                studentBean.getProfilePictureUrl());
-
-        loadProfilePhoto(
-                buddyPhotoImageView,
-                buddyBean.getFbProfileId(),
-                buddyBean.getProfilePictureUrl());
+        ImageLoader imageLoader = VolleySingleton.getInstance(getContext()).getImageLoader();
+        studentPhotoImageView.setImageUrl(studentBean.getProfilePictureUrl(), imageLoader);
+        buddyPhotoImageView.setImageUrl(buddyBean.getProfilePictureUrl(), imageLoader);
     }
 
     private void graduateBuddy() {

@@ -4,10 +4,13 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.android.ui.RenderQrCodeAsyncTask;
+import com.playposse.peertopeeroxygen.android.util.VolleySingleton;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
 /**
@@ -17,7 +20,7 @@ public class StudentProfileActivity extends StudentParentActivity {
 
     private static final String LOG_CAT = StudentProfileActivity.class.getSimpleName();
 
-    private ImageView profilePhotoImageView;
+    private NetworkImageView profilePhotoImageView;
     private TextView profileNameTextView;
     private ImageView qrCodeImageView;
     private TextView teachPointsTextView;
@@ -29,7 +32,7 @@ public class StudentProfileActivity extends StudentParentActivity {
         setContentView(R.layout.activity_student_profile);
         super.onCreate(savedInstanceState);
 
-        profilePhotoImageView = (ImageView) findViewById(R.id.profilePhotoImageView);
+        profilePhotoImageView = (NetworkImageView) findViewById(R.id.profilePhotoImageView);
         profileNameTextView = (TextView) findViewById(R.id.profileNameTextView);
         teachPointsTextView = (TextView) findViewById(R.id.teachPointsTextView);
         practicePointsTextView = (TextView) findViewById(R.id.practicePointsTextView);
@@ -51,10 +54,8 @@ public class StudentProfileActivity extends StudentParentActivity {
         showPoints(userBean, heartPointsTextView, PointType.heart, R.string.heart_points_label);
 
         // Show profile photo.
-        loadProfilePhoto(
-                profilePhotoImageView,
-                userBean.getFbProfileId(),
-                userBean.getProfilePictureUrl());
+        ImageLoader imageLoader = VolleySingleton.getInstance(this).getImageLoader();
+        profilePhotoImageView.setImageUrl(userBean.getProfilePictureUrl(), imageLoader);
 
         // Show QR code.
         new RenderQrCodeAsyncTask(userBean.getId(), qrCodeImageView).execute();

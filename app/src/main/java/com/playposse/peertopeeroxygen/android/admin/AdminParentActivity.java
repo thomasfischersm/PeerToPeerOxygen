@@ -51,7 +51,9 @@ public abstract class AdminParentActivity extends DataServiceParentActivity {
     }
 
     protected void dismissLoadingProgress() {
-        progressDialog.dismiss();
-        progressDialog = null;
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
     }
 }

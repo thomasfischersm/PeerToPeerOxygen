@@ -11,12 +11,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataServiceParentFragment;
 import com.playposse.peertopeeroxygen.android.data.types.UserMissionRoleType;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
+import com.playposse.peertopeeroxygen.android.util.VolleySingleton;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
 
@@ -37,7 +40,7 @@ public class StudentBuddyMissionInvitationFragment extends DataServiceParentFrag
     private MissionBean missionBean;
 
     private TextView invitationTextView;
-    private ImageView studentPhotoImageView;
+    private NetworkImageView studentPhotoImageView;
     private Button cancelButton;
     private Button graduateButton;
 
@@ -87,7 +90,7 @@ public class StudentBuddyMissionInvitationFragment extends DataServiceParentFrag
                 false);
 
         invitationTextView = (TextView) rootView.findViewById(R.id.invitationTextView);
-        studentPhotoImageView = (ImageView) rootView.findViewById(R.id.studentPhotoImageView);
+        studentPhotoImageView = (NetworkImageView) rootView.findViewById(R.id.studentPhotoImageView);
         cancelButton = (Button) rootView.findViewById(R.id.cancelButton);
         graduateButton = (Button) rootView.findViewById(R.id.graduateButton);
         seniorBuddyRequiredTextView = (TextView) rootView.findViewById(R.id.seniorBuddyRequiredTextView);
@@ -116,10 +119,8 @@ public class StudentBuddyMissionInvitationFragment extends DataServiceParentFrag
 
     @Override
     public void receiveData(DataRepository dataRepository) {
-        loadProfilePhoto(
-                studentPhotoImageView,
-                studentBean.getFbProfileId(),
-                studentBean.getProfilePictureUrl());
+        ImageLoader imageLoader = VolleySingleton.getInstance(getContext()).getImageLoader();
+        studentPhotoImageView.setImageUrl(studentBean.getProfilePictureUrl(), imageLoader);
 
         missionBean = dataRepository
                 .getMissionBean(missionLadderId, missionTreeId, missionId);

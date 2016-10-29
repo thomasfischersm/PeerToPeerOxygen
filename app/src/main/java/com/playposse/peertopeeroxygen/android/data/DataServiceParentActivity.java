@@ -8,7 +8,6 @@ import android.widget.ImageView;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.admin.AdminMainActivity;
-import com.playposse.peertopeeroxygen.android.data.facebook.FacebookProfilePhotoCache;
 import com.playposse.peertopeeroxygen.android.data.practicas.PracticaRepository;
 import com.playposse.peertopeeroxygen.android.practicamgmt.PracticaManager;
 import com.playposse.peertopeeroxygen.android.student.StudentAboutActivity;
@@ -66,28 +65,6 @@ public abstract class DataServiceParentActivity
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    protected void loadProfilePhoto(
-            ImageView studentPhotoImageView,
-            String fbProfileId,
-            String photoUrlString) {
-
-        if ((dataServiceConnection == null)
-                || (dataServiceConnection.getLocalBinder() == null)
-                || (dataServiceConnection.getLocalBinder().getDataRepository() == null)) {
-            return;
-        }
-
-        FacebookProfilePhotoCache photoCache = dataServiceConnection
-                .getLocalBinder()
-                .getDataRepository()
-                .getFacebookProfilePhotoCache();
-        photoCache.loadImage(
-                this,
-                studentPhotoImageView,
-                fbProfileId,
-                photoUrlString);
     }
 
     @Override

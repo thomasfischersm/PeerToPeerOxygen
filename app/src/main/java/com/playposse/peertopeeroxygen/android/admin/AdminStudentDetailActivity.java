@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataService;
@@ -13,6 +15,7 @@ import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
 import com.playposse.peertopeeroxygen.android.ui.dialogs.NumberPickerDialogBuilder;
+import com.playposse.peertopeeroxygen.android.util.VolleySingleton;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -26,7 +29,7 @@ public class AdminStudentDetailActivity extends AdminParentActivity {
 
     private UserBeanParcelable studentBean;
 
-    private ImageView profilePhotoImageView;
+    private NetworkImageView profilePhotoImageView;
     private TextView nameTextView;
     private TextView signupDateTextView;
     private TextView teachPointsTextView;
@@ -44,7 +47,7 @@ public class AdminStudentDetailActivity extends AdminParentActivity {
         setTitle(studentName);
 
         // Find View references.
-        profilePhotoImageView = (ImageView) findViewById(R.id.profilePhotoImageView);
+        profilePhotoImageView = (NetworkImageView) findViewById(R.id.profilePhotoImageView);
         nameTextView = (TextView) findViewById(R.id.nameTextView);
         signupDateTextView = (TextView) findViewById(R.id.signupDateTextView);
         teachPointsTextView = (TextView) findViewById(R.id.teachPointsTextView);
@@ -101,10 +104,8 @@ public class AdminStudentDetailActivity extends AdminParentActivity {
 
     @Override
     public void receiveData(DataRepository dataRepository) {
-        loadProfilePhoto(
-                profilePhotoImageView,
-                studentBean.getFbProfileId(),
-                studentBean.getProfilePictureUrl());
+        ImageLoader imageLoader = VolleySingleton.getInstance(this).getImageLoader();
+        profilePhotoImageView.setImageUrl(studentBean.getProfilePictureUrl(), imageLoader);
     }
 
     private void addPoints(PointType pointType, int addedPoints) {
