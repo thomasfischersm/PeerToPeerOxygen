@@ -12,12 +12,15 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionFeedbackClientAction;
 import com.playposse.peertopeeroxygen.android.ui.widgets.StarRatingView;
 import com.playposse.peertopeeroxygen.android.util.EmailUtil;
 import com.playposse.peertopeeroxygen.android.util.StringUtil;
+import com.playposse.peertopeeroxygen.android.util.VolleySingleton;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionFeedbackBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
@@ -140,7 +143,7 @@ public class AdminMissionFeedbackActivity
 
                 viewHolder = new ViewHolder();
                 viewHolder.profilePhotoImageView =
-                        (ImageView) convertView.findViewById(R.id.profilePhotoImageView);
+                        (NetworkImageView) convertView.findViewById(R.id.profilePhotoImageView);
                 viewHolder.starRatingView =
                         (StarRatingView) convertView.findViewById(R.id.starRatingView);
                 viewHolder.studentNameTextView =
@@ -157,10 +160,10 @@ public class AdminMissionFeedbackActivity
             String studentName = userBean.getFirstName() + " " + userBean.getLastName();
             String comment = StringUtil.getCleanString(missionFeedbackBean.getComment());
 
-            loadProfilePhoto(
-                    viewHolder.profilePhotoImageView,
-                    userBean.getFbProfileId(),
-                    userBean.getProfilePictureUrl());
+            ImageLoader imageLoader = VolleySingleton.getInstance(getContext()).getImageLoader();
+            viewHolder.profilePhotoImageView.setImageUrl(
+                    userBean.getProfilePictureUrl(),
+                    imageLoader);
             viewHolder.starRatingView.setRating(missionFeedbackBean.getRating());
             viewHolder.studentNameTextView.setText(studentName);
             if (comment != null) {
@@ -185,7 +188,7 @@ public class AdminMissionFeedbackActivity
      * ViewHolder for the {@link View}s in the layout of the {@link ListView}.
      */
     private static class ViewHolder {
-        private ImageView profilePhotoImageView;
+        private NetworkImageView profilePhotoImageView;
         private StarRatingView starRatingView;
         private TextView studentNameTextView;
         private TextView commentTextView;

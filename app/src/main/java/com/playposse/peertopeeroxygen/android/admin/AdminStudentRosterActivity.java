@@ -10,12 +10,15 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetStudentRosterClientAction;
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
+import com.playposse.peertopeeroxygen.android.util.VolleySingleton;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
 import java.util.List;
@@ -83,6 +86,10 @@ public class AdminStudentRosterActivity
             int teachPoints = DataRepository.getPointByType(student, PointType.teach);
             int heartPoints = DataRepository.getPointByType(student, PointType.heart);
 
+            ImageLoader imageLoader = VolleySingleton.getInstance(getContext()).getImageLoader();
+            viewHolder.profilePhotoImageView.setImageUrl(
+                    student.getProfilePictureUrl(),
+                    imageLoader);
             viewHolder.firstNameTextView.setText(student.getFirstName());
             viewHolder.lastNameTextView.setText(student.getLastName());
             viewHolder.teachPointsTextView.setText(Integer.toString(teachPoints));
@@ -101,17 +108,11 @@ public class AdminStudentRosterActivity
                 }
             });
 
-            // Schedule profile photo for loading in a separate thread.
-            loadProfilePhoto(
-                    viewHolder.profilePhotoImageView,
-                    student.getFbProfileId(),
-                    student.getProfilePictureUrl());
-
             return convertView;
         }
 
         private class ViewHolder {
-            private final ImageView profilePhotoImageView;
+            private final NetworkImageView profilePhotoImageView;
             private final TextView firstNameTextView;
             private final TextView lastNameTextView;
             private final TextView teachPointsTextView;
@@ -119,7 +120,7 @@ public class AdminStudentRosterActivity
             private final TextView heartPointsTextView;
 
             private ViewHolder(View view) {
-                profilePhotoImageView = (ImageView) view.findViewById(R.id.profilePhotoImageView);
+                profilePhotoImageView = (NetworkImageView) view.findViewById(R.id.profilePhotoImageView);
                 firstNameTextView = (TextView) view.findViewById(R.id.firstNameTextView);
                 lastNameTextView = (TextView) view.findViewById(R.id.lastNameTextView);
                 teachPointsTextView = (TextView) view.findViewById(R.id.teachPointsTextView);
