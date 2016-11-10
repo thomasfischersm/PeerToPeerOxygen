@@ -48,7 +48,7 @@ public class OxygenUser {
     @Load private Map<UserPoints.PointType, UserPoints> points = new HashMap<>();
     @Load private List<LevelCompletion> levelCompletions = new ArrayList<>();
     @Load @Nullable private Ref<Practica> activePracticaRef;
-    private Ref<Domain> domainRef;
+    @Index private Ref<Domain> domainRef;
     private Ref<MasterUser> masterUserRef;
 
     @Stringify(LongStringifier.class)

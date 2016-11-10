@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
+import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.ui.adapters.MissionSpinnerArrayAdapter;
 import com.playposse.peertopeeroxygen.android.ui.dialogs.ConfirmationDialogBuilder;
@@ -95,6 +96,7 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
             // Check if any data has been entered in the name field.
             if (nameEditText.getText().length() > 0) {
                 missionTreeBean = new MissionTreeBean();
+                missionTreeBean.setDomainId(OxygenSharedPreferences.getCurrentDomainId(this));
                 missionTreeBean.setLevel(determineNextLevel());
                 shouldSave = true;
             }

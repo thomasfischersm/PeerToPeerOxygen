@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
+import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.ui.widgets.EditDateTime;
 import com.playposse.peertopeeroxygen.android.util.GeoUtil;
@@ -146,6 +147,7 @@ public class AdminEditPracticaActivity extends AdminParentActivity {
 
         if (practicaBean == null) {
             practicaBean = new PracticaBean();
+            practicaBean.setDomainId(OxygenSharedPreferences.getCurrentDomainId(this));
         }
 
         save();

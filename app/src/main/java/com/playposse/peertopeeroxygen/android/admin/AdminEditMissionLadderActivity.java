@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
+import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.ui.dialogs.ConfirmationDialogBuilder;
 import com.playposse.peertopeeroxygen.android.ui.widgets.ListViewNoScroll;
@@ -86,6 +87,7 @@ public class AdminEditMissionLadderActivity extends AdminParentActivity {
             // Check if any data has been entered in the name field.
             if (nameEditText.getText().length() > 0) {
                 missionLadderBean = new MissionLadderBean();
+                missionLadderBean.setDomainId(OxygenSharedPreferences.getCurrentDomainId(this));
                 shouldSave = true;
             }
         } else {

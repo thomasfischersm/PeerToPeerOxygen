@@ -16,6 +16,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
+import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionFeedbackClientAction;
 import com.playposse.peertopeeroxygen.android.ui.widgets.StarRatingView;
 import com.playposse.peertopeeroxygen.android.util.EmailUtil;
@@ -105,7 +106,7 @@ public class AdminMissionFeedbackActivity
 
         EmailUtil.sendEmail(
                 this,
-                missionFeedbackBean.getUserBean().getEmail(), // Store master user in preferences
+                OxygenSharedPreferences.getUserEmail(getApplicationContext()),
                 R.string.feedback_email_subject,
                 emailBody);
     }

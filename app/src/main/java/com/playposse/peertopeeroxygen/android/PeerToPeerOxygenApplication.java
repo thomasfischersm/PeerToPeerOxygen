@@ -54,7 +54,9 @@ public class PeerToPeerOxygenApplication extends Application {
             OxygenSharedPreferences.setCurrentDomain(getApplicationContext(), DEFAULT_DOMAIN);
             HashSet<Long> subscribedDomainIds = new HashSet<>(1);
             subscribedDomainIds.add(DEFAULT_DOMAIN);
-            OxygenSharedPreferences.setSubscribedDomainIds(getApplicationContext(), subscribedDomainIds);
+            OxygenSharedPreferences.setSubscribedDomainIds(
+                    getApplicationContext(),
+                    subscribedDomainIds);
         }
     }
 }

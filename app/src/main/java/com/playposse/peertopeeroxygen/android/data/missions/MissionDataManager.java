@@ -45,6 +45,8 @@ public class MissionDataManager {
             return;
         }
 
+        OxygenSharedPreferences.setCurrentDomain(context, domainId);
+        OxygenSharedPreferences.addSubscribedDomainId(context, domainId);
         OxygenFirebaseMessagingService.subscribeToDomainTopic(domainId);
 
         if (getFile(context, domainId).exists()) {

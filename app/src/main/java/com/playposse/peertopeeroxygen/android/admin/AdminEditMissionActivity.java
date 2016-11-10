@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
+import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.googledrive.GoogleDriveInitializer;
 import com.playposse.peertopeeroxygen.android.googledrive.GoogleDriveReader;
 import com.playposse.peertopeeroxygen.android.googledrive.GoogleDriveWriter;
@@ -136,6 +137,7 @@ public class AdminEditMissionActivity
 
         if ((shouldSave) && (missionBean == null)) {
             missionBean = new MissionBean();
+            missionBean.setDomainId(OxygenSharedPreferences.getCurrentDomainId(this));
         }
 
         // Save mission.

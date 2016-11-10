@@ -2,6 +2,7 @@ package com.playposse.peertopeeroxygen.android.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,6 +12,8 @@ import java.util.Set;
  */
 public final class OxygenSharedPreferences {
 
+    private static final String LOG_CAT = OxygenSharedPreferences.class.getSimpleName();
+
     private static final String PREFS_NAME = "OxygenPreferences";
 
     private static final String SESSION_KEY = "sessionId";
@@ -18,6 +21,9 @@ public final class OxygenSharedPreferences {
     private static final String LOANER_DEVICE_KEY = "loanderDeviceID";
     private static final String CURRENT_DOMAIN_ID_KEY = "currentDomainId";
     private static final String SUBSCRIBED_DOMAIN_IDS_KEY = "subscribedDomainIds";
+    private static final String USER_EMAIL_KEY = "userEmail";
+
+    private static final String NULL_STRING = "-1";
 
     public static Long getSessionId(Context context) {
         SharedPreferences sharedPreferences =
@@ -79,6 +85,7 @@ public final class OxygenSharedPreferences {
     }
 
     public static void setCurrentDomain(Context context, Long domainId) {
+        Log.i(LOG_CAT, "The current domain is set to " + domainId);
         SharedPreferences sharedPreferences =
                 context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         sharedPreferences.edit().putLong(CURRENT_DOMAIN_ID_KEY, domainId).apply();
@@ -109,5 +116,29 @@ public final class OxygenSharedPreferences {
         SharedPreferences sharedPreferences =
                 context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         sharedPreferences.edit().putStringSet(SUBSCRIBED_DOMAIN_IDS_KEY, stringSet).apply();
+    }
+
+    public static void addSubscribedDomainId(Context context, Long domainId) {
+        Set<Long> subscribedDomainIds = getSubscribedDomainIds(context);
+        subscribedDomainIds.add(domainId);
+        setSubscribedDomainIds(context, subscribedDomainIds);
+    }
+
+
+    public static String getUserEmail(Context context) {
+        SharedPreferences sharedPreferences =
+                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        String userEmail = sharedPreferences.getString(USER_EMAIL_KEY, NULL_STRING);
+        return (NULL_STRING.equals(userEmail)) ? userEmail : null;
+    }
+
+    public static void setUserEmail(Context context, String userEmail) {
+        SharedPreferences sharedPreferences =
+                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        if (userEmail != null) {
+            sharedPreferences.edit().putString(USER_EMAIL_KEY, userEmail).apply();
+        } else {
+            sharedPreferences.edit().remove(USER_EMAIL_KEY).apply();
+        }
     }
 }

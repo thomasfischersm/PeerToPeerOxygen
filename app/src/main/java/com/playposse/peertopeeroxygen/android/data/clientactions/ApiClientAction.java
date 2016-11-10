@@ -58,7 +58,9 @@ public abstract class ApiClientAction {
     }
 
     protected Long getDomainId() {
-        return OxygenSharedPreferences.getCurrentDomainId(getContext());
+        Long currentDomainId = OxygenSharedPreferences.getCurrentDomainId(getContext());
+        Log.i(LOG_CAT, "Got domain to send to the endpoint: " + currentDomainId);
+        return currentDomainId;
     }
 
     public final void execute() {
