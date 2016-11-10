@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.widget.ImageView;
 
+import com.playposse.peertopeeroxygen.android.data.missions.MissionDataManager;
+
 /**
  * An abstract {@link Fragment} that connects to the {@link DataService}.
  */
@@ -28,7 +30,7 @@ public abstract class DataServiceParentFragment
         super.onResume();
 
         if (dataServiceConnection != null) {
-            CompleteMissionDataCache.checkStale(dataServiceConnection.getLocalBinder());
+            MissionDataManager.checkStale(getContext(), dataServiceConnection.getLocalBinder());
         }
     }
 

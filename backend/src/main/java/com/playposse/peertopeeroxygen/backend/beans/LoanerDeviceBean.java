@@ -21,6 +21,7 @@ public class LoanerDeviceBean {
         this.friendlyName = loanerDevice.getFriendlyName();
         this.created = loanerDevice.getCreated();
         this.lastLogin = loanerDevice.getLastLogin();
+
         this.lastUserBean = new UserBean(loanerDevice.getLastUserRef().get());
     }
 

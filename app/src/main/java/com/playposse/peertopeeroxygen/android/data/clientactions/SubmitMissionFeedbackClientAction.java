@@ -28,8 +28,8 @@ public class SubmitMissionFeedbackClientAction extends ApiClientAction {
 
     @Override
     protected void executeAsync() throws IOException {
-        getBinder().getApi()
-                .submitMissionFeedback(getBinder().getSessionId(), missionId, rating)
+        getApi()
+                .submitMissionFeedback(getSessionId(), missionId, rating, getDomainId())
                 .setComment(comment)
                 .execute();
     }

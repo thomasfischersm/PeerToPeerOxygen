@@ -17,6 +17,8 @@ public class CheckOutOfPracticaClientAction extends ApiClientAction {
 
     @Override
     protected void executeAsync() throws IOException {
-        getBinder().getApi().checkOutOfPractica(getBinder().getSessionId(), practicaId).execute();
+        getApi()
+                .checkOutOfPractica(getSessionId(), practicaId, getDomainId())
+                .execute();
     }
 }

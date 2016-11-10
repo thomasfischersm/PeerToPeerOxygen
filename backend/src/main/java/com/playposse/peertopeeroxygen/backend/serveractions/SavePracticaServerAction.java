@@ -1,13 +1,18 @@
 package com.playposse.peertopeeroxygen.backend.serveractions;
 
+import com.google.api.server.spi.response.BadRequestException;
+import com.google.api.server.spi.response.UnauthorizedException;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.beans.PracticaBean;
 import com.playposse.peertopeeroxygen.backend.firebase.SendPracticaUpdateServerAction;
+import com.playposse.peertopeeroxygen.backend.schema.MasterUser;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 import com.playposse.peertopeeroxygen.backend.schema.Practica;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -17,7 +22,19 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 public class SavePracticaServerAction extends ServerAction {
 
-    public static PracticaBean save(PracticaBean practicaBean) throws IOException {
+    public static PracticaBean save(
+            Long sessionId,
+            PracticaBean practicaBean,
+            Long domainId) throws IOException, UnauthorizedException, BadRequestException {
+
+        // Do security check.
+        MasterUser masterUser = loadMasterUserBySessionId(sessionId);
+        OxygenUser oxygenUser = findOxygenUserByDomain(masterUser, domainId);
+        protectByAdminCheck(masterUser, oxygenUser, domainId);
+
+        // Verify that the practica
+        verifyPracticaByDomain(practicaBean, domainId);
+
         final Practica practica;
         if (practicaBean.getId() == null) {
             practica = practicaBean.toEntity();

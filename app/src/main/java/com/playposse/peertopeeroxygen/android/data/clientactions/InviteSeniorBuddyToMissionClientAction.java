@@ -39,13 +39,14 @@ public class InviteSeniorBuddyToMissionClientAction extends ApiClientAction {
     @Override
     protected void executeAsync() throws IOException {
         try {
-            getBinder().getApi().inviteSeniorBuddyToMission(
-                    getBinder().getSessionId(),
+            getApi().inviteSeniorBuddyToMission(
+                    getSessionId(),
                     studentId,
                     seniorBuddyId,
                     missionLadderId,
                     missionTreeId,
-                    missionId).execute();
+                    missionId,
+                    getDomainId()).execute();
         } catch (GoogleJsonResponseException ex) {
             if (ex.getStatusCode() == 403) {
                 // A server check determined that the buddy isn't ready to teach. Show the user a

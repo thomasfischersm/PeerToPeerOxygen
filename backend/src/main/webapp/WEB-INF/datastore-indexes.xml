@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<datastore-indexes
+    autoGenerate="true">
+    <datastore-index kind="Practica" ancestor="false" source="manual">
+        <property name="domainRef" direction="asc"/>
+        <property name="end" direction="asc"/>
+    </datastore-index>
+</datastore-indexes>

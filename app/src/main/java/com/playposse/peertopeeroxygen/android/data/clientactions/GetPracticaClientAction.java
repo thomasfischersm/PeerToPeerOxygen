@@ -41,7 +41,10 @@ public class GetPracticaClientAction extends ApiClientAction {
 
     @Override
     protected void executeAsync() throws IOException {
-        practicaBeans = getBinder().getApi().getPractica(practicaDates.name()).execute().getItems();
+        practicaBeans = getApi()
+                .getPractica(getSessionId(), practicaDates.name(), getDomainId())
+                .execute()
+                .getItems();
     }
 
     @Override

@@ -8,6 +8,8 @@ import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.playposse.peertopeeroxygen.backend.schema.util.RefUtil.createDomainRef;
+
 /**
  * Equivalent of {@link MissionTree} for transport across the network.
  */
@@ -18,6 +20,7 @@ public class MissionTreeBean {
     private String description;
     private int level;
     private Long bossMissionId;
+    private Long domainId;
     private List<MissionBean> missionBeans = new ArrayList<>();
     private List<Long> requiredMissionIds = new ArrayList<>();
 
@@ -29,6 +32,7 @@ public class MissionTreeBean {
         this.name = missionTree.getName();
         this.description = missionTree.getDescription();
         this.level = missionTree.getLevel();
+        this.domainId = missionTree.getDomainRef().getKey().getId();
 
         if (missionTree.getBossMissionRef() != null) {
             bossMissionId = missionTree.getBossMissionRef().getKey().getId();
@@ -90,6 +94,14 @@ public class MissionTreeBean {
         this.bossMissionId = bossMissionId;
     }
 
+    public Long getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(Long domainId) {
+        this.domainId = domainId;
+    }
+
     public List<MissionBean> getMissionBeans() {
         return missionBeans;
     }
@@ -110,7 +122,13 @@ public class MissionTreeBean {
             bossMissionRef = null;
         }
 
-        MissionTree missionTree = new MissionTree(id, name, description, level, bossMissionRef);
+        MissionTree missionTree = new MissionTree(
+                id,
+                name,
+                description,
+                level,
+                bossMissionRef,
+                createDomainRef(domainId));
 
         for (MissionBean missionBean : missionBeans) {
             Key<Mission> missionKey = Key.create(Mission.class, missionBean.getId());

@@ -43,8 +43,8 @@ public class DeleteMissionTreeClientAction extends ApiClientAction {
 
     @Override
     public void executeAsync() throws IOException {
-        getBinder().getApi()
-                .deleteMissionTree(getBinder().getSessionId(), missionLadderId, missionTreeId)
+        getApi()
+                .deleteMissionTree(getSessionId(), missionLadderId, missionTreeId, getDomainId())
                 .execute();
     }
 }

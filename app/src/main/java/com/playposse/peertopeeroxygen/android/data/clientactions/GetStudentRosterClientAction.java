@@ -4,6 +4,7 @@ import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxyg
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,15 +23,20 @@ public class GetStudentRosterClientAction extends ApiClientAction {
     @Override
     protected void executeAsync() throws IOException {
         // Access AppEngine for data.
-        Long sessionId = getBinder().getSessionId();
-        PeerToPeerOxygenApi api = getBinder().getApi();
-        final List<UserBean> userBeans = api.getStudentRoster(sessionId).execute().getItems();
+        final List<UserBean> userBeans = getApi()
+                .getStudentRoster(getSessionId(), getDomainId())
+                .execute()
+                .getItems();
 
         // Fire callback on UI thread.
         callback.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                callback.receiveData(userBeans);
+                if (userBeans != null) {
+                    callback.receiveData(userBeans);
+                } else {
+                    callback.receiveData(new ArrayList<UserBean>(0));
+                }
             }
         });
     }
@@ -44,6 +50,7 @@ public class GetStudentRosterClientAction extends ApiClientAction {
 
         /**
          * Used to switch to the UI Thread of the actitivy implementing this interface.
+         *
          * @param runnable
          */
         void runOnUiThread(Runnable runnable);

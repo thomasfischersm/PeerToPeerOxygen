@@ -8,8 +8,8 @@ import android.widget.Button;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.playposse.peertopeeroxygen.android.R;
-import com.playposse.peertopeeroxygen.android.data.CompleteMissionDataCache;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
+import com.playposse.peertopeeroxygen.android.data.missions.MissionDataManager;
 import com.playposse.peertopeeroxygen.android.googledrive.GoogleDriveInitializer;
 import com.playposse.peertopeeroxygen.android.googledrive.GoogleDriveWriter;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
@@ -131,7 +131,7 @@ public class AdminBackupActivity extends AdminParentActivity {
                             .getCompleteMissionDataBean();
             String json = null;
             try {
-                json = CompleteMissionDataCache.toJson(completeMissionDataBean);
+                json = MissionDataManager.toJson(completeMissionDataBean);
             } catch (IOException ex) {
                 Log.e(LOG_CAT, "Failed to encode mission data in json.", ex);
             }

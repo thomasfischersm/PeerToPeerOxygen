@@ -11,6 +11,7 @@ public class MissionStatsBean {
     private int completionCount = 0;
     private int ratingTotal = 0;
     private int ratingCount = 0;
+    private Long domainId;
 
     public MissionStatsBean() {
     }
@@ -20,6 +21,7 @@ public class MissionStatsBean {
         completionCount = missionStats.getCompletionCount();
         ratingTotal = missionStats.getRatingTotal();
         ratingCount = missionStats.getRatingCount();
+        domainId = missionStats.getDomainRef().getKey().getId();
     }
 
     public int getCompletionCount() {
@@ -36,5 +38,9 @@ public class MissionStatsBean {
 
     public int getRatingTotal() {
         return ratingTotal;
+    }
+
+    public Long getDomainId() {
+        return domainId;
     }
 }

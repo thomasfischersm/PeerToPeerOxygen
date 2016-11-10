@@ -1,9 +1,12 @@
 package com.playposse.peertopeeroxygen.backend.beans;
 
+import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.schema.LevelCompletion;
+import com.playposse.peertopeeroxygen.backend.schema.MasterUser;
 import com.playposse.peertopeeroxygen.backend.schema.MissionCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 import com.playposse.peertopeeroxygen.backend.schema.UserPoints;
+import com.playposse.peertopeeroxygen.backend.schema.util.RefUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,15 +20,13 @@ public class UserBean {
 
     private Long id;
     private boolean isAdmin;
-    private String fbProfileId;
-    private Long sessionId;
     private String firebaseToken;
     private String firstName;
     private String lastName;
     private String name;
-    private String email;
     private String profilePictureUrl;
     private Long created;
+    private Long domainId;
     private List<MissionCompletionBean> missionCompletionBeans = new ArrayList<>();
     private Map<String, Integer> pointsMap = new HashMap<>();
     private List<LevelCompletionBean> levelCompletionBeans = new ArrayList<>();
@@ -34,17 +35,19 @@ public class UserBean {
     }
 
     public UserBean(OxygenUser oxygenUser) {
+        this(oxygenUser.getMasterUserRef().get(), oxygenUser);
+    }
+
+    public UserBean(MasterUser masteruser, OxygenUser oxygenUser) {
         id = oxygenUser.getId();
         isAdmin = oxygenUser.isAdmin();
-        fbProfileId = oxygenUser.getFbProfileId();
-        sessionId = oxygenUser.getSessionId();
-        firebaseToken = oxygenUser.getFirebaseToken();
-        firstName = oxygenUser.getFirstName();
-        lastName = oxygenUser.getLastName();
-        name = oxygenUser.getLastName();
-        profilePictureUrl = oxygenUser.getProfilePictureUrl();
-        email = oxygenUser.getEmail();
-        created = oxygenUser.getCreated();
+        firebaseToken = masteruser.getFirebaseToken();
+        firstName = masteruser.getFirstName();
+        lastName = masteruser.getLastName();
+        name = masteruser.getLastName();
+        profilePictureUrl = masteruser.getProfilePictureUrl();
+        created = masteruser.getCreated();
+        domainId = RefUtil.getDomainId(oxygenUser);
 
         for (MissionCompletion missionCompletion : oxygenUser.getMissionCompletions().values()) {
             missionCompletionBeans.add(new MissionCompletionBean(missionCompletion));
@@ -57,10 +60,6 @@ public class UserBean {
         for (UserPoints point : oxygenUser.getPoints().values()) {
             pointsMap.put(point.getType().name(), point.getCount());
         }
-    }
-
-    public String getFbProfileId() {
-        return fbProfileId;
     }
 
     public String getFirstName() {
@@ -87,14 +86,6 @@ public class UserBean {
         return profilePictureUrl;
     }
 
-    public Long getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(Long sessionId) {
-        this.sessionId = sessionId;
-    }
-
     public String getFirebaseToken() {
         return firebaseToken;
     }
@@ -103,20 +94,16 @@ public class UserBean {
         this.firebaseToken = firebaseToken;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public Map<String, Integer> getPointsMap() {
         return pointsMap;
     }
 
     public Long getCreated() {
         return created;
+    }
+
+    public Long getDomainId() {
+        return domainId;
     }
 
     public List<MissionCompletionBean> getMissionCompletionBeans() {

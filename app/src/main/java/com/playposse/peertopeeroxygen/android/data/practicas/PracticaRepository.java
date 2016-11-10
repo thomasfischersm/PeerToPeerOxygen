@@ -69,8 +69,10 @@ public class PracticaRepository {
 
     private void replaceInternalData(List<PracticaBean> result) {
         practicaBeans.clear();
-        for (PracticaBean practicaBean : result) {
-            practicaBeans.put(practicaBean.getId(), practicaBean);
+        if (result != null) {
+            for (PracticaBean practicaBean : result) {
+                practicaBeans.put(practicaBean.getId(), practicaBean);
+            }
         }
     }
 

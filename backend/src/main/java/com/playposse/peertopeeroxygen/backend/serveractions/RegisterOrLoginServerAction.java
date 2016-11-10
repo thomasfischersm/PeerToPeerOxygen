@@ -1,15 +1,23 @@
 package com.playposse.peertopeeroxygen.backend.serveractions;
 
+import com.google.api.server.spi.response.BadRequestException;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.ObjectifyFactory;
+import com.googlecode.objectify.Ref;
+import com.playposse.peertopeeroxygen.backend.beans.MasterUserBean;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
+import com.playposse.peertopeeroxygen.backend.schema.Domain;
 import com.playposse.peertopeeroxygen.backend.schema.LoanerDevice;
+import com.playposse.peertopeeroxygen.backend.schema.MasterUser;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
+import com.playposse.peertopeeroxygen.backend.schema.util.RefUtil;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.Parameter;
 import com.restfb.Version;
 import com.restfb.types.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -25,55 +33,75 @@ public class RegisterOrLoginServerAction extends ServerAction {
 
     private static final Logger log = Logger.getLogger(RegisterOrLoginServerAction.class.getName());
 
-    public static UserBean registerOrLogin(
+    public static MasterUserBean registerOrLogin(
             String accessToken,
             String firebaseToken,
-            @Nullable Long loanerDeviceId) {
+            @Nullable Long loanerDeviceId,
+            @Nullable Long domainId) {
 
         Long sessionId = new Random().nextLong();
+        Ref<Domain> domainRef = RefUtil.createDomainRef(domainId);
 
         // Retrieve user data.
         User fbUser = fetchUserFromFaceBook(accessToken);
-        List<OxygenUser> oxygenUsers = ofy()
+        List<MasterUser> masterUsers = ofy()
                 .load()
-                .type(OxygenUser.class)
+                .type(MasterUser.class)
                 .filter("fbProfileId", fbUser.getId())
                 .list();
 
         // Register if necessary.
+        final MasterUser masterUser;
         OxygenUser oxygenUser;
-        if (oxygenUsers.size() == 0) {
-            oxygenUser = new OxygenUser(
-                    sessionId,
+        if (masterUsers.size() == 0) {
+            List<Ref<OxygenUser>> oxygenUserRefList = new ArrayList<>(1);
+            Long masterUserId = new ObjectifyFactory().allocateId(MasterUser.class).getId();
+            masterUser = new MasterUser(
+                    masterUserId,
                     fbUser.getId(),
+                    sessionId,
                     firebaseToken,
-                    fbUser.getName(),
                     fbUser.getFirstName(),
                     fbUser.getLastName(),
+                    fbUser.getName(),
                     fbUser.getPicture().getUrl(),
                     fbUser.getEmail(),
-                    System.currentTimeMillis(),
-                    false);
+                    oxygenUserRefList);
+
+            oxygenUser = new OxygenUser(masterUser, false, domainRef);
             Key<OxygenUser> oxygenUserKey = ofy().save().entity(oxygenUser).now();
-            oxygenUser.setId(oxygenUser.getId());
+            Ref<OxygenUser> oxygenUserRef = Ref.create(oxygenUserKey);
+            oxygenUserRefList.add(oxygenUserRef);
+
+            ofy().save().entity(masterUser).now();
         } else {
-            oxygenUser = oxygenUsers.get(0);
-            if (oxygenUsers.size() > 1) {
-                log.info("Found more than one OxygenUser entries for fbProfileId: "
+            masterUser = masterUsers.get(0);
+            if (masterUsers.size() > 1) {
+                log.info("Found more than one MasterUser entries for fbProfileId: "
                         + fbUser.getId());
             }
-            oxygenUser.setSessionId(sessionId);
-            oxygenUser.setFirebaseToken(firebaseToken);
-            oxygenUser.setLastLogin(System.currentTimeMillis());
-            if (oxygenUser.getEmail() == null) {
-                oxygenUser.setEmail(fbUser.getEmail());
+
+            try {
+                oxygenUser = findOxygenUserByDomain(masterUser, domainId);
+            } catch (BadRequestException ex) {
+                oxygenUser = new OxygenUser(masterUser, false, domainRef);
+                Key<OxygenUser> oxygenUserKey = ofy().save().entity(oxygenUser).now();
+                if (masterUser.getDomainUserRefs() == null) {
+                    masterUser.setDomainUserRefs(new ArrayList<Ref<OxygenUser>>());
+                }
+                masterUser.getDomainUserRefs().add(Ref.create(oxygenUserKey));
             }
-            ofy().save().entity(oxygenUser).now();
+
+            masterUser.setSessionId(sessionId);
+            masterUser.setFirebaseToken(firebaseToken);
+            masterUser.setLastLogin(System.currentTimeMillis());
+            masterUser.setEmail(fbUser.getEmail());
+            ofy().save().entity(masterUser).now();
         }
 
         updateLoanerDevice(loanerDeviceId, oxygenUser);
 
-        return new UserBean(oxygenUser);
+        return new MasterUserBean(masterUser);
     }
 
     private static User fetchUserFromFaceBook(String accessToken) {

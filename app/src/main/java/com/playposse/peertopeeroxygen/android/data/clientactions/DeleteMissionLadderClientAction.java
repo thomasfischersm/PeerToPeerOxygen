@@ -23,8 +23,8 @@ public class DeleteMissionLadderClientAction extends ApiClientAction {
 
     @Override
     protected void executeAsync() throws IOException {
-        getBinder().getApi()
-                .deleteMissionLadder(getBinder().getSessionId(), missionLadderId)
+        getApi()
+                .deleteMissionLadder(getSessionId(), missionLadderId, getDomainId())
                 .execute();
         MissionLadderBean missionLadderBean =
                 getDataRepository().getMissionLadderBean(missionLadderId);

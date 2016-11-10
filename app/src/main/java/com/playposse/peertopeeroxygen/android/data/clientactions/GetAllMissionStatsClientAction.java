@@ -26,9 +26,10 @@ public class GetAllMissionStatsClientAction extends ApiClientAction {
 
     @Override
     protected void executeAsync() throws IOException {
-        Long sessionId = getBinder().getSessionId();
-        missionStatsBeanList =
-                getBinder().getApi().getAllMissionStats(sessionId).execute().getItems();
+        missionStatsBeanList = getApi()
+                .getAllMissionStats(getSessionId(), getDomainId())
+                .execute()
+                .getItems();
         Log.i(LOG_CAT, "Calling API completed");
     }
 

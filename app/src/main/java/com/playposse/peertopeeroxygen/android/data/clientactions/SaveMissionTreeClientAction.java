@@ -33,13 +33,13 @@ public class SaveMissionTreeClientAction extends ApiClientAction {
     @Override
     protected void executeAsync() throws IOException {
         boolean create = missionTreeBean.getId() == null;
-        MissionTreeBean result =
-                getBinder().getApi()
-                        .saveMissionTree(
-                                getBinder().getSessionId(),
-                                missionLadderId,
-                                missionTreeBean)
-                        .execute();
+        MissionTreeBean result = getApi()
+                .saveMissionTree(
+                        getSessionId(),
+                        missionLadderId,
+                        getDomainId(),
+                        missionTreeBean)
+                .execute();
         missionTreeBean.setId(result.getId()); // Save id for new entities.
 
         // Update local data to avoid reloading data from the server.

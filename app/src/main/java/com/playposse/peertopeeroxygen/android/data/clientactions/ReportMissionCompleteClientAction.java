@@ -41,10 +41,13 @@ public class ReportMissionCompleteClientAction extends ApiClientAction {
     @Override
     protected void executeAsync() throws IOException {
         Log.i(LOG_CAT, "Calling server to reportMissionComplete");
-        getBinder().getApi().reportMissionComplete(
-                getBinder().getSessionId(),
-                studentId,
-                missionId).execute();
+        getApi()
+                .reportMissionComplete(
+                        getSessionId(),
+                        studentId,
+                        missionId,
+                        getDomainId())
+                .execute();
         Log.i(LOG_CAT, "Succeeded calling server to reportMissionComplete");
     }
 }

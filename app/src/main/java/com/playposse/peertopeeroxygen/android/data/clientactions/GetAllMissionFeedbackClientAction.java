@@ -22,9 +22,10 @@ public class GetAllMissionFeedbackClientAction extends ApiClientAction {
 
     @Override
     protected void executeAsync() throws IOException {
-        Long sessionId = getBinder().getSessionId();
-        missionFeedbackBeanList =
-                getBinder().getApi().getAllMissionFeedback(sessionId).execute().getItems();
+        missionFeedbackBeanList = getApi()
+                .getAllMissionFeedback(getSessionId(), getDomainId())
+                .execute()
+                .getItems();
     }
 
     @Override

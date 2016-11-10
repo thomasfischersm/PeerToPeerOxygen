@@ -43,8 +43,9 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
     private static final String PRACTICA_UPDATE_TYPE = "practicaUpdate";
     private static final String PRACTICA_USER_UPDATE_TYPE = "practicaUserUpdate";
 
-    private static final String ALL_DEVICES_TOPIC = "allDevices";
-    public static final String PRACTICA_FIREBASE_TOPIC_PREFIX = "practica-";
+    private static final String ALL_DEVICES_TOPIC = "allDevices"; // TODO: Retire most usages, except for domain list updates.
+    private static final String PRACTICA_FIREBASE_TOPIC_PREFIX = "practica-";
+    private static final String DOMAIN_FIREBASE_TOPIC_PREFIX = "domain-";
 
     protected DataServiceConnection dataServiceConnection;
     private List<FirebaseClientAction> pendingActions = new ArrayList<>();
@@ -141,6 +142,16 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
     public static void unsubscribeFromPracticaTopic(Long practicaId) {
         String topic = PRACTICA_FIREBASE_TOPIC_PREFIX +practicaId;
         FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
+    }
+
+    public static void subscribeToDomainTopic(Long domainId) {
+        String domain = DOMAIN_FIREBASE_TOPIC_PREFIX + domainId;
+        FirebaseMessaging.getInstance().subscribeToTopic(domain);
+    }
+
+    public static void unsubscribeFromDomainTopic(Long domainId) {
+        String domain = DOMAIN_FIREBASE_TOPIC_PREFIX + domainId;
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(domain);
     }
 
     private final class EmptyDataReceivedCallback

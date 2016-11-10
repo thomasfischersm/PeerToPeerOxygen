@@ -21,6 +21,8 @@ public class SavePracticaClientAction extends ApiClientAction {
 
     @Override
     protected void executeAsync() throws IOException {
-        getBinder().getApi().savePractica(getBinder().getSessionId(), practicaBean).execute();
+        getApi()
+                .savePractica(getSessionId(), getDomainId(), practicaBean)
+                .execute();
     }
 }

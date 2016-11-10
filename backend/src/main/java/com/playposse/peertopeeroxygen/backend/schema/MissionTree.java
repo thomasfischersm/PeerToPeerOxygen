@@ -6,11 +6,16 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Load;
+import com.googlecode.objectify.annotation.OnLoad;
+import com.playposse.peertopeeroxygen.backend.schema.util.MigrationConstants;
+import com.playposse.peertopeeroxygen.backend.schema.util.RefUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
+
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * Objectify entity that represents a mission tree. A mission tree is a collection of missions
@@ -27,6 +32,7 @@ public class MissionTree {
     private int level;
     @Index @Load @Nullable Ref<Mission> bossMissionRef;
     @Load private List<Ref<Mission>> missions = new ArrayList<>();
+    @Index private Ref<Domain> domainRef;
 
     /**
      * List of missions that are required to be completed before attempting to beat the mission
@@ -45,13 +51,15 @@ public class MissionTree {
             String name,
             String description,
             int level,
-            Ref<Mission> bossMissionRef) {
+            Ref<Mission> bossMissionRef,
+            Ref<Domain> domainRef) {
 
         this.id = id;
         this.name = name;
         this.description = description;
         this.level = level;
         this.bossMissionRef = bossMissionRef;
+        this.domainRef = domainRef;
     }
 
     public Long getId() {
@@ -101,5 +109,21 @@ public class MissionTree {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Ref<Domain> getDomainRef() {
+        return domainRef;
+    }
+
+    public void setDomainRef(Ref<Domain> domainRef) {
+        this.domainRef = domainRef;
+    }
+
+    @OnLoad
+    public void migrateToMultiDomainSupport() {
+        if ((domainRef == null) && (MigrationConstants.DEFAULT_DOMAIN != null)) {
+            domainRef = RefUtil.createDomainRef(MigrationConstants.DEFAULT_DOMAIN);
+            ofy().save().entity(this).now();
+        }
     }
 }

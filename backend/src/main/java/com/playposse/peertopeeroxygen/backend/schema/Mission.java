@@ -5,6 +5,9 @@ import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Load;
+import com.googlecode.objectify.annotation.OnLoad;
+import com.playposse.peertopeeroxygen.backend.schema.util.MigrationConstants;
+import com.playposse.peertopeeroxygen.backend.schema.util.RefUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
+
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * Objectify entity that describes a mission.
@@ -29,7 +34,7 @@ public class Mission {
     @Nullable private String buddyYouTubeVideoId;
     @Load private List<Ref<Mission>> requiredMissions = new ArrayList<>();
     private Map<UserPoints.PointType, Integer> pointCostMap = new HashMap<>();
-//    private byte[] icon;
+    private Ref<Domain> domainRef;
 
     /**
      * Default constructor for Objectify.
@@ -46,8 +51,9 @@ public class Mission {
             String studentInstruction,
             String buddyInstruction,
             int minimumStudyCount,
-            String studentYouTubeVideoId,
-            String buddyYouTubeVideoId) {
+            @Nullable String studentYouTubeVideoId,
+            @Nullable String buddyYouTubeVideoId,
+            Ref<Domain> domainRef) {
 
         this.id = id;
         this.buddyInstruction = buddyInstruction;
@@ -56,6 +62,7 @@ public class Mission {
         this.minimumStudyCount = minimumStudyCount;
         this.studentYouTubeVideoId = studentYouTubeVideoId;
         this.buddyYouTubeVideoId = buddyYouTubeVideoId;
+        this.domainRef = domainRef;
     }
 
     public Long getId() {
@@ -118,5 +125,21 @@ public class Mission {
 
     public Map<UserPoints.PointType, Integer> getPointCostMap() {
         return pointCostMap;
+    }
+
+    public Ref<Domain> getDomainRef() {
+        return domainRef;
+    }
+
+    public void setDomainRef(Ref<Domain> domainRef) {
+        this.domainRef = domainRef;
+    }
+
+    @OnLoad
+    public void migrateToMultiDomainSupport() {
+        if ((domainRef == null) && (MigrationConstants.DEFAULT_DOMAIN != null)) {
+            domainRef = RefUtil.createDomainRef(MigrationConstants.DEFAULT_DOMAIN);
+            ofy().save().entity(this).now();
+        }
     }
 }

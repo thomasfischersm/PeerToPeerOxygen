@@ -13,6 +13,8 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import static com.playposse.peertopeeroxygen.backend.schema.util.RefUtil.createDomainRef;
+
 /**
  * Equivalent of {@link Mission} for transport across the network.
  */
@@ -25,6 +27,7 @@ public class MissionBean {
     private int minimumStudyCount;
     @Nullable private String studentYouTubeVideoId;
     @Nullable private String buddyYouTubeVideoId;
+    private Long domainId;
     private List<Long> requiredMissionIds = new ArrayList<>();
     private Map<String, Integer> pointCostMap = new HashMap<>();
 
@@ -39,6 +42,7 @@ public class MissionBean {
         this.minimumStudyCount = mission.getMinimumStudyCount();
         this.studentYouTubeVideoId = mission.getStudentYouTubeVideoId();
         this.buddyYouTubeVideoId = mission.getBuddyYouTubeVideoId();
+        this.domainId = mission.getDomainRef().getKey().getId();
 
         for (Ref<Mission> requiredMissionRef : mission.getRequiredMissions()) {
             if (requiredMissionRef.get() != null) {
@@ -113,6 +117,14 @@ public class MissionBean {
         this.studentYouTubeVideoId = studentYouTubeVideoId;
     }
 
+    public Long getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(Long domainId) {
+        this.domainId = domainId;
+    }
+
     public List<Long> getRequiredMissionIds() {
         return requiredMissionIds;
     }
@@ -129,7 +141,8 @@ public class MissionBean {
                 buddyInstruction,
                 minimumStudyCount,
                 studentYouTubeVideoId,
-                buddyYouTubeVideoId);
+                buddyYouTubeVideoId,
+                createDomainRef(domainId));
 
         for (Long requiredMissionId : requiredMissionIds) {
             Key<Mission> requiredMissionKey = Key.create(Mission.class, requiredMissionId);

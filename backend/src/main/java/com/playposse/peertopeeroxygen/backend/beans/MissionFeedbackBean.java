@@ -14,6 +14,7 @@ public class MissionFeedbackBean {
     private int rating;
     private long date;
     @Nullable private String comment;
+    private Long domainId;
 
     public MissionFeedbackBean() {
     }
@@ -24,6 +25,7 @@ public class MissionFeedbackBean {
         rating = missionFeedback.getRating();
         date = missionFeedback.getDate();
         comment = missionFeedback.getComment();
+        domainId = missionFeedback.getDomainRef().getKey().getId();
     }
 
     @Nullable
@@ -45,5 +47,9 @@ public class MissionFeedbackBean {
 
     public UserBean getUserBean() {
         return userBean;
+    }
+
+    public Long getDomainId() {
+        return domainId;
     }
 }

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.admin.AdminMainActivity;
+import com.playposse.peertopeeroxygen.android.data.missions.MissionDataManager;
 import com.playposse.peertopeeroxygen.android.data.practicas.PracticaRepository;
 import com.playposse.peertopeeroxygen.android.practicamgmt.PracticaManager;
 import com.playposse.peertopeeroxygen.android.student.StudentAboutActivity;
@@ -52,7 +53,9 @@ public abstract class DataServiceParentActivity
                 startActivity(new Intent(this, AdminMainActivity.class));
                 return true;
             case R.id.refreshMenuItem:
-                dataServiceConnection.getLocalBinder().reload();
+                MissionDataManager.invalidate(getApplicationContext());
+                DataService.LocalBinder localBinder = dataServiceConnection.getLocalBinder();
+                MissionDataManager.checkStale(getApplicationContext(), localBinder);
                 return true;
             case R.id.debugMenuItem:
                 boolean debugFlag = !item.isChecked();

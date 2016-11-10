@@ -37,10 +37,11 @@ public class SaveMissionClientAction extends ApiClientAction {
     protected void executeAsync() throws IOException {
         boolean create = missionBean.getId() == null;
 
-        MissionBean result = getBinder().getApi().saveMission(
-                getBinder().getSessionId(),
+        MissionBean result = getApi().saveMission(
+                getSessionId(),
                 missionLadderId,
                 missionTreeId,
+                getDomainId(),
                 missionBean)
                 .execute();
         missionBean.setId(result.getId());

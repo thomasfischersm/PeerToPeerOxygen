@@ -14,6 +14,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.StringWriter;
 
+import static com.playposse.peertopeeroxygen.backend.schema.util.RefUtil.getDomainId;
+
 /**
  * Firebase server action that sends updated metainformation about a practica to the clients. This
  * can be a new practica or an update to an existing practica.
@@ -35,6 +37,6 @@ public class SendPracticaUpdateServerAction extends FirebaseServerAction {
         rootNode.put(TYPE_KEY, PRACTICA_UPDATE_TYPE);
         rootNode.put(PRACTICA_BEAN, practicaJson);
 
-        return sendMessageToAllDevices(rootNode, FirebasePriority.normal, null);
+        return sendMessageToDomain(getDomainId(practica), rootNode, FirebasePriority.normal, null);
     }
 }

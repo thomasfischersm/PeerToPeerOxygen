@@ -35,12 +35,13 @@ public class DeleteMissionClientAction extends ApiClientAction {
                 getDataRepository().getMissionBean(missionLadderId, missionTreeId, missionId);
         missionTreeBean.getMissionBeans().remove(missionBean);
 
-        getBinder().getApi()
+        getApi()
                 .deleteMission(
-                        getBinder().getSessionId(),
+                        getSessionId(),
                         missionLadderId,
                         missionTreeId,
-                        missionId)
+                        missionId,
+                        getDomainId())
                 .execute();
     }
 }

@@ -20,8 +20,6 @@ import java.util.logging.Logger;
 
 import javax.annotation.Nullable;
 
-import static com.playposse.peertopeeroxygen.backend.serveractions.ServerAction.stripForSafety;
-
 /**
  * A class with utility methods for dealing with Firebase.
  */
@@ -38,6 +36,7 @@ public class FirebaseServerAction {
     private static final String APP_ID = "AIzaSyDMTDhV84ZdiacBCm9vN2z0q5BM3vJccgs";
 
     private static final String ALL_DEVICES_DESTINATION = "/topics/allDevices";
+    private static final String DOMAIN_FIREBASE_TOPIC_PREFIX = "/topics/domain-";
 
     protected static final String TYPE_KEY = "type";
 
@@ -55,6 +54,17 @@ public class FirebaseServerAction {
             @Nullable String collapseKey)
             throws IOException {
         return sendMessageToDevice(ALL_DEVICES_DESTINATION, data, priority, collapseKey);
+    }
+
+    protected  static String sendMessageToDomain(
+            Long domainId,
+            JSONObject data,
+            FirebasePriority priority,
+            @Nullable String collapseKey)
+            throws IOException {
+
+        String firebaseGroup = DOMAIN_FIREBASE_TOPIC_PREFIX + domainId;
+        return sendMessageToDevice(firebaseGroup, data, priority, collapseKey);
     }
 
     protected static String sendMessageToDevice(
@@ -141,7 +151,6 @@ public class FirebaseServerAction {
      */
     protected static UserBean stripCompletions(OxygenUser user) {
         UserBean userBean = new UserBean(user);
-        stripForSafety(userBean);
         userBean.setLevelCompletionBeans(new ArrayList<LevelCompletionBean>());
         userBean.setMissionCompletionBeans(new ArrayList<MissionCompletionBean>());
         return userBean;

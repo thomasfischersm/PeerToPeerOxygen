@@ -8,6 +8,8 @@ import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.playposse.peertopeeroxygen.backend.schema.util.RefUtil.createDomainRef;
+
 /**
  * Equivalent of {@link MissionLadder} for transport across the network.
  */
@@ -16,6 +18,7 @@ public class MissionLadderBean {
     private Long id;
     private String name;
     private String description;
+    private Long domainId;
     private List<MissionTreeBean> missionTreeBeans = new ArrayList<>();
 
     public MissionLadderBean() {
@@ -25,6 +28,7 @@ public class MissionLadderBean {
         this.id = missionLadder.getId();
         this.name = missionLadder.getName();
         this.description = missionLadder.getDescription();
+        this.domainId = missionLadder.getDomainRef().getKey().getId();
 
         for (Ref<MissionTree> missionTreeRef : missionLadder.getMissionTreeRefs()) {
             MissionTree missionTree = missionTreeRef.get();
@@ -58,6 +62,14 @@ public class MissionLadderBean {
         this.name = name;
     }
 
+    public Long getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(Long domainId) {
+        this.domainId = domainId;
+    }
+
     public List<MissionTreeBean> getMissionTreeBeans() {
         return missionTreeBeans;
     }
@@ -67,7 +79,8 @@ public class MissionLadderBean {
     }
 
     public MissionLadder toEntity() {
-        MissionLadder missionLadder = new MissionLadder(id, name, description);
+        MissionLadder missionLadder =
+                new MissionLadder(id, name, description, createDomainRef(domainId));
         for (MissionTreeBean missionTreeBean : missionTreeBeans) {
             Ref<MissionTree> missionTreeBeanRef =
                     Ref.create(Key.create(MissionTree.class, missionTreeBean.getId()));

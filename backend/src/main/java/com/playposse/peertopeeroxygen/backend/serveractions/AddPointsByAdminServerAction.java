@@ -1,13 +1,16 @@
 package com.playposse.peertopeeroxygen.backend.serveractions;
 
+import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.firebase.FirebaseServerAction;
 import com.playposse.peertopeeroxygen.backend.firebase.SendPointsUpdateToStudentServerAction;
+import com.playposse.peertopeeroxygen.backend.schema.MasterUser;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 import com.playposse.peertopeeroxygen.backend.schema.PointsTransferAuditLog;
 import com.playposse.peertopeeroxygen.backend.schema.UserPoints;
+import com.playposse.peertopeeroxygen.backend.schema.util.RefUtil;
 
 import java.io.IOException;
 import java.util.Map;
@@ -20,15 +23,22 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 public class AddPointsByAdminServerAction extends ServerAction {
 
     public void addPointsByAdmin(
-            OxygenUser adminUser,
+            Long sessionId,
             Long studentId,
             String pointTypeString,
-            int addedPoints)
-            throws UnauthorizedException, IOException {
+            int addedPoints,
+            Long domainId)
+            throws UnauthorizedException, IOException, BadRequestException {
 
         // Look up data.
-        OxygenUser student = loadUserById(studentId);
+        MasterUser adminMasterUser = loadMasterUserBySessionId(sessionId);
+        OxygenUser adminOxygenUser = findOxygenUserByDomain(adminMasterUser, domainId);
+        OxygenUser student = loadOxygenUserById(studentId, domainId);
         UserPoints.PointType pointType = UserPoints.PointType.valueOf(pointTypeString);
+
+        // Check security.
+        protectByAdminCheck(adminMasterUser, adminOxygenUser, domainId);
+        verifyUserByDomain(student, domainId);
 
         // Instantiate data structures as necessary.
         UserPoints userPoints = null;
@@ -52,9 +62,10 @@ public class AddPointsByAdminServerAction extends ServerAction {
         PointsTransferAuditLog auditLog = new PointsTransferAuditLog(
                 PointsTransferAuditLog.PointsTransferType.awardedByAdmin,
                 Ref.create(Key.create(OxygenUser.class, student.getId())),
-                Ref.create(Key.create(OxygenUser.class, adminUser.getId())),
+                Ref.create(Key.create(OxygenUser.class, adminOxygenUser.getId())),
                 pointType,
-                addedPoints);
+                addedPoints,
+                RefUtil.createDomainRef(domainId));
         ofy().save().entity(auditLog).now();
 
         // Send notification to the student via Firebase message.

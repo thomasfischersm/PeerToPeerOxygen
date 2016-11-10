@@ -22,9 +22,8 @@ public class GetAllLoanerDevicesClientAction extends ApiClientAction {
 
     @Override
     protected void executeAsync() throws IOException {
-        loanerDeviceBeanList = getBinder()
-                .getApi()
-                .getAllLoanerDevices(getBinder().getSessionId())
+        loanerDeviceBeanList = getApi()
+                .getAllLoanerDevices(getSessionId(), getDomainId())
                 .execute()
                 .getItems();
     }

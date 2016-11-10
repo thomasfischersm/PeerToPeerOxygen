@@ -3,6 +3,7 @@ package com.playposse.peertopeeroxygen.backend.serveractions;
 import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.playposse.peertopeeroxygen.backend.beans.PracticaBean;
+import com.playposse.peertopeeroxygen.backend.schema.MasterUser;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 import com.playposse.peertopeeroxygen.backend.schema.Practica;
 
@@ -17,10 +18,12 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
  */
 public class CheckOutOfPracticaServerAction extends ServerAction {
 
-    public static void checkout(Long sessionId, Long practicaId)
+    public static void checkout(Long sessionId, Long practicaId, Long domainId)
             throws UnauthorizedException, BadRequestException, IOException {
 
-        OxygenUser user = loadUserBySessionId(sessionId);
+        MasterUser masterUser = loadMasterUserBySessionId(sessionId);
+        OxygenUser user = findOxygenUserByDomain(masterUser, domainId);
+
         user.setActivePracticaRef(null);
         ofy().save().entity(user);
 

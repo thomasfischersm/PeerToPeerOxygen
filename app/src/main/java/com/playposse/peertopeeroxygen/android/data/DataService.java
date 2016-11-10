@@ -38,6 +38,7 @@ import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionTree
 import com.playposse.peertopeeroxygen.android.data.clientactions.SavePracticaClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.SubmitMissionFeedbackClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.UnmarkLoanerDeviceClientAction;
+import com.playposse.peertopeeroxygen.android.data.missions.MissionDataManager;
 import com.playposse.peertopeeroxygen.android.student.StudentLoginActivity;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxygenApi;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
@@ -72,6 +73,7 @@ public class DataService extends Service {
         if (dataRepository == null) {
             dataRepository = new DataRepository();
             dataRepository.onStart(getApplicationContext(), localBinder);
+            MissionDataManager.checkStale(getApplicationContext(), localBinder);
         }
 
         return localBinder;
@@ -118,7 +120,7 @@ public class DataService extends Service {
             }
 
             if (checkStale) {
-                CompleteMissionDataCache.checkStale(this);
+                MissionDataManager.checkStale(getApplicationContext(), this);
             }
         }
 
@@ -135,7 +137,8 @@ public class DataService extends Service {
 
         public void init() {
             if ((dataRepository == null) || (dataRepository.getCompleteMissionDataBean() == null)) {
-                CompleteMissionDataCache.getCompleteMissionDataBean(this, getApplicationContext());
+                Long domainId = OxygenSharedPreferences.getCurrentDomainId(getApplicationContext());
+                MissionDataManager.switchToDomainAsync(domainId, getApplicationContext(), this);
             }
         }
 
@@ -267,7 +270,7 @@ public class DataService extends Service {
         }
 
         public void addPointsByAdmin(Long studentId, String pointType, int addedPoints) {
-            new AddPointsByAdminClientAction(this, getSessionId(), studentId, pointType, addedPoints)
+            new AddPointsByAdminClientAction(this, studentId, pointType, addedPoints)
                     .execute();
         }
 
@@ -328,10 +331,11 @@ public class DataService extends Service {
             new CheckOutOfPracticaClientAction(this, practicaId).execute();
         }
 
-        public void reload() {
-            CompleteMissionDataCache.LoadRemotelyCallback cacheCallback =
-                    new CompleteMissionDataCache.LoadRemotelyCallback(getApplicationContext());
-            new MissionDataRetrieverClientAction(this, cacheCallback).execute();
+        public void getAllMissionData(
+                Long domainId,
+                MissionDataRetrieverClientAction.Callback callback) {
+
+            new MissionDataRetrieverClientAction(domainId, this, callback).execute();
         }
     }
 

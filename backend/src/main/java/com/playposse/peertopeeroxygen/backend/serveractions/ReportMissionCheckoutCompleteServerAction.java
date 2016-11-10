@@ -1,16 +1,20 @@
 package com.playposse.peertopeeroxygen.backend.serveractions;
 
+import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.firebase.FirebaseServerAction;
 import com.playposse.peertopeeroxygen.backend.firebase.SendMissionCompletionToBuddyServerAction;
+import com.playposse.peertopeeroxygen.backend.schema.Domain;
+import com.playposse.peertopeeroxygen.backend.schema.MasterUser;
 import com.playposse.peertopeeroxygen.backend.schema.MentoringAuditLog;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
 import com.playposse.peertopeeroxygen.backend.schema.MissionCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 import com.playposse.peertopeeroxygen.backend.schema.PointsTransferAuditLog;
 import com.playposse.peertopeeroxygen.backend.schema.UserPoints;
+import com.playposse.peertopeeroxygen.backend.schema.util.RefUtil;
 
 import java.io.IOException;
 
@@ -28,22 +32,32 @@ public class ReportMissionCheckoutCompleteServerAction extends ServerAction {
             Long sessionId,
             Long studentId,
             Long buddyId,
-            Long missionId)
-            throws UnauthorizedException, IOException {
+            Long missionId,
+            Long domainId)
+            throws UnauthorizedException, IOException, BadRequestException {
 
-        // Load relevant data.
-        OxygenUser student = loadUserById(studentId);
-        OxygenUser buddy = loadUserById(buddyId);
-        OxygenUser seniorBuddy = loadUserBySessionId(sessionId);
+        // Load student.
+        OxygenUser student = loadOxygenUserById(studentId, domainId);
+        verifyUserByDomain(student, domainId);
+
+        // Load buddy.
+        OxygenUser buddy = loadOxygenUserById(buddyId, domainId);
+        verifyUserByDomain(buddy, domainId);
+
+        // Load senior buddy.
+        MasterUser masterSeniorBuddy = loadMasterUserBySessionId(sessionId);
+        OxygenUser seniorBuddy = findOxygenUserByDomain(masterSeniorBuddy, domainId);
 
         Ref<Mission> missionRef = Ref.create(Key.create(Mission.class, missionId));
         Ref<OxygenUser> studentRef = Ref.create(Key.create(OxygenUser.class, student.getId()));
         Ref<OxygenUser> buddyRef = Ref.create(Key.create(OxygenUser.class, buddy.getId()));
         Ref<OxygenUser> seniorBuddyRef = Ref.create(Key.create(OxygenUser.class, seniorBuddy.getId()));
+        Ref<Domain> domainRef = RefUtil.createDomainRef(domainId);
 
         updateSeniorBuddy(seniorBuddy, missionRef);
         updateBuddy(buddy, missionRef);
-        updateMentoringLog(studentRef, buddyRef, seniorBuddyRef, missionRef);
+        updateMentoringLog(studentRef, buddyRef, seniorBuddyRef, missionRef, domainRef);
+        updatePointTransferLogForSeniorBuddy(seniorBuddyRef, buddyRef, domainRef);
 
 
         // Send a Firebase message to the student to confirm completion.
@@ -108,14 +122,16 @@ public class ReportMissionCheckoutCompleteServerAction extends ServerAction {
 
     private static void updatePointTransferLogForSeniorBuddy(
             Ref<OxygenUser> seniorBuddyRef,
-            Ref<OxygenUser> buddyRef) {
+            Ref<OxygenUser> buddyRef,
+            Ref<Domain> domainRef) {
 
         PointsTransferAuditLog auditLog = new PointsTransferAuditLog(
                 PointsTransferAuditLog.PointsTransferType.teachMission,
                 seniorBuddyRef,
                 buddyRef,
                 UserPoints.PointType.teach,
-                1);
+                1,
+                domainRef);
         ofy().save().entity(auditLog);
     }
 
@@ -123,7 +139,8 @@ public class ReportMissionCheckoutCompleteServerAction extends ServerAction {
             Ref<OxygenUser> studentRef,
             Ref<OxygenUser> buddyRef,
             Ref<OxygenUser> seniorBuddyRef,
-            Ref<Mission> missionRef) {
+            Ref<Mission> missionRef,
+            Ref<Domain> domainRef) {
 
         // Save audit log
         MentoringAuditLog audit = new MentoringAuditLog(
@@ -132,7 +149,8 @@ public class ReportMissionCheckoutCompleteServerAction extends ServerAction {
                 seniorBuddyRef,
                 missionRef,
                 true,
-                System.currentTimeMillis());
+                System.currentTimeMillis(),
+                domainRef);
         ofy().save().entity(audit);
     }
 }

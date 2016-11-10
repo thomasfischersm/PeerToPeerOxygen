@@ -4,8 +4,13 @@ import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.OnLoad;
+import com.playposse.peertopeeroxygen.backend.schema.util.MigrationConstants;
+import com.playposse.peertopeeroxygen.backend.schema.util.RefUtil;
 
 import javax.annotation.Nullable;
+
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * Objectify entity that represents one teaching event for the purpose of being able to analyze
@@ -21,6 +26,7 @@ public class MentoringAuditLog {
     private Ref<Mission> mission;
     private boolean isSuccess;
     @Index private Long date;
+    @Index private Ref<Domain> domainRef;
 
     public MentoringAuditLog() {
     }
@@ -31,7 +37,8 @@ public class MentoringAuditLog {
             Ref<OxygenUser> supervisingBuddy,
             Ref<Mission> mission,
             boolean isSuccess,
-            Long date) {
+            Long date,
+            Ref<Domain> domainRef) {
 
         this.buddy = buddy;
         this.date = date;
@@ -40,6 +47,7 @@ public class MentoringAuditLog {
         this.mission = mission;
         this.student = student;
         this.supervisingBuddy = supervisingBuddy;
+        this.domainRef = domainRef;
     }
 
     public Ref<OxygenUser> getBuddy() {
@@ -97,5 +105,17 @@ public class MentoringAuditLog {
 
     public void setSupervisingBuddy(@Nullable Ref<OxygenUser> supervisingBuddy) {
         this.supervisingBuddy = supervisingBuddy;
+    }
+
+    public Ref<Domain> getDomainRef() {
+        return domainRef;
+    }
+
+    @OnLoad
+    public void migrateToMultiDomainSupport() {
+        if ((domainRef == null) && (MigrationConstants.DEFAULT_DOMAIN != null)) {
+            domainRef = RefUtil.createDomainRef(MigrationConstants.DEFAULT_DOMAIN);
+            ofy().save().entity(this).now();
+        }
     }
 }

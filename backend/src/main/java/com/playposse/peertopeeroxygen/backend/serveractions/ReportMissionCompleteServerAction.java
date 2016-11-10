@@ -1,11 +1,14 @@
 package com.playposse.peertopeeroxygen.backend.serveractions;
 
+import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.firebase.SendMissionCompletionToStudentServerAction;
 import com.playposse.peertopeeroxygen.backend.firebase.SendPracticaUserUpdateServerAction;
+import com.playposse.peertopeeroxygen.backend.schema.Domain;
 import com.playposse.peertopeeroxygen.backend.schema.LevelCompletion;
+import com.playposse.peertopeeroxygen.backend.schema.MasterUser;
 import com.playposse.peertopeeroxygen.backend.schema.MentoringAuditLog;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
 import com.playposse.peertopeeroxygen.backend.schema.MissionCompletion;
@@ -14,6 +17,7 @@ import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 import com.playposse.peertopeeroxygen.backend.schema.PointsTransferAuditLog;
 import com.playposse.peertopeeroxygen.backend.schema.UserPoints;
+import com.playposse.peertopeeroxygen.backend.schema.util.RefUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,15 +41,25 @@ public class ReportMissionCompleteServerAction extends ServerAction {
     public static void reportMissionComplete(
             Long sessionId,
             Long studentId,
-            Long missionId)
-            throws UnauthorizedException, IOException {
+            Long missionId,
+            Long domainId)
+            throws UnauthorizedException, IOException, BadRequestException {
 
-        // Load relevant data.
-        OxygenUser buddy = loadUserBySessionId(sessionId);
-        OxygenUser student = loadUserById(studentId);
+        // Load buddy.
+        MasterUser masterUser = loadMasterUserBySessionId(sessionId);
+        OxygenUser buddy = findOxygenUserByDomain(masterUser, domainId);
+        verifyUserByDomain(buddy, domainId);
+
+        // Load student.
+        OxygenUser student = loadOxygenUserById(studentId, domainId);
+
+        // Create references.
         Ref<Mission> missionRef = Ref.create(Key.create(Mission.class, missionId));
         Ref<OxygenUser> buddyRef = Ref.create(Key.create(OxygenUser.class, buddy.getId()));
         Ref<OxygenUser> studentRef = Ref.create(Key.create(OxygenUser.class, student.getId()));
+        Ref<Domain> domainRef = RefUtil.createDomainRef(domainId);
+
+        // Load mission.
         Mission mission = ofy().load().type(Mission.class).id(missionId).now();
 
         List<MissionTree> missionTreeQueryResult = ofy()
@@ -59,11 +73,11 @@ public class ReportMissionCompleteServerAction extends ServerAction {
         // Check if the buddy is allowed to teach the mission.
         // Update buddy first because this includes checks if the buddy is allowed to teach.
         updateBuddy(missionId, buddy, missionRef);
-        updateStudent(missionId, student, missionRef, buddyRef, studentRef, mission, missionTree);
-        updatePointTransferLogForBuddy(buddyRef, studentRef);
-        updateMentoringLog(studentId, buddy, missionRef);
+        updateStudent(missionId, student, missionRef, buddyRef, studentRef, domainRef, mission, missionTree);
+        updatePointTransferLogForBuddy(buddyRef, studentRef, domainRef);
+        updateMentoringLog(studentId, buddy, missionRef, domainRef);
 
-        updateMissionStats(missionId);
+        updateMissionStats(missionId, domainId);
 
         // Send a Firebase message to the student to confirm completion.
         SendMissionCompletionToStudentServerAction.sendMissionCompletionToStudent(
@@ -78,6 +92,7 @@ public class ReportMissionCompleteServerAction extends ServerAction {
             Ref<Mission> missionRef,
             Ref<OxygenUser> buddyRef,
             Ref<OxygenUser> studentRef,
+            Ref<Domain> domainRef,
             Mission mission,
             @Nullable MissionTree missionTree) throws IOException {
 
@@ -92,7 +107,7 @@ public class ReportMissionCompleteServerAction extends ServerAction {
             student.getMissionCompletions().put(missionId, completion);
         }
 
-        chargePoints(student, mission, buddyRef, studentRef);
+        chargePoints(student, mission, buddyRef, studentRef, domainRef);
 
         if (completion.getStudyCount() >= mission.getMinimumStudyCount()) {
             // Be sure to avoid accidentally setting studyComplete to false if the mission study
@@ -151,18 +166,25 @@ public class ReportMissionCompleteServerAction extends ServerAction {
 
     private static void updatePointTransferLogForBuddy(
             Ref<OxygenUser> buddyRef,
-            Ref<OxygenUser> studentRef) {
+            Ref<OxygenUser> studentRef,
+            Ref<Domain> domainRef) {
 
         PointsTransferAuditLog auditLog = new PointsTransferAuditLog(
                 PointsTransferAuditLog.PointsTransferType.teachMission,
                 buddyRef,
                 studentRef,
                 UserPoints.PointType.teach,
-                1);
+                1,
+                domainRef);
         ofy().save().entity(auditLog);
     }
 
-    private static void updateMentoringLog(Long studentId, OxygenUser buddy, Ref<Mission> missionRef) {
+    private static void updateMentoringLog(
+            Long studentId,
+            OxygenUser buddy,
+            Ref<Mission> missionRef,
+            Ref<Domain> domainRef) {
+
         // Save audit log
         MentoringAuditLog audit = new MentoringAuditLog(
                 Ref.create(Key.create(OxygenUser.class, studentId)),
@@ -170,7 +192,8 @@ public class ReportMissionCompleteServerAction extends ServerAction {
                 null,
                 missionRef,
                 true,
-                System.currentTimeMillis());
+                System.currentTimeMillis(),
+                domainRef);
         ofy().save().entity(audit);
     }
 
@@ -178,7 +201,8 @@ public class ReportMissionCompleteServerAction extends ServerAction {
             OxygenUser student,
             Mission mission,
             Ref<OxygenUser> buddyRef,
-            Ref<OxygenUser> studentRef) {
+            Ref<OxygenUser> studentRef,
+            Ref<Domain> domainRef) {
 
         for (Map.Entry<UserPoints.PointType, Integer> entry : mission.getPointCostMap().entrySet()) {
             Integer pointCount = 0 - entry.getValue();
@@ -191,14 +215,17 @@ public class ReportMissionCompleteServerAction extends ServerAction {
                         studentRef,
                         buddyRef,
                         pointType,
-                        pointCount);
+                        pointCount,
+                        domainRef);
                 ofy().save().entity(auditLog);
             }
         }
     }
 
-    private static void updateMissionStats(Long missionId) {
-        final MissionStats missionStats = getMissionStats(missionId);
+    private static void updateMissionStats(Long missionId, long domainId)
+            throws BadRequestException {
+
+        final MissionStats missionStats = getMissionStats(missionId, domainId);
 
         missionStats.incrementCompletion();
 

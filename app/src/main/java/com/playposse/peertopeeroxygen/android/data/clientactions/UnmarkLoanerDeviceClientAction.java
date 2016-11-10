@@ -31,9 +31,8 @@ public class UnmarkLoanerDeviceClientAction extends ApiClientAction {
         }
 
         OxygenSharedPreferences.setLoanerDeviceId(getContext(), null);
-        getBinder()
-                .getApi()
-                .unmarkLoanerDevice(getBinder().getSessionId(), loanerDeviceId)
+        getApi()
+                .unmarkLoanerDevice(getSessionId(), loanerDeviceId, getDomainId())
                 .execute();
     }
 }

@@ -9,6 +9,8 @@ import com.playposse.peertopeeroxygen.backend.schema.Practica;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.playposse.peertopeeroxygen.backend.schema.util.RefUtil.createDomainRef;
+
 /**
  * Equivalent of {@link Practica} for transport across the network.
  */
@@ -25,6 +27,7 @@ public class PracticaBean {
     private List<PracticaUserBean> attendeeUserBeans = new ArrayList<>();
     private Long created;
     private String timezone;
+    private Long domainId;
 
     public PracticaBean() {
     }
@@ -40,6 +43,7 @@ public class PracticaBean {
         this.created = practica.getCreated();
         this.timezone = practica.getTimezone();
         this.hostUserBean = new PracticaUserBean(practica.getHostUser().get());
+        this.domainId = practica.getDomainRef().getKey().getId();
 
         for (Ref<OxygenUser> attendee : practica.getAttendeeUsers()) {
             attendeeUserBeans.add(new PracticaUserBean(attendee.get()));
@@ -126,6 +130,14 @@ public class PracticaBean {
         this.timezone = timezone;
     }
 
+    public Long getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(Long domainId) {
+        this.domainId = domainId;
+    }
+
     public Practica toEntity() {
         List<Ref<OxygenUser>> attendeeEntities = new ArrayList<>(attendeeUserBeans.size());
         for (PracticaUserBean practicaUserBean : attendeeUserBeans) {
@@ -143,6 +155,7 @@ public class PracticaBean {
                 gpsLocation,
                 Ref.create(Key.create(OxygenUser.class, hostUserBean.getId())),
                 attendeeEntities,
-                timezone);
+                timezone,
+                createDomainRef(domainId));
     }
 }

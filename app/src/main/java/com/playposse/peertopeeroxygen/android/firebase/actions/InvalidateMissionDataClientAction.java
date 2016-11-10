@@ -3,7 +3,7 @@ package com.playposse.peertopeeroxygen.android.firebase.actions;
 import android.util.Log;
 
 import com.google.firebase.messaging.RemoteMessage;
-import com.playposse.peertopeeroxygen.android.data.CompleteMissionDataCache;
+import com.playposse.peertopeeroxygen.android.data.missions.MissionDataManager;
 
 /**
  * A Firebase action that clears the local mission data cache because there is new data on the
@@ -19,7 +19,7 @@ public class InvalidateMissionDataClientAction extends FirebaseClientAction {
 
     @Override
     protected void execute(RemoteMessage remoteMessage) {
-        CompleteMissionDataCache.invalidate();
+        MissionDataManager.invalidate(getApplicationContext());
         Log.i(LOG_CAT, "Got Firebase message to invalidate mission cache.");
     }
 }

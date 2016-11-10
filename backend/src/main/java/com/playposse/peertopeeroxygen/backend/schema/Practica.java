@@ -6,9 +6,14 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Load;
+import com.googlecode.objectify.annotation.OnLoad;
+import com.playposse.peertopeeroxygen.backend.schema.util.MigrationConstants;
+import com.playposse.peertopeeroxygen.backend.schema.util.RefUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * An Objectify instance that represents a practica event.
@@ -28,6 +33,7 @@ public class Practica {
     @Load private List<Ref<OxygenUser>> attendeeUsers = new ArrayList<>();
     private Long created = System.currentTimeMillis();
     private String timezone;
+    @Index private Ref<Domain> domainRef;
 
     public Practica() {
     }
@@ -41,7 +47,8 @@ public class Practica {
             String gpsLocation,
             Ref<OxygenUser> hostUser,
             List<Ref<OxygenUser>> attendeeUsers,
-            String timezone) {
+            String timezone,
+            Ref<Domain> domainRef) {
 
         this.name = name;
         this.greeting = greeting;
@@ -52,6 +59,7 @@ public class Practica {
         this.hostUser = hostUser;
         this.attendeeUsers = attendeeUsers;
         this.timezone = timezone;
+        this.domainRef = domainRef;
     }
 
     public Long getId() {
@@ -128,5 +136,21 @@ public class Practica {
 
     public List<Ref<OxygenUser>> getAttendeeUsers() {
         return attendeeUsers;
+    }
+
+    public Ref<Domain> getDomainRef() {
+        return domainRef;
+    }
+
+    public void setDomainRef(Ref<Domain> domainRef) {
+        this.domainRef = domainRef;
+    }
+
+    @OnLoad
+    public void migrateToMultiDomainSupport() {
+        if ((domainRef == null) && (MigrationConstants.DEFAULT_DOMAIN != null)) {
+            domainRef = RefUtil.createDomainRef(MigrationConstants.DEFAULT_DOMAIN);
+            ofy().save().entity(this).now();
+        }
     }
 }

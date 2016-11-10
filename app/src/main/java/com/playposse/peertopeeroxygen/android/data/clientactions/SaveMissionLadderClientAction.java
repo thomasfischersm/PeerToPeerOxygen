@@ -26,10 +26,9 @@ public class SaveMissionLadderClientAction extends ApiClientAction {
     @Override
     protected void executeAsync() throws IOException {
         boolean create = missionLadderBean.getId() == null;
-        MissionLadderBean result =
-                getBinder().getApi()
-                        .saveMissionLadder(getBinder().getSessionId(), missionLadderBean)
-                        .execute();
+        MissionLadderBean result = getApi()
+                .saveMissionLadder(getSessionId(), getDomainId(), missionLadderBean)
+                .execute();
         missionLadderBean.setId(result.getId()); // Save id for new entities.
 
         // Update local data to avoid reloading data from the server.

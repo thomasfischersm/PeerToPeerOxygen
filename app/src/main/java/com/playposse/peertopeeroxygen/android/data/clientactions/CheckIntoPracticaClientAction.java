@@ -30,9 +30,8 @@ public class CheckIntoPracticaClientAction extends ApiClientAction {
 
     @Override
     protected void executeAsync() throws IOException {
-        resultPracticaBean = getBinder()
-                .getApi()
-                .checkIntoPractica(getBinder().getSessionId(), practicaId)
+        resultPracticaBean = getApi()
+                .checkIntoPractica(getSessionId(), practicaId, getDomainId())
                 .execute();
     }
 

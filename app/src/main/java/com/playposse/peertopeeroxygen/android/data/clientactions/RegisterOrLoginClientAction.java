@@ -3,6 +3,7 @@ package com.playposse.peertopeeroxygen.android.data.clientactions;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MasterUserBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
 import java.io.IOException;
@@ -33,17 +34,14 @@ public class RegisterOrLoginClientAction extends ApiClientAction {
     protected void executeAsync() throws IOException {
         String firebaseToken = FirebaseInstanceId.getInstance().getToken();
         Long loanerDeviceId = OxygenSharedPreferences.getLoanerDeviceId(getContext());
-        UserBean userBean =
+        MasterUserBean masterUserBean =
                 getBinder().getApi()
                         .registerOrLogin(accessToken, firebaseToken)
                         .setLoanerDeviceId(loanerDeviceId)
+                        .setDomainId(getDomainId())
                         .execute();
-        OxygenSharedPreferences.setSessionId(getContext(), userBean.getSessionId());
+        OxygenSharedPreferences.setSessionId(getContext(), masterUserBean.getSessionId());
 
-        if ((getDataRepository() != null)
-                && (getDataRepository().getCompleteMissionDataBean() != null)) {
-            getDataRepository().getCompleteMissionDataBean().setUserBean(userBean);
-        }
         signInSuccessCallback.onSuccess();
     }
 }

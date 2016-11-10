@@ -105,7 +105,7 @@ public class AdminMissionFeedbackActivity
 
         EmailUtil.sendEmail(
                 this,
-                missionFeedbackBean.getUserBean().getEmail(),
+                missionFeedbackBean.getUserBean().getEmail(), // Store master user in preferences
                 R.string.feedback_email_subject,
                 emailBody);
     }

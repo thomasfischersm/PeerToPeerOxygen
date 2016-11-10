@@ -20,7 +20,6 @@ public class UserBeanParcelable implements Parcelable {
 
     private Long id;
     private boolean isAdmin;
-    private String fbProfileId;
     private String firebaseToken;
     private String firstName;
     private String lastName;
@@ -36,7 +35,6 @@ public class UserBeanParcelable implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         out.writeLong(id);
         out.writeValue(isAdmin);
-        out.writeString(fbProfileId);
         out.writeString(firebaseToken);
         out.writeString(firstName);
         out.writeString(lastName);
@@ -69,7 +67,6 @@ public class UserBeanParcelable implements Parcelable {
     private UserBeanParcelable(Parcel in) {
         id = in.readLong();
         isAdmin = (Boolean) in.readValue(null);
-        fbProfileId = in.readString();
         firebaseToken = in.readString();
         firstName = in.readString();
         lastName = in.readString();
@@ -89,7 +86,6 @@ public class UserBeanParcelable implements Parcelable {
     private UserBeanParcelable(UserBean userBean) {
         id = userBean.getId();
         isAdmin = userBean.getAdmin();
-        fbProfileId = userBean.getFbProfileId();
         firebaseToken = userBean.getFirebaseToken();
         firstName = userBean.getFirstName();
         lastName = userBean.getLastName();
@@ -116,14 +112,6 @@ public class UserBeanParcelable implements Parcelable {
 
     public static UserBeanParcelable fromBean(UserBean userBean) {
         return new UserBeanParcelable(userBean);
-    }
-
-    public String getFbProfileId() {
-        return fbProfileId;
-    }
-
-    public void setFbProfileId(String fbProfileId) {
-        this.fbProfileId = fbProfileId;
     }
 
     public String getFirebaseToken() {

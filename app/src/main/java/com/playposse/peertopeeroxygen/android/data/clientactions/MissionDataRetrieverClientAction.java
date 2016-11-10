@@ -22,15 +22,17 @@ public class MissionDataRetrieverClientAction extends ApiClientAction {
 
     private static final String LOG_CAT = MissionDataRetrieverClientAction.class.getSimpleName();
 
-    @Nullable
-    private final MissionDataRetrieverCallback callback;
+    private final Long domainId;
+    @Nullable private final Callback callback;
 
     public MissionDataRetrieverClientAction(
+            Long domainId,
             BinderForActions binder,
-            @Nullable MissionDataRetrieverCallback callback) {
+            @Nullable Callback callback) {
 
         super(binder, true);
 
+        this.domainId = domainId;
         this.callback = callback;
     }
 
@@ -41,7 +43,7 @@ public class MissionDataRetrieverClientAction extends ApiClientAction {
             getBinder().redirectToLoginActivity();
         }
         CompleteMissionDataBean completeMissionDataBean =
-                getBinder().getApi().getMissionData(sessionId).execute();
+                getBinder().getApi().getMissionData(sessionId, domainId).execute();
 
         Log.i(LOG_CAT, "BEFORE FIX");
         debugDump(completeMissionDataBean);
@@ -134,7 +136,7 @@ public class MissionDataRetrieverClientAction extends ApiClientAction {
     /**
      * Callback that is called when the mission data has been loaded.
      */
-    public interface MissionDataRetrieverCallback {
+    public interface Callback {
         void onComplete(CompleteMissionDataBean completeMissionDataBean);
     }
 }

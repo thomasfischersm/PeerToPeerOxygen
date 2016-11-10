@@ -4,13 +4,18 @@ import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.OnLoad;
+import com.playposse.peertopeeroxygen.backend.schema.util.MigrationConstants;
+import com.playposse.peertopeeroxygen.backend.schema.util.RefUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * Objectify Entity that models missions ladders. A rung of mission levels has a type, e.g.
@@ -27,8 +32,7 @@ public class MissionLadder {
     private String name;
     private String description;
     @Load private List<Ref<MissionTree>> missionTreeRefs = new ArrayList<>();
-
-//    private byte[] icon;
+    @Index private Ref<Domain> domainRef;
 
     /**
      * Default constructor for Objectify.
@@ -37,20 +41,13 @@ public class MissionLadder {
     }
 
     /**
-     * Constructor for creating a new mission ladder.
-     */
-    public MissionLadder(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
-
-    /**
      * Constructor for converting bean to entity.
      */
-    public MissionLadder(Long id, String name, String description) {
+    public MissionLadder(Long id, String name, String description, Ref<Domain> domainRef) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.domainRef = domainRef;
     }
 
     /**
@@ -85,12 +82,28 @@ public class MissionLadder {
         this.name = name;
     }
 
+    public Ref<Domain> getDomainRef() {
+        return domainRef;
+    }
+
+    public void setDomainRef(Ref<Domain> domainRef) {
+        this.domainRef = domainRef;
+    }
+
+    @OnLoad
+    public void migrateToMultiDomainSupport() {
+        if ((domainRef == null) && (MigrationConstants.DEFAULT_DOMAIN != null)) {
+            domainRef = RefUtil.createDomainRef(MigrationConstants.DEFAULT_DOMAIN);
+            ofy().save().entity(this).now();
+        }
+    }
+
     private static final class MissionTreeRefComparator implements Comparator<Ref<MissionTree>> {
 
         @Override
         public int compare(Ref<MissionTree> missionTreeRef0, Ref<MissionTree> missionTreeRef1) {
-            MissionTree missionTree0 = missionTreeRef0.getValue();
-            MissionTree missionTree1 = missionTreeRef1.getValue();
+            MissionTree missionTree0 = missionTreeRef0.get();
+            MissionTree missionTree1 = missionTreeRef1.get();
 
             if (missionTree0 == null) {
                 return 1;

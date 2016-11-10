@@ -17,11 +17,12 @@ public class SendMissionDataInvalidationServerAction extends FirebaseServerActio
     /**
      * Sends a message to all devices to tell them to invalidate the mission data cache.
      */
-    public static String sendMissionDataInvalidation() throws IOException {
+    public static String sendMissionDataInvalidation(Long domainId) throws IOException {
         JSONObject rootNode = new JSONObject();
         rootNode.put(TYPE_KEY, INVALIDATE_MISSION_DATA_TYPE);
 
-        return sendMessageToAllDevices(
+        return sendMessageToDomain(
+                domainId,
                 rootNode,
                 FirebasePriority.normal,
                 INVALIDATE_MISSION_DATA_COLLAPSE_KEY);

@@ -1,10 +1,12 @@
 package com.playposse.peertopeeroxygen.backend.serveractions;
 
+import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
 import com.playposse.peertopeeroxygen.backend.exceptions.BuddyLacksMissionExperienceException;
 import com.playposse.peertopeeroxygen.backend.firebase.FirebaseServerAction;
 import com.playposse.peertopeeroxygen.backend.firebase.SendMissionInviteToBuddyServerAction;
+import com.playposse.peertopeeroxygen.backend.schema.MasterUser;
 import com.playposse.peertopeeroxygen.backend.schema.MissionCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 
@@ -22,11 +24,18 @@ public class InviteBuddyToMissionServerAction extends ServerAction {
             Long buddyId,
             Long missionLadderId,
             Long missionTreeId,
-            Long missionId)
-            throws UnauthorizedException, IOException, BuddyLacksMissionExperienceException {
+            Long missionId,
+            Long domainId)
+            throws UnauthorizedException, IOException, BuddyLacksMissionExperienceException, BadRequestException {
 
-        OxygenUser student = loadUserBySessionId(sessionId);
-        OxygenUser buddy = loadUserById(buddyId);
+        // Load and verify student.
+        MasterUser masterStudent = loadMasterUserBySessionId(sessionId);
+        OxygenUser oxygenStudent = findOxygenUserByDomain(masterStudent, domainId);
+        protectByAdminCheck(masterStudent, oxygenStudent, domainId);
+
+        // Load and verify buddy
+        OxygenUser buddy = loadOxygenUserById(buddyId, domainId);
+        verifyUserByDomain(buddy, domainId);
 
         Map<Long, MissionCompletion> buddyCompletions = buddy.getMissionCompletions();
         if (!buddy.isAdmin()) {
@@ -39,11 +48,11 @@ public class InviteBuddyToMissionServerAction extends ServerAction {
 
         SendMissionInviteToBuddyServerAction.sendMissionInviteToBuddy(
                 buddy.getFirebaseToken(),
-                student,
+                oxygenStudent,
                 missionLadderId,
                 missionTreeId,
                 missionId);
 
-        return stripForSafety(new UserBean(buddy));
+        return new UserBean(buddy);
     }
 }

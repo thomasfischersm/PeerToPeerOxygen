@@ -7,6 +7,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import static com.playposse.peertopeeroxygen.backend.schema.util.RefUtil.getDomainId;
+
 /**
  * A Firebase server action that notifies a student that he has been graduated from the mission.
  */

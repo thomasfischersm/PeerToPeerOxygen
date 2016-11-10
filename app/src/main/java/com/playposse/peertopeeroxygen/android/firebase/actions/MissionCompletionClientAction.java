@@ -5,8 +5,8 @@ import android.content.Intent;
 
 import com.google.firebase.messaging.RemoteMessage;
 import com.playposse.peertopeeroxygen.android.R;
-import com.playposse.peertopeeroxygen.android.data.CompleteMissionDataCache;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
+import com.playposse.peertopeeroxygen.android.data.missions.MissionDataManager;
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.android.data.types.UserMissionRoleType;
 import com.playposse.peertopeeroxygen.android.firebase.FirebaseMessage;
@@ -76,7 +76,7 @@ public class MissionCompletionClientAction extends FirebaseClientAction {
         }
 
         // Save changes to the davice storage.
-        CompleteMissionDataCache.save(getApplicationContext(), dataRepository);
+        MissionDataManager.saveSync(getApplicationContext(), getLocalBinder());
 
         // Send a toast.
         Context context = getApplicationContext();

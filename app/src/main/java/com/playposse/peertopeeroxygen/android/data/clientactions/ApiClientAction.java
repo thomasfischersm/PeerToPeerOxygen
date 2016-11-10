@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
+import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxygenApi;
 
 import java.io.IOException;
 
@@ -45,6 +47,18 @@ public abstract class ApiClientAction {
 
     protected Context getContext() {
         return binder.getApplicationContext();
+    }
+
+    protected PeerToPeerOxygenApi getApi() {
+        return getBinder().getApi();
+    }
+
+    protected Long getSessionId() {
+        return getBinder().getSessionId();
+    }
+
+    protected Long getDomainId() {
+        return OxygenSharedPreferences.getCurrentDomainId(getContext());
     }
 
     public final void execute() {

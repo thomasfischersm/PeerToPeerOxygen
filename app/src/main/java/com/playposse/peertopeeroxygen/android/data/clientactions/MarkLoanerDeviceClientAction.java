@@ -26,9 +26,8 @@ public class MarkLoanerDeviceClientAction extends ApiClientAction {
 
     @Override
     protected void executeAsync() throws IOException {
-        LoanerDeviceBean loanerDevice = getBinder()
-                .getApi()
-                .markLoanerDevice(getBinder().getSessionId(), friendlyName)
+        LoanerDeviceBean loanerDevice = getApi()
+                .markLoanerDevice(getSessionId(), friendlyName, getDomainId())
                 .execute();
         OxygenSharedPreferences.setLoanerDeviceId(getContext(), loanerDevice.getId());
     }
