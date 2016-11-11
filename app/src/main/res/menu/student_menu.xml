@@ -4,4 +4,8 @@
     <item
         android:id="@+id/aboutMenuItem"
         android:title="@string/about_menu_title" />
+
+    <item
+        android:id="@+id/emailLogMenuItem"
+        android:title="@string/send_log_menu_title" />
 </menu>

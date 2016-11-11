@@ -204,6 +204,11 @@ public class PracticaRepository {
     }
 
     public void replacePractica(PracticaBean practicaBean) {
+        if (practicaBean == null) {
+            Log.e(LOG_CAT, "replacePractica was called with a null bean!");
+            return;
+        }
+
         practicaBeans.put(practicaBean.getId(), practicaBean);
 
         if ((currentPractica != null) && currentPractica.getId().equals(practicaBean.getId())) {

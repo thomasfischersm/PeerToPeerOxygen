@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetPracticaByIdClientAction;
+import com.playposse.peertopeeroxygen.android.data.missions.MissionDataManager;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.practicamgmt.PracticaManager;
 import com.playposse.peertopeeroxygen.android.util.CreateViewUtil;
@@ -91,6 +92,10 @@ public class StudentPracticaCheckinActivity
 
     private void checkIntoPractica() {
         if ((dataServiceConnection.getLocalBinder() != null) && (practicaBean != null)) {
+            MissionDataManager.switchToDomainAsync(
+                    practicaBean.getDomainId(),
+                    getApplicationContext(),
+                    dataServiceConnection.getLocalBinder());
             PracticaManager.checkin(practicaBean, dataServiceConnection.getLocalBinder());
             startActivity(new Intent(this, StudentMainActivity.class));
         }

@@ -136,12 +136,13 @@ public class ServerAction {
         }
         return oxygenUser;
     }
-    public static MasterUser loadMasterUserBySessionId(Long sessionId)
+
+    protected static MasterUser loadMasterUserBySessionId(Long sessionId)
             throws UnauthorizedException {
         return loadMasterUserBySessionId(sessionId, true);
     }
 
-    public static MasterUser loadMasterUserBySessionId(Long sessionId, boolean shouldRetry)
+    private static MasterUser loadMasterUserBySessionId(Long sessionId, boolean shouldRetry)
             throws UnauthorizedException {
 
         List<MasterUser> masterUsers = ofy()

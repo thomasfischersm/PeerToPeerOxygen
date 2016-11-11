@@ -24,7 +24,7 @@ public class GetPracticaByIdServerAction extends ServerAction {
 
         // Look up data.
         MasterUser masterUser = loadMasterUserBySessionId(sessionId);
-        OxygenUser oxygenUser = findOxygenUserByDomain(masterUser, domainId);
+//        OxygenUser oxygenUser = findOxygenUserByDomain(masterUser, domainId);
         Practica practica = ofy().load().type(Practica.class).id(practicaId).now();
 
         // Do security check.

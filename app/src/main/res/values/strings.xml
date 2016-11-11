@@ -156,6 +156,7 @@
     <string name="refresh_menu_title">Refresh</string>
     <string name="debug_menu_title">Debug</string>
     <string name="about_menu_title">About</string>
+    <string name="send_log_menu_title">Send log</string>
 
     <!-- Explanations why missions are locked -->
     <string name="locked_level_mission_lock_reason">The level is still locked.</string>
@@ -211,6 +212,9 @@
 
     <!-- Emails -->
     <string name="feedback_email_subject">Thank you for your feedback!</string>
+    <string name="email_log_dialog_title">E-mail log</string>
+    <string name="email_log_subject">Log for Peer-to-peer Oxygen</string>
+    <string name="publisher_email">thomas@playposse.com</string>
 
     <!-- Error messages -->
     <string name="network_error">Failed to retrieve data from the server.</string>

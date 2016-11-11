@@ -13,6 +13,7 @@ import com.playposse.peertopeeroxygen.android.data.practicas.PracticaRepository;
 import com.playposse.peertopeeroxygen.android.practicamgmt.PracticaManager;
 import com.playposse.peertopeeroxygen.android.student.StudentAboutActivity;
 import com.playposse.peertopeeroxygen.android.student.StudentMainActivity;
+import com.playposse.peertopeeroxygen.android.util.LogUtil;
 
 /**
  * An activity that connects to the {@link DataService}.
@@ -61,6 +62,9 @@ public abstract class DataServiceParentActivity
                 boolean debugFlag = !item.isChecked();
                 item.setChecked(debugFlag);
                 OxygenSharedPreferences.setDebugFlag(this, debugFlag);
+                return true;
+            case R.id.emailLogMenuItem:
+                LogUtil.emailLog(this);
                 return true;
             case R.id.aboutMenuItem:
                 startActivity(new Intent(this, StudentAboutActivity.class));

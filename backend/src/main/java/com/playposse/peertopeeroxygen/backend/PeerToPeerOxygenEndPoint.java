@@ -14,6 +14,7 @@ import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.googlecode.objectify.ObjectifyService;
 import com.playposse.peertopeeroxygen.backend.beans.CompleteMissionDataBean;
+import com.playposse.peertopeeroxygen.backend.beans.DomainBean;
 import com.playposse.peertopeeroxygen.backend.beans.LoanerDeviceBean;
 import com.playposse.peertopeeroxygen.backend.beans.MasterUserBean;
 import com.playposse.peertopeeroxygen.backend.beans.MissionBean;
@@ -51,6 +52,7 @@ import com.playposse.peertopeeroxygen.backend.serveractions.GetAllMissionStatsSe
 import com.playposse.peertopeeroxygen.backend.serveractions.GetMissionDataServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetPracticaByIdServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetPracticaServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.GetPublicDomainsServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetStudentRosterServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.InviteBuddyToMissionServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.InviteSeniorBuddyToMissionServerAction;
@@ -429,5 +431,12 @@ public class PeerToPeerOxygenEndPoint {
             throws UnauthorizedException, BadRequestException, IOException {
 
         CheckOutOfPracticaServerAction.checkout(sessionId, practicaId, domainId);
+    }
+
+    @ApiMethod(name = "getPublicDomains")
+    public List<DomainBean> getPublicDomains(@Named("sessionId") Long sessionId)
+            throws UnauthorizedException {
+
+        return GetPublicDomainsServerAction.getPublicDomains(sessionId);
     }
 }
