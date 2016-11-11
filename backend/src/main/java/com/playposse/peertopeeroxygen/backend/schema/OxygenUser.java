@@ -175,10 +175,12 @@ public class OxygenUser {
         this.sessionId = sessionId;
     }
 
+    @Deprecated
     public String getFirebaseToken() {
         return firebaseToken;
     }
 
+    @Deprecated
     public void setFirebaseToken(String firebaseToken) {
         this.firebaseToken = firebaseToken;
     }

@@ -64,7 +64,7 @@ public class InviteSeniorBuddyToMissionServerAction extends ServerAction {
         }
 
         SendMissionInviteToSeniorBuddyServerAction.sendMissionInviteToSeniorBuddy(
-                seniorBuddy.getFirebaseToken(),
+                seniorBuddy.getMasterUserRef().get().getFirebaseToken(),
                 student,
                 buddy,
                 missionLadderId,

@@ -39,8 +39,9 @@ public class MissionDataRetrieverClientAction extends ApiClientAction {
     @Override
     protected void executeAsync() throws IOException {
         Long sessionId = getBinder().getSessionId();
-        if (sessionId == -1) {
+        if ((sessionId == null) || (sessionId == -1)) {
             getBinder().redirectToLoginActivity();
+            return;
         }
         CompleteMissionDataBean completeMissionDataBean =
                 getBinder().getApi().getMissionData(sessionId, domainId).execute();

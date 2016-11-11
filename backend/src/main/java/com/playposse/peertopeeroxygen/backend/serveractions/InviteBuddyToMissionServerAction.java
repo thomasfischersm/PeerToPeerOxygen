@@ -47,7 +47,7 @@ public class InviteBuddyToMissionServerAction extends ServerAction {
         }
 
         SendMissionInviteToBuddyServerAction.sendMissionInviteToBuddy(
-                buddy.getFirebaseToken(),
+                buddy.getMasterUserRef().get().getFirebaseToken(),
                 oxygenStudent,
                 missionLadderId,
                 missionTreeId,

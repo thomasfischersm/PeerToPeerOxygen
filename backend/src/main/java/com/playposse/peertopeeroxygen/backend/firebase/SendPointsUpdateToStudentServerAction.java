@@ -24,6 +24,6 @@ public class SendPointsUpdateToStudentServerAction extends FirebaseServerAction 
         rootNode.put(TYPE_KEY, UPDATE_STUDENT_POINTS_TYPE);
         rootNode.put(STUDENT_BEAN, studentBeanJson);
 
-        return sendMessageToDevice(student.getFirebaseToken(), rootNode);
+        return sendMessageToDevice(student.getMasterUserRef().get().getFirebaseToken(), rootNode);
     }
 }

@@ -42,6 +42,7 @@ public class RegisterOrLoginClientAction extends ApiClientAction {
                         .execute();
         OxygenSharedPreferences.setSessionId(getContext(), masterUserBean.getSessionId());
         OxygenSharedPreferences.setUserEmail(getContext(), masterUserBean.getEmail());
+        OxygenSharedPreferences.setFirebaseToken(getContext(), masterUserBean.getFirebaseToken());
 
         signInSuccessCallback.onSuccess();
     }

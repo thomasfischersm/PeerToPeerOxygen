@@ -62,7 +62,7 @@ public class ReportMissionCheckoutCompleteServerAction extends ServerAction {
 
         // Send a Firebase message to the student to confirm completion.
         SendMissionCompletionToBuddyServerAction.sendMissionCompletionToBuddy(
-                buddy.getFirebaseToken(),
+                buddy.getMasterUserRef().get().getFirebaseToken(),
                 student,
                 missionId);
     }

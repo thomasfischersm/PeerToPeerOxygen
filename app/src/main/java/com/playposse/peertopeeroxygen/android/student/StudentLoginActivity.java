@@ -75,7 +75,8 @@ public class StudentLoginActivity extends DataServiceParentActivity {
         Log.i(LOG_CAT, "Facebook callback registered.");
 
         // Check if we already have a session id.
-        if (OxygenSharedPreferences.getSessionId(this) != -1) {
+        Long sessionId = OxygenSharedPreferences.getSessionId(this);
+        if ((sessionId != null) && (sessionId != -1)) {
             startActivity(new Intent(this, StudentMainActivity.class));
         }
 

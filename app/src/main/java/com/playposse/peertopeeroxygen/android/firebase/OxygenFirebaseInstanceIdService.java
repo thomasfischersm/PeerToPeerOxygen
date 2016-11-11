@@ -1,5 +1,7 @@
 package com.playposse.peertopeeroxygen.android.firebase;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -18,31 +20,70 @@ public class OxygenFirebaseInstanceIdService extends FirebaseInstanceIdService {
 
     private static final String LOG_CAT = OxygenFirebaseInstanceIdService.class.getSimpleName();
 
+    private boolean isRemoteCallPending = false;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        String actualFirebaseToken = FirebaseInstanceId.getInstance().getToken();
+        String storedFirebaseToken =
+                OxygenSharedPreferences.getFirebaseToken(getApplicationContext());
+
+        if (!actualFirebaseToken.equals(storedFirebaseToken)) {
+            updateFireBaseTokenInCloud(getApplicationContext());
+        }
+    }
+
     @Override
     public void onTokenRefresh() {
-        final String firebaseToken = FirebaseInstanceId.getInstance().getToken();
-        Log.i(LOG_CAT, "Firebase updated its token.");
+        updateFireBaseTokenInCloud(getApplicationContext());
+    }
 
-        final Long sessionId = OxygenSharedPreferences.getSessionId(getApplicationContext());
-        if (sessionId != -1) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    PeerToPeerOxygenApi peerToPeerOxygenApi = new PeerToPeerOxygenApi.Builder(
-                            AndroidHttp.newCompatibleTransport(),
-                            new AndroidJsonFactory(),
-                            null)
-                            .setApplicationName("PeerToPeerOxygen")
-                            .setRootUrl("https://peertopeeroxygen.appspot.com/_ah/api/")
-                            .build();
+    private void updateFireBaseTokenInCloud(Context context) {
+        if (!isRemoteCallPending) {
+            isRemoteCallPending = true;
+            new UpdateFireBaseTokenInCloudAsyncTask(context).execute();
+        }
+    }
 
-                    try {
-                        peerToPeerOxygenApi.updateFirebaseToken(sessionId, firebaseToken);
-                    } catch (IOException ex) {
-                        Log.i(LOG_CAT, "Failed to send appEngine the new Firebase token.", ex);
-                    }
+    private class UpdateFireBaseTokenInCloudAsyncTask extends AsyncTask<Void, Void, String> {
+
+        private final Context context;
+
+        private UpdateFireBaseTokenInCloudAsyncTask(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            String firebaseToken = FirebaseInstanceId.getInstance().getToken();
+            Log.i(LOG_CAT, "Firebase updated its token: " + firebaseToken);
+
+            final Long sessionId = OxygenSharedPreferences.getSessionId(context);
+            if ((sessionId != null) && (sessionId != -1) && (firebaseToken != null)) {
+                PeerToPeerOxygenApi peerToPeerOxygenApi = new PeerToPeerOxygenApi.Builder(
+                        AndroidHttp.newCompatibleTransport(),
+                        new AndroidJsonFactory(),
+                        null)
+                        .setApplicationName("PeerToPeerOxygen")
+                        .setRootUrl("https://peertopeeroxygen.appspot.com/_ah/api/")
+                        .build();
+
+                try {
+                    peerToPeerOxygenApi.updateFirebaseToken(sessionId, firebaseToken).execute();
+                } catch (IOException ex) {
+                    Log.i(LOG_CAT, "Failed to send appEngine the new Firebase token.", ex);
+                    isRemoteCallPending = false;
                 }
-            }).start();
+            }
+            return firebaseToken;
+        }
+
+        @Override
+        protected void onPostExecute(String firebaseToken) {
+            OxygenSharedPreferences.setFirebaseToken(context, firebaseToken);
+            isRemoteCallPending = false;
         }
     }
 }
