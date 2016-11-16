@@ -51,9 +51,11 @@ public class RegisterOrLoginServerAction extends ServerAction {
                 .list();
 
         // Register if necessary.
+        log.info("About to login or register user with FB id: " + fbUser.getId());
         final MasterUser masterUser;
         OxygenUser oxygenUser;
         if (masterUsers.size() == 0) {
+            log.info("Proceeding to register user.");
             List<Ref<OxygenUser>> oxygenUserRefList = new ArrayList<>(1);
             Long masterUserId = new ObjectifyFactory().allocateId(MasterUser.class).getId();
             masterUser = new MasterUser(
@@ -75,6 +77,7 @@ public class RegisterOrLoginServerAction extends ServerAction {
 
             ofy().save().entity(masterUser).now();
         } else {
+            log.info("Proceeding to log in user");
             masterUser = masterUsers.get(0);
             if (masterUsers.size() > 1) {
                 log.info("Found more than one MasterUser entries for fbProfileId: "
@@ -83,7 +86,9 @@ public class RegisterOrLoginServerAction extends ServerAction {
 
             try {
                 oxygenUser = findOxygenUserByDomain(masterUser, domainId);
+                log.info("Found OxygenUser for domain " + domainId);
             } catch (BadRequestException ex) {
+                log.info("Creating new OxygenUser for the domain " + domainId);
                 oxygenUser = new OxygenUser(masterUser, false, domainRef);
                 Key<OxygenUser> oxygenUserKey = ofy().save().entity(oxygenUser).now();
                 if (masterUser.getDomainUserRefs() == null) {

@@ -145,7 +145,7 @@ public class MasterUser {
         this.domainUserRefs = domainUserRefs;
     }
 
-    public OxygenUser getOxygenUser(Long domainId) {
+    public OxygenUser getOxygenUser(Long expectedDomain) {
         if (getDomainUserRefs() != null) {
             for (Ref<OxygenUser> oxygenUserRef : getDomainUserRefs()) {
                 OxygenUser oxygenUser = oxygenUserRef.get();
@@ -156,7 +156,7 @@ public class MasterUser {
                 }
 
                 long actualDomainId = oxygenUser.getDomainRef().getKey().getId();
-                if (equals(actualDomainId)) {
+                if (expectedDomain.equals(actualDomainId)) {
                     return oxygenUser;
                 }
             }
