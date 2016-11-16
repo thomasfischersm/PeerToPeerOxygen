@@ -30,7 +30,9 @@ public class OxygenFirebaseInstanceIdService extends FirebaseInstanceIdService {
         String storedFirebaseToken =
                 OxygenSharedPreferences.getFirebaseToken(getApplicationContext());
 
-        if (!actualFirebaseToken.equals(storedFirebaseToken)) {
+        if ((actualFirebaseToken != null)
+                && (storedFirebaseToken != null)
+                && (!actualFirebaseToken.equals(storedFirebaseToken))) {
             updateFireBaseTokenInCloud(getApplicationContext());
         }
     }
