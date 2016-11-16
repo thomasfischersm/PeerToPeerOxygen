@@ -144,4 +144,23 @@ public class MasterUser {
     public void setDomainUserRefs(List<Ref<OxygenUser>> domainUserRefs) {
         this.domainUserRefs = domainUserRefs;
     }
+
+    public OxygenUser getOxygenUser(Long domainId) {
+        if (getDomainUserRefs() != null) {
+            for (Ref<OxygenUser> oxygenUserRef : getDomainUserRefs()) {
+                OxygenUser oxygenUser = oxygenUserRef.get();
+
+                if (oxygenUser == null) {
+                    // Skip the reference to the deleted OxygenUser.
+                    continue;
+                }
+
+                long actualDomainId = oxygenUser.getDomainRef().getKey().getId();
+                if (equals(actualDomainId)) {
+                    return oxygenUser;
+                }
+            }
+        }
+        return null;
+    }
 }

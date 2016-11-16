@@ -170,21 +170,16 @@ public class ServerAction {
         return masterUsers.get(0);
     }
 
-    protected static OxygenUser findOxygenUserByDomain(MasterUser masterUser, Long expectedDomainId)
+    protected static OxygenUser findOxygenUserByDomain(MasterUser masterUser, Long domainId)
             throws BadRequestException {
 
-        if (masterUser.getDomainUserRefs() != null) {
-            for (Ref<OxygenUser> oxygenUserRef : masterUser.getDomainUserRefs()) {
-                OxygenUser oxygenUser = oxygenUserRef.get();
-                long actualDomainId = oxygenUser.getDomainRef().getKey().getId();
-                if (expectedDomainId.equals(actualDomainId)) {
-                    return oxygenUser;
-                }
-            }
+        OxygenUser oxygenUser = masterUser.getOxygenUser(domainId);
+        if (oxygenUser != null) {
+            return oxygenUser;
+        } else {
+            throw new BadRequestException("Master user " + masterUser.getId()
+                    + " doesn't have a domain user for domain " + domainId);
         }
-
-        throw new BadRequestException("Master user " + masterUser.getId()
-                + " doesn't have a domain user for domain " + expectedDomainId);
     }
 
     protected static LevelCompletion getLevelCompletion(OxygenUser user, Long missionTreeId) {

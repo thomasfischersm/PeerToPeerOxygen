@@ -9,6 +9,7 @@ import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.gson.reflect.TypeToken;
 import com.playposse.peertopeeroxygen.android.data.DataService;
+import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetPracticaByIdClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetPracticaClientAction;
 import com.playposse.peertopeeroxygen.android.util.StreamUtil;
@@ -47,6 +48,16 @@ public class PracticaRepository {
         } catch (IOException ex) {
             Log.e(LOG_CAT, "Failed to load practica repository from cache file.", ex);
         }
+
+        // Check if the user is logged in yet.
+        if (OxygenSharedPreferences.hasSessionId(context)) {
+            fetchFreshDataFromServer(context, localBinder);
+        }
+    }
+
+    public  void fetchFreshDataFromServer(
+            final Context context,
+            DataService.LocalBinder localBinder) {
 
         // Couldn't load from cache. Try to retrieve the practica data from the cloud in a separate
         // thread.
@@ -178,7 +189,14 @@ public class PracticaRepository {
             return false;
         }
 
-        String json = StreamUtil.readTextStream(file);
+        String json = StreamUtil.readTextStream(file).trim();
+
+        if (json.length() == 0) {
+            // The file is corrupted. Try loading from the server.
+            file.delete();
+            return false;
+        }
+
         JsonObjectParser jsonParser = new JacksonFactory().createJsonObjectParser();
         List<PracticaBean> practicaBeanList = (List<PracticaBean>) jsonParser.parseAndClose(new StringReader(json), new TypeToken<List<PracticaBean>>() {
         }.getType());

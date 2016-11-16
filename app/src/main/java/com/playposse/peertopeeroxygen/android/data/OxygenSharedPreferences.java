@@ -34,6 +34,11 @@ public final class OxygenSharedPreferences {
         setLong(context, SESSION_KEY, sessionId);
     }
 
+    public static boolean hasSessionId(Context context) {
+        Long sessionId = getSessionId(context);
+        return (sessionId != null) && (sessionId != -1);
+    }
+
     public static boolean getDebugFlag(Context context) {
 
         try {

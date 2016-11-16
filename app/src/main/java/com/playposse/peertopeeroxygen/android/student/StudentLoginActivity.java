@@ -17,6 +17,8 @@ import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceParentActivity;
 import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
+import com.playposse.peertopeeroxygen.android.data.practicas.PracticaRepository;
+import com.playposse.peertopeeroxygen.android.practicamgmt.PracticaManager;
 
 public class StudentLoginActivity extends DataServiceParentActivity {
 
@@ -54,6 +56,14 @@ public class StudentLoginActivity extends DataServiceParentActivity {
                         new DataService.SignInSuccessCallback() {
                             @Override
                             public void onSuccess() {
+                                DataService.LocalBinder localBinder =
+                                        dataServiceConnection.getLocalBinder();
+                                PracticaRepository practicaRepository =
+                                        localBinder.getDataRepository().getPracticaRepository();
+                                practicaRepository.fetchFreshDataFromServer(
+                                        getApplicationContext(),
+                                        localBinder);
+
                                 Intent intent = new Intent(
                                         getApplicationContext(),
                                         StudentMainActivity.class);

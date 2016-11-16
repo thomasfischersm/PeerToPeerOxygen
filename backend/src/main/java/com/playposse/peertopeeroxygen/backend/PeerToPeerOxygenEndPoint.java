@@ -57,6 +57,7 @@ import com.playposse.peertopeeroxygen.backend.serveractions.GetStudentRosterServ
 import com.playposse.peertopeeroxygen.backend.serveractions.InviteBuddyToMissionServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.InviteSeniorBuddyToMissionServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.MarkLoanerDeviceServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.PromoteToAdminServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.RegisterOrLoginServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.ReportMissionCheckoutCompleteServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.ReportMissionCompleteServerAction;
@@ -66,6 +67,7 @@ import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionTreeServe
 import com.playposse.peertopeeroxygen.backend.serveractions.SavePracticaServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.ServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.SubmitMissionFeedbackServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.SubscribeToDomainServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.UnmarkLoanerDeviceServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.UpdateFirebaseTokenServerAction;
 import com.playposse.peertopeeroxygen.backend.util.ObjectifyRegistrationServletContextListener;
@@ -438,5 +440,32 @@ public class PeerToPeerOxygenEndPoint {
             throws UnauthorizedException {
 
         return GetPublicDomainsServerAction.getPublicDomains(sessionId);
+    }
+
+    @ApiMethod(name = "promoteToAdmin")
+    public void promoteToAdmin(
+            @Named("sessionId") Long sessionId,
+            @Named("studentId") Long studentId,
+            @Named("domainId") Long domainId) throws UnauthorizedException, BadRequestException {
+
+        PromoteToAdminServerAction.promoteToAdmin(sessionId, studentId, domainId);
+    }
+
+    @ApiMethod(name = "subscribeToPublicDomain")
+    public UserBean subscribeToPublicDomain(
+            @Named("sessionId") Long sessionId,
+            @Named("domainId") Long domainId)
+            throws BadRequestException, UnauthorizedException {
+
+        return SubscribeToDomainServerAction.subscribeToPublicDomain(sessionId, domainId);
+    }
+
+    @ApiMethod(name = "subscribeToPrivateDomain")
+    public UserBean subscribeToPrivateDomain(
+            @Named("sessionId") Long sessionId,
+            @Named("invitationCode") String invitationCode)
+            throws BadRequestException, UnauthorizedException {
+
+        return SubscribeToDomainServerAction.subscribeToPrivateDomain(sessionId, invitationCode);
     }
 }
