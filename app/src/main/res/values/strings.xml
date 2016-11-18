@@ -190,6 +190,8 @@
     <string name="no_camera_detected_toast">No camera detected.</string>
     <string name="received_practica_update">Received practica update.</string>
     <string name="successfully_signed_into_practica">Successfully signed into practica.</string>
+    <string name="admin_promotion_toast">You were promoted to admin for \'%1$s\'.</string>
+    <string name="admin_demotion_toast">You were demoted from admin for \'%1$s\'.</string>
 
     <!-- Reusable strings -->
     <string name="name_form_label">Name</string>

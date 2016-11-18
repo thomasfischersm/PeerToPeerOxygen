@@ -73,8 +73,15 @@ public class MissionDataManager {
 
     public static void invalidate(Context context) {
         Log.i(LOG_CAT, "The mission cache is marked stale.");
-        isStale = true;
         Long domainId = OxygenSharedPreferences.getCurrentDomainId(context);
+        invalidate(context, domainId);
+    }
+
+    public static void invalidate(Context context, Long domainId) {
+        Long currentDomainId = OxygenSharedPreferences.getCurrentDomainId(context);
+        if (currentDomainId.equals(domainId)) {
+            isStale = true;
+        }
         getFile(context, domainId).delete();
     }
 

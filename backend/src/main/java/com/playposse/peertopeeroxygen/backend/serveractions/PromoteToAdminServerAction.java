@@ -2,9 +2,12 @@ package com.playposse.peertopeeroxygen.backend.serveractions;
 
 import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.UnauthorizedException;
+import com.playposse.peertopeeroxygen.backend.firebase.SendAdminPromotionToStudentServerAction;
 import com.playposse.peertopeeroxygen.backend.schema.Domain;
 import com.playposse.peertopeeroxygen.backend.schema.MasterUser;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
+
+import java.io.IOException;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -18,7 +21,7 @@ public class PromoteToAdminServerAction extends ServerAction {
             Long studentId,
             Long domainId,
             boolean isAdmin)
-            throws UnauthorizedException, BadRequestException {
+            throws UnauthorizedException, BadRequestException, IOException {
 
         // Do security check.
         MasterUser masterUser = loadMasterUserBySessionId(sessionId);
@@ -53,5 +56,10 @@ public class PromoteToAdminServerAction extends ServerAction {
         // Promote the student.
         studentOxygenUser.setAdmin(isAdmin);
         ofy().save().entity(studentOxygenUser);
+
+        // Send a Firebase message to the student.
+        SendAdminPromotionToStudentServerAction.sendAdminPromotionMessage(
+                studentOxygenUser,
+                isAdmin);
     }
 }

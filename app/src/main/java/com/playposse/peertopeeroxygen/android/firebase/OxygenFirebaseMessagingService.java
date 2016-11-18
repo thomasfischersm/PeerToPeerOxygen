@@ -11,6 +11,7 @@ import com.playposse.peertopeeroxygen.android.data.DataReceivedCallback;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
+import com.playposse.peertopeeroxygen.android.firebase.actions.AdminPromotionClientAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.FirebaseClientAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.InvalidateMissionDataClientAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.MissionCheckoutCompletionClientAction;
@@ -42,6 +43,7 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
     private static final String INVALIDATE_MISSION_DATA_TYPE = "invalidateMissionData";
     private static final String PRACTICA_UPDATE_TYPE = "practicaUpdate";
     private static final String PRACTICA_USER_UPDATE_TYPE = "practicaUserUpdate";
+    private static final String ADMIN_PROMOTION_TYPE = "adminPromotion";
 
     private static final String ALL_DEVICES_TOPIC = "allDevices"; // TODO: Retire most usages, except for domain list updates.
     private static final String PRACTICA_FIREBASE_TOPIC_PREFIX = "practica-";
@@ -105,6 +107,10 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
                 break;
             case PRACTICA_USER_UPDATE_TYPE:
                 execute(new PracticaUserUpdateClientAction(remoteMessage));
+                break;
+            case ADMIN_PROMOTION_TYPE:
+                execute(new AdminPromotionClientAction(remoteMessage));
+                break;
             default:
                 Log.w(LOG_CAT, "Received an unknown message type from Firebase: "
                         + data.get(TYPE_KEY));

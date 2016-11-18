@@ -17,6 +17,8 @@ public abstract class FirebaseMessage {
     protected static final String MISSION_LADDER_KEY = "missionLadderId";
     protected static final String MISSION_TREE_KEY = "missionTreeId";
     protected static final String MISSION_KEY = "missionId";
+    protected static final String DOMAIN_KEY = "domainId";
+    protected static final String DOMAIN_NAME_KEY = "domainName";
 
     protected final Map<String, String> data;
 
