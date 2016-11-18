@@ -3,6 +3,7 @@ package com.playposse.peertopeeroxygen.android.admin;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,6 +12,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataService;
+import com.playposse.peertopeeroxygen.android.data.clientactions.ApiClientAction;
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
@@ -35,6 +37,7 @@ public class AdminStudentDetailActivity extends AdminParentActivity {
     private TextView teachPointsTextView;
     private TextView practicePointsTextView;
     private TextView heartPointsTextView;
+    private Button promoteAdminButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class AdminStudentDetailActivity extends AdminParentActivity {
         teachPointsTextView = (TextView) findViewById(R.id.teachPointsTextView);
         practicePointsTextView = (TextView) findViewById(R.id.practicePointsTextView);
         heartPointsTextView = (TextView) findViewById(R.id.heartPointsTextView);
+        promoteAdminButton = (Button) findViewById(R.id.promoteAdminButton);
 
         // Format date.
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
@@ -63,6 +67,19 @@ public class AdminStudentDetailActivity extends AdminParentActivity {
         nameTextView.setText(studentName);
         signupDateTextView.setText(signupDateLabel);
         refreshPoints();
+        setLabelonPromoteButton();
+
+        // Show profile photo.
+        ImageLoader imageLoader = VolleySingleton.getInstance(this).getImageLoader();
+        profilePhotoImageView.setImageUrl(studentBean.getProfilePictureUrl(), imageLoader);
+
+        // Attach actions
+        promoteAdminButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handlePromoteButtonClicked();
+            }
+        });
     }
 
     private void refreshPoints() {
@@ -102,10 +119,17 @@ public class AdminStudentDetailActivity extends AdminParentActivity {
         });
     }
 
+    private void setLabelonPromoteButton() {
+        if (studentBean.isAdmin()) {
+            promoteAdminButton.setText(R.string.demote_from_admin_button);
+        } else {
+            promoteAdminButton.setText(R.string.promote_to_admin_button);
+        }
+    }
+
     @Override
     public void receiveData(DataRepository dataRepository) {
-        ImageLoader imageLoader = VolleySingleton.getInstance(this).getImageLoader();
-        profilePhotoImageView.setImageUrl(studentBean.getProfilePictureUrl(), imageLoader);
+
     }
 
     private void addPoints(PointType pointType, int addedPoints) {
@@ -121,5 +145,26 @@ public class AdminStudentDetailActivity extends AdminParentActivity {
         studentBean.getPointsMap().put(pointType.name(), pointCount);
 
         refreshPoints();
+    }
+
+    private void handlePromoteButtonClicked() {
+        if (dataServiceConnection != null) {
+            showLoadingProgress();
+            dataServiceConnection.getLocalBinder().promoteToAdmin(
+                    studentBean.getId(),
+                    !studentBean.isAdmin(),
+                    new ApiClientAction.CompletionCallback() {
+                        @Override
+                        public void onComplete() {
+                            studentBean.setAdmin(!studentBean.isAdmin());
+                            setLabelonPromoteButton();
+
+                            // Ensure that a rotation change won't unset the data locally.
+                            getIntent().putExtra(ExtraConstants.EXTRA_STUDENT_BEAN, studentBean);
+
+                            dismissLoadingProgress();
+                        }
+                    });
+        }
     }
 }

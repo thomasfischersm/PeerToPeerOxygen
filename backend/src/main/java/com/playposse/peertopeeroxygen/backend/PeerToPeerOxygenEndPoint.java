@@ -447,9 +447,10 @@ public class PeerToPeerOxygenEndPoint {
     public void promoteToAdmin(
             @Named("sessionId") Long sessionId,
             @Named("studentId") Long studentId,
-            @Named("domainId") Long domainId) throws UnauthorizedException, BadRequestException {
+            @Named("domainId") Long domainId,
+            @Named("isAdmin") boolean isAdmin) throws UnauthorizedException, BadRequestException {
 
-        PromoteToAdminServerAction.promoteToAdmin(sessionId, studentId, domainId);
+        PromoteToAdminServerAction.promoteToAdmin(sessionId, studentId, domainId, isAdmin);
     }
 
     @ApiMethod(name = "subscribeToPublicDomain")

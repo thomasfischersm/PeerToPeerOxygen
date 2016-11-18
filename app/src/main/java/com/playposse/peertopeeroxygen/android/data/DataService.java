@@ -29,6 +29,7 @@ import com.playposse.peertopeeroxygen.android.data.clientactions.InviteBuddyToMi
 import com.playposse.peertopeeroxygen.android.data.clientactions.InviteSeniorBuddyToMissionClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.MarkLoanerDeviceClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.MissionDataRetrieverClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.PromoteToAdminClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.RegisterOrLoginClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.ReportMissionCheckoutCompleteClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.ReportMissionCompleteClientAction;
@@ -336,6 +337,14 @@ public class DataService extends Service {
                 MissionDataRetrieverClientAction.Callback callback) {
 
             new MissionDataRetrieverClientAction(domainId, this, callback).execute();
+        }
+
+        public void promoteToAdmin(
+                Long studentId,
+                boolean isAdmin,
+                ApiClientAction.CompletionCallback completionCallback) {
+
+            new PromoteToAdminClientAction(studentId, isAdmin, this, completionCallback).execute();
         }
     }
 

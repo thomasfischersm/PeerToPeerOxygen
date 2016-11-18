@@ -84,6 +84,8 @@
 
     <!-- Student profile detail -->
     <string name="add_points_dialog_title">Add %1$s points</string>
+    <string name="promote_to_admin_button">Promote to admin</string>
+    <string name="demote_from_admin_button">Demote from admin</string>
 
     <!-- Mission tree view -->
     <string name="student_mission_tree_activity_title">Level %1$s: %2$s</string>
