@@ -28,10 +28,17 @@ public class Domain {
     public Domain() {
     }
 
-    public Domain(String name, String description, String invitationCode, boolean isPublic) {
+    public Domain(
+            String name,
+            String description,
+            String invitationCode,
+            Ref<MasterUser> ownerRef,
+            boolean isPublic) {
+
         this.name = name;
         this.description = description;
         this.invitationCode = invitationCode;
+        this.ownerRef = ownerRef;
         this.isPublic = isPublic;
     }
 

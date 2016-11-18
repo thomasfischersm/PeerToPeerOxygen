@@ -43,6 +43,7 @@ import com.playposse.peertopeeroxygen.backend.schema.UserPoints;
 import com.playposse.peertopeeroxygen.backend.serveractions.AddPointsByAdminServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.CheckIntoPracticaServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.CheckOutOfPracticaServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.CreatePrivateDomainServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionLadderServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionTreeServerAction;
@@ -467,5 +468,18 @@ public class PeerToPeerOxygenEndPoint {
             throws BadRequestException, UnauthorizedException {
 
         return SubscribeToDomainServerAction.subscribeToPrivateDomain(sessionId, invitationCode);
+    }
+
+    @ApiMethod(name = "createPrivateDomain")
+    public DomainBean createPrivateDomain(
+            @Named("sessionId") Long sessionId,
+            @Named("domainName") String domainName,
+            @Named("domainDescription") String domainDescription)
+            throws UnauthorizedException {
+
+        return CreatePrivateDomainServerAction.createPrivateDomain(
+                sessionId,
+                domainName,
+                domainDescription);
     }
 }

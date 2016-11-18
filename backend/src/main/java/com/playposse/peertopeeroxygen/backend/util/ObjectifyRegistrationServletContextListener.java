@@ -1,6 +1,8 @@
 package com.playposse.peertopeeroxygen.backend.util;
 
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.schema.Domain;
 import com.playposse.peertopeeroxygen.backend.schema.LevelCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.LoanerDevice;
@@ -60,10 +62,12 @@ public class ObjectifyRegistrationServletContextListener implements ServletConte
             return;
         }
 
+        Ref<MasterUser> ownerRef = Ref.create(Key.create(MasterUser.class, 8090001L));
         Domain domain = new Domain(
                 "Argentine Tango",
                 "Tango is one of the most beautiful, elegant, and sensual dance of modern times.",
                 InvitationCodeGenerator.generateCode(),
+                ownerRef,
                 true);
         ofy().save().entity(domain).now();
     }

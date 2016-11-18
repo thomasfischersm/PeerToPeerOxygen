@@ -99,8 +99,8 @@ public class DomainBean {
     }
 
     public Domain toEntity() {
-        Domain domain = new Domain(name, description, invitationCode, isPublic());
-        domain.setOwnerRef(Ref.create(Key.create(MasterUser.class, ownerBean.getId())));
+        Ref<MasterUser> ownerRef = Ref.create(Key.create(MasterUser.class, ownerBean.getId()));
+        Domain domain = new Domain(name, description, invitationCode, ownerRef, isPublic());
 
         if (domain.getMissionLadderRefs() != null) {
             domain.getMissionLadderRefs().clear();
