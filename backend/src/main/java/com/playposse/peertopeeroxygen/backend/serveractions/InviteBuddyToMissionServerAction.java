@@ -31,7 +31,6 @@ public class InviteBuddyToMissionServerAction extends ServerAction {
         // Load and verify student.
         MasterUser masterStudent = loadMasterUserBySessionId(sessionId);
         OxygenUser oxygenStudent = findOxygenUserByDomain(masterStudent, domainId);
-        protectByAdminCheck(masterStudent, oxygenStudent, domainId);
 
         // Load and verify buddy
         OxygenUser buddy = loadOxygenUserById(buddyId, domainId);

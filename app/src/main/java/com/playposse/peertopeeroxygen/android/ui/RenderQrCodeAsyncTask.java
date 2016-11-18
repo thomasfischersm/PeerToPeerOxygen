@@ -28,6 +28,7 @@ public class RenderQrCodeAsyncTask extends AsyncTask<Void, Void, Bitmap> {
     private int retryCount;
 
     public RenderQrCodeAsyncTask(Long userId, final ImageView imageView) {
+        Log.i(LOG_CAT, "Initiate generating QR code.");
         this.userId = userId;
         this.imageView = imageView;
         waitForImageDimensionsToBeSet(imageView);
@@ -42,6 +43,8 @@ public class RenderQrCodeAsyncTask extends AsyncTask<Void, Void, Bitmap> {
                 height = imageView.getHeight();
                 if ((retryCount < 6) && (width == 0)) {
                     waitForImageDimensionsToBeSet(imageView);
+                } else {
+                    Log.e(LOG_CAT, "Couldn't get the width after 6 retries.");
                 }
             }
         });
@@ -87,6 +90,7 @@ public class RenderQrCodeAsyncTask extends AsyncTask<Void, Void, Bitmap> {
         // Copy int array into Bitmap.
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+        Log.i(LOG_CAT, "Done generating QR code.");
         return bitmap;
     }
 }

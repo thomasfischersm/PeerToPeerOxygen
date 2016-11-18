@@ -20,7 +20,16 @@ public class LogUtil {
 
     private static final String LOG_CAT = LogUtil.class.getSimpleName();
 
+    public static final int EXTERNAL_DRIVE_PERMISSION_REQUEST = 1;
+
     public static void emailLog(Activity activity) {
+        if (!PermissionUtil.checkAndGetPermission(
+                activity,
+                "android.permission.WRITE_EXTERNAL_STORAGE",
+                EXTERNAL_DRIVE_PERMISSION_REQUEST)) {
+            return;
+        }
+
         new EmailLogAsyncTask(activity).execute();
     }
 
@@ -42,8 +51,6 @@ public class LogUtil {
                         Runtime.getRuntime().exec("logcat -f " + outputFile.getAbsolutePath());
                 Log.i(LOG_CAT, "Finished dumping log.");
                 InputStream errorStream = process.getErrorStream();
-//                String errorText = StreamUtil.readTextStream(errorStream);
-//                Log.i(LOG_CAT, "Running logcat outputted: " + errorText);
             } catch (Throwable ex) {
                 Log.e(LOG_CAT, "Failed to export log to the file system", ex);
             }
