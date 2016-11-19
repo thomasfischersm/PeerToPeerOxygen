@@ -10,6 +10,10 @@
         android:title="@string/student_home_menu_title" />
 
     <item
+        android:id="@+id/switchDomainMenuItem"
+        android:title="@string/switch_domain_menu_title"/>
+
+    <item
         android:id="@+id/refreshMenuItem"
         android:title="@string/refresh_menu_title" />
 

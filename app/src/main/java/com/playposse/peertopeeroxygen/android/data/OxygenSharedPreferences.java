@@ -81,7 +81,7 @@ public final class OxygenSharedPreferences {
         Set<String> domainIds = sharedPreferences.getStringSet(SUBSCRIBED_DOMAIN_IDS_KEY, null);
 
         if ((domainIds == null) || (domainIds.size() == 0)) {
-            return null;
+            return new HashSet<>();
         }
 
         Set<Long> result = new HashSet<>(domainIds.size());

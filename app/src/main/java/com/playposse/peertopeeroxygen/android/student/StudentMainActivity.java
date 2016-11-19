@@ -27,7 +27,7 @@ public class StudentMainActivity extends StudentParentActivity {
 
     public static final String LOG_TAG = StudentMainActivity.class.getSimpleName();
 
-    LinearLayout rootView;
+    private LinearLayout rootView;
     private TextView missionHeadingTextView;
     private Button studentProfileButton;
     private Button viewPracticaButton;

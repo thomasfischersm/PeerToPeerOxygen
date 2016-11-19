@@ -103,6 +103,12 @@
     <string name="view_practica_label">View practica</string>
     <string name="logout_button_label">Logout</string>
 
+    <!-- Domain selection activity -->
+    <string name="select_users_domain_heading">Select from your subscribed domains</string>
+    <string name="select_public_domain_heading">Select public domain</string>
+    <string name="select_private_domain_heading">Select private domain</string>
+    <string name="enter_invitation_code_label">Enter invitation code</string>
+
     <!-- Student mission activity -->
     <string name="default_instruction_tab_label">Instruction</string>
     <string name="start_scan_button">Start scanning buddy profile.</string>
@@ -155,6 +161,7 @@
     <!-- Admin and student menu -->
     <string name="admin_home_menu_title">Admin home</string>
     <string name="student_home_menu_title">Student home</string>
+    <string name="switch_domain_menu_title">Switch domain</string>
     <string name="refresh_menu_title">Refresh</string>
     <string name="debug_menu_title">Debug</string>
     <string name="about_menu_title">About</string>
@@ -192,6 +199,7 @@
     <string name="successfully_signed_into_practica">Successfully signed into practica.</string>
     <string name="admin_promotion_toast">You were promoted to admin for \'%1$s\'.</string>
     <string name="admin_demotion_toast">You were demoted from admin for \'%1$s\'.</string>
+    <string name="invitation_code_not_found_toast">The invitation code could not be found.</string>
 
     <!-- Reusable strings -->
     <string name="name_form_label">Name</string>

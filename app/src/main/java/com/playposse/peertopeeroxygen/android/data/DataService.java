@@ -24,6 +24,7 @@ import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionFe
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionStatsClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetPracticaByIdClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetPracticaClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.GetPublicDomainsClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetStudentRosterClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.InviteBuddyToMissionClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.InviteSeniorBuddyToMissionClientAction;
@@ -38,6 +39,8 @@ import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionLadd
 import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionTreeClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.SavePracticaClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.SubmitMissionFeedbackClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.SubscribeToPrivateDomainClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.SubscribeToPublicDomainClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.UnmarkLoanerDeviceClientAction;
 import com.playposse.peertopeeroxygen.android.data.missions.MissionDataManager;
 import com.playposse.peertopeeroxygen.android.student.StudentLoginActivity;
@@ -345,6 +348,25 @@ public class DataService extends Service {
                 ApiClientAction.CompletionCallback completionCallback) {
 
             new PromoteToAdminClientAction(studentId, isAdmin, this, completionCallback).execute();
+        }
+
+        public void getPublicDomains(GetPublicDomainsClientAction.Callback callback) {
+
+            new GetPublicDomainsClientAction(this, callback).execute();
+        }
+
+        public void subscribeToPrivateDomain(
+                String invitationCode,
+                SubscribeToPrivateDomainClientAction.Callback callback) {
+
+            new SubscribeToPrivateDomainClientAction(this, invitationCode, callback).execute();
+        }
+
+        public void subscribeToPublicDomain(
+                Long domainId,
+                SubscribeToPublicDomainClientAction.Callback callback) {
+
+            new SubscribeToPublicDomainClientAction(this, domainId, callback).execute();
         }
     }
 

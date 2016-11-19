@@ -1,5 +1,6 @@
 package com.playposse.peertopeeroxygen.android.data;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import com.playposse.peertopeeroxygen.android.data.missions.MissionDataManager;
 import com.playposse.peertopeeroxygen.android.data.practicas.PracticaRepository;
 import com.playposse.peertopeeroxygen.android.practicamgmt.PracticaManager;
 import com.playposse.peertopeeroxygen.android.student.StudentAboutActivity;
+import com.playposse.peertopeeroxygen.android.student.StudentDomainSelectionActivity;
 import com.playposse.peertopeeroxygen.android.student.StudentMainActivity;
 import com.playposse.peertopeeroxygen.android.util.LogUtil;
 
@@ -26,6 +28,7 @@ public abstract class DataServiceParentActivity
     protected boolean shouldAutoInit = true;
     protected boolean shouldRegisterCallback = true;
     protected boolean shouldCheckPractica = true;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onStart() {
@@ -52,6 +55,9 @@ public abstract class DataServiceParentActivity
                 return true;
             case R.id.adminHomeMenuItem:
                 startActivity(new Intent(this, AdminMainActivity.class));
+                return true;
+            case R.id.switchDomainMenuItem:
+                startActivity(new Intent(this, StudentDomainSelectionActivity.class));
                 return true;
             case R.id.refreshMenuItem:
                 MissionDataManager.invalidate(getApplicationContext());
@@ -94,6 +100,21 @@ public abstract class DataServiceParentActivity
             return dataServiceConnection.getLocalBinder().getDataRepository();
         } else {
             return null;
+        }
+    }
+
+    protected void showLoadingProgress() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle(R.string.progress_dialog_title);
+        progressDialog.setMessage(getString(R.string.progress_dialog_message));
+        progressDialog.setCancelable(false); // disable dismiss by tapping outside of the dialog
+        progressDialog.show();
+    }
+
+    protected void dismissLoadingProgress() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
         }
     }
 }

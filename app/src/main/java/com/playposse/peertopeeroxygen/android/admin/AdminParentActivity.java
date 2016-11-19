@@ -16,8 +16,6 @@ import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
  */
 public abstract class AdminParentActivity extends DataServiceParentActivity {
 
-    private ProgressDialog progressDialog;
-
     public AdminParentActivity() {
         shouldCheckPractica = false;
     }
@@ -40,20 +38,5 @@ public abstract class AdminParentActivity extends DataServiceParentActivity {
         debugMenuItem.setChecked(debugFlag);
 
         return true;
-    }
-
-    protected void showLoadingProgress() {
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle(R.string.progress_dialog_title);
-        progressDialog.setMessage(getString(R.string.progress_dialog_message));
-        progressDialog.setCancelable(false); // disable dismiss by tapping outside of the dialog
-        progressDialog.show();
-    }
-
-    protected void dismissLoadingProgress() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-            progressDialog = null;
-        }
     }
 }

@@ -13,6 +13,7 @@ import com.google.api.server.spi.config.Named;
 import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.googlecode.objectify.ObjectifyService;
+import com.playposse.peertopeeroxygen.backend.beans.CombinedDomainBeans;
 import com.playposse.peertopeeroxygen.backend.beans.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.beans.DomainBean;
 import com.playposse.peertopeeroxygen.backend.beans.LoanerDeviceBean;
@@ -437,7 +438,7 @@ public class PeerToPeerOxygenEndPoint {
     }
 
     @ApiMethod(name = "getPublicDomains")
-    public List<DomainBean> getPublicDomains(@Named("sessionId") Long sessionId)
+    public CombinedDomainBeans getPublicDomains(@Named("sessionId") Long sessionId)
             throws UnauthorizedException {
 
         return GetPublicDomainsServerAction.getPublicDomains(sessionId);
