@@ -126,7 +126,7 @@
     <string name="profile_title">Your profile</string>
 
     <!-- QR code scanner fragment -->
-    <string name="link_buddy_title">Buddy</string>
+    <string name="link_buddy_title">Pair Up!</string>
     <string name="link_senior_buddy_title">Super buddy</string>
     <string name="invitation_title">Invitation</string>
     <string name="youtube_title">YouTube</string>

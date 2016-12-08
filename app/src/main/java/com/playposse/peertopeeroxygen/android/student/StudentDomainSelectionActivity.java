@@ -1,13 +1,19 @@
 package com.playposse.peertopeeroxygen.android.student;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
@@ -33,6 +39,8 @@ public class StudentDomainSelectionActivity
         extends StudentParentActivity
         implements GetPublicDomainsClientAction.Callback {
 
+    private final static String LOG_CAT = StudentDomainSelectionActivity.class.getSimpleName();
+
     private LinearLayout rootView;
     private TextView usersDomainTextView;
     private TextView selectPublicDomainTextView;
@@ -52,10 +60,36 @@ public class StudentDomainSelectionActivity
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (!hasFocus) {
-                    if (!StringUtil.isEmpty(invitationCodeEditText)) {
-                        switchToPrivateDomain(invitationCodeEditText.getText().toString());
-                    }
+                    invitationCodeEditText.clearFocus();
+                    rootView.requestFocus();
+                    
+                    switchToPrivateDomain();
                 }
+            }
+        });
+
+        invitationCodeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    switchToPrivateDomain();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        rootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(LOG_CAT, "Got touch");
+                invitationCodeEditText.clearFocus();
+                rootView.requestFocus();
+
+                InputMethodManager imm =
+                        (InputMethodManager) getApplicationContext().getSystemService(
+                                Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         });
 
@@ -132,12 +166,17 @@ public class StudentDomainSelectionActivity
         });
     }
 
-    private void switchToPrivateDomain(String invitationCode) {
+    private void switchToPrivateDomain() {
         if (dataServiceConnection == null) {
             return;
         }
 
+        if (StringUtil.isEmpty(invitationCodeEditText)) {
+            return;
+        }
+
         showLoadingProgress();
+        String invitationCode = invitationCodeEditText.getText().toString();
         dataServiceConnection.getLocalBinder().subscribeToPrivateDomain(
                 invitationCode,
                 new SubscribeToPrivateDomainClientAction.Callback() {

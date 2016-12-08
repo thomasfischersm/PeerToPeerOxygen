@@ -19,47 +19,54 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/focusCaptureView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/rootView"
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
 
-            <TextView
-                android:id="@+id/usersDomainTextView"
+            <LinearLayout
+                android:id="@+id/rootView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/select_users_domain_heading" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/selectPublicDomainTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/select_public_domain_heading" />
+                <TextView
+                    android:id="@+id/usersDomainTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/select_users_domain_heading" />
 
-            <TextView
-                android:id="@+id/selectPrivateDomainTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/select_private_domain_heading" />
+                <TextView
+                    android:id="@+id/selectPublicDomainTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/select_public_domain_heading" />
 
-            <EditText
-                android:id="@+id/invitationCodeEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/enter_invitation_code_label"
-                android:imeOptions="actionDone"
-                android:inputType="textVisiblePassword"
-                android:lines="1" />
+                <TextView
+                    android:id="@+id/selectPrivateDomainTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/select_private_domain_heading" />
 
-        </LinearLayout>
-    </ScrollView>
+                <EditText
+                    android:id="@+id/invitationCodeEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/enter_invitation_code_label"
+                    android:imeOptions="actionDone"
+                    android:inputType="textVisiblePassword"
+                    android:lines="1" />
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 </LinearLayout>
