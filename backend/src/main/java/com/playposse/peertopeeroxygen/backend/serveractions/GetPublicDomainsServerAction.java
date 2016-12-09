@@ -47,6 +47,6 @@ public class GetPublicDomainsServerAction extends ServerAction {
             publicDomainBeans.add(new DomainBean(domain));
         }
 
-        return new CombinedDomainBeans(subscribedDomainBeans, publicDomainBeans);
+        return new CombinedDomainBeans(publicDomainBeans, subscribedDomainBeans);
     }
 }
