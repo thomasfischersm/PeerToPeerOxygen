@@ -1,13 +1,17 @@
 package com.playposse.peertopeeroxygen.backend.serveractions;
 
+import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.beans.DomainBean;
+import com.playposse.peertopeeroxygen.backend.exceptions.DuplicateDomainNameException;
 import com.playposse.peertopeeroxygen.backend.schema.Domain;
 import com.playposse.peertopeeroxygen.backend.schema.MasterUser;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 import com.playposse.peertopeeroxygen.backend.schema.util.RefUtil;
 import com.playposse.peertopeeroxygen.backend.util.InvitationCodeGenerator;
+
+import java.util.List;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -20,12 +24,19 @@ public class CreatePrivateDomainServerAction extends ServerAction {
             Long sessionId,
             String domainName,
             String domainDescription)
-            throws UnauthorizedException {
+            throws UnauthorizedException, DuplicateDomainNameException {
 
         // Prepare data.
         MasterUser masterUser = loadMasterUserBySessionId(sessionId);
         Ref<MasterUser> masterUserRef = RefUtil.createMasterUserRef(masterUser);
         String invitationCode = InvitationCodeGenerator.generateCode();
+
+        // Check for existing name.
+        List<Domain> domainList =
+                ofy().load().type(Domain.class).filter("name =", domainName).list();
+        if (domainList.size() > 0) {
+            throw new DuplicateDomainNameException(domainName);
+        }
 
         // Create new private domain.
         Domain domain =

@@ -17,7 +17,7 @@ import java.util.List;
 public class Domain {
 
     @Id private Long id;
-    private String name;
+    @Index private String name;
     private String description;
     @Index private String invitationCode;
     private Ref<MasterUser> ownerRef;

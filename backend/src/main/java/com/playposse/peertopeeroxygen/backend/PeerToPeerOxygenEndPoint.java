@@ -26,6 +26,7 @@ import com.playposse.peertopeeroxygen.backend.beans.MissionTreeBean;
 import com.playposse.peertopeeroxygen.backend.beans.PracticaBean;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
 import com.playposse.peertopeeroxygen.backend.exceptions.BuddyLacksMissionExperienceException;
+import com.playposse.peertopeeroxygen.backend.exceptions.DuplicateDomainNameException;
 import com.playposse.peertopeeroxygen.backend.schema.Domain;
 import com.playposse.peertopeeroxygen.backend.schema.LevelCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.LoanerDevice;
@@ -478,7 +479,7 @@ public class PeerToPeerOxygenEndPoint {
             @Named("sessionId") Long sessionId,
             @Named("domainName") String domainName,
             @Named("domainDescription") String domainDescription)
-            throws UnauthorizedException {
+            throws UnauthorizedException, DuplicateDomainNameException {
 
         return CreatePrivateDomainServerAction.createPrivateDomain(
                 sessionId,
