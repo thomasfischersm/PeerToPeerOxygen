@@ -24,6 +24,7 @@ public class AdminMainActivity extends AdminParentActivity {
 
     public static final String LOG_TAG = AdminMainActivity.class.getSimpleName();
 
+    private TextView editDomainLink;
     private TextView openMissionLaddersTextView;
     private TextView openPracticasTextView;
     private TextView openStudentRosterTextView;
@@ -38,6 +39,15 @@ public class AdminMainActivity extends AdminParentActivity {
         super.onCreate(savedInstanceState);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
+        editDomainLink = (TextView) findViewById(R.id.editDomainLink);
+        editDomainLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(
+                        new Intent(AdminMainActivity.this, AdminEditDomainActivity.class));
+            }
+        });
 
         openMissionLaddersTextView = (TextView) findViewById(R.id.openMissionLaddersLink);
         openMissionLaddersTextView.setOnClickListener(new View.OnClickListener() {

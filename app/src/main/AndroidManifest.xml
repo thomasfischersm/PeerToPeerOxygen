@@ -165,7 +165,16 @@
             android:launchMode="singleTop"
             android:parentActivityName=".admin.AdminMainActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-        <activity android:name=".student.StudentCreatePrivateDomainActivity"></activity>
+        <activity
+            android:name=".student.StudentCreatePrivateDomainActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".student.StudentDomainSelectionActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+        <activity
+            android:name=".admin.AdminEditDomainActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".admin.AdminMainActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
     </application>
 
 </manifest>

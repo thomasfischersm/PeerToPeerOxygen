@@ -4,8 +4,10 @@ import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
+import com.playposse.peertopeeroxygen.backend.beans.DomainBean;
 import com.playposse.peertopeeroxygen.backend.beans.PracticaBean;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
+import com.playposse.peertopeeroxygen.backend.exceptions.DuplicateDomainNameException;
 import com.playposse.peertopeeroxygen.backend.schema.Domain;
 import com.playposse.peertopeeroxygen.backend.schema.LevelCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.MasterUser;
@@ -215,4 +217,13 @@ public class ServerAction {
         }
     }
 
+    protected static void checkDuplicateDomainName(String domainName)
+            throws DuplicateDomainNameException {
+
+        List<Domain> domainList =
+                ofy().load().type(Domain.class).filter("name =", domainName).list();
+        if (domainList.size() > 0) {
+            throw new DuplicateDomainNameException(domainName);
+        }
+    }
 }

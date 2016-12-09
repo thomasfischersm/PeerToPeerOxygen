@@ -64,6 +64,7 @@ import com.playposse.peertopeeroxygen.backend.serveractions.PromoteToAdminServer
 import com.playposse.peertopeeroxygen.backend.serveractions.RegisterOrLoginServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.ReportMissionCheckoutCompleteServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.ReportMissionCompleteServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.SaveDomainServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionLadderServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionTreeServerAction;
@@ -485,5 +486,20 @@ public class PeerToPeerOxygenEndPoint {
                 sessionId,
                 domainName,
                 domainDescription);
+    }
+
+    @ApiMethod(name = "saveDomain")
+    public DomainBean saveDomain(
+            @Named("sessionId") Long sessionId,
+            @Named("domainId") Long domainId,
+            @Named("domainName") String domainName,
+            @Named("domainDescription") String domainDescription)
+            throws
+            DuplicateDomainNameException,
+            BadRequestException,
+            UnauthorizedException,
+            IOException {
+
+        return SaveDomainServerAction.save(sessionId, domainId, domainName, domainDescription);
     }
 }

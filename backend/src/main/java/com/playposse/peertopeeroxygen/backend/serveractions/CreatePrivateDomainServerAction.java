@@ -32,11 +32,7 @@ public class CreatePrivateDomainServerAction extends ServerAction {
         String invitationCode = InvitationCodeGenerator.generateCode();
 
         // Check for existing name.
-        List<Domain> domainList =
-                ofy().load().type(Domain.class).filter("name =", domainName).list();
-        if (domainList.size() > 0) {
-            throw new DuplicateDomainNameException(domainName);
-        }
+        checkDuplicateDomainName(domainName);
 
         // Create new private domain.
         Domain domain =

@@ -35,6 +35,7 @@ import com.playposse.peertopeeroxygen.android.data.clientactions.PromoteToAdminC
 import com.playposse.peertopeeroxygen.android.data.clientactions.RegisterOrLoginClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.ReportMissionCheckoutCompleteClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.ReportMissionCompleteClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.SaveDomainClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionLadderClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.SaveMissionTreeClientAction;
@@ -377,6 +378,14 @@ public class DataService extends Service {
 
             new CreatePrivateDomainClientAction(this, domainName, domainDescription, callback)
                     .execute();
+        }
+
+        public void saveDomain(
+                String domainName,
+                String domainDescription,
+                SaveDomainClientAction.Callback callback) {
+
+            new SaveDomainClientAction(this, domainName, domainDescription, callback).execute();
         }
     }
 

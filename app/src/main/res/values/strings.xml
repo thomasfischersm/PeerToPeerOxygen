@@ -5,6 +5,7 @@
 
     <!-- Admin home -->
     <string name="admin_home_title">Admin: %1$s</string>
+    <string name="edit_domain_link">Edit domain</string>
     <string name="show_mission_ladders_link">Show mission ladders</string>
     <string name="show_practicas_link">Show practicas</string>
     <string name="student_roster_link">Show student roster</string>
@@ -95,6 +96,11 @@
     <string name="heart_point_abbreviation">H: %1$s</string>
     <string name="studyCountLabel">Studied: %1$s/%2$s</string>
     <string name="mentorCountLabel">Taught: %1$s times</string>
+
+    <!-- Edit domain activity -->
+    <string name="edit_domain_title">Edit domain</string>
+    <string name="private_domain_hint">This is a private domain. To invite students and collaborators, hand them this invitation code: &lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="save_private_domain_button_label">Save</string>
 
     <!-- Student home -->
     <string name="student_learning_mission_heading">Learning missions</string>
@@ -210,6 +216,7 @@
     <string name="invitation_code_not_found_toast">The invitation code could not be found.</string>
     <string name="private_domain_creation_success_toast">Successfully created private domain.</string>
     <string name="duplicate_private_domain_name_toast">The \'%1$s\' domain already exists.</string>
+    <string name="save_domain_success_toast">Successfully saved domain.</string>
 
     <!-- Reusable strings -->
     <string name="name_form_label">Name</string>
