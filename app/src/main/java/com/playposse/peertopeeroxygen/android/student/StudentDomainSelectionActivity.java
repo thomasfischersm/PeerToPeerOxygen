@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.android.gms.vision.text.Text;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
@@ -45,6 +46,7 @@ public class StudentDomainSelectionActivity
     private TextView usersDomainTextView;
     private TextView selectPublicDomainTextView;
     private EditText invitationCodeEditText;
+    private TextView createPrivateDomainLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class StudentDomainSelectionActivity
         usersDomainTextView = (TextView) findViewById(R.id.usersDomainTextView);
         selectPublicDomainTextView = (TextView) findViewById(R.id.selectPublicDomainTextView);
         invitationCodeEditText = (EditText) findViewById(R.id.invitationCodeEditText);
+        createPrivateDomainLink = (TextView) findViewById(R.id.createPrivateDomainLink);
 
         invitationCodeEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -62,7 +65,7 @@ public class StudentDomainSelectionActivity
                 if (!hasFocus) {
                     invitationCodeEditText.clearFocus();
                     rootView.requestFocus();
-                    
+
                     switchToPrivateDomain();
                 }
             }
@@ -90,6 +93,14 @@ public class StudentDomainSelectionActivity
                         (InputMethodManager) getApplicationContext().getSystemService(
                                 Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        });
+
+        createPrivateDomainLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Context context = getApplicationContext();
+                startActivity(new Intent(context, StudentCreatePrivateDomainActivity.class));
             }
         });
 

@@ -108,6 +108,7 @@
     <string name="select_public_domain_heading">Select public domain</string>
     <string name="select_private_domain_heading">Select private domain</string>
     <string name="enter_invitation_code_label">Enter invitation code</string>
+    <string name="create_private_domain_link_label">Are you a teacher? Create your own domain!</string>
 
     <!-- Student mission activity -->
     <string name="default_instruction_tab_label">Instruction</string>
@@ -158,6 +159,13 @@
     <string name="admin_can_teach_everything">An admin can teach everything.</string>
     <string name="both_admins_heading">You are both admins.</string>
 
+    <!-- Create private domain activity -->
+    <string name="create_private_domain_title">Create private domain</string>
+    <string name="domain_name_label">Domain name</string>
+    <string name="domain_description_label">Domain description</string>
+    <string name="create_private_domain_button_label">Create</string>
+    <string name="private_domain_hints">How to get started: Once the domain is created, click on the three dot options menu in the top right corner. There will be a new option to go to the admin home. That\'s a content management system where you can create missions and levels.\n\nHow to invite people: An invitation code will be generated. Hand the invitation code to anyone whom you want to join the domain. You can look up the invitation code in the domain section.</string>
+
     <!-- Admin and student menu -->
     <string name="admin_home_menu_title">Admin home</string>
     <string name="student_home_menu_title">Student home</string>
@@ -200,6 +208,7 @@
     <string name="admin_promotion_toast">You were promoted to admin for \'%1$s\'.</string>
     <string name="admin_demotion_toast">You were demoted from admin for \'%1$s\'.</string>
     <string name="invitation_code_not_found_toast">The invitation code could not be found.</string>
+    <string name="private_domain_creation_success_toast">Successfully created private domain.</string>
 
     <!-- Reusable strings -->
     <string name="name_form_label">Name</string>

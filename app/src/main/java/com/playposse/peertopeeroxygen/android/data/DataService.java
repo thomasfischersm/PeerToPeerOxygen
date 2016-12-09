@@ -16,6 +16,7 @@ import com.playposse.peertopeeroxygen.android.data.clientactions.BinderForAction
 import com.playposse.peertopeeroxygen.android.data.clientactions.ApiClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.CheckIntoPracticaClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.CheckOutOfPracticaClientAction;
+import com.playposse.peertopeeroxygen.android.data.clientactions.CreatePrivateDomainClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionLadderClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.DeleteMissionTreeClientAction;
@@ -367,6 +368,15 @@ public class DataService extends Service {
                 SubscribeToPublicDomainClientAction.Callback callback) {
 
             new SubscribeToPublicDomainClientAction(this, domainId, callback).execute();
+        }
+
+        public void createPrivateDomain(
+                String domainName,
+                String domainDescription,
+                CreatePrivateDomainClientAction.Callback callback) {
+
+            new CreatePrivateDomainClientAction(this, domainName, domainDescription, callback)
+                    .execute();
         }
     }
 

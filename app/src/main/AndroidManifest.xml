@@ -165,6 +165,7 @@
             android:launchMode="singleTop"
             android:parentActivityName=".admin.AdminMainActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+        <activity android:name=".student.StudentCreatePrivateDomainActivity"></activity>
     </application>
 
 </manifest>

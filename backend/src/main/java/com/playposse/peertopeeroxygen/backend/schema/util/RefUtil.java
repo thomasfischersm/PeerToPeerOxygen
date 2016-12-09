@@ -19,6 +19,10 @@ public class RefUtil {
         return Ref.create(Key.create(Domain.class, domainId));
     }
 
+    public static Ref<Domain> createDomainRef(Domain domain) {
+        return Ref.create(Key.create(Domain.class, domain.getId()));
+    }
+
     public static Ref<OxygenUser> createOxygenUserRef(OxygenUser user) {
         return createOxygenUserRef(user.getId());
     }
