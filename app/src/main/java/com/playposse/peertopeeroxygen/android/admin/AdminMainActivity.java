@@ -37,7 +37,6 @@ public class AdminMainActivity extends AdminParentActivity {
         setContentView(R.layout.activity_admin_main);
         super.onCreate(savedInstanceState);
 
-        setTitle(R.string.admin_home_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         openMissionLaddersTextView = (TextView) findViewById(R.id.openMissionLaddersLink);
@@ -104,8 +103,8 @@ public class AdminMainActivity extends AdminParentActivity {
 
     @Override
     public void receiveData(DataRepository dataRepository) {
-        // Nothing to do. Yet, calling the service ensures that the data is already there for other
-        // activities.
+        String domainName = dataRepository.getCompleteMissionDataBean().getDomainBean().getName();
+        setTitle(getString(R.string.admin_home_title, domainName));
     }
 
     public void printHashKey() {

@@ -13,9 +13,14 @@ public class CompleteMissionDataBean {
 
     private final List<MissionLadderBean> missionLadderBeans = new ArrayList<>();
     private UserBean userBean;
+    private DomainBean domainBean;
 
-    public CompleteMissionDataBean(UserBean userBean, List<MissionLadder> missionLadders) {
+    public CompleteMissionDataBean(
+            UserBean userBean,
+            DomainBean domainBean,
+            List<MissionLadder> missionLadders) {
         this.userBean = userBean;
+        this.domainBean = domainBean;
 
         for (MissionLadder missionLadder : missionLadders) {
             missionLadderBeans.add(new MissionLadderBean(missionLadder));
@@ -28,5 +33,9 @@ public class CompleteMissionDataBean {
 
     public UserBean getUserBean() {
         return userBean;
+    }
+
+    public DomainBean getDomainBean() {
+        return domainBean;
     }
 }

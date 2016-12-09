@@ -4,6 +4,7 @@ import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.googlecode.objectify.Key;
 import com.playposse.peertopeeroxygen.backend.beans.CompleteMissionDataBean;
+import com.playposse.peertopeeroxygen.backend.beans.DomainBean;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
 import com.playposse.peertopeeroxygen.backend.schema.Domain;
 import com.playposse.peertopeeroxygen.backend.schema.MasterUser;
@@ -25,6 +26,7 @@ public class GetMissionDataServerAction extends ServerAction {
         // Look up data.
         MasterUser masterUser = loadMasterUserBySessionId(sessionId);
         OxygenUser oxygenUser = findOxygenUserByDomain(masterUser, domainId);
+        Domain domain = oxygenUser.getDomainRef().get();
 
         Key<Domain> domainKey = Key.create(Domain.class, domainId);
         List<MissionLadder> missionLadders = ofy().load()
@@ -32,6 +34,9 @@ public class GetMissionDataServerAction extends ServerAction {
                 .filter("domainRef =", domainKey)
                 .list();
 
-        return new CompleteMissionDataBean(new UserBean(oxygenUser), missionLadders);
+        return new CompleteMissionDataBean(
+                new UserBean(oxygenUser),
+                new DomainBean(domain),
+                missionLadders);
     }
 }

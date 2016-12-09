@@ -4,7 +4,7 @@
     <string name="app_name">PeerToPeerOxygen</string>
 
     <!-- Admin home -->
-    <string name="admin_home_title">Admin home</string>
+    <string name="admin_home_title">Admin: %1$s</string>
     <string name="show_mission_ladders_link">Show mission ladders</string>
     <string name="show_practicas_link">Show practicas</string>
     <string name="student_roster_link">Show student roster</string>

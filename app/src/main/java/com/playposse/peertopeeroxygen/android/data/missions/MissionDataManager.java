@@ -203,21 +203,28 @@ public class MissionDataManager {
             try {
                 String json = StreamUtil.readTextStream(file);
                 CompleteMissionDataBean completeMissionDataBean = fromJson(json);
-                switchToDomainSync(
-                        domainId,
-                        completeMissionDataBean,
-                        true, context,
-                        localBinder);
-                return null;
+
+                if (completeMissionDataBean.getDomainBean() != null) {
+                    switchToDomainSync(
+                            domainId,
+                            completeMissionDataBean,
+                            true, context,
+                            localBinder);
+                    return null;
+                } else {
+                    // The stored JSON is an old version of the schema without domain. Let the code
+                    // pass through to load fresh data from the server.
+                }
             } catch (Exception ex) {
                 Log.e(LOG_CAT, "Failed to read complete mission data locally.", ex);
-
-                // Delete the apparently corrupt file.
-                file.delete();
-
-                // Try to  fall back to remotely.
-                loadRemotelyAsync(domainId, context, localBinder);
             }
+
+            // SHOULD NOT REACH THIS ON SUCCESS!
+            // Delete the apparently corrupt file.
+            file.delete();
+
+            // Try to  fall back to remotely.
+            loadRemotelyAsync(domainId, context, localBinder);
             return null;
         }
     }

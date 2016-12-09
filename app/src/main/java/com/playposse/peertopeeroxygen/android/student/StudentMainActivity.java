@@ -73,7 +73,7 @@ public class StudentMainActivity extends StudentParentActivity {
     }
 
     @Override
-    public void receiveData(final DataRepository dataRepository) {
+    public void receiveData(DataRepository dataRepository) {
         List<MissionLadderBean> missionLadderBeans =
                 dataRepository.getMissionLadderBeans();
 
@@ -88,6 +88,8 @@ public class StudentMainActivity extends StudentParentActivity {
         } else {
             viewPracticaButton.setVisibility(View.GONE);
         }
+
+        setTitle(dataRepository.getCompleteMissionDataBean().getDomainBean().getName());
     }
 
     /**
