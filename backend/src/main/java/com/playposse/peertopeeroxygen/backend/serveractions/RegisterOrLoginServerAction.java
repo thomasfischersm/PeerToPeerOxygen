@@ -5,7 +5,6 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.beans.MasterUserBean;
-import com.playposse.peertopeeroxygen.backend.beans.UserBean;
 import com.playposse.peertopeeroxygen.backend.schema.Domain;
 import com.playposse.peertopeeroxygen.backend.schema.LoanerDevice;
 import com.playposse.peertopeeroxygen.backend.schema.MasterUser;
@@ -40,7 +39,7 @@ public class RegisterOrLoginServerAction extends ServerAction {
             @Nullable Long domainId) {
 
         Long sessionId = new Random().nextLong();
-        Ref<Domain> domainRef = RefUtil.createDomainRef(domainId);
+        Ref<Domain> domainRef = (domainId != null) ? RefUtil.createDomainRef(domainId) : null;
 
         // Retrieve user data.
         User fbUser = fetchUserFromFaceBook(accessToken);
@@ -70,10 +69,12 @@ public class RegisterOrLoginServerAction extends ServerAction {
                     fbUser.getEmail(),
                     oxygenUserRefList);
 
-            oxygenUser = new OxygenUser(masterUser, false, domainRef);
-            Key<OxygenUser> oxygenUserKey = ofy().save().entity(oxygenUser).now();
-            Ref<OxygenUser> oxygenUserRef = Ref.create(oxygenUserKey);
-            oxygenUserRefList.add(oxygenUserRef);
+            if (domainId != null) {
+                oxygenUser = new OxygenUser(masterUser, false, domainRef);
+                Key<OxygenUser> oxygenUserKey = ofy().save().entity(oxygenUser).now();
+                Ref<OxygenUser> oxygenUserRef = Ref.create(oxygenUserKey);
+                oxygenUserRefList.add(oxygenUserRef);
+            }
 
             ofy().save().entity(masterUser).now();
         } else {
@@ -84,17 +85,22 @@ public class RegisterOrLoginServerAction extends ServerAction {
                         + fbUser.getId());
             }
 
-            try {
-                oxygenUser = findOxygenUserByDomain(masterUser, domainId);
-                log.info("Found OxygenUser for domain " + domainId);
-            } catch (BadRequestException ex) {
-                log.info("Creating new OxygenUser for the domain " + domainId);
-                oxygenUser = new OxygenUser(masterUser, false, domainRef);
-                Key<OxygenUser> oxygenUserKey = ofy().save().entity(oxygenUser).now();
-                if (masterUser.getDomainUserRefs() == null) {
-                    masterUser.setDomainUserRefs(new ArrayList<Ref<OxygenUser>>());
+            if (domainId != null) {
+                try {
+                    oxygenUser = findOxygenUserByDomain(masterUser, domainId);
+                    log.info("Found OxygenUser for domain " + domainId);
+                } catch (BadRequestException ex) {
+                    log.info("Creating new OxygenUser for the domain " + domainId);
+                    oxygenUser = new OxygenUser(masterUser, false, domainRef);
+                    Key<OxygenUser> oxygenUserKey = ofy().save().entity(oxygenUser).now();
+                    if (masterUser.getDomainUserRefs() == null) {
+                        masterUser.setDomainUserRefs(new ArrayList<Ref<OxygenUser>>());
+                    }
+                    masterUser.getDomainUserRefs().add(Ref.create(oxygenUserKey));
                 }
-                masterUser.getDomainUserRefs().add(Ref.create(oxygenUserKey));
+
+                updateLoanerDevice(loanerDeviceId, oxygenUser);
+
             }
 
             masterUser.setSessionId(sessionId);
@@ -104,13 +110,11 @@ public class RegisterOrLoginServerAction extends ServerAction {
             ofy().save().entity(masterUser).now();
         }
 
-        updateLoanerDevice(loanerDeviceId, oxygenUser);
-
         return new MasterUserBean(masterUser);
     }
 
     private static User fetchUserFromFaceBook(String accessToken) {
-        FacebookClient facebookClient = new DefaultFacebookClient(accessToken, Version.VERSION_2_7);
+        FacebookClient facebookClient = new DefaultFacebookClient(accessToken, Version.VERSION_2_8);
         return facebookClient.fetchObject(
                 "me",
                 User.class,
