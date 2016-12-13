@@ -26,10 +26,10 @@ public class RegisterOrLoginServerActionTest {
     @Test
     public void loginWithoutDomain() throws IOException {
         // Create test user in Facebook.
-        TestUser fbTestUser = TestUserUtil.createFbTestUser(TestUserUtil.TEST_USER_NAME);
+        TestUser fbTestUser = ApiTestUtil.createFbTestUser(ApiTestUtil.TEST_USER_NAME);
 
         // Login for the first time.
-        MasterUserBean masterUserBean = TestUserUtil.registerOrLoginUser(
+        MasterUserBean masterUserBean = ApiTestUtil.registerOrLoginUser(
                 fbTestUser,
                 FirebaseInstanceId.getInstance().getToken(),
                 null);
@@ -37,7 +37,7 @@ public class RegisterOrLoginServerActionTest {
         Long oldSessionId = masterUserBean.getSessionId();
 
         // Login to existing user.
-        masterUserBean = TestUserUtil.registerOrLoginUser(
+        masterUserBean = ApiTestUtil.registerOrLoginUser(
                 fbTestUser,
                 FirebaseInstanceId.getInstance().getToken(),
                 null);
@@ -48,28 +48,28 @@ public class RegisterOrLoginServerActionTest {
     @Test
     public void loginWithDomain() throws IOException {
         // Create test user in Facebook.
-        TestUser fbTestUser = TestUserUtil.createFbTestUser(TestUserUtil.TEST_USER_NAME);
+        TestUser fbTestUser = ApiTestUtil.createFbTestUser(ApiTestUtil.TEST_USER_NAME);
 
         // Login for the first time.
-        MasterUserBean masterUserBean = TestUserUtil.registerOrLoginUser(
+        MasterUserBean masterUserBean = ApiTestUtil.registerOrLoginUser(
                 fbTestUser,
                 FirebaseInstanceId.getInstance().getToken(),
-                TestUserUtil.TESTING_DOMAIN_ID);
+                ApiTestUtil.TESTING_DOMAIN_ID);
         assertMasterUser(masterUserBean);
         Long oldSessionId = masterUserBean.getSessionId();
 
         // Login to existing user.
-        masterUserBean = TestUserUtil.registerOrLoginUser(
+        masterUserBean = ApiTestUtil.registerOrLoginUser(
                 fbTestUser,
                 FirebaseInstanceId.getInstance().getToken(),
-                TestUserUtil.TESTING_DOMAIN_ID);
+                ApiTestUtil.TESTING_DOMAIN_ID);
         assertMasterUser(masterUserBean);
         assertNotEquals(oldSessionId, masterUserBean.getSessionId());
     }
 
     private void assertMasterUser(MasterUserBean masterUserBean) {
         assertNotNull(masterUserBean);
-        assertEquals(TestUserUtil.TEST_USER_NAME, masterUserBean.getName());
+        assertEquals(ApiTestUtil.TEST_USER_NAME, masterUserBean.getName());
         assertNotNull(masterUserBean.getSessionId());
     }
 }

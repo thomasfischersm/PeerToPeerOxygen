@@ -22,23 +22,23 @@ public class CreatePrivateDomainServerActionTest {
     @Test
     public void createPrivateDomain() throws IOException {
         // Setup.
-        TestUser fbTestUser = TestUserUtil.createFbTestUser(TestUserUtil.TEST_USER_NAME);
-        MasterUserBean masterUserBean = TestUserUtil.registerOrLoginUser(
+        TestUser fbTestUser = ApiTestUtil.createFbTestUser(ApiTestUtil.TEST_USER_NAME);
+        MasterUserBean masterUserBean = ApiTestUtil.registerOrLoginUser(
                 fbTestUser,
                 FirebaseInstanceId.getInstance().getToken(),
                 null);
-        PeerToPeerOxygenApi api = TestUserUtil.instantiateApi();
+        PeerToPeerOxygenApi api = ApiTestUtil.instantiateApi();
 
         // Create private domain.
         DomainBean domainBean = api.createPrivateDomain(
                 masterUserBean.getSessionId(),
-                TestUserUtil.GENERATED_DOMAIN_NAME,
-                TestUserUtil.GENERATED_DOMAIN_DESCRIPTION)
+                ApiTestUtil.GENERATED_DOMAIN_NAME,
+                ApiTestUtil.GENERATED_DOMAIN_DESCRIPTION)
                 .execute();
 
         assertNotNull(domainBean);
-        assertEquals(TestUserUtil.GENERATED_DOMAIN_NAME, domainBean.getName());
-        assertEquals(TestUserUtil.GENERATED_DOMAIN_DESCRIPTION, domainBean.getDescription());
+        assertEquals(ApiTestUtil.GENERATED_DOMAIN_NAME, domainBean.getName());
+        assertEquals(ApiTestUtil.GENERATED_DOMAIN_DESCRIPTION, domainBean.getDescription());
         assertNotNull(domainBean.getInvitationCode());
         assertNotNull(domainBean.getOwnerBean());
         assertEquals(masterUserBean.getId(), domainBean.getOwnerBean().getId());

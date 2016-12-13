@@ -8,6 +8,9 @@ import com.playposse.peertopeeroxygen.backend.schema.Mission;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 import com.playposse.peertopeeroxygen.backend.schema.Practica;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 /**
@@ -21,6 +24,14 @@ public class RefUtil {
 
     public static Ref<Domain> createDomainRef(Domain domain) {
         return Ref.create(Key.create(Domain.class, domain.getId()));
+    }
+
+    public static List<Ref<Domain>> createDomainRefs(List<Domain> domains) {
+        List<Ref<Domain>> domainRefs = new ArrayList<>(domains.size());
+        for (Domain domain : domains) {
+            domainRefs.add(createDomainRef(domain));
+        }
+        return domainRefs;
     }
 
     public static Ref<OxygenUser> createOxygenUserRef(OxygenUser user) {

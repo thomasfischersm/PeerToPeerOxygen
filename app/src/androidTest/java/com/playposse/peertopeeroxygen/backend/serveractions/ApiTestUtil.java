@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 /**
  * A utility for handling Facebook API access to create Endpoint tests.
  */
-public class TestUserUtil {
+public class ApiTestUtil {
 
     public static final Long TESTING_DOMAIN_ID = 5670976570261504L;
     public static final String TESTING_DOMAIN_INVITATION_CODE = "JFgABAoeTn";
@@ -26,6 +26,8 @@ public class TestUserUtil {
     public static final String GENERATED_DOMAIN_DESCRIPTION = "Do not use!";
 
     public static final String TEST_USER_NAME = "James Lucas";
+
+    private static final Long CLEAN_DATA_PASS_CODE = 389275931L;
 
     public static TestUser createFbTestUser(String name) {
         FacebookClient facebookClient = new DefaultFacebookClient(
@@ -58,5 +60,9 @@ public class TestUserUtil {
                 .setApplicationName("PeerToPeerOxygen")
                 .setRootUrl("https://peertopeeroxygen.appspot.com/_ah/api/")
                 .build();
+    }
+
+    public static void cleanTestData(PeerToPeerOxygenApi api) throws IOException {
+        api.cleanTestData(CLEAN_DATA_PASS_CODE).execute();
     }
 }

@@ -27,16 +27,16 @@ public class SubscribeToPrivateDomainServerActionTest {
 
     @Test
     public void subscribeToPrivateDomain() throws IOException {
-        TestUser fbTestUser = TestUserUtil.createFbTestUser(TestUserUtil.TEST_USER_NAME);
-        MasterUserBean masterUserBean = TestUserUtil.registerOrLoginUser(
+        TestUser fbTestUser = ApiTestUtil.createFbTestUser(ApiTestUtil.TEST_USER_NAME);
+        MasterUserBean masterUserBean = ApiTestUtil.registerOrLoginUser(
                 fbTestUser,
                 FirebaseInstanceId.getInstance().getToken(),
                 null);
 
-        PeerToPeerOxygenApi api = TestUserUtil.instantiateApi();
+        PeerToPeerOxygenApi api = ApiTestUtil.instantiateApi();
         UserBean userBean = api.subscribeToPrivateDomain(
                 masterUserBean.getSessionId(),
-                TestUserUtil.TESTING_DOMAIN_INVITATION_CODE)
+                ApiTestUtil.TESTING_DOMAIN_INVITATION_CODE)
                 .execute();
 
         assertUserBean(userBean);
@@ -44,16 +44,16 @@ public class SubscribeToPrivateDomainServerActionTest {
 
     @Test
     public void subscribeToPublicDomain() throws IOException {
-        TestUser fbTestUser = TestUserUtil.createFbTestUser(TestUserUtil.TEST_USER_NAME);
-        MasterUserBean masterUserBean = TestUserUtil.registerOrLoginUser(
+        TestUser fbTestUser = ApiTestUtil.createFbTestUser(ApiTestUtil.TEST_USER_NAME);
+        MasterUserBean masterUserBean = ApiTestUtil.registerOrLoginUser(
                 fbTestUser,
                 FirebaseInstanceId.getInstance().getToken(),
                 null);
 
-        PeerToPeerOxygenApi api = TestUserUtil.instantiateApi();
+        PeerToPeerOxygenApi api = ApiTestUtil.instantiateApi();
         UserBean userBean = api.subscribeToPublicDomain(
                 masterUserBean.getSessionId(),
-                TestUserUtil.TESTING_DOMAIN_ID)
+                ApiTestUtil.TESTING_DOMAIN_ID)
                 .execute();
 
         assertUserBean(userBean);
@@ -62,7 +62,7 @@ public class SubscribeToPrivateDomainServerActionTest {
     private void assertUserBean(UserBean userBean) {
         assertNotNull(userBean);
         assertNotNull(userBean.getDomainId());
-        assertEquals(TestUserUtil.TESTING_DOMAIN_ID, userBean.getDomainId());
+        assertEquals(ApiTestUtil.TESTING_DOMAIN_ID, userBean.getDomainId());
         assertFalse(userBean.getAdmin());
     }
 }

@@ -200,7 +200,7 @@ public class ServerAction {
 
         Key<Mission> missionKey = Key.create(Mission.class, missionId);
         List<MissionStats> missionStatsList =
-                ofy().load().type(MissionStats.class).filter("missionRef", missionKey).list();
+                ofy().load().type(MissionStats.class).filter("missionRef =", missionKey).list();
 
         if ((missionStatsList == null) || (missionStatsList.size() == 0)) {
             Ref<Domain> domainRef = Ref.create(Key.create(Domain.class, expectedDomainId));

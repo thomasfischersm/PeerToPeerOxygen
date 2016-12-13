@@ -45,6 +45,7 @@ import com.playposse.peertopeeroxygen.backend.schema.UserPoints;
 import com.playposse.peertopeeroxygen.backend.serveractions.AddPointsByAdminServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.CheckIntoPracticaServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.CheckOutOfPracticaServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.CleanTestDataServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.CreatePrivateDomainServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionLadderServerAction;
@@ -501,5 +502,10 @@ public class PeerToPeerOxygenEndPoint {
             IOException {
 
         return SaveDomainServerAction.save(sessionId, domainId, domainName, domainDescription);
+    }
+
+    @ApiMethod(name = "cleanTestData")
+    public void cleanTestData(@Named("passCode") Long passCode) {
+        CleanTestDataServerAction.cleanTestData(passCode);
     }
 }

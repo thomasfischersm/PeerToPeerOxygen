@@ -20,7 +20,7 @@ public class Domain {
     @Index private String name;
     private String description;
     @Index private String invitationCode;
-    private Ref<MasterUser> ownerRef;
+    @Index private Ref<MasterUser> ownerRef;
     private Long created = System.currentTimeMillis();
     @Index private boolean isPublic = false;
     private List<Ref<MissionLadder>> missionLadderRefs = new ArrayList<>();
