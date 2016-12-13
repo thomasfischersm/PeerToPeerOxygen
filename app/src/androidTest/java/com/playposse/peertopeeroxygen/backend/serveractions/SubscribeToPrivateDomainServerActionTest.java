@@ -8,12 +8,17 @@ import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxyg
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MasterUserBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 import com.playposse.peertopeeroxygen.backend.serveractions.util.ApiTestUtil;
+import com.playposse.peertopeeroxygen.backend.serveractions.util.VerificationUtil;
 import com.restfb.types.TestUser;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -26,6 +31,13 @@ import static junit.framework.Assert.assertNotNull;
 @MediumTest
 public class SubscribeToPrivateDomainServerActionTest {
 
+    private PeerToPeerOxygenApi api;
+
+    @Before
+    public void setUp() {
+        api = ApiTestUtil.instantiateApi();
+    }
+
     @Test
     public void subscribeToPrivateDomain() throws IOException {
         TestUser fbTestUser = ApiTestUtil.createFbTestUser(ApiTestUtil.TEST_USER_NAME);
@@ -33,14 +45,23 @@ public class SubscribeToPrivateDomainServerActionTest {
                 fbTestUser,
                 FirebaseInstanceId.getInstance().getToken(),
                 null);
+        VerificationUtil.verifySubscribedDomains(api, masterUserBean, Collections.<Long>emptyList());
 
-        PeerToPeerOxygenApi api = ApiTestUtil.instantiateApi();
         UserBean userBean = api.subscribeToPrivateDomain(
                 masterUserBean.getSessionId(),
                 ApiTestUtil.TESTING_DOMAIN_INVITATION_CODE)
                 .execute();
-
         assertUserBean(userBean);
+        List<Long> domainIds = Collections.<Long>singletonList(ApiTestUtil.TESTING_DOMAIN_ID);
+        VerificationUtil.verifySubscribedDomains(api, masterUserBean, domainIds);
+
+        // Ensure that duplicate subscription doesn't create duplicates.
+        userBean = api.subscribeToPrivateDomain(
+                masterUserBean.getSessionId(),
+                ApiTestUtil.TESTING_DOMAIN_INVITATION_CODE)
+                .execute();
+        assertUserBean(userBean);
+        VerificationUtil.verifySubscribedDomains(api, masterUserBean, domainIds);
     }
 
     @Test
@@ -51,13 +72,21 @@ public class SubscribeToPrivateDomainServerActionTest {
                 FirebaseInstanceId.getInstance().getToken(),
                 null);
 
-        PeerToPeerOxygenApi api = ApiTestUtil.instantiateApi();
         UserBean userBean = api.subscribeToPublicDomain(
                 masterUserBean.getSessionId(),
                 ApiTestUtil.TESTING_DOMAIN_ID)
                 .execute();
-
         assertUserBean(userBean);
+        List<Long> domainIds = Collections.<Long>singletonList(ApiTestUtil.TESTING_DOMAIN_ID);
+        VerificationUtil.verifySubscribedDomains(api, masterUserBean, domainIds);
+
+        // Ensure that duplicate subscription doesn't create duplicates.
+        userBean = api.subscribeToPublicDomain(
+                masterUserBean.getSessionId(),
+                ApiTestUtil.TESTING_DOMAIN_ID)
+                .execute();
+        assertUserBean(userBean);
+        VerificationUtil.verifySubscribedDomains(api, masterUserBean, domainIds);
     }
 
     private void assertUserBean(UserBean userBean) {
