@@ -23,12 +23,10 @@ import static org.junit.Assert.assertNotEquals;
 @MediumTest
 public class RegisterOrLoginServerActionTest {
 
-    private static final String TEST_USER_NAME = "James Lucas";
-
     @Test
     public void loginWithoutDomain() throws IOException {
         // Create test user in Facebook.
-        TestUser fbTestUser = TestUserUtil.createFbTestUser(TEST_USER_NAME);
+        TestUser fbTestUser = TestUserUtil.createFbTestUser(TestUserUtil.TEST_USER_NAME);
 
         // Login for the first time.
         MasterUserBean masterUserBean = TestUserUtil.registerOrLoginUser(
@@ -50,7 +48,7 @@ public class RegisterOrLoginServerActionTest {
     @Test
     public void loginWithDomain() throws IOException {
         // Create test user in Facebook.
-        TestUser fbTestUser = TestUserUtil.createFbTestUser(TEST_USER_NAME);
+        TestUser fbTestUser = TestUserUtil.createFbTestUser(TestUserUtil.TEST_USER_NAME);
 
         // Login for the first time.
         MasterUserBean masterUserBean = TestUserUtil.registerOrLoginUser(
@@ -71,7 +69,7 @@ public class RegisterOrLoginServerActionTest {
 
     private void assertMasterUser(MasterUserBean masterUserBean) {
         assertNotNull(masterUserBean);
-        assertEquals(TEST_USER_NAME, masterUserBean.getName());
+        assertEquals(TestUserUtil.TEST_USER_NAME, masterUserBean.getName());
         assertNotNull(masterUserBean.getSessionId());
     }
 }
