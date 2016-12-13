@@ -21,6 +21,10 @@ public class TestUserUtil {
 
     public static final Long TESTING_DOMAIN_ID = 5670976570261504L;
     public static final String TESTING_DOMAIN_INVITATION_CODE = "JFgABAoeTn";
+
+    public static final String GENERATED_DOMAIN_NAME = "Generated domain for testing";
+    public static final String GENERATED_DOMAIN_DESCRIPTION = "Do not use!";
+
     public static final String TEST_USER_NAME = "James Lucas";
 
     public static TestUser createFbTestUser(String name) {

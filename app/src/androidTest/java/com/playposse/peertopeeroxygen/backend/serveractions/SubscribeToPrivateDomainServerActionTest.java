@@ -19,11 +19,11 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 
 /**
- * Instrumented test for SubscribeToPrivateDomainClientAction.
+ * Instrumented test for SubscribeToPrivateDomainServerAction.
  */
 @RunWith(AndroidJUnit4.class)
 @MediumTest
-public class SubscribeToPrivateDomainClientActionTest {
+public class SubscribeToPrivateDomainServerActionTest {
 
     @Test
     public void subscribeToPrivateDomain() throws IOException {
