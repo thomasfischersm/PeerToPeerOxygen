@@ -1,5 +1,7 @@
 package com.playposse.peertopeeroxygen.backend.serveractions;
 
+import com.playposse.peertopeeroxygen.backend.serveractions.util.ApiTestUtil;
+
 import org.junit.AfterClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

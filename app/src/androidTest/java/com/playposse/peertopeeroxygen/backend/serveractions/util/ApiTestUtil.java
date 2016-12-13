@@ -1,4 +1,6 @@
-package com.playposse.peertopeeroxygen.backend.serveractions;
+package com.playposse.peertopeeroxygen.backend.serveractions.util;
+
+import android.util.Log;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -8,9 +10,14 @@ import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.Parameter;
 import com.restfb.Version;
+import com.restfb.json.JsonArray;
+import com.restfb.json.JsonObject;
 import com.restfb.types.TestUser;
+import com.restfb.types.User;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -18,6 +25,8 @@ import javax.annotation.Nullable;
  * A utility for handling Facebook API access to create Endpoint tests.
  */
 public class ApiTestUtil {
+
+    private static final String LOG_CAT = ApiTestUtil.class.getSimpleName();
 
     public static final Long TESTING_DOMAIN_ID = 5670976570261504L;
     public static final String TESTING_DOMAIN_INVITATION_CODE = "JFgABAoeTn";
@@ -64,5 +73,52 @@ public class ApiTestUtil {
 
     public static void cleanTestData(PeerToPeerOxygenApi api) throws IOException {
         api.cleanTestData(CLEAN_DATA_PASS_CODE).execute();
+        cleanFBTestUsers();
+    }
+
+    public static void cleanFBTestUsers() {
+        // Create FB client.
+        FacebookClient facebookClient = new DefaultFacebookClient(
+                FacebookSecrets.APP_TOKEN,
+                FacebookSecrets.APP_SECRET,
+                Version.VERSION_2_8);
+
+        // Query FB test user ids.
+        JsonObject testUsersResponse = facebookClient.fetchObject(
+                "1584198245207052/accounts/test-users",
+                JsonObject.class,
+                Parameter.with("limit", 100));
+
+        // Query FB test users individually.
+        JsonArray dataArray = testUsersResponse.getJsonArray("data");
+        List<String> fbUserIds = new ArrayList<>(dataArray.length());
+        for (int i = 0; i < dataArray.length(); i++) {
+            String fbUserId = dataArray.getJsonObject(i).getString("id");
+            fbUserIds.add(fbUserId);
+        }
+
+        // Iterate of FB test users
+        RuntimeException exception = null;
+        for (String fbUserId : fbUserIds) {
+            try {
+                User user = facebookClient.fetchObject(
+                        fbUserId,
+                        User.class);
+                if (TEST_USER_NAME.equals(user.getName())) {
+                    boolean result = facebookClient.deleteObject(fbUserId);
+                    Log.i(LOG_CAT, "Deleted FB user " + fbUserId + ". Result: " + result);
+                }
+            } catch (RuntimeException ex) {
+                Log.e(LOG_CAT, "Failed to handle this particular fb user. " + fbUserId);
+                exception = ex;
+            }
+        }
+
+        if (exception != null) {
+            throw exception;
+        }
+
+        System.out.println("bla");
+
     }
 }

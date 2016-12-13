@@ -5,6 +5,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MasterUserBean;
+import com.playposse.peertopeeroxygen.backend.serveractions.util.ApiTestUtil;
 import com.restfb.types.TestUser;
 
 import org.junit.Test;
