@@ -16,6 +16,7 @@ import java.io.IOException;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         CreatePrivateDomainServerActionTest.class,
+        GetMissionDataServerActionTest.class,
         RegisterOrLoginServerActionTest.class,
         SaveMissionLadderServerActionTest.class,
         SubscribeToPrivateDomainServerActionTest.class,

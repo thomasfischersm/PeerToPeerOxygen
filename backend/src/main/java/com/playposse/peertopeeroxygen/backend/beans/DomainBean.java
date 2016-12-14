@@ -40,6 +40,9 @@ public class DomainBean {
                 missionLadderBeans.add(new MissionLadderBean(missionLadderRef.get()));
             }
         }
+
+        // Enforce security.
+        ownerBean.setSessionId(null);
     }
 
     public Long getId() {

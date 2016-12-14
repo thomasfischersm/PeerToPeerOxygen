@@ -44,7 +44,7 @@ public class UserBean {
         firebaseToken = masteruser.getFirebaseToken();
         firstName = masteruser.getFirstName();
         lastName = masteruser.getLastName();
-        name = masteruser.getLastName();
+        name = masteruser.getName();
         profilePictureUrl = masteruser.getProfilePictureUrl();
         created = masteruser.getCreated();
         domainId = RefUtil.getDomainId(oxygenUser);
