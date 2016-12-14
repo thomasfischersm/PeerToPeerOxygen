@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxygenApi;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.DomainBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MasterUserBean;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
@@ -18,6 +19,7 @@ import com.restfb.types.User;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Nullable;
 
@@ -120,5 +122,16 @@ public class ApiTestUtil {
 
         System.out.println("bla");
 
+    }
+
+    public static DomainBean createPrivateTestDomain(
+            PeerToPeerOxygenApi api,
+            MasterUserBean masterUserBean) throws IOException {
+
+        return api.createPrivateDomain(
+                masterUserBean.getSessionId(),
+                ApiTestUtil.GENERATED_DOMAIN_NAME + new Random().nextLong(),
+                ApiTestUtil.GENERATED_DOMAIN_DESCRIPTION)
+                .execute();
     }
 }

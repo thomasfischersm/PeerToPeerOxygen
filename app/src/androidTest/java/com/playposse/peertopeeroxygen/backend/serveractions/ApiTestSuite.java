@@ -15,8 +15,9 @@ import java.io.IOException;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        RegisterOrLoginServerActionTest.class,
         CreatePrivateDomainServerActionTest.class,
+        RegisterOrLoginServerActionTest.class,
+        SaveMissionLadderServerActionTest.class,
         SubscribeToPrivateDomainServerActionTest.class,
 })
 public class ApiTestSuite {
