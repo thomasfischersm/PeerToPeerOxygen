@@ -5,6 +5,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxygenApi;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.DomainBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MasterUserBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
@@ -16,9 +17,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * An API test for SaveMissionLadderServerAction.
@@ -69,6 +72,9 @@ public class SaveMissionLadderServerActionTest {
         assertEquals(MISSION_LADDER_DESCRIPTION, resultBean.getDescription());
         assertEquals(testDomainBean.getId(), resultBean.getDomainId());
 
+        missionLadderBean.setId(resultBean.getId());
+        verifyMissionLadder(missionLadderBean);
+
         return resultBean;
     }
 
@@ -84,6 +90,7 @@ public class SaveMissionLadderServerActionTest {
                 testDomainBean.getId(),
                 missionLadderBean)
                 .execute();
+        verifyMissionLadder(missionLadderBean);
 
         assertNotNull(resultBean);
         assertNotNull(resultBean.getId());
@@ -101,5 +108,30 @@ public class SaveMissionLadderServerActionTest {
                 missionLadderBean.getId(),
                 testDomainBean.getId())
                 .execute();
+        verifyZeroMissionLadders();
+    }
+
+    private void verifyMissionLadder(MissionLadderBean expectedLadder) throws IOException {
+        CompleteMissionDataBean completeMissionDataBean =
+                api.getMissionData(masterUserBean.getSessionId(), testDomainBean.getId()).execute();
+        List<MissionLadderBean> missionLadderBeans =
+                completeMissionDataBean.getMissionLadderBeans();
+
+        assertNotNull(missionLadderBeans);
+        assertEquals(1, missionLadderBeans.size());
+
+        MissionLadderBean actualLadder = missionLadderBeans.get(0);
+        assertEquals(expectedLadder.getId(), actualLadder.getId());
+        assertEquals(expectedLadder.getName(), actualLadder.getName());
+        assertEquals(expectedLadder.getDescription(), actualLadder.getDescription());
+        assertEquals(expectedLadder.getDomainId(), actualLadder.getDomainId());
+    }
+
+    private void verifyZeroMissionLadders() throws IOException {
+        CompleteMissionDataBean completeMissionDataBean =
+                api.getMissionData(masterUserBean.getSessionId(), testDomainBean.getId()).execute();
+        List<MissionLadderBean> missionLadderBeans =
+                completeMissionDataBean.getMissionLadderBeans();
+        assertTrue((missionLadderBeans == null) || (missionLadderBeans.size() == 0));
     }
 }
