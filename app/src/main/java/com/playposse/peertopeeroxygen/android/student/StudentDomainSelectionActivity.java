@@ -53,6 +53,8 @@ public class StudentDomainSelectionActivity
         setContentView(R.layout.activity_student_domain_selection);
         super.onCreate(savedInstanceState);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
         rootView = (LinearLayout) findViewById(R.id.rootView);
         usersDomainTextView = (TextView) findViewById(R.id.usersDomainTextView);
         selectPublicDomainTextView = (TextView) findViewById(R.id.selectPublicDomainTextView);
@@ -105,10 +107,12 @@ public class StudentDomainSelectionActivity
         });
 
         showLoadingProgress();
+        Log.i(LOG_CAT, "StudentDomainSelectionActivity.onCreate has finished.");
     }
 
     @Override
     public void receiveData(DataRepository dataRepository) {
+        Log.i(LOG_CAT, "StudentDomainSelectionActivity.receiveData has been called.");
         super.receiveData(dataRepository);
 
         dataServiceConnection.getLocalBinder().getPublicDomains(this);
@@ -116,6 +120,7 @@ public class StudentDomainSelectionActivity
 
     @Override
     public void onResult(CombinedDomainBeans combinedDomainBeans) {
+        Log.i(LOG_CAT, "StudentDomainSelectionActivity.onResult has been called.");
         dismissLoadingProgress();
 
         Set<Long> subscribedDomainIds = OxygenSharedPreferences.getSubscribedDomainIds(this);
@@ -224,5 +229,12 @@ public class StudentDomainSelectionActivity
                 dataServiceConnection.getLocalBinder());
 
         startActivity(new Intent(getApplicationContext(), StudentMainActivity.class));
+    }
+
+    @Override
+    public void onServiceConnected() {
+        super.onServiceConnected();
+
+        receiveData(dataServiceConnection.getLocalBinder().getDataRepository());
     }
 }

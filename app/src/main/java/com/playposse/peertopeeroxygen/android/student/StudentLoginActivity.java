@@ -56,18 +56,7 @@ public class StudentLoginActivity extends DataServiceParentActivity {
                         new DataService.SignInSuccessCallback() {
                             @Override
                             public void onSuccess() {
-                                DataService.LocalBinder localBinder =
-                                        dataServiceConnection.getLocalBinder();
-                                PracticaRepository practicaRepository =
-                                        localBinder.getDataRepository().getPracticaRepository();
-                                practicaRepository.fetchFreshDataFromServer(
-                                        getApplicationContext(),
-                                        localBinder);
-
-                                Intent intent = new Intent(
-                                        getApplicationContext(),
-                                        StudentMainActivity.class);
-                                startActivity(intent);
+                                handleLoginCompleted();
                             }
                         });
             }
@@ -109,5 +98,21 @@ public class StudentLoginActivity extends DataServiceParentActivity {
     public void receiveData(DataRepository dataRepository) {
         // This should actually never be called because this activity disables the initilization
         // call.
+    }
+
+    private void handleLoginCompleted() {
+        DataService.LocalBinder localBinder =
+                dataServiceConnection.getLocalBinder();
+        PracticaRepository practicaRepository =
+                localBinder.getDataRepository().getPracticaRepository();
+        practicaRepository.fetchFreshDataFromServer(
+                getApplicationContext(),
+                localBinder);
+
+        if (OxygenSharedPreferences.getCurrentDomainId(getApplicationContext()) == null) {
+            startActivity(new Intent(this, StudentDomainSelectionActivity.class));
+        } else {
+            startActivity(new Intent(this, StudentMainActivity.class));
+        }
     }
 }

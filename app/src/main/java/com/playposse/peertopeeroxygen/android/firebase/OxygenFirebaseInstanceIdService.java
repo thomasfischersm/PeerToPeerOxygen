@@ -35,10 +35,16 @@ public class OxygenFirebaseInstanceIdService extends FirebaseInstanceIdService {
                 && (!actualFirebaseToken.equals(storedFirebaseToken))) {
             updateFireBaseTokenInCloud(getApplicationContext());
         }
+
+        Log.i(LOG_CAT, "OxygenFirebaseInstanceIdService.onCreate completed with token: "
+                + actualFirebaseToken);
     }
 
     @Override
     public void onTokenRefresh() {
+        Log.i(LOG_CAT, "OxygenFirebaseInstanceIdService.onTokenRefresh started with token: "
+                + FirebaseInstanceId.getInstance().getToken());
+
         updateFireBaseTokenInCloud(getApplicationContext());
     }
 

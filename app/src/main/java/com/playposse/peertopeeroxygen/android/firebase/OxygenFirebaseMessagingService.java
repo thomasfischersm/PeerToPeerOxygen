@@ -11,6 +11,7 @@ import com.playposse.peertopeeroxygen.android.data.DataReceivedCallback;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceConnection;
+import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.firebase.actions.AdminPromotionClientAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.FirebaseClientAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.InvalidateMissionDataClientAction;
@@ -25,6 +26,7 @@ import com.playposse.peertopeeroxygen.android.firebase.actions.UpdatePointsClien
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * An implementation of {@link FirebaseMessagingService} that receives messages from AppEngine. The
@@ -63,6 +65,17 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
         bindService(intent, dataServiceConnection, Context.BIND_AUTO_CREATE);
 
         FirebaseMessaging.getInstance().subscribeToTopic(ALL_DEVICES_TOPIC);
+        subscribeToDomainTopics();
+    }
+
+    private void subscribeToDomainTopics() {
+        Set<Long> domainIds =
+                OxygenSharedPreferences.getSubscribedDomainIds(getApplicationContext());
+        if (domainIds != null) {
+            for (Long domainId : domainIds) {
+                subscribeToDomainTopic(domainId);
+            }
+        }
     }
 
     @Override

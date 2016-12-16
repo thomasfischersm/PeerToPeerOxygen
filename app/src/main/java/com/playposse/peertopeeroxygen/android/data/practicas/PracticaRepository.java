@@ -26,9 +26,11 @@ import java.util.Map;
 
 /**
  * A client repository that stores meta information about practicas.
- * <p>
+ *
  * <p>This repository saves to a cache file each time it receives a data update. When it starts, it
  * tries to read from that cache file.
+ *
+ * <p>TODO: Need to make this work for multiple domains.
  */
 public class PracticaRepository {
 
@@ -39,7 +41,7 @@ public class PracticaRepository {
     private Map<Long, PracticaBean> practicaBeans = new HashMap<>();
     private PracticaBean currentPractica;
 
-    public PracticaRepository(final Context context, DataService.LocalBinder localBinder) {
+    public PracticaRepository(Context context, DataService.LocalBinder localBinder) {
         // Try to load from JSON encoded cache file.
         try {
             if (load(context)) {
@@ -58,6 +60,11 @@ public class PracticaRepository {
     public  void fetchFreshDataFromServer(
             final Context context,
             DataService.LocalBinder localBinder) {
+
+        if (OxygenSharedPreferences.getCurrentDomainId(context) == null) {
+            // No domain has been subscribed to yet.
+            return;
+        }
 
         // Couldn't load from cache. Try to retrieve the practica data from the cloud in a separate
         // thread.

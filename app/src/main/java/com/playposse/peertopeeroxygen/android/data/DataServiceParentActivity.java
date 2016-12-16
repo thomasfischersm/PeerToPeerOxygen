@@ -104,17 +104,27 @@ public abstract class DataServiceParentActivity
     }
 
     protected void showLoadingProgress() {
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle(R.string.progress_dialog_title);
-        progressDialog.setMessage(getString(R.string.progress_dialog_message));
-        progressDialog.setCancelable(false); // disable dismiss by tapping outside of the dialog
-        progressDialog.show();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog = new ProgressDialog(DataServiceParentActivity.this);
+                progressDialog.setTitle(R.string.progress_dialog_title);
+                progressDialog.setMessage(getString(R.string.progress_dialog_message));
+                progressDialog.setCancelable(false); // disable dismiss by tapping outside of the dialog
+                progressDialog.show();
+            }
+        });
     }
 
     protected void dismissLoadingProgress() {
         if (progressDialog != null) {
-            progressDialog.dismiss();
-            progressDialog = null;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressDialog.dismiss();
+                    progressDialog = null;
+                }
+            });
         }
     }
 }
