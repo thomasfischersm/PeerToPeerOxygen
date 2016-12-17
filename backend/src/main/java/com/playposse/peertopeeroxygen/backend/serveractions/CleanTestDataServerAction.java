@@ -1,11 +1,14 @@
 package com.playposse.peertopeeroxygen.backend.serveractions;
 
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.playposse.peertopeeroxygen.backend.schema.Domain;
 import com.playposse.peertopeeroxygen.backend.schema.MasterUser;
 import com.playposse.peertopeeroxygen.backend.schema.Mission;
 import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
 import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
+import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
+import com.playposse.peertopeeroxygen.backend.schema.Practica;
 import com.playposse.peertopeeroxygen.backend.schema.util.RefUtil;
 
 import java.util.ArrayList;
@@ -32,12 +35,17 @@ public class CleanTestDataServerAction extends ServerAction {
         List<MasterUser> masterUsers = ofy().load().type(MasterUser.class).list();
         List<MasterUser> testMasterUsers = new ArrayList<>();
         List<Ref<MasterUser>> testMasterUserRefs = new ArrayList<>();
+        List<Key<OxygenUser>> testOxygenUserKeys = new ArrayList<>();
 
         // Find test users.
         for (MasterUser masterUser : masterUsers) {
             if (TEST_USER_NAME.equals(masterUser.getName())) {
                 testMasterUsers.add(masterUser);
                 testMasterUserRefs.add(RefUtil.createMasterUserRef(masterUser));
+
+                for (Ref<OxygenUser> oxygenUserRef : masterUser.getDomainUserRefs()) {
+                    testOxygenUserKeys.add(oxygenUserRef.getKey());
+                }
             }
         }
 
@@ -46,7 +54,7 @@ public class CleanTestDataServerAction extends ServerAction {
                 ofy().load().type(Domain.class).filter("ownerRef IN", testMasterUserRefs).list();
         List<Ref<Domain>> domainRefs = RefUtil.createDomainRefs(domains);
 
-        // Find mission data owned by test users.
+        // Find mission data in test domains.
         if (domainRefs.size() > 0) {
             List<MissionLadder> missionLadders =
                     ofy().load().type(MissionLadder.class).filter("domainRef IN", domainRefs).list();
@@ -59,11 +67,18 @@ public class CleanTestDataServerAction extends ServerAction {
             ofy().delete().entities(missions);
             ofy().delete().entities(missionTrees);
             ofy().delete().entities(missionLadders);
+        }
 
+        // Find practicas in test domains.
+        List<Practica> practicas =
+                ofy().load().type(Practica.class).filter("domainRef IN", domainRefs).list();
+        if (practicas.size() > 0) {
+            ofy().delete().entities(practicas);
         }
 
         // Nuke rest of all the data.
         ofy().delete().entities(domains);
         ofy().delete().entities(testMasterUsers);
+        ofy().delete().keys(testOxygenUserKeys);
     }
 }

@@ -12,7 +12,9 @@ import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 import com.playposse.peertopeeroxygen.backend.schema.Practica;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
@@ -35,27 +37,32 @@ public class GetPracticaServerAction extends ServerAction{
     public static List<PracticaBean> getPractica(
             Long sessionId,
             PracticaDates practicaDates,
-            Long domainId)
+            Set<Long> domainIds)
             throws BadRequestException, UnauthorizedException {
 
         // Look up data.
         MasterUser masterUser = loadMasterUserBySessionId(sessionId);
-        OxygenUser oxygenUser = findOxygenUserByDomain(masterUser, domainId);
+        for (Long domainId : domainIds) {
+            findOxygenUserByDomain(masterUser, domainId);
+        }
 
-        Key<Domain> domainKey = Key.create(Domain.class, domainId);
+        Set<Key<Domain>> domainKeys = new HashSet<>(domainIds.size());
+        for (Long domainId : domainIds) {
+            domainKeys.add(Key.create(Domain.class, domainId));
+        }
         final List<Practica> practicas;
         switch (practicaDates) {
             case future:
                 practicas = ofy().load()
                         .type(Practica.class)
-                        .filter("domainRef =", domainKey)
+                        .filter("domainRef IN", domainKeys)
                         .filter("end >=", System.currentTimeMillis())
                         .list();
                 break;
             case past:
                 practicas = ofy().load()
                         .type(Practica.class)
-                        .filter("domainRef =", domainKey)
+                        .filter("domainRef IN", domainKeys)
                         .filter("end <", System.currentTimeMillis())
                         .list();
                 break;
@@ -63,16 +70,16 @@ public class GetPracticaServerAction extends ServerAction{
                 throw new BadRequestException("Unexpected practica date: " + practicaDates);
         }
 
-        return convert(practicas, domainId);
+        return convert(practicas);
     }
 
-    private static List<PracticaBean> convert(List<Practica> practicas, Long domainId)
+    private static List<PracticaBean> convert(List<Practica> practicas)
             throws BadRequestException {
 
         List<PracticaBean> practicaBeans = new ArrayList<>(practicas.size());
         if (practicas != null) {
             for (Practica practica : practicas) {
-                verifyPracticaByDomain(practica, domainId);
+//                verifyPracticaByDomain(practica, domainId);
                 practicaBeans.add(new PracticaBean(practica));
             }
         }

@@ -24,6 +24,7 @@ public class GetPracticaClientAction extends ApiClientAction {
     }
 
     private final PracticaDates practicaDates;
+    private final List<Long> domainIds;
     private final Callback callback;
 
     private List<PracticaBean> practicaBeans;
@@ -31,18 +32,20 @@ public class GetPracticaClientAction extends ApiClientAction {
     public GetPracticaClientAction(
             BinderForActions binder,
             PracticaDates practicaDates,
+            List<Long> domainIds,
             Callback callback) {
 
         super(binder, false);
 
         this.practicaDates = practicaDates;
+        this.domainIds = domainIds;
         this.callback = callback;
     }
 
     @Override
     protected void executeAsync() throws IOException {
         practicaBeans = getApi()
-                .getPractica(getSessionId(), practicaDates.name(), getDomainId())
+                .getPractica(domainIds, practicaDates.name(), getSessionId())
                 .execute()
                 .getItems();
     }

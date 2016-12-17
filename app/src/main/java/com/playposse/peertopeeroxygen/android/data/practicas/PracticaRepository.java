@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A client repository that stores meta information about practicas.
@@ -68,8 +69,11 @@ public class PracticaRepository {
 
         // Couldn't load from cache. Try to retrieve the practica data from the cloud in a separate
         // thread.
+        List<Long> subscribedDomainIds =
+                new ArrayList<>(OxygenSharedPreferences.getSubscribedDomainIds(context));
         localBinder.getPractica(
                 GetPracticaClientAction.PracticaDates.future,
+                subscribedDomainIds,
                 new GetPracticaClientAction.Callback() {
                     @Override
                     public void onResult(List<PracticaBean> result) {

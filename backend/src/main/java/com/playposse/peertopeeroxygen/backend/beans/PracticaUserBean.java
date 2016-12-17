@@ -2,6 +2,7 @@ package com.playposse.peertopeeroxygen.backend.beans;
 
 import com.google.appengine.repackaged.com.google.api.client.json.JsonString;
 import com.playposse.peertopeeroxygen.backend.schema.LevelCompletion;
+import com.playposse.peertopeeroxygen.backend.schema.MasterUser;
 import com.playposse.peertopeeroxygen.backend.schema.MissionCompletion;
 import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
 
@@ -29,12 +30,14 @@ public class PracticaUserBean {
     }
 
     public PracticaUserBean(OxygenUser user) {
+        MasterUser masterUser = user.getMasterUserRef().get();
+
         id = user.getId();
         isAdmin = user.isAdmin();
-        firstName = user.getFirstName();
-        lastName = user.getLastName();
-        name = user.getName();
-        profilePictureUrl = user.getProfilePictureUrl();
+        firstName = masterUser.getFirstName();
+        lastName = masterUser.getLastName();
+        name = masterUser.getName();
+        profilePictureUrl = masterUser.getProfilePictureUrl();
         studiedMissions = buildStudiedMissionString(user.getMissionCompletions());
         completedLevels = buildCompletedLevelsString(user.getLevelCompletions());
     }

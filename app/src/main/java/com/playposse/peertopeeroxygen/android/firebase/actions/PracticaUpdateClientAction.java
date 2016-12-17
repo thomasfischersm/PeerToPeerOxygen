@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.data.practicas.PracticaRepository;
 import com.playposse.peertopeeroxygen.android.firebase.FirebaseMessage;
 import com.playposse.peertopeeroxygen.android.firebase.actions.data.TempPracticaBean;
@@ -14,6 +15,7 @@ import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.Practica
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.PracticaUserBean;
 
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * Firebase client action that processes updates to practica meta information.
@@ -32,6 +34,16 @@ public class PracticaUpdateClientAction extends FirebaseClientAction {
     protected void execute(RemoteMessage remoteMessage) {
         try {
             PracticaUpdateMessage message = new PracticaUpdateMessage(remoteMessage);
+
+            Set<Long> subscribedDomainIds =
+                    OxygenSharedPreferences.getSubscribedDomainIds(getApplicationContext());
+            Long domainId = message.getPracticaBean().getDomainId();
+            if (!subscribedDomainIds.contains(domainId)) {
+                // Skip because it's an unrelated domain.
+                // TODO: Improve this to only send Firebase messages for subscribed domains!
+                return;
+            }
+
             PracticaRepository practicaRepository = getDataRepository().getPracticaRepository();
             practicaRepository.updatePracticaNotAttendees(message.getPracticaBean(), getApplicationContext());
 
@@ -63,6 +75,7 @@ public class PracticaUpdateClientAction extends FirebaseClientAction {
             practicaBean.setGpsLocation(tempPracticaBean.getGpsLocation());
             practicaBean.setCreated(tempPracticaBean.getCreated());
             practicaBean.setTimezone(tempPracticaBean.getTimezone());
+            practicaBean.setDomainId(tempPracticaBean.getDomainId());
 
             if (tempPracticaBean.getHostUserBean() != null) {
                 TempPracticaUserBean tempHostBean = tempPracticaBean.getHostUserBean();

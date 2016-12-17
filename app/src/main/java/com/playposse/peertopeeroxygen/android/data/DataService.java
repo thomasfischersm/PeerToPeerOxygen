@@ -311,8 +311,9 @@ public class DataService extends Service {
 
         public void getPractica(
                 GetPracticaClientAction.PracticaDates practicaDates,
+                List<Long> domainIds,
                 GetPracticaClientAction.Callback callback) {
-            new GetPracticaClientAction(this, practicaDates, callback).execute();
+            new GetPracticaClientAction(this, practicaDates, domainIds, callback).execute();
         }
 
         public void getPracticaById(

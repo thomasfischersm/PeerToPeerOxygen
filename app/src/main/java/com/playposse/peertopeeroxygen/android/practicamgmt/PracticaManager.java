@@ -21,7 +21,9 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataService;
+import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.data.clientactions.CheckIntoPracticaClientAction;
+import com.playposse.peertopeeroxygen.android.data.missions.MissionDataManager;
 import com.playposse.peertopeeroxygen.android.data.practicas.PracticaRepository;
 import com.playposse.peertopeeroxygen.android.firebase.OxygenFirebaseMessagingService;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
@@ -99,7 +101,7 @@ public class PracticaManager {
         }
 
         if (practicaRepository.getCurrentPractica() == null) {
-            checkPracticaGeoFence(activity, practicaRepository);
+            checkPracticaGeoFence(activity, localBinder);
         }
 
         checkEndOfPractica(localBinder);
@@ -110,7 +112,7 @@ public class PracticaManager {
      */
     private static void checkPracticaGeoFence(
             Activity activity,
-            PracticaRepository practicaRepository) {
+            DataService.LocalBinder localBinder) {
 
         if (!PermissionUtil.checkAndGetPermission(
                 activity,
@@ -125,13 +127,15 @@ public class PracticaManager {
             return;
         }
 
+        PracticaRepository practicaRepository =
+                localBinder.getDataRepository().getPracticaRepository();
         for (PracticaBean practicaBean : practicaRepository.getActivePracticas()) {
             Location practicaLocation = GeoUtil.toLocation(practicaBean.getGpsLocation());
             float distance = GeoUtil.distanceBetween(userLocation, practicaLocation);
             Log.i(LOG_CAT, "Evaluation practica distance: " + practicaBean.getName() + ": "
                     + distance + "m");
             if (distance <= GEO_FENCE_PERIMETER) {
-                startPracticaCheckinActivity(activity, practicaBean);
+                startPracticaCheckinActivity(activity, practicaBean, localBinder);
                 return;
             }
         }
@@ -162,7 +166,19 @@ public class PracticaManager {
                 });
     }
 
-    private static void startPracticaCheckinActivity(Activity activity, PracticaBean practicaBean) {
+    private static void startPracticaCheckinActivity(
+            Activity activity,
+            PracticaBean practicaBean,
+            DataService.LocalBinder localBinder) {
+
+        Long currentDomainId = OxygenSharedPreferences.getCurrentDomainId(activity);
+        if (!practicaBean.getDomainId().equals(currentDomainId)) {
+            MissionDataManager.switchToDomainAsync(
+                    practicaBean.getDomainId(),
+                    activity,
+                    localBinder);
+        }
+
         Intent intent = new Intent(activity, StudentPracticaCheckinActivity.class);
         intent.putExtra(ExtraConstants.EXTRA_PRACTICA_ID, practicaBean.getId());
         activity.startActivity(intent);

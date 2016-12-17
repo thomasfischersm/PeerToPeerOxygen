@@ -79,6 +79,7 @@ import com.playposse.peertopeeroxygen.backend.util.ObjectifyRegistrationServletC
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.annotation.Nullable;
@@ -400,14 +401,14 @@ public class PeerToPeerOxygenEndPoint {
         return SavePracticaServerAction.save(sessionId, practicaBean, domainId);
     }
 
-    @ApiMethod(name = "getPractica")
+    @ApiMethod(name = "getPractica", path="getPractica", httpMethod = ApiMethod.HttpMethod.POST)
     public List<PracticaBean> getPractica(
             @Named("sessionId") Long sessionId,
             @Named("practicaDates") GetPracticaServerAction.PracticaDates practicaDates,
-            @Named("domainId") Long domainId)
+            @Named("domainIds") Set<Long> domainIds)
             throws BadRequestException, UnauthorizedException {
 
-        return GetPracticaServerAction.getPractica(sessionId, practicaDates, domainId);
+        return GetPracticaServerAction.getPractica(sessionId, practicaDates, domainIds);
     }
 
     @ApiMethod(name = "getPracticaById")

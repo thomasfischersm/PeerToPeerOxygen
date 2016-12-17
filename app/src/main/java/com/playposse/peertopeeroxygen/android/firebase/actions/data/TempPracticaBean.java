@@ -17,6 +17,7 @@ public class TempPracticaBean {
 //        private List<PracticaUserBean> attendeeUserBeans = new ArrayList<>();
     private Long created;
     private String timezone;
+    private Long domainId;
 
     public Long getId() {
         return id;
@@ -96,5 +97,13 @@ public class TempPracticaBean {
 
     public void setHostUserBean(TempPracticaUserBean hostUserBean) {
         this.hostUserBean = hostUserBean;
+    }
+
+    public Long getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(Long domainId) {
+        this.domainId = domainId;
     }
 }

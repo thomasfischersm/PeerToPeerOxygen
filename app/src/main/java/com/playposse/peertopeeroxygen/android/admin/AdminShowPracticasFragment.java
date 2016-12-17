@@ -18,12 +18,14 @@ import android.widget.TextView;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataServiceParentFragment;
+import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetPracticaClientAction;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.PracticaBean;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -85,8 +87,12 @@ public class AdminShowPracticasFragment
 
     @Override
     public void receiveData(DataRepository dataRepository) {
+        Long domainId = OxygenSharedPreferences.getCurrentDomainId(getContext());
+        List<Long> domainIds = Collections.singletonList(domainId);
+
         dataServiceConnection.getLocalBinder().getPractica(
                 practicaDates,
+                domainIds,
                 new GetPracticaClientAction.Callback() {
                     @Override
                     public void onResult(List<PracticaBean> practicaBeanList) {
