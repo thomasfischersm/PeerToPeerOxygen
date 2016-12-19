@@ -378,13 +378,13 @@ public class MissionTreeWidget extends View {
             drawingCache = bitmap;
             Log.i(LOG_CAT, "DrawAsyncTask is done.");
             forceLayout();
-            ((View) getParent().getParent().getParent()).invalidate();
+//            ((View) getParent().getParent().getParent()).invalidate();
             requestLayout();
             invalidate();
-            ((View) getParent().getParent().getParent().getParent().getParent()).invalidate();
-            ((View) getParent().getParent().getParent().getParent().getParent()).forceLayout();
-            ((View) getParent().getParent().getParent().getParent().getParent()).requestLayout();
-            ((View) getParent().getParent().getParent().getParent().getParent()).invalidate();
+//            ((View) getParent().getParent().getParent().getParent().getParent()).invalidate();
+//            ((View) getParent().getParent().getParent().getParent().getParent()).forceLayout();
+//            ((View) getParent().getParent().getParent().getParent().getParent()).requestLayout();
+//            ((View) getParent().getParent().getParent().getParent().getParent()).invalidate();
         }
 
         private float toPx(float dp) {
