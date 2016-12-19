@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
+import com.playposse.peertopeeroxygen.android.missiondependencies.MissionLadderSorter;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.util.LogoutUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
@@ -76,6 +77,7 @@ public class StudentMainActivity extends StudentParentActivity {
     public void receiveData(DataRepository dataRepository) {
         List<MissionLadderBean> missionLadderBeans =
                 dataRepository.getMissionLadderBeans();
+        missionLadderBeans = MissionLadderSorter.sort(missionLadderBeans);
 
         View afterView = missionHeadingTextView;
         clearButtons(afterView);
