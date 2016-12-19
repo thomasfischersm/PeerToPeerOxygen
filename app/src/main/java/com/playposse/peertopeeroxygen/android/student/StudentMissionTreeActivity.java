@@ -73,6 +73,9 @@ public class StudentMissionTreeActivity extends StudentParentActivity {
             super(fragmentManager);
 
             this.missionLadderBean = missionLadderBean;
+
+            // Init title.
+            onPageSelected(0);
         }
 
         @Override
