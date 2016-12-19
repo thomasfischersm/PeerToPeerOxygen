@@ -89,7 +89,7 @@
     <string name="demote_from_admin_button">Demote from admin</string>
 
     <!-- Mission tree view -->
-    <string name="student_mission_tree_activity_title">Level %1$s: %2$s</string>
+    <string name="student_mission_tree_activity_title">Level %1$d: %2$s</string>
     <string name="boss_label">Boss: %1$s</string>
     <string name="teach_point_abbreviation">T: %1$s</string>
     <string name="practice_point_abbreviation">P: %1$s</string>
