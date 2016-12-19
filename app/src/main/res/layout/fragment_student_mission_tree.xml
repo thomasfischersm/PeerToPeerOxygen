@@ -1,8 +1,7 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     tools:context="com.playposse.peertopeeroxygen.android.student.StudentMissionTreeFragment">
 
     <ScrollView
@@ -21,4 +20,22 @@
 
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lockLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="1.0">
+
+        <ImageView
+            android:id="@+id/lockImageView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".7"
+            android:alpha="0.7"
+            android:src="@drawable/ic_lock_black_24dp" />
+    </LinearLayout>
+</RelativeLayout>

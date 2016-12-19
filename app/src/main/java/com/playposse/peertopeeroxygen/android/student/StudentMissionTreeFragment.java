@@ -2,6 +2,8 @@ package com.playposse.peertopeeroxygen.android.student;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -22,6 +26,7 @@ import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
 import com.playposse.peertopeeroxygen.android.ui.widgets.MissionTreeWidget;
 import com.playposse.peertopeeroxygen.android.util.VolleySingleton;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.LevelCompletionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
@@ -37,6 +42,8 @@ public class StudentMissionTreeFragment extends DataServiceParentFragment {
     private Long missionLadderId;
     private Long missionTreeId;
 
+    private LinearLayout lockLayout;
+    private ImageView lockImageView;
     private MissionTreeWidget missionTreeWidget;
 
     public StudentMissionTreeFragment() {
@@ -75,8 +82,9 @@ public class StudentMissionTreeFragment extends DataServiceParentFragment {
                 container,
                 false);
 
+        lockLayout = (LinearLayout) rootView.findViewById(R.id.lockLayout);
+        lockImageView = (ImageView) rootView.findViewById(R.id.lockImageView);
         missionTreeWidget = (MissionTreeWidget) rootView.findViewById(R.id.missionTreeWidget);
-
 
         return rootView;
     }
@@ -90,5 +98,21 @@ public class StudentMissionTreeFragment extends DataServiceParentFragment {
                 missionLadderId,
                 missionTreeBean,
                 dataRepository);
+
+        // Figure out if the level is unlocked.
+        int previousLevel = missionTreeBean.getLevel() - 1;
+        MissionTreeBean nextMissionTreeBean =
+                dataRepository.getMissionTreeBeanByLevel(missionLadderId, previousLevel);
+        boolean isUnlocked = false;
+        if (dataRepository.getUserBean().getAdmin()) {
+            isUnlocked = true;
+        } else if (missionTreeBean.getLevel() == 1) {
+            isUnlocked = true;
+        } else if (nextMissionTreeBean != null) {
+            LevelCompletionBean levelCompletionBean =
+                    dataRepository.getLevelCompletionByMissionTreeId(nextMissionTreeBean.getId());
+            isUnlocked = (levelCompletionBean != null);
+        }
+        lockLayout.setVisibility(isUnlocked ? View.GONE : View.VISIBLE);
     }
 }

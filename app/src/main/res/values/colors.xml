@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="emphasis">#31b6e7</color>
     <color name="bg_gray">#cecbce</color>
+    <color name="overlay_layer">#66000000</color>
 </resources>
