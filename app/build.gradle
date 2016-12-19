@@ -8,14 +8,17 @@ android {
         applicationId "com.playposse.peertopeeroxygen.android"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 15
-        versionName "15.0"
+        versionCode 16
+        versionName "16.0"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    dexOptions {
+        jumboMode true
     }
 }
 
