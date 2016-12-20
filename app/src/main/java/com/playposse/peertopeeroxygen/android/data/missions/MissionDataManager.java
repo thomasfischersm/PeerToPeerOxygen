@@ -2,6 +2,7 @@ package com.playposse.peertopeeroxygen.android.data.missions;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.WorkerThread;
 import android.util.Log;
 
 import com.google.api.client.json.JsonObjectParser;
@@ -77,6 +78,7 @@ public class MissionDataManager {
         invalidate(context, domainId);
     }
 
+    @WorkerThread
     public static void invalidate(Context context, Long domainId) {
         Long currentDomainId = OxygenSharedPreferences.getCurrentDomainId(context);
         if (currentDomainId.equals(domainId)) {
@@ -105,6 +107,7 @@ public class MissionDataManager {
                 });
     }
 
+    @WorkerThread
     private static void switchToDomainSync(
             Long domainId,
             CompleteMissionDataBean completeMissionDataBean,
@@ -124,6 +127,7 @@ public class MissionDataManager {
         localBinder.makeDataReceivedCallbacks();
     }
 
+    @WorkerThread
     public static void saveSync(Context context, DataService.LocalBinder localBinder) {
 
         Long domainId = OxygenSharedPreferences.getCurrentDomainId(context);
@@ -132,6 +136,7 @@ public class MissionDataManager {
         saveSync(domainId, completeMissionDataBean, context, localBinder);
     }
 
+    @WorkerThread
     private static void saveSync(
             Long domainId,
             CompleteMissionDataBean completeMissionDataBean,
@@ -171,6 +176,7 @@ public class MissionDataManager {
         return json;
     }
 
+    @WorkerThread
     private static File getFile(Context context, Long domainId) {
         String fileName = String.format(FILE_PATTERN, domainId);
         return new File(context.getCacheDir(), fileName);
