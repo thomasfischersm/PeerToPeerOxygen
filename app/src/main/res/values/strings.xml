@@ -5,12 +5,15 @@
 
     <!-- Admin home -->
     <string name="admin_home_title">Admin: %1$s</string>
+    <string name="content_management_title">Content management</string>
     <string name="edit_domain_link">Edit domain</string>
     <string name="show_mission_ladders_link">Edit courses</string>
-    <string name="show_practicas_link">Show practicas</string>
-    <string name="student_roster_link">Show student roster</string>
+    <string name="show_practicas_link">Edit practicas</string>
+    <string name="student_management_title">Student management</string>
+    <string name="student_roster_link">Student roster</string>
     <string name="stats_link">Mission stats</string>
     <string name="feedback_link">Mission feedback</string>
+    <string name="other_title">Other</string>
     <string name="backup_link">Backup</string>
     <string name="loaner_devices_link">Loaner devices</string>
 
