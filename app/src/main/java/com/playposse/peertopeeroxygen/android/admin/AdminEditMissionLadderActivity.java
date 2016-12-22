@@ -10,7 +10,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
@@ -38,7 +41,7 @@ public class AdminEditMissionLadderActivity extends AdminParentActivity {
     private EditText nameEditText;
     private EditText descriptionEditText;
     private ListViewNoScroll missionLaddersListView;
-    private TextView createMissionTreeLink;
+    private Button createMissionTreeButton;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -56,12 +59,12 @@ public class AdminEditMissionLadderActivity extends AdminParentActivity {
 
         Log.i(LOG_CAT, "Edit mission ladder called with ladder id: " + missionLadderId);
 
-        createMissionTreeLink = (TextView) findViewById(R.id.createMissionTreeLink);
         nameEditText = (EditText) findViewById(R.id.missionLadderNameEditText);
         descriptionEditText = (EditText) findViewById(R.id.missionLadderDescriptionEditText);
         missionLaddersListView = (ListViewNoScroll) findViewById(R.id.missionTreesListView);
+        createMissionTreeButton = (Button) findViewById(R.id.createMissionTreeButton);
 
-        createMissionTreeLink.setOnClickListener(new View.OnClickListener() {
+        createMissionTreeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(
@@ -152,10 +155,10 @@ public class AdminEditMissionLadderActivity extends AdminParentActivity {
                     getString(R.string.mission_tree_label),
                     missionTreeBean.getLevel(),
                     missionTreeBean.getName());
-            TextView missionTreeNameLink =
-                    (TextView) convertView.findViewById(R.id.missionTreeNameLink);
-            missionTreeNameLink.setText(missionTreeNameLabel);
-            missionTreeNameLink.setOnClickListener(new View.OnClickListener() {
+            Button missionTreeNameButton =
+                    (Button) convertView.findViewById(R.id.missionTreeNameButton);
+            missionTreeNameButton.setText(missionTreeNameLabel);
+            missionTreeNameButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     saveIfNecessary();
@@ -170,9 +173,9 @@ public class AdminEditMissionLadderActivity extends AdminParentActivity {
                 }
             });
 
-            TextView missionTreeDeleteLink =
-                    (TextView) convertView.findViewById(R.id.missionTreeDeleteLink);
-            missionTreeDeleteLink.setOnClickListener(new View.OnClickListener() {
+            ImageButton missionTreeDeleteButton =
+                    (ImageButton) convertView.findViewById(R.id.missionTreeDeleteLink);
+            missionTreeDeleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     String deleteMessage = String.format(
