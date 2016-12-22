@@ -6,7 +6,7 @@
     <!-- Admin home -->
     <string name="admin_home_title">Admin: %1$s</string>
     <string name="edit_domain_link">Edit domain</string>
-    <string name="show_mission_ladders_link">Show mission ladders</string>
+    <string name="show_mission_ladders_link">Edit courses</string>
     <string name="show_practicas_link">Show practicas</string>
     <string name="student_roster_link">Show student roster</string>
     <string name="stats_link">Mission stats</string>
@@ -15,19 +15,19 @@
     <string name="loaner_devices_link">Loaner devices</string>
 
     <!-- Show mission ladders -->
-    <string name="show_mission_ladders_title">Show mission ladders</string>
-    <string name="new_mission_ladder_link">Create new mission ladder</string>
-    <string name="confirm_delete_mission_ladder_message">Do you want to delete mission ladder: %1$s?</string>
+    <string name="show_mission_ladders_title">Course listing</string>
+    <string name="new_mission_ladder_link">Create new course</string>
+    <string name="confirm_delete_mission_ladder_message">Do you want to delete the course: %1$s?</string>
 
     <!-- Edit mission ladder -->
-    <string name="edit_mission_ladder_title">Mission ladder: %1$s</string>
-    <string name="mission_trees_label">Mission trees</string>
-    <string name="new_mission_tree_link">Create new mission tree</string>
+    <string name="edit_mission_ladder_title">Course: %1$s</string>
+    <string name="mission_trees_label">Levels</string>
+    <string name="new_mission_tree_link">Create a new level</string>
     <string name="mission_tree_label">Level %1$d: %2$s</string>
-    <string name="confirm_delete_mission_tree_message">Do you want to delete mission tree: %1$s?</string>
+    <string name="confirm_delete_mission_tree_message">Do you want to delete the level: %1$s?</string>
 
     <!-- Edit mission trees -->
-    <string name="edit_mission_tree_title">Mission tree: %1$s</string>
+    <string name="edit_mission_tree_title">Level: %1$s</string>
     <string name="boss_mission_label">Boss mission: </string>
     <string name="missions_label">Missions</string>
     <string name="new_mission_link">Create new mission</string>
@@ -103,7 +103,7 @@
     <string name="save_private_domain_button_label">Save</string>
 
     <!-- Student home -->
-    <string name="student_learning_mission_heading">Learning missions</string>
+    <string name="student_learning_mission_heading">Courses</string>
     <string name="student_functions_heading">Functions</string>
     <string name="student_profile_label">View profile</string>
     <string name="view_practica_label">View practica</string>
@@ -200,9 +200,9 @@
     <string name="cant_supervise_mission_toast">%1$s invited you to supervise teaching  \'%2$s\'. You have to teach the mission under supervision yourself before you can supervise another buddy!</string>
     <string name="mentor_not_ready_toast">%1$s isn\'t ready to mentor that mission yet.</string>
     <string name="import_mission_parse_error_toast">The file could not be parsed.</string>
-    <string name="mission_ladder_save_confirmation_toast">The mission ladder is saved.</string>
-    <string name="mission_tree_save_confirmation_toast">The mission tree is saved.</string>
-    <string name="mission_save_confirmation_toast">The mission is saved.</string>
+    <string name="mission_ladder_save_confirmation_toast">The course has been saved.</string>
+    <string name="mission_tree_save_confirmation_toast">The level has been saved.</string>
+    <string name="mission_save_confirmation_toast">The mission has been saved.</string>
     <string name="google_drive_import_failed_toast">The Google drive import failed with code: %1$s.</string>
     <string name="google_drive_read_failed_toast">Failed reading from Google Drive with error: %1$s.</string>
     <string name="google_drive_read_open_failed_toast">Failed open file from Google Drive with error: %1$s.</string>
