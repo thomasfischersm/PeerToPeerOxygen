@@ -122,16 +122,18 @@ public class AdminEditMissionLadderActivity extends AdminParentActivity {
             // existing mission ladder
             missionLadderBean =
                     dataRepository.getMissionLadderBean(missionLadderId);
-            nameEditText.setText(missionLadderBean.getName());
-            descriptionEditText.setText(missionLadderBean.getDescription());
+            if (missionLadderBean != null) {
+                nameEditText.setText(missionLadderBean.getName());
+                descriptionEditText.setText(missionLadderBean.getDescription());
 
-            MissionTreeBeanArrayAdapter adapter = new MissionTreeBeanArrayAdapter(
-                    missionLadderBean.getMissionTreeBeans());
-            missionLaddersListView.setAdapter(adapter);
+                MissionTreeBeanArrayAdapter adapter = new MissionTreeBeanArrayAdapter(
+                        missionLadderBean.getMissionTreeBeans());
+                missionLaddersListView.setAdapter(adapter);
 
-            setTitle(String.format(
-                    getString(R.string.edit_mission_ladder_title),
-                    missionLadderBean.getName()));
+                setTitle(String.format(
+                        getString(R.string.edit_mission_ladder_title),
+                        missionLadderBean.getName()));
+            }
         }
     }
 

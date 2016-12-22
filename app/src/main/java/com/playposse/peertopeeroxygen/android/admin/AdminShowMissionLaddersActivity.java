@@ -8,8 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.ScrollView;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
@@ -22,8 +24,9 @@ import java.util.List;
 
 public class AdminShowMissionLaddersActivity extends AdminParentActivity {
 
-    private TextView createMissionLadderLink;
+    private Button createMissionLadderButton;
     private ListView missionLaddersListView;
+    private ScrollView missionLadderHintScrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +35,11 @@ public class AdminShowMissionLaddersActivity extends AdminParentActivity {
 
         setTitle(R.string.show_mission_ladders_title);
 
-        createMissionLadderLink = (TextView) findViewById(R.id.createMissionLadderLink);
+        createMissionLadderButton = (Button) findViewById(R.id.createMissionLadderButton);
         missionLaddersListView = (ListView) findViewById(R.id.missionLaddersListView);
+        missionLadderHintScrollView = (ScrollView) findViewById(R.id.missionLadderHintScrollView);
 
-        createMissionLadderLink.setOnClickListener(new View.OnClickListener() {
+        createMissionLadderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(
@@ -48,10 +52,20 @@ public class AdminShowMissionLaddersActivity extends AdminParentActivity {
 
     @Override
     public void receiveData(final DataRepository dataRepository) {
+        List<MissionLadderBean> missionLadderBeans = dataRepository.getMissionLadderBeans();
         MissionLadderBeanArrayAdapter adapter = new MissionLadderBeanArrayAdapter(
-                new ArrayList<>(dataRepository.getMissionLadderBeans()));
+                new ArrayList<>(missionLadderBeans));
         missionLaddersListView.setAdapter(adapter);
         missionLaddersListView.refreshDrawableState();
+
+        // Show hint if there are no mission ladders.
+        if (missionLadderBeans.size() == 0) {
+            missionLadderHintScrollView.setVisibility(View.VISIBLE);
+            missionLaddersListView.setVisibility(View.GONE);
+        } else {
+            missionLadderHintScrollView.setVisibility(View.GONE);
+            missionLaddersListView.setVisibility(View.VISIBLE);
+        }
     }
 
     private final class MissionLadderBeanArrayAdapter
@@ -71,10 +85,10 @@ public class AdminShowMissionLaddersActivity extends AdminParentActivity {
             }
 
             final MissionLadderBean missionLadderBean = getItem(position);
-            TextView missionLadderNameLink =
-                    (TextView) convertView.findViewById(R.id.missionLadderNameLink);
-            missionLadderNameLink.setText(missionLadderBean.getName());
-            missionLadderNameLink.setOnClickListener(new View.OnClickListener() {
+            Button missionLadderNameButton =
+                    (Button) convertView.findViewById(R.id.missionLadderNameButton);
+            missionLadderNameButton.setText(missionLadderBean.getName());
+            missionLadderNameButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(
@@ -87,8 +101,8 @@ public class AdminShowMissionLaddersActivity extends AdminParentActivity {
                 }
             });
 
-            TextView missionLadderDeleteLink =
-                    (TextView) convertView.findViewById(R.id.missionLadderDeleteLink);
+            ImageButton missionLadderDeleteLink =
+                    (ImageButton) convertView.findViewById(R.id.missionLadderDeleteButton);
             missionLadderDeleteLink.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

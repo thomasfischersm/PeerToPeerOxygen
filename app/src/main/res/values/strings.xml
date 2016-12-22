@@ -19,6 +19,7 @@
 
     <!-- Show mission ladders -->
     <string name="show_mission_ladders_title">Course listing</string>
+    <string name="mission_ladder_hint">Help:\nYou probably want to have a main course. In the case of a new driver learning to drive, the main course would take the student from the first ignition turn to the DMV driving exam.\n\nYou might want to offer advanced courses like off road driving and basic DIY mechanics. You might also want to offer a course with optional content, like practice drills.\n\nYou\'ll group missions into levels for conceptual organization and to provide frequent learning accomplishments. 8-12 missions per level is roughly what fits on an average phone screen.\n\nExample:\n- Course: Learn to drive\n-- Level 1: Parking lot warmup\n--- Mission: Starting and stopping\n...\n- Course: Simple DIY mechanics\n- Course: Off-road driving</string>
     <string name="new_mission_ladder_link">Create new course</string>
     <string name="confirm_delete_mission_ladder_message">Do you want to delete the course: %1$s?</string>
 
