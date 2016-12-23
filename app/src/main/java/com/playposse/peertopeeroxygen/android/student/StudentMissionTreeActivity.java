@@ -120,10 +120,12 @@ public class StudentMissionTreeActivity extends StudentParentActivity {
 
         @Nullable
         private MissionTreeBean getMissonTreeBeanByPosition(int position) {
-            List<MissionTreeBean> missionTreeBeans = missionLadderBean.getMissionTreeBeans();
-            if ((missionTreeBeans != null) && (position < missionTreeBeans.size())) {
+            if (missionLadderBean != null) {
+                List<MissionTreeBean> missionTreeBeans = missionLadderBean.getMissionTreeBeans();
+                if ((missionTreeBeans != null) && (position < missionTreeBeans.size())) {
 
-                return missionTreeBeans.get(position);
+                    return missionTreeBeans.get(position);
+                }
             }
 
             return null;

@@ -6,4 +6,10 @@
     <color name="emphasis">#31b6e7</color>
     <color name="bg_gray">#cecbce</color>
     <color name="overlay_layer">#66000000</color>
+
+    <!-- Mission state colors -->
+    <color name="lockedMission">#9E9E9E</color>
+    <color name="readyMission">#4CAF50</color>
+    <color name="learnedMission">#212121</color>
+    <color name="teachableMission">#03A9F4</color>
 </resources>

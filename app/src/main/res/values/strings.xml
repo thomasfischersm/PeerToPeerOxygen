@@ -99,8 +99,18 @@
     <string name="teach_point_abbreviation">T: %1$s</string>
     <string name="practice_point_abbreviation">P: %1$s</string>
     <string name="heart_point_abbreviation">H: %1$s</string>
-    <string name="studyCountLabel">Studied: %1$s/%2$s</string>
-    <string name="mentorCountLabel">Taught: %1$s times</string>
+    <string name="study_count_label">Studied: %1$s/%2$s</string>
+    <string name="mentor_count_label">Taught: %1$s times</string>
+    <string name="legend_heading">Legend</string>
+    <string name="legend_cost_heading">Cost: </string>
+    <string name="legend_teach_point">teach point</string>
+    <string name="legend_practice_point">practice point</string>
+    <string name="legend_heart_point">heart point</string>
+    <string name="legend_mission_heading">Mission:</string>
+    <string name="legend_locked_mission">locked</string>
+    <string name="legend_ready_mission">ready</string>
+    <string name="legend_learned_mission">learned</string>
+    <string name="legend_solo_teachable_mission">teachable</string>
 
     <!-- Edit domain activity -->
     <string name="edit_domain_title">Edit domain</string>

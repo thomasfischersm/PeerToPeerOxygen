@@ -443,10 +443,10 @@ public class MissionTreeWidget extends View {
         // TODO: Consider avoiding that this creates new entries in the UserBean.
         MissionCompletionBean completion = dataRepository.getMissionCompletion(missionBean.getId());
         if (completion.getMentorCount() > 0) {
-            String mentorCountLabel = getContext().getString(R.string.mentorCountLabel);
+            String mentorCountLabel = getContext().getString(R.string.mentor_count_label);
             return String.format("\n" + mentorCountLabel, completion.getMentorCount());
         } else if (completion.getStudyCount() > 0) {
-            String studyCountLabel = getContext().getString(R.string.studyCountLabel);
+            String studyCountLabel = getContext().getString(R.string.study_count_label);
             return String.format(
                     "\n" + studyCountLabel,
                     completion.getStudyCount(),
