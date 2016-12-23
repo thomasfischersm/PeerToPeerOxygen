@@ -169,57 +169,59 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
             missionTreeBean = dataRepository.getMissionTreeBean(
                     missionLadderId,
                     missionTreeId);
-            nameEditText.setText(missionTreeBean.getName());
-            descriptionEditText.setText(missionTreeBean.getDescription());
+            if (missionTreeBean != null) {
+                nameEditText.setText(missionTreeBean.getName());
+                descriptionEditText.setText(missionTreeBean.getDescription());
 
-            setTitle(String.format(
-                    getString(R.string.edit_mission_tree_title),
-                    missionTreeBean.getName()));
+                setTitle(String.format(
+                        getString(R.string.edit_mission_tree_title),
+                        missionTreeBean.getName()));
 
-            // Load boss mission spinner.
-            final List<MissionBean> possibleBossMissions = getPossibleBossMissions(missionTreeBean);
-            bossMissionSpinner.setAdapter(new MissionSpinnerArrayAdapter(
-                    this,
-                    R.layout.list_item_text_view,
-                    possibleBossMissions));
-            if (missionTreeBean.getBossMissionId() != null) {
-                bossMissionBean = dataRepository.getMissionBean(
-                        missionLadderId,
-                        missionTreeId,
-                        missionTreeBean.getBossMissionId());
-                bossMissionSpinner.setSelection(possibleBossMissions.indexOf(bossMissionBean));
-            } else {
-                bossMissionBean = null;
-            }
-            bossMissionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(
-                        AdapterView<?> adapterView,
-                        View view,
-                        int selectedPosition,
-                        long id) {
-
-                    bossMissionBean = possibleBossMissions.get(selectedPosition);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
+                // Load boss mission spinner.
+                final List<MissionBean> possibleBossMissions = getPossibleBossMissions(missionTreeBean);
+                bossMissionSpinner.setAdapter(new MissionSpinnerArrayAdapter(
+                        this,
+                        R.layout.list_item_text_view,
+                        possibleBossMissions));
+                if (missionTreeBean.getBossMissionId() != null) {
+                    bossMissionBean = dataRepository.getMissionBean(
+                            missionLadderId,
+                            missionTreeId,
+                            missionTreeBean.getBossMissionId());
+                    bossMissionSpinner.setSelection(possibleBossMissions.indexOf(bossMissionBean));
+                } else {
                     bossMissionBean = null;
                 }
-            });
+                bossMissionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(
+                            AdapterView<?> adapterView,
+                            View view,
+                            int selectedPosition,
+                            long id) {
 
-            // Load child missions.
-            MissionBeanArrayAdapter adapter = new MissionBeanArrayAdapter(
-                    missionTreeBean.getMissionBeans());
-            missionsListView.setAdapter(adapter);
+                        bossMissionBean = possibleBossMissions.get(selectedPosition);
+                    }
 
-            requiredMissionsListView.setAdapter(
-                    missionTreeBean.getMissionBeans(),
-                    missionTreeBean.getRequiredMissionIds(),
-                    null);
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+                        bossMissionBean = null;
+                    }
+                });
 
-            // Set visibility of view tree button.
-            viewTreeButton.setVisibility(missionTreeBean != null? View.VISIBLE : View.INVISIBLE);
+                // Load child missions.
+                MissionBeanArrayAdapter adapter = new MissionBeanArrayAdapter(
+                        missionTreeBean.getMissionBeans());
+                missionsListView.setAdapter(adapter);
+
+                requiredMissionsListView.setAdapter(
+                        missionTreeBean.getMissionBeans(),
+                        missionTreeBean.getRequiredMissionIds(),
+                        null);
+
+                // Set visibility of view tree button.
+                viewTreeButton.setVisibility(missionTreeBean != null ? View.VISIBLE : View.INVISIBLE);
+            }
         }
 
         missionLadderBean = dataRepository.getMissionLadderBean(missionLadderId);

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.admin.AdminEditMissionTreeActivity;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataServiceParentFragment;
 import com.playposse.peertopeeroxygen.android.data.types.UserMissionRoleType;
@@ -42,6 +44,7 @@ public class StudentMissionTreeFragment extends DataServiceParentFragment {
     private Long missionLadderId;
     private Long missionTreeId;
 
+    private ImageButton editTreeButton;
     private LinearLayout lockLayout;
     private ImageView lockImageView;
     private MissionTreeWidget missionTreeWidget;
@@ -81,10 +84,25 @@ public class StudentMissionTreeFragment extends DataServiceParentFragment {
                 R.layout.fragment_student_mission_tree,
                 container,
                 false);
-
+        editTreeButton = (ImageButton) rootView.findViewById(R.id.editTreeButton);
         lockLayout = (LinearLayout) rootView.findViewById(R.id.lockLayout);
         lockImageView = (ImageView) rootView.findViewById(R.id.lockImageView);
         missionTreeWidget = (MissionTreeWidget) rootView.findViewById(R.id.missionTreeWidget);
+
+        editTreeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if ((missionLadderId != null) && (missionTreeId != null)) {
+                    Intent intent = ExtraConstants.createIntent(
+                            getActivity(),
+                            AdminEditMissionTreeActivity.class,
+                            missionLadderId,
+                            missionTreeId,
+                            null);
+                    startActivity(intent);
+                }
+            }
+        });
 
         return rootView;
     }
@@ -93,6 +111,10 @@ public class StudentMissionTreeFragment extends DataServiceParentFragment {
     public void receiveData(DataRepository dataRepository) {
         MissionTreeBean missionTreeBean = dataRepository
                 .getMissionTreeBean(missionLadderId, missionTreeId);
+
+        if (missionTreeBean == null) {
+            return;
+        }
 
         missionTreeWidget.setMissionTreeBean(
                 missionLadderId,
@@ -114,5 +136,9 @@ public class StudentMissionTreeFragment extends DataServiceParentFragment {
             isUnlocked = (levelCompletionBean != null);
         }
         lockLayout.setVisibility(isUnlocked ? View.GONE : View.VISIBLE);
+
+        // Show editTreeButton to admins.
+        Boolean isAdmin = dataRepository.getUserBean().getAdmin();
+        editTreeButton.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
     }
 }
