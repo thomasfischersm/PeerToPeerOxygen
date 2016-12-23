@@ -20,6 +20,7 @@ import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
+import com.playposse.peertopeeroxygen.android.student.StudentMissionTreeActivity;
 import com.playposse.peertopeeroxygen.android.ui.adapters.MissionSpinnerArrayAdapter;
 import com.playposse.peertopeeroxygen.android.ui.dialogs.ConfirmationDialogBuilder;
 import com.playposse.peertopeeroxygen.android.ui.widgets.ListViewNoScroll;
@@ -47,6 +48,7 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
 
     private Button createMissionButton;
     private EditText nameEditText;
+    private ImageButton viewTreeButton;
     private EditText descriptionEditText;
     private Spinner bossMissionSpinner;
     private TextView missionLabeTextView;
@@ -67,6 +69,7 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
 
         createMissionButton = (Button) findViewById(R.id.createMissionButton);
         nameEditText = (EditText) findViewById(R.id.missionTreeNameEditText);
+        viewTreeButton = (ImageButton) findViewById(R.id.viewTreeButton);
         descriptionEditText = (EditText) findViewById(R.id.missionTreeDescriptionEditText);
         bossMissionSpinner = (Spinner) findViewById(R.id.bossMissionSpinner);
         missionLabeTextView = (TextView) findViewById(R.id.missionLabeTextView);
@@ -87,6 +90,21 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
                 intent.putExtra(ExtraConstants.EXTRA_MISSION_LADDER_ID, missionLadderId);
                 intent.putExtra(ExtraConstants.EXTRA_MISSION_TREE_ID, missionTreeId);
                 startActivity(intent);
+            }
+        });
+
+        viewTreeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if ((missionTreeId != null) & (missionTreeId != -1)) {
+                    Intent intent = ExtraConstants.createIntent(
+                            getApplicationContext(),
+                            StudentMissionTreeActivity.class,
+                            missionLadderId,
+                            missionTreeId,
+                            null);
+                    startActivity(intent);
+                }
             }
         });
     }
@@ -199,6 +217,9 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
                     missionTreeBean.getMissionBeans(),
                     missionTreeBean.getRequiredMissionIds(),
                     null);
+
+            // Set visibility of view tree button.
+            viewTreeButton.setVisibility(missionTreeBean != null? View.VISIBLE : View.INVISIBLE);
         }
 
         missionLadderBean = dataRepository.getMissionLadderBean(missionLadderId);
