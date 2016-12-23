@@ -9,7 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -42,11 +45,14 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
     private MissionTreeBean missionTreeBean;
     private MissionBean bossMissionBean;
 
-    private TextView createMissionLink;
+    private Button createMissionButton;
     private EditText nameEditText;
     private EditText descriptionEditText;
     private Spinner bossMissionSpinner;
+    private TextView missionLabeTextView;
+    private ScrollView missionScrollView;
     private ListViewNoScroll missionsListView;
+    private ScrollView hintScrollView;
     private RequiredMissionListView requiredMissionsListView;
 
 
@@ -59,15 +65,18 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
         missionTreeId = getIntent().getLongExtra(ExtraConstants.EXTRA_MISSION_TREE_ID, -1);
         missionTreeBean = null;
 
-        createMissionLink = (TextView) findViewById(R.id.createMissionLink);
+        createMissionButton = (Button) findViewById(R.id.createMissionButton);
         nameEditText = (EditText) findViewById(R.id.missionTreeNameEditText);
         descriptionEditText = (EditText) findViewById(R.id.missionTreeDescriptionEditText);
         bossMissionSpinner = (Spinner) findViewById(R.id.bossMissionSpinner);
+        missionLabeTextView = (TextView) findViewById(R.id.missionLabeTextView);
+        missionScrollView = (ScrollView) findViewById(R.id.missionScrollView);
         missionsListView = (ListViewNoScroll) findViewById(R.id.missionsListView);
+        hintScrollView = (ScrollView) findViewById(R.id.hintScrollView);
         requiredMissionsListView =
                 (RequiredMissionListView) findViewById(R.id.requiredMissionsListView);
 
-        createMissionLink.setOnClickListener(new View.OnClickListener() {
+        createMissionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveIfNecessary();
@@ -193,6 +202,24 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
         }
 
         missionLadderBean = dataRepository.getMissionLadderBean(missionLadderId);
+
+        setHintTextVisibility();
+    }
+
+    private void setHintTextVisibility() {
+        if ((missionTreeBean != null)
+                && (missionTreeBean.getMissionBeans() != null)
+                && (missionTreeBean.getMissionBeans().size() > 0)) {
+            // Show missions.
+            missionLabeTextView.setVisibility(View.VISIBLE);
+            missionScrollView.setVisibility(View.VISIBLE);
+            hintScrollView.setVisibility(View.GONE);
+        } else {
+            // Show hint text.
+            missionLabeTextView.setVisibility(View.GONE);
+            missionScrollView.setVisibility(View.GONE);
+            hintScrollView.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -246,9 +273,9 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
             }
 
             final MissionBean missionBean = getItem(position);
-            TextView missionNameLink = (TextView) convertView.findViewById(R.id.missionNameLink);
-            missionNameLink.setText(missionBean.getName());
-            missionNameLink.setOnClickListener(new View.OnClickListener() {
+            Button missionNameButton = (Button) convertView.findViewById(R.id.missionNameButton);
+            missionNameButton.setText(missionBean.getName());
+            missionNameButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     saveIfNecessary();
@@ -264,23 +291,26 @@ public class AdminEditMissionTreeActivity extends AdminParentActivity {
                 }
             });
 
-            TextView missionDeleteLink =
-                    (TextView) convertView.findViewById(R.id.missionDeleteLink);
-            missionDeleteLink.setOnClickListener(new View.OnClickListener() {
+            ImageButton missionDeleteButton =
+                    (ImageButton) convertView.findViewById(R.id.missionDeleteButton);
+            missionDeleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     String deleteMessage = String.format(
                             getString(R.string.confirm_delete_mission_message),
                             missionBean.getName());
-                    ConfirmationDialogBuilder.show(AdminEditMissionTreeActivity.this, deleteMessage, new Runnable() {
-                        @Override
-                        public void run() {
-                            dataServiceConnection.getLocalBinder().deleteMission(
-                                    missionLadderBean.getId(),
-                                    missionTreeBean.getId(),
-                                    missionBean.getId());
-                        }
-                    });
+                    ConfirmationDialogBuilder.show(
+                            AdminEditMissionTreeActivity.this,
+                            deleteMessage,
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    dataServiceConnection.getLocalBinder().deleteMission(
+                                            missionLadderBean.getId(),
+                                            missionTreeBean.getId(),
+                                            missionBean.getId());
+                                }
+                            });
                 }
             });
 

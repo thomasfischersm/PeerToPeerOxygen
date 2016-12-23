@@ -96,8 +96,7 @@ public class StudentBuddyMissionInvitationFragment extends DataServiceParentFrag
         seniorBuddyRequiredTextView = (TextView) rootView.findViewById(R.id.seniorBuddyRequiredTextView);
 
         String studentName = studentBean.getFirstName() + " " + studentBean.getLastName();
-        String invitation =
-                String.format(getString(R.string.mission_invitation_message), studentName);
+        String invitation = getString(R.string.mission_invitation_message, studentName);
         invitationTextView.setText(invitation);
 
         cancelButton.setOnClickListener(new View.OnClickListener() {

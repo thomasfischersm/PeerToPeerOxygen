@@ -12,9 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
@@ -176,7 +174,7 @@ public class AdminEditMissionLadderActivity extends AdminParentActivity {
             });
 
             ImageButton missionTreeDeleteButton =
-                    (ImageButton) convertView.findViewById(R.id.missionTreeDeleteLink);
+                    (ImageButton) convertView.findViewById(R.id.missionTreeDeleteButton);
             missionTreeDeleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

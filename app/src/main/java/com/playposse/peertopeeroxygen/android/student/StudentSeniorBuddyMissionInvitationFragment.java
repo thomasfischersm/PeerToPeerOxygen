@@ -99,8 +99,8 @@ public class StudentSeniorBuddyMissionInvitationFragment extends DataServicePare
 
         String studentName = studentBean.getFirstName() + " " + studentBean.getLastName();
         String buddyName = buddyBean.getFirstName() + " " + buddyBean.getLastName();
-        String invitation = String.format(
-                getString(R.string.mission_senior_invitation_message),
+        String invitation = getString(
+                R.string.mission_senior_invitation_message,
                 buddyName,
                 studentName);
         invitationTextView.setText(invitation);

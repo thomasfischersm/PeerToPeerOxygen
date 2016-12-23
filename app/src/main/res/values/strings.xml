@@ -33,6 +33,7 @@
     <!-- Edit mission trees -->
     <string name="edit_mission_tree_title">Level: %1$s</string>
     <string name="boss_mission_label">Boss mission: </string>
+    <string name="mission_tree_hint">Help:\nBoss mission: The boss mission is the final mission that will unlock the next level.\n\nLearning path: Each mission can have a prerequisite mission. You can chain missions to create a learning path. Example: Mission A -> mission B -> boss mission.\n\nStudent choice: Try to offer students a choice. A mission can depend on more than one prerequisite. Students can choose the order in which they complete the missions.\n\nBonus missions: Feel free to throw in some bonus missions. If the mission isn\'t a prerequisite of another mission, students can choose to do them or not.</string>
     <string name="missions_label">Missions</string>
     <string name="new_mission_link">Create new mission</string>
 

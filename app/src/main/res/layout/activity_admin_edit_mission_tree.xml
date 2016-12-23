@@ -16,97 +16,115 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <ScrollView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
-        <LinearLayout
+        <GridLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:columnCount="2">
 
-            <LinearLayout
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/missionTreeNameEditText"
+                android:text="@string/name_form_label" />
+
+            <EditText
+                android:id="@+id/missionTreeNameEditText"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill_horizontal"
+                android:inputType="textAutoComplete" />
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:text="@string/description_form_label" />
+
+            <EditText
+                android:id="@+id/missionTreeDescriptionEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_columnSpan="2"
+                android:layout_gravity="fill"
+                android:inputType="textMultiLine|textAutoComplete" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+            <TextView
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/bossMissionSpinner"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:text="@string/boss_mission_label" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/name_form_label" />
+            <Spinner
+                android:id="@+id/bossMissionSpinner"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill_horizontal" />
+        </GridLayout>
 
-                    <EditText
-                        android:id="@+id/missionTreeNameEditText"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2" />
-                </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/description_form_label" />
+            <TextView
+                android:id="@+id/missionLabeTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/missions_label" />
 
-                <EditText
-                    android:id="@+id/missionTreeDescriptionEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:lines="7" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/boss_mission_label" />
-
-                    <Spinner
-                        android:id="@+id/bossMissionSpinner"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/missions_label" />
+            <ScrollView
+                android:id="@+id/missionScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="fill_vertical"
+                android:layout_weight="1">
 
                 <com.playposse.peertopeeroxygen.android.ui.widgets.ListViewNoScroll
                     android:id="@+id/missionsListView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+            </ScrollView>
+
+            <ScrollView
+                android:id="@+id/hintScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="fill_vertical"
+                android:layout_weight="1"
+                android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/createMissionLink"
+                    android:id="@+id/hintTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/new_mission_link" />
+                    android:text="@string/mission_tree_hint" />
+            </ScrollView>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/required_missions_label" />
+            <Button
+                android:id="@+id/createMissionButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/new_mission_link" />
 
-                <com.playposse.peertopeeroxygen.android.ui.widgets.RequiredMissionListView
-                    android:id="@+id/requiredMissionsListView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/required_missions_label"
+                android:visibility="gone" />
+
+            <com.playposse.peertopeeroxygen.android.ui.widgets.RequiredMissionListView
+                android:id="@+id/requiredMissionsListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
         </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
 </LinearLayout>
