@@ -47,11 +47,13 @@ public class StudentMissionTreeActivity extends StudentParentActivity {
                 if (missionTreePager.getHandler() != null) {
                     MissionLadderBean missionLadderBean =
                             dataRepository.getMissionLadderBean(missionLadderId);
-                    MissionTreePagerAdapter pagerAdapter = new MissionTreePagerAdapter(
-                            getSupportFragmentManager(),
-                            missionLadderBean);
-                    missionTreePager.setAdapter(pagerAdapter);
-                    missionTreePager.addOnPageChangeListener(pagerAdapter);
+                    if (missionLadderBean != null) {
+                        MissionTreePagerAdapter pagerAdapter = new MissionTreePagerAdapter(
+                                getSupportFragmentManager(),
+                                missionLadderBean);
+                        missionTreePager.setAdapter(pagerAdapter);
+                        missionTreePager.addOnPageChangeListener(pagerAdapter);
+                    }
                 }
             }
         });
