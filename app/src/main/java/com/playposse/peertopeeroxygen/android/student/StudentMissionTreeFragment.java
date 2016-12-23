@@ -46,7 +46,6 @@ public class StudentMissionTreeFragment extends DataServiceParentFragment {
 
     private ImageButton editTreeButton;
     private LinearLayout lockLayout;
-    private ImageView lockImageView;
     private MissionTreeWidget missionTreeWidget;
 
     public StudentMissionTreeFragment() {
@@ -86,7 +85,6 @@ public class StudentMissionTreeFragment extends DataServiceParentFragment {
                 false);
         editTreeButton = (ImageButton) rootView.findViewById(R.id.editTreeButton);
         lockLayout = (LinearLayout) rootView.findViewById(R.id.lockLayout);
-        lockImageView = (ImageView) rootView.findViewById(R.id.lockImageView);
         missionTreeWidget = (MissionTreeWidget) rootView.findViewById(R.id.missionTreeWidget);
 
         editTreeButton.setOnClickListener(new View.OnClickListener() {

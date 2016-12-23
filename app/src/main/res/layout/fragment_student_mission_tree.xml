@@ -40,7 +40,6 @@
         android:weightSum="1.0">
 
         <ImageView
-            android:id="@+id/lockImageView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight=".7"
