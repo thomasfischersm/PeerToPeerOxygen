@@ -27,6 +27,7 @@ import com.playposse.peertopeeroxygen.android.data.types.UserMissionRoleType;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
 import com.playposse.peertopeeroxygen.android.ui.widgets.MissionTreeWidget;
+import com.playposse.peertopeeroxygen.android.ui.widgets.missiontree.MissionTreeWidgetV2;
 import com.playposse.peertopeeroxygen.android.util.VolleySingleton;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.LevelCompletionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
@@ -46,7 +47,7 @@ public class StudentMissionTreeFragment extends DataServiceParentFragment {
 
     private ImageButton editTreeButton;
     private LinearLayout lockLayout;
-    private MissionTreeWidget missionTreeWidget;
+    private MissionTreeWidgetV2 missionTreeWidget;
 
     public StudentMissionTreeFragment() {
         // Required empty public constructor
@@ -85,7 +86,7 @@ public class StudentMissionTreeFragment extends DataServiceParentFragment {
                 false);
         editTreeButton = (ImageButton) rootView.findViewById(R.id.editTreeButton);
         lockLayout = (LinearLayout) rootView.findViewById(R.id.lockLayout);
-        missionTreeWidget = (MissionTreeWidget) rootView.findViewById(R.id.missionTreeWidget);
+        missionTreeWidget = (MissionTreeWidgetV2) rootView.findViewById(R.id.missionTreeWidget);
 
         editTreeButton.setOnClickListener(new View.OnClickListener() {
             @Override

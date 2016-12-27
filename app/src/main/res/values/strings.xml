@@ -112,6 +112,12 @@
     <string name="legend_learned_mission">learned</string>
     <string name="legend_solo_teachable_mission">teachable</string>
 
+    <!-- Mission tree view V2 -->
+    <string name="boss_mission_caption">Boss mission&lt;br /&gt;</string>
+    <string name="point_img" translatable="false">&lt;img src=\"%1$s\" /&gt;</string>
+    <string name="point_cost_label">&lt;br /&gt;Cost: </string>
+    <string name="point_cost_separator">, </string>
+
     <!-- Edit domain activity -->
     <string name="edit_domain_title">Edit domain</string>
     <string name="private_domain_hint">This is a private domain. To invite students and collaborators, hand them this invitation code: &lt;b&gt;%1$s&lt;/b&gt;</string>
