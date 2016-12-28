@@ -2,6 +2,11 @@ package com.playposse.peertopeeroxygen.android.ui.widgets.missiontree;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.view.ViewCompat;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -48,7 +53,25 @@ public class MissionWrapperToButtonConverter {
         button.setLayoutParams(layoutParams);
 
         // Set color based on availability.
-        // TODO:
+        final ColorStateList backgroundTint;
+        switch (wrapper.getMissionAvailability()) {
+            case LOCKED:
+                backgroundTint = ContextCompat.getColorStateList(context, R.color.lockedMission);
+                break;
+            case UNLOCKED:
+                backgroundTint = ContextCompat.getColorStateList(context, R.color.readyMission);
+                break;
+            case COMPLETED:
+                backgroundTint = ContextCompat.getColorStateList(context, R.color.learnedMission);
+                break;
+            case TEACHABLE:
+                backgroundTint = ContextCompat.getColorStateList(context, R.color.teachableMission);
+                break;
+            default:
+                throw new IllegalArgumentException("The mission availability is not supported: "
+                        + wrapper.getMissionAvailability());
+        }
+        ViewCompat.setBackgroundTintList(button, backgroundTint);
 
         // Add text.
         button.setAllCaps(false);
