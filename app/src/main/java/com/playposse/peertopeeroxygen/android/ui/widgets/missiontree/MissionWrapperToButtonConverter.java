@@ -54,6 +54,7 @@ public class MissionWrapperToButtonConverter {
         button.setAllCaps(false);
         button.setText(createButtonText(context, wrapper, button.getTextSize()));
         button.setMaxWidth(0);
+        button.setTag(wrapper);
 
         // Add click listener
         button.setOnClickListener(new MissionClickListener(context, wrapper));

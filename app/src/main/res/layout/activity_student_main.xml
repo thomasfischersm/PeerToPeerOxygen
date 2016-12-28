@@ -61,7 +61,7 @@
                 android:text="@string/logout_button_label" />
 
             <Button
-                android:id="@+id/testButton"
+                android:id="@+id/testButton" android:theme="@style/LockedMissionTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content">
 
                 <Button android:text="asdf asdf asdf asdf" android:layout_columnWeight="1" android:maxWidth="0dp"/>
-                <Button android:layout_columnWeight="1" />
+                <Button android:layout_columnWeight="1"  android:theme="@style/ReadyMissionTheme" style="@style/ReadyMissionTheme"/>
                 <Button android:layout_columnWeight="1" />
                 <Button android:layout_columnWeight="1" />
 

@@ -2,6 +2,7 @@ package com.playposse.peertopeeroxygen.android.ui.widgets.missiontree;
 
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.Map;
  * A container to lay out missions in a grid.
  */
 public class MissionGrid {
+
+    private final String LOG_CAT = MissionGrid.class.getSimpleName();
 
     private final int maxColumn;
 
@@ -34,7 +37,7 @@ public class MissionGrid {
         if (rowItems.get(column) != null) {
             throw new RuntimeException("Didn't expect an item at " + column + " " + row);
         }
-        rowItems.add(column, wrapper);
+        rowItems.set(column, wrapper);
         wrapper.place(row, column);
     }
 
@@ -116,6 +119,7 @@ public class MissionGrid {
 
         List<MissionWrapper> toRowItems = grid.get(toRow);
         toRowItems.set(toColumn, wrapper);
+        wrapper.place(toRow, toColumn);
     }
 
     public void add(OrphanTree orphanTree) {
@@ -141,6 +145,8 @@ public class MissionGrid {
                         currentRow++;
                     }
                 }
+                Log.i(LOG_CAT, "Attempting to place column " + wrapper.getMissionBean().getName()
+                        + " of orphan tree at " + currentRow + " " + column);
                 boolean addSuccess = attemptAdd(currentRow, column, wrapper);
                 if (!addSuccess) {
                     throw new RuntimeException("Failed to add orphan tree at row " + currentRow

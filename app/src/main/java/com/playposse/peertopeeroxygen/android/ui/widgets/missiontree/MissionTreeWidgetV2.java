@@ -2,16 +2,22 @@ package com.playposse.peertopeeroxygen.android.ui.widgets.missiontree;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
+import android.widget.Button;
 import android.widget.GridLayout;
 
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.view.View.MeasureSpec.EXACTLY;
@@ -96,6 +102,21 @@ public class MissionTreeWidgetV2 extends GridLayout {
                 displayMetrics);
 
         return (int) (availableWidthInPx / minButtonWidthInPx);
+    }
+
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+
+        super.dispatchDraw(canvas);
+        ArrowDrawer.drawArrows(getContext(), canvas, getChildren(), getColumnCount());
+    }
+
+    private List<View> getChildren() {
+        List<View> children = new ArrayList<>(getChildCount());
+        for (int i = 0; i < getChildCount(); i++) {
+            children.add(getChildAt(i));
+        }
+        return children;
     }
 
     public void setMissionTreeBean(

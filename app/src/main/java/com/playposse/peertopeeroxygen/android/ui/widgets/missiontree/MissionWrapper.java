@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +33,8 @@ import java.util.Set;
  * the first call.
  */
 public class MissionWrapper {
+
+    private static final String LOG_CAT = MissionWrapper.class.getSimpleName();
 
     private final MissionBean missionBean;
     private final boolean isBossMission;
@@ -201,14 +204,20 @@ public class MissionWrapper {
                 averageParentColumn = 0.0;
             } else {
                 double avg = 0;
-                for (MissionWrapper wrapper : getParents()) {
-                    avg += wrapper.getColumn();
+                for (MissionWrapper parent : getParents()) {
+                    avg += parent.getColumn();
                 }
                 averageParentColumn = avg / getParents().size();
             }
         }
 
+        Log.i(LOG_CAT, getMissionBean().getName() + ".getAverageParentColumn() = "
+                + averageParentColumn);
         return averageParentColumn;
+    }
+
+    public void setAverageParentColumn(Double averageParentColumn) {
+        this.averageParentColumn = averageParentColumn;
     }
 
     public MissionAvailabilityChecker.MissionAvailability getMissionAvailability() {

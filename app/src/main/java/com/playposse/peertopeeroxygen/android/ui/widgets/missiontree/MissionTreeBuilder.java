@@ -13,6 +13,7 @@ import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionB
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,6 +32,7 @@ public class MissionTreeBuilder {
 
     private MissionWrapper bossWrapper;
     private Set<MissionWrapper> wrappers;
+    private Set<MissionWrapper> bossTreeWrappers;
     private Map<Long, MissionWrapper> missionIdToWrapperMap;
     private Map<Integer, List<MissionWrapper>> ordinalToWrapperMap;
     private Set<OrphanTree> orphanTrees;
@@ -46,6 +48,7 @@ public class MissionTreeBuilder {
         this.maxColumn = maxColumn;
 
         initMissionWrapper(missionLadderId, missionTreeBean, dataRepository);
+        findBossTree();
         organizeWrappersByOrdinal();
         findOrphanTrees();
         organizeOrphanTreesBySizeComplexity();
@@ -53,10 +56,11 @@ public class MissionTreeBuilder {
         placeOrphanTrees();
     }
 
-    private void initMissionWrapper(
+    Set<MissionWrapper> initMissionWrapper(
             Long missionLadderId,
             MissionTreeBean missionTreeBean,
             DataRepository dataRepository) {
+
         List<MissionBean> missionBeans = missionTreeBean.getMissionBeans();
         if (missionBeans == null) {
             missionBeans = new ArrayList<>();
@@ -84,10 +88,22 @@ public class MissionTreeBuilder {
         for (MissionWrapper wrapper : wrappers) {
             wrapper.init(missionIdToWrapperMap);
         }
+
+        return wrappers;
+    }
+
+    private void findBossTree() {
+        bossTreeWrappers = new HashSet<>();
+        for (MissionWrapper wrapper : wrappers) {
+            if (wrapper.getConnectedToBossMission()) {
+                bossTreeWrappers.add(wrapper);
+                wrappers.remove(wrapper);
+            }
+        }
     }
 
     private void organizeWrappersByOrdinal() {
-        ordinalToWrapperMap = MissionTreeBuilderUtil.organizeByOrdinal(wrappers);
+        ordinalToWrapperMap = MissionTreeBuilderUtil.organizeByOrdinal(bossTreeWrappers);
     }
 
     private void findOrphanTrees() {
@@ -133,6 +149,7 @@ public class MissionTreeBuilder {
         int row = 1;
         for (int ordinal : ordinals) {
             List<MissionWrapper> wrappers = ordinalToWrapperMap.get(ordinal);
+            Collections.sort(wrappers, new AverageParentColumnComparator());
             for (MissionWrapper wrapper : wrappers) {
                 if (wrapper == bossWrapper) {
                     continue;
