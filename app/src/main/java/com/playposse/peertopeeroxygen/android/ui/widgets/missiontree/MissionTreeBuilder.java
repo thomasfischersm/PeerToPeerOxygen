@@ -94,10 +94,12 @@ public class MissionTreeBuilder {
 
     private void findBossTree() {
         bossTreeWrappers = new HashSet<>();
-        for (MissionWrapper wrapper : wrappers) {
+        Iterator<MissionWrapper> wrappersIterator = wrappers.iterator();
+        while (wrappersIterator.hasNext()) {
+            MissionWrapper wrapper = wrappersIterator.next();
             if (wrapper.getConnectedToBossMission()) {
                 bossTreeWrappers.add(wrapper);
-                wrappers.remove(wrapper);
+                wrappersIterator.remove();
             }
         }
     }

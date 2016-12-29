@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.playposse.peertopeeroxygen.android"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 17
         versionName "17.0"

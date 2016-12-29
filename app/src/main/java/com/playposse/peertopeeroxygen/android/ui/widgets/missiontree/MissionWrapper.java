@@ -2,6 +2,7 @@ package com.playposse.peertopeeroxygen.android.ui.widgets.missiontree;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -50,7 +51,7 @@ public class MissionWrapper {
     private Boolean leadsToBossMission = null;
     private Boolean isConnectedToBossMission = null;
     private Integer verticalOrdinal = null;
-    private Boolean isPlaced = null;
+    private boolean isPlaced = false;
     private Integer column = null;
     private Integer row = null;
     private Double averageParentColumn = null;
@@ -68,12 +69,32 @@ public class MissionWrapper {
         this.missionTreeBean = missionTreeBean;
         this.dataRepository = dataRepository;
 
-        missionPlaceHolder = new MissionPlaceHolder(missionBean);
+        missionPlaceHolder = createMissionPlaceHolder(missionBean);
         missionAvailability = MissionAvailabilityChecker.determineAvailability(
                 missionPlaceHolder,
                 missionLadderId,
                 missionTreeBean,
                 dataRepository);
+    }
+
+    /**
+     * Creates a {@link MissionPlaceHolder}, which is a class for backwards compatibility. This
+     * is only minimally functional and should be removed once the old version of the code is no
+     * longer needed.
+     */
+    @NonNull
+    private MissionPlaceHolder createMissionPlaceHolder(MissionBean missionBean) {
+        MissionPlaceHolder holder = new MissionPlaceHolder(missionBean);
+
+        List<Long> requiredMissionIds = missionBean.getRequiredMissionIds();
+        if (requiredMissionIds != null) {
+            for (Long childId : requiredMissionIds) {
+                MissionBean childMissionBean = dataRepository.getMissionBean(childId);
+                MissionPlaceHolder childHolder = new MissionPlaceHolder(childMissionBean);
+                holder.getChildren().add(childHolder);
+            }
+        }
+        return holder;
     }
 
     public void init(Map<Long, MissionWrapper> missionIdToWrapperMap) {
@@ -128,7 +149,7 @@ public class MissionWrapper {
 
     public boolean getLeadsToBossMission() {
         if (leadsToBossMission == null) {
-            leadsToBossMission = false;
+            leadsToBossMission = isBossMission;
             for (MissionWrapper parent : parents) {
                 if (parent.getLeadsToBossMission() || isBossMission) {
                     leadsToBossMission = true;
@@ -157,7 +178,7 @@ public class MissionWrapper {
         return isConnectedToBossMission;
     }
 
-    public Integer getVerticalOrdinal() {
+    public int getVerticalOrdinal() {
         if (verticalOrdinal == null) {
             if (getLeadsToBossMission()) {
                 // Leads to boss mission. So simply recursively walk up to the boss mission.
@@ -186,7 +207,7 @@ public class MissionWrapper {
         return verticalOrdinal;
     }
 
-    public Boolean getPlaced() {
+    public boolean getPlaced() {
         return isPlaced;
     }
 
