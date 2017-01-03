@@ -25,6 +25,7 @@ import java.util.List;
 public class StudentMissionTreeActivity extends StudentParentActivity {
 
     private Long missionLadderId;
+    private Long missionTreeId; // Optional
 
     private ViewPager missionTreePager;
 
@@ -35,6 +36,7 @@ public class StudentMissionTreeActivity extends StudentParentActivity {
 
         Intent intent = getIntent();
         missionLadderId = intent.getLongExtra(ExtraConstants.EXTRA_MISSION_LADDER_ID, -1);
+        missionTreeId = intent.getLongExtra(ExtraConstants.EXTRA_MISSION_TREE_ID, -1);
 
         missionTreePager = (ViewPager) findViewById(R.id.missionTreePager);
     }
@@ -53,6 +55,15 @@ public class StudentMissionTreeActivity extends StudentParentActivity {
                                 missionLadderBean);
                         missionTreePager.setAdapter(pagerAdapter);
                         missionTreePager.addOnPageChangeListener(pagerAdapter);
+
+                        if (missionTreeId != -1) {
+                            MissionTreeBean missionTreeBean = dataRepository.getMissionTreeBean(
+                                    missionLadderId,
+                                    missionTreeId);
+                            if (missionTreeBean != null) {
+                                missionTreePager.setCurrentItem(missionTreeBean.getLevel() - 1);
+                            }
+                        }
                     }
                 }
             }

@@ -75,8 +75,8 @@ public class OrphanTree {
 
     public int getSizeComplexity() {
         if (sizeComplexity == null) {
-            int height = 0;
-            int width = 0;
+            int height = 1;
+            int width = 1;
 
             for (Integer ordinal : ordinalToWrapperMap.keySet()) {
                 height = Math.max(height, ordinal);

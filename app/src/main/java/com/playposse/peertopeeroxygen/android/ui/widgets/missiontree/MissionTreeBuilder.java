@@ -92,14 +92,14 @@ public class MissionTreeBuilder {
         return wrappers;
     }
 
-    private void findBossTree() {
+    void findBossTree() {
         bossTreeWrappers = new HashSet<>();
         Iterator<MissionWrapper> wrappersIterator = wrappers.iterator();
         while (wrappersIterator.hasNext()) {
             MissionWrapper wrapper = wrappersIterator.next();
             if (wrapper.getConnectedToBossMission()) {
                 bossTreeWrappers.add(wrapper);
-                wrappersIterator.remove();
+//                wrappersIterator.remove();
             }
         }
     }
@@ -151,6 +151,11 @@ public class MissionTreeBuilder {
         int row = 1;
         for (int ordinal : ordinals) {
             List<MissionWrapper> wrappers = ordinalToWrapperMap.get(ordinal);
+            if ((ordinal == 0) && (wrappers.size() == 1)) {
+                // It's only the boss mission and no sibling to the boss mission.
+                continue;
+            }
+
             Collections.sort(wrappers, new AverageParentColumnComparator());
             for (MissionWrapper wrapper : wrappers) {
                 if (wrapper == bossWrapper) {
@@ -161,6 +166,7 @@ public class MissionTreeBuilder {
                     missionGrid.attemptAdd(row, wrapper.getAverageParentColumn(), wrapper);
                 }
             }
+            row++;
         }
     }
 
@@ -168,10 +174,6 @@ public class MissionTreeBuilder {
         for (OrphanTree orphanTree : orphanTrees) {
             missionGrid.add(orphanTree);
         }
-    }
-
-    public MissionGrid getMissionGrid() {
-        return missionGrid;
     }
 
     public GridLayout populateGridLayout(Context context, GridLayout gridLayout) {
@@ -205,5 +207,47 @@ public class MissionTreeBuilder {
         Space space = new Space(context);
         space.setLayoutParams(layoutParams);
         return space;
+    }
+
+    /**
+     * Visible for testing only.
+     */
+    MissionWrapper getBossWrapper() {
+        return bossWrapper;
+    }
+
+    /**
+     * Visible for testing only.
+     */
+    Set<MissionWrapper> getBossTreeWrappers() {
+        return bossTreeWrappers;
+    }
+
+    /**
+     * Visible for testing only.
+     */
+    Set<MissionWrapper> getWrappers() {
+        return wrappers;
+    }
+
+    /**
+     * Visible for testing only.
+     */
+    Set<OrphanTree> getOrphanTrees() {
+        return orphanTrees;
+    }
+
+    /**
+     * Visible for testing only.
+     */
+    Map<Integer, List<MissionWrapper>> getOrdinalToWrapperMap() {
+        return ordinalToWrapperMap;
+    }
+
+    /**
+     * Visible for testing only.
+     */
+    MissionGrid getMissionGrid() {
+        return missionGrid;
     }
 }

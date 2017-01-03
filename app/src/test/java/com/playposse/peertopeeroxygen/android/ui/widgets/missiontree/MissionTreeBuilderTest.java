@@ -15,17 +15,40 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertSame;
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * A unit test for {@link MissionTreeBuilder}.
+ *
+ * <p>This test expects a tree that is laid out as follows:
+ * <code>
+ *     ----------------------------------
+ *     |          | Boss     |          |
+ *     ----------------------------------
+ *     | Child A  | Child B  | Orphan   |
+ *     ----------------------------------
+ *     | Child AA | Child AB | Child BA |
+ *     ----------------------------------
+ *     |          | Child BB |          |
+ *     ----------------------------------
+ * </code>
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Log.class})
 public class MissionTreeBuilderTest {
 
+    private static final int MAX_COLUMNS = 3;
     private static final Long MISSION_LADDER_ID = 1_234L;
     private static final Long MISSION_TREE_ID = 123L;
 
@@ -58,7 +81,7 @@ public class MissionTreeBuilderTest {
         missionTreeBean.setId(MISSION_TREE_ID);
         missionTreeBean.setBossMissionId(bossMission.getId());
         missionTreeBean.setLevel(1);
-        missionTreeBean.setMissionBeans(new ArrayList<MissionBean>(Arrays.asList(
+        missionTreeBean.setMissionBeans(new ArrayList<>(Arrays.asList(
                 bossMission,
                 childAMission,
                 childBMission,
@@ -81,7 +104,7 @@ public class MissionTreeBuilderTest {
     @Test
     public void initMissionWrapper() {
         MissionTreeBuilder builder =
-                new MissionTreeBuilder(null, missionTreeBean, 3, dataRepository);
+                new MissionTreeBuilder(null, missionTreeBean, MAX_COLUMNS, dataRepository);
         Set<MissionWrapper> wrappers =
                 builder.initMissionWrapper(null, missionTreeBean, dataRepository);
 
@@ -103,6 +126,7 @@ public class MissionTreeBuilderTest {
             boolean isBossMission) {
 
         MissionWrapper wrapper = getWrapperById(wrappers, missionBean.getId());
+        assertNotNull(wrapper);
         assertEquals(missionBean, wrapper.getMissionBean());
         assertEquals(isBossMission, wrapper.isBossMission());
         return wrapper;
@@ -115,5 +139,104 @@ public class MissionTreeBuilderTest {
             }
         }
         return null;
+    }
+
+    @Test
+    public void findBossTree() {
+        MissionTreeBuilder builder =
+                new MissionTreeBuilder(null, missionTreeBean, 3, dataRepository);
+
+        assertSame(bossMission, builder.getBossWrapper().getMissionBean());
+
+        Set<MissionWrapper> bossTreeWrappers = builder.getBossTreeWrappers();
+        assertEquals(7, bossTreeWrappers.size());
+        bossTreeWrappers.remove(assertWrapper(bossTreeWrappers, bossMission, true));
+        bossTreeWrappers.remove(assertWrapper(bossTreeWrappers, childAMission, false));
+        bossTreeWrappers.remove(assertWrapper(bossTreeWrappers, childBMission, false));
+        bossTreeWrappers.remove(assertWrapper(bossTreeWrappers, childAAMission, false));
+        bossTreeWrappers.remove(assertWrapper(bossTreeWrappers, childABMission, false));
+        bossTreeWrappers.remove(assertWrapper(bossTreeWrappers, childBAMission, false));
+        bossTreeWrappers.remove(assertWrapper(bossTreeWrappers, childBBMission, false));
+        assertEquals(0, bossTreeWrappers.size());
+    }
+
+    @Test
+    public void organizeWrappersByOrdinal() {
+        MissionTreeBuilder builder =
+                new MissionTreeBuilder(null, missionTreeBean, MAX_COLUMNS, dataRepository);
+        Map<Integer, List<MissionWrapper>> ordinalToWrapperMap = builder.getOrdinalToWrapperMap();
+
+        assertEquals(3, ordinalToWrapperMap.size());
+
+        List<MissionWrapper> ordinal0Wrappers = ordinalToWrapperMap.get(0);
+        assertEquals(1, ordinal0Wrappers.size());
+        assertWrapper(new HashSet<>(ordinal0Wrappers), bossMission, true);
+
+        List<MissionWrapper> ordinal1Wrappers = ordinalToWrapperMap.get(1);
+        assertEquals(2, ordinal1Wrappers.size());
+        assertWrapper(new HashSet<>(ordinal1Wrappers), childAMission, false);
+        assertWrapper(new HashSet<>(ordinal1Wrappers), childBMission, false);
+
+        List<MissionWrapper> ordinal2Wrappers = ordinalToWrapperMap.get(2);
+        assertEquals(4, ordinal2Wrappers.size());
+        assertWrapper(new HashSet<>(ordinal2Wrappers), childAAMission, false);
+        assertWrapper(new HashSet<>(ordinal2Wrappers), childABMission, false);
+        assertWrapper(new HashSet<>(ordinal2Wrappers), childBAMission, false);
+        assertWrapper(new HashSet<>(ordinal2Wrappers), childBBMission, false);
+    }
+
+    @Test
+    public void findOrphanTrees() {
+        MissionTreeBuilder builder =
+                new MissionTreeBuilder(null, missionTreeBean, MAX_COLUMNS, dataRepository);
+
+        Set<OrphanTree> orphanTrees = builder.getOrphanTrees();
+        assertEquals(1, orphanTrees.size());
+
+        OrphanTree orphanTree = orphanTrees.iterator().next();
+        assertEquals(1, orphanTree.getSizeComplexity());
+        assertThat(orphanTree.getSortedOrdinals(), is(Arrays.asList(0)));
+    }
+
+    @Test
+    public void placeBossTree() {
+        MissionTreeBuilder builder =
+                new MissionTreeBuilder(null, missionTreeBean, MAX_COLUMNS, dataRepository);
+        MissionGrid missionGrid = builder.getMissionGrid();
+
+        assertEquals(MAX_COLUMNS, missionGrid.getMaxColumn());
+        assertEquals(4, missionGrid.getMaxRow());
+
+        // first row
+        assertNull(missionGrid.get(0, 0));
+        assertMissionInGrid(missionGrid, bossMission, 0, 1);
+        assertNull(missionGrid.get(0, 2));
+
+        // second row
+        assertMissionInGrid(missionGrid, childAMission, 1, 0);
+        assertMissionInGrid(missionGrid, childBMission, 1, 1);
+        assertMissionInGrid(missionGrid, orphanMission, 1, 2);
+
+        // third row
+        assertMissionInGrid(missionGrid, childAAMission, 2, 0);
+        assertMissionInGrid(missionGrid, childABMission, 2, 1);
+        assertMissionInGrid(missionGrid, childBAMission, 2, 2);
+
+        // fourth row
+        assertNull(missionGrid.get(0, 0));
+        assertMissionInGrid(missionGrid, childBBMission, 3, 1);
+        assertNull(missionGrid.get(0, 2));
+    }
+
+    private void assertMissionInGrid(
+            MissionGrid missionGrid,
+            MissionBean missionBean,
+            int row,
+            int column) {
+
+        MissionWrapper wrapper = missionGrid.get(row, column);
+        assertSame(missionBean, wrapper.getMissionBean());
+        assertEquals(Integer.valueOf(row), wrapper.getRow());
+        assertEquals(Integer.valueOf(column), wrapper.getColumn());
     }
 }

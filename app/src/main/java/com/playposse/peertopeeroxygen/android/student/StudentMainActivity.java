@@ -73,28 +73,6 @@ public class StudentMainActivity extends StudentParentActivity {
         });
 
         debug(); // TODO: Remove
-
-        // TESTING DO NOT COMMIT
-        Button testButton = (Button) findViewById(R.id.testButton);
-        final float textSize = testButton.getTextSize() /*/ getResources().getDisplayMetrics().density*/;
-        Html.ImageGetter imageGetter = new Html.ImageGetter() {
-            @Override
-            public Drawable getDrawable(String s) {
-                Drawable drawable = getResources().getDrawable(R.drawable.ic_directions_run_black_24dp);
-                float ratio = textSize / drawable.getIntrinsicHeight();
-                drawable.setBounds(
-                        0,
-                        0,
-                        (int) (drawable.getIntrinsicWidth() * ratio),
-                        (int) (drawable.getIntrinsicHeight() * ratio));
-                return drawable;
-            }
-        };
-        testButton.setAllCaps(false);
-        testButton.setText(Html.fromHtml("this is <b>bold</b> for <img src=\"bla\"> you<br/><br/>new line", imageGetter, null));
-
-        TextView testTextView = (TextView) findViewById(R.id.testTextView);
-        testTextView.setText(Html.fromHtml("this is <b>bold</b> for <img src=\"bla\"/> you<br/><br/>new line<img src=\"bla\"/>", imageGetter, null));
     }
 
     @Override
