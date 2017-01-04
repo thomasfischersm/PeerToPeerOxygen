@@ -12,9 +12,11 @@ public class MissionPath {
     private final List<MissionWrapper> wrappers;
 
     private int relativeHeight = 0;
+    private boolean mightLeadToBossMission = true;
 
     public MissionPath(MissionWrapper startingMission) {
         wrappers = new ArrayList<>();
+
         wrappers.add(startingMission);
     }
 
@@ -41,8 +43,17 @@ public class MissionPath {
                     + " Destination: " + child.getMissionBean().getName());
         }
 
+        mightLeadToBossMission = false;
         wrappers.add(child);
         relativeHeight--;
+    }
+
+    public MissionWrapper getLastMissionWrapper() {
+        return wrappers.get(wrappers.size() - 1);
+    }
+
+    public boolean contains(MissionWrapper wrapper) {
+        return wrappers.contains(wrapper);
     }
 
     public int getRelativeHeight() {
@@ -50,6 +61,10 @@ public class MissionPath {
     }
 
     public MissionPath duplicate() {
-        return new MissionPath(wrappers, relativeHeight);
+        return new MissionPath(new ArrayList<>(wrappers), relativeHeight);
+    }
+
+    public boolean getLeadsToBossMission() {
+        return mightLeadToBossMission && wrappers.get(0).getLeadsToBossMission();
     }
 }

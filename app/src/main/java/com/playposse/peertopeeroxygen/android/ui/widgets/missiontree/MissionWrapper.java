@@ -48,6 +48,8 @@ public class MissionWrapper {
     private Set<MissionWrapper> parents;
     private Set<MissionWrapper> children;
 
+    MissionPathCollection missionPathCollection;
+
     private Boolean leadsToBossMission = null;
     private Boolean isConnectedToBossMission = null;
     private Integer verticalOrdinal = null;
@@ -161,19 +163,26 @@ public class MissionWrapper {
         return leadsToBossMission;
     }
 
+//    public boolean getConnectedToBossMission() {
+//        if (isConnectedToBossMission == null) {
+//            if (getLeadsToBossMission()) {
+//                isConnectedToBossMission = true;
+//            } else {
+//                isConnectedToBossMission = false;
+//                for (MissionWrapper child : children) {
+//                    if (child.getConnectedToBossMission()) {
+//                        isConnectedToBossMission = true;
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//        return isConnectedToBossMission;
+//    }
+
     public boolean getConnectedToBossMission() {
         if (isConnectedToBossMission == null) {
-            if (getLeadsToBossMission()) {
-                isConnectedToBossMission = true;
-            } else {
-                isConnectedToBossMission = false;
-                for (MissionWrapper child : children) {
-                    if (child.getConnectedToBossMission()) {
-                        isConnectedToBossMission = true;
-                        break;
-                    }
-                }
-            }
+            isConnectedToBossMission = getMissionPathCollection().getConnectedToBossMission();
         }
         return isConnectedToBossMission;
     }
@@ -182,38 +191,47 @@ public class MissionWrapper {
         this.isConnectedToBossMission = isConnectedToBossMission;
     }
 
+//    public int getVerticalOrdinal() {
+//        if (verticalOrdinal == null) {
+//            if (getLeadsToBossMission()) {
+//                // Leads to boss mission. So simply recursively walk up to the boss mission.
+//                verticalOrdinal = 0;
+//                for (MissionWrapper parent : parents) {
+//                    verticalOrdinal = Math.max(verticalOrdinal, parent.getVerticalOrdinal() + 1);
+//                }
+//            } else if (getConnectedToBossMission()) {
+//                // The current mission doesn't lead to the boss mission, but a mission below leads
+//                // to the boss mission. So walk down the tree until it's possible to walk up.
+//                for (MissionWrapper child : children) {
+//                    if (verticalOrdinal == null) {
+//                        verticalOrdinal = child.getVerticalOrdinal() - 1;
+//                    } else {
+//                        verticalOrdinal = Math.min(verticalOrdinal, child.getVerticalOrdinal() - 1);
+//                    }
+//                }
+//            } else {
+//                // We are in an orphan tree. The top mission in the orphan has vertical ordinal 0.
+//                verticalOrdinal = 0;
+//                for (MissionWrapper parent : parents) {
+//                    verticalOrdinal = Math.max(verticalOrdinal, parent.getVerticalOrdinal() + 1);
+//                }
+//            }
+//        }
+//        return verticalOrdinal;
+//    }
+
     public int getVerticalOrdinal() {
         if (verticalOrdinal == null) {
-            if (getLeadsToBossMission()) {
-                // Leads to boss mission. So simply recursively walk up to the boss mission.
-                verticalOrdinal = 0;
-                for (MissionWrapper parent : parents) {
-                    verticalOrdinal = Math.max(verticalOrdinal, parent.getVerticalOrdinal() + 1);
-                }
-            } else if (getConnectedToBossMission()) {
-                // The current mission doesn't lead to the boss mission, but a mission below leads
-                // to the boss mission. So walk down the tree until it's possible to walk up.
-                for (MissionWrapper child : children) {
-                    if (verticalOrdinal == null) {
-                        verticalOrdinal = child.getVerticalOrdinal() - 1;
-                    } else {
-                        verticalOrdinal = Math.min(verticalOrdinal, child.getVerticalOrdinal() - 1);
-                    }
-                }
+            if (getConnectedToBossMission()) {
+                verticalOrdinal =
+                        getMissionPathCollection().getVerticalOrdinalRelativeToBossMission();
             } else {
-                // We are in an orphan tree. The top mission in the orphan has vertical ordinal 0.
-                verticalOrdinal = 0;
-                for (MissionWrapper parent : parents) {
-                    verticalOrdinal = Math.max(verticalOrdinal, parent.getVerticalOrdinal() + 1);
-                }
+                verticalOrdinal =
+                        getMissionPathCollection().getVerticalOrdinalRelativeToPeakOfOrphanTree();
             }
         }
         return verticalOrdinal;
     }
-
-//    public int getVerticalOrdinalV2() {
-//
-//    }
 
     public boolean getPlaced() {
         return isPlaced;
@@ -243,6 +261,13 @@ public class MissionWrapper {
         Log.i(LOG_CAT, getMissionBean().getName() + ".getAverageParentColumn() = "
                 + averageParentColumn);
         return averageParentColumn;
+    }
+
+    private MissionPathCollection getMissionPathCollection() {
+        if (missionPathCollection == null) {
+            missionPathCollection = new MissionPathCollection(this);
+        }
+        return missionPathCollection;
     }
 
     public void setAverageParentColumn(Double averageParentColumn) {

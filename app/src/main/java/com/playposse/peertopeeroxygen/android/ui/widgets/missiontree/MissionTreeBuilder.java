@@ -46,7 +46,7 @@ public class MissionTreeBuilder {
         this.maxColumn = maxColumn;
 
         initMissionWrapper(missionLadderId, missionTreeBean, dataRepository);
-        fixIsConnectedToBossMission(bossWrapper);
+//        fixIsConnectedToBossMission(bossWrapper);
         findBossTree();
         organizeWrappersByOrdinal();
         findOrphanTrees();
@@ -99,33 +99,33 @@ public class MissionTreeBuilder {
      * mission C. The recursive code in {@link MissionWrapper} would miss marking that mission as
      * connected to the boss misison.
      */
-    static void fixIsConnectedToBossMission(MissionWrapper bossWrapper) {
-        if (bossWrapper == null) {
-            return;
-        }
-
-        Set<MissionWrapper> fixedWrappers = new HashSet<>();
-        Set<MissionWrapper> pendingWrappers = new HashSet<>();
-        pendingWrappers.add(bossWrapper);
-        while (pendingWrappers.size() > 0) {
-            MissionWrapper wrapper = pendingWrappers.iterator().next();
-            wrapper.setConnectedToBossMission(true);
-            pendingWrappers.remove(wrapper);
-            fixedWrappers.add(wrapper);
-
-            for (MissionWrapper parent : wrapper.getParents()) {
-                if (!fixedWrappers.contains(parent)) {
-                    pendingWrappers.add(parent);
-                }
-            }
-
-            for (MissionWrapper child : wrapper.getChildren()) {
-                if (!fixedWrappers.contains(child)) {
-                    pendingWrappers.add(child);
-                }
-            }
-        }
-    }
+//    static void fixIsConnectedToBossMission(MissionWrapper bossWrapper) {
+//        if (bossWrapper == null) {
+//            return;
+//        }
+//
+//        Set<MissionWrapper> fixedWrappers = new HashSet<>();
+//        Set<MissionWrapper> pendingWrappers = new HashSet<>();
+//        pendingWrappers.add(bossWrapper);
+//        while (pendingWrappers.size() > 0) {
+//            MissionWrapper wrapper = pendingWrappers.iterator().next();
+//            wrapper.setConnectedToBossMission(true);
+//            pendingWrappers.remove(wrapper);
+//            fixedWrappers.add(wrapper);
+//
+//            for (MissionWrapper parent : wrapper.getParents()) {
+//                if (!fixedWrappers.contains(parent)) {
+//                    pendingWrappers.add(parent);
+//                }
+//            }
+//
+//            for (MissionWrapper child : wrapper.getChildren()) {
+//                if (!fixedWrappers.contains(child)) {
+//                    pendingWrappers.add(child);
+//                }
+//            }
+//        }
+//    }
 
     private void findBossTree() {
         bossTreeWrappers = new HashSet<>();

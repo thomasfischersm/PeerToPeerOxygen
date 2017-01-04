@@ -132,7 +132,7 @@ public class MissionWrapperTest {
         normalWrapper.init(missionIdToWrapperMap);
 
         // Fix bug in the connected recursion.
-        MissionTreeBuilder.fixIsConnectedToBossMission(bossWrapper);
+//        MissionTreeBuilder.fixIsConnectedToBossMission(bossWrapper);
     }
 
     @NonNull
