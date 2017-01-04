@@ -235,7 +235,7 @@ public class MissionTreeBuilder {
 
     private static Space createSpace(Context context, int row, int column) {
         GridLayout.Spec rowSpec = GridLayout.spec(row);
-        GridLayout.Spec columnSpec = GridLayout.spec(column);
+        GridLayout.Spec columnSpec = GridLayout.spec(column, 1, 1.0f);
         GridLayout.LayoutParams layoutParams =
                 new GridLayout.LayoutParams(rowSpec, columnSpec);
 
