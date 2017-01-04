@@ -49,28 +49,55 @@
                     android:id="@+id/selectPublicDomainTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:text="@string/select_public_domain_heading" />
 
                 <TextView
                     android:id="@+id/selectPrivateDomainTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:text="@string/select_private_domain_heading" />
 
-                <EditText
-                    android:id="@+id/invitationCodeEditText"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/enter_invitation_code_label"
-                    android:imeOptions="actionDone"
-                    android:inputType="textVisiblePassword"
-                    android:lines="1" />
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/invitationCodeEditText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/enter_invitation_code_label"
+                        android:imeOptions="actionDone"
+                        android:inputType="textVisiblePassword"
+                        android:lines="1" />
+
+                    <Button
+                        android:id="@+id/selectPrivateDomainButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/select_private_domain_button_label" />
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/createPrivateDomainLink"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/create_private_domain_link_label"/>
+                    android:layout_marginTop="16dp"
+                    android:text="@string/make_your_own_domain_heading" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="32dp"
+                    android:text="@string/create_private_domain_link_upsell" />
+
+                <Button
+                    android:id="@+id/createPrivateDomainButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/create_private_domain_button" />
 
             </LinearLayout>
         </ScrollView>

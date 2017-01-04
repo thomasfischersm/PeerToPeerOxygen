@@ -46,7 +46,8 @@ public class StudentDomainSelectionActivity
     private TextView usersDomainTextView;
     private TextView selectPublicDomainTextView;
     private EditText invitationCodeEditText;
-    private TextView createPrivateDomainLink;
+    private Button selectPrivateDomainButton;
+    private Button createPrivateDomainButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,19 +60,8 @@ public class StudentDomainSelectionActivity
         usersDomainTextView = (TextView) findViewById(R.id.usersDomainTextView);
         selectPublicDomainTextView = (TextView) findViewById(R.id.selectPublicDomainTextView);
         invitationCodeEditText = (EditText) findViewById(R.id.invitationCodeEditText);
-        createPrivateDomainLink = (TextView) findViewById(R.id.createPrivateDomainLink);
-
-        invitationCodeEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (!hasFocus) {
-                    invitationCodeEditText.clearFocus();
-                    rootView.requestFocus();
-
-                    switchToPrivateDomain();
-                }
-            }
-        });
+        selectPrivateDomainButton = (Button) findViewById(R.id.selectPrivateDomainButton);
+        createPrivateDomainButton = (Button) findViewById(R.id.createPrivateDomainButton);
 
         invitationCodeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -84,21 +74,14 @@ public class StudentDomainSelectionActivity
             }
         });
 
-        rootView.setOnClickListener(new View.OnClickListener() {
+        selectPrivateDomainButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Log.i(LOG_CAT, "Got touch");
-                invitationCodeEditText.clearFocus();
-                rootView.requestFocus();
-
-                InputMethodManager imm =
-                        (InputMethodManager) getApplicationContext().getSystemService(
-                                Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            public void onClick(View v) {
+                switchToPrivateDomain();
             }
         });
 
-        createPrivateDomainLink.setOnClickListener(new View.OnClickListener() {
+        createPrivateDomainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Context context = getApplicationContext();
@@ -142,13 +125,16 @@ public class StudentDomainSelectionActivity
         index = rootView.indexOfChild(selectPublicDomainTextView) + 1;
         clearDomainButtons(index);
         List<DomainBean> publicDomainBeans = combinedDomainBeans.getPublicBeans();
+        boolean atLeastOnePublicDomain = false;
         if (publicDomainBeans != null) {
             for (DomainBean domainBean : publicDomainBeans) {
                 if (!subscribedDomainIds.contains(domainBean.getId())) {
                     addDomainButton(index++, domainBean);
+                    atLeastOnePublicDomain = true;
                 }
             }
         }
+        selectPublicDomainTextView.setVisibility(atLeastOnePublicDomain ? View.VISIBLE : View.GONE);
     }
 
     /**

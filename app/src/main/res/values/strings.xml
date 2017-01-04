@@ -131,11 +131,14 @@
     <string name="logout_button_label">Logout</string>
 
     <!-- Domain selection activity -->
-    <string name="select_users_domain_heading">Select from your subscribed domains</string>
-    <string name="select_public_domain_heading">Select public domain</string>
-    <string name="select_private_domain_heading">Select private domain</string>
+    <string name="select_users_domain_heading">Subscribed domains</string>
+    <string name="select_public_domain_heading">Public domain</string>
+    <string name="select_private_domain_heading">Private domain</string>
     <string name="enter_invitation_code_label">Enter invitation code</string>
-    <string name="create_private_domain_link_label">Are you a teacher? Create your own domain!</string>
+    <string name="select_private_domain_button_label">Go</string>
+    <string name="make_your_own_domain_heading">Make your own domain</string>
+    <string name="create_private_domain_link_upsell">Are you a teacher? Create your own domain!\nAre you a manager? Create your own domain for business procedures, e.g. opening/closing procedures of a coffee shop. Do you have friends? Create a domain to teach your friends something cool, e.g. secret handshakes.</string>
+    <string name="create_private_domain_button">Create private domain</string>
 
     <!-- Student mission activity -->
     <string name="default_instruction_tab_label">Instruction</string>
