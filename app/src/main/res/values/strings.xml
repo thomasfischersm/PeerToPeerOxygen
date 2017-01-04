@@ -158,6 +158,7 @@
     <string name="link_senior_buddy_title">Super buddy</string>
     <string name="invitation_title">Invitation</string>
     <string name="youtube_title">YouTube</string>
+    <string name="scanner_instructions">Scan your mentor\'s QR code. Go to options/show QR code.</string>
 
     <!-- Student mission feedback activity -->
     <string name="student_mission_feedback_title">Mission feedback</string>
@@ -197,6 +198,7 @@
     <string name="admin_home_menu_title">Admin home</string>
     <string name="student_home_menu_title">Student home</string>
     <string name="switch_domain_menu_title">Switch domain</string>
+    <string name="show_qr_code_menu_title">Show QR code</string>
     <string name="refresh_menu_title">Refresh</string>
     <string name="debug_menu_title">Debug</string>
     <string name="about_menu_title">About</string>

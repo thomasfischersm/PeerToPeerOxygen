@@ -15,6 +15,7 @@ import com.playposse.peertopeeroxygen.android.practicamgmt.PracticaManager;
 import com.playposse.peertopeeroxygen.android.student.StudentAboutActivity;
 import com.playposse.peertopeeroxygen.android.student.StudentDomainSelectionActivity;
 import com.playposse.peertopeeroxygen.android.student.StudentMainActivity;
+import com.playposse.peertopeeroxygen.android.student.StudentProfileActivity;
 import com.playposse.peertopeeroxygen.android.util.LogUtil;
 
 /**
@@ -50,6 +51,9 @@ public abstract class DataServiceParentActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.showQrCodeMenuItem:
+                startActivity(new Intent(this, StudentProfileActivity.class));
+                return true;
             case R.id.studentHomeMenuItem:
                 startActivity(new Intent(this, StudentMainActivity.class));
                 return true;

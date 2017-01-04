@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/showQrCodeMenuItem"
+        android:title="@string/show_qr_code_menu_title" />
+
+    <item
         android:id="@+id/adminHomeMenuItem"
         android:title="@string/admin_home_menu_title" />
 

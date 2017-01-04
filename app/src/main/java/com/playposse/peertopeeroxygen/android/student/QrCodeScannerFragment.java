@@ -267,6 +267,7 @@ public class QrCodeScannerFragment extends Fragment {
                 setCameraSource(new CameraSource.Builder(getActivity(), detector)
                         .setFacing(getPreferredCameraFacing())
                         .setRequestedPreviewSize(width, height)
+                        .setAutoFocusEnabled(true)
                         .build());
                 if (!checkCameraPermission()) {
                     return;
