@@ -1,9 +1,7 @@
 package com.playposse.peertopeeroxygen.android.ui.widgets.missiontree;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.Space;
@@ -48,6 +46,7 @@ public class MissionTreeBuilder {
         this.maxColumn = maxColumn;
 
         initMissionWrapper(missionLadderId, missionTreeBean, dataRepository);
+        fixIsConnectedToBossMission(bossWrapper);
         findBossTree();
         organizeWrappersByOrdinal();
         findOrphanTrees();
@@ -92,7 +91,43 @@ public class MissionTreeBuilder {
         return wrappers;
     }
 
-    void findBossTree() {
+    /**
+     * Fixes a flaw in {@link MissionWrapper#getConnectedToBossMission()}.
+     *
+     * <p>If there is a mission path with a mission A that leads to the boss mission, mission A
+     * can have a parent B that does not lead to the boss mission. That mission B can have a child
+     * mission C. The recursive code in {@link MissionWrapper} would miss marking that mission as
+     * connected to the boss misison.
+     */
+    static void fixIsConnectedToBossMission(MissionWrapper bossWrapper) {
+        if (bossWrapper == null) {
+            return;
+        }
+
+        Set<MissionWrapper> fixedWrappers = new HashSet<>();
+        Set<MissionWrapper> pendingWrappers = new HashSet<>();
+        pendingWrappers.add(bossWrapper);
+        while (pendingWrappers.size() > 0) {
+            MissionWrapper wrapper = pendingWrappers.iterator().next();
+            wrapper.setConnectedToBossMission(true);
+            pendingWrappers.remove(wrapper);
+            fixedWrappers.add(wrapper);
+
+            for (MissionWrapper parent : wrapper.getParents()) {
+                if (!fixedWrappers.contains(parent)) {
+                    pendingWrappers.add(parent);
+                }
+            }
+
+            for (MissionWrapper child : wrapper.getChildren()) {
+                if (!fixedWrappers.contains(child)) {
+                    pendingWrappers.add(child);
+                }
+            }
+        }
+    }
+
+    private void findBossTree() {
         bossTreeWrappers = new HashSet<>();
         Iterator<MissionWrapper> wrappersIterator = wrappers.iterator();
         while (wrappersIterator.hasNext()) {

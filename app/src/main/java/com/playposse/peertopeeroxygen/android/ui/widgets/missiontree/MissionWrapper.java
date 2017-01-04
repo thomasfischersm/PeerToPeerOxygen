@@ -178,6 +178,10 @@ public class MissionWrapper {
         return isConnectedToBossMission;
     }
 
+    public void setConnectedToBossMission(boolean isConnectedToBossMission) {
+        this.isConnectedToBossMission = isConnectedToBossMission;
+    }
+
     public int getVerticalOrdinal() {
         if (verticalOrdinal == null) {
             if (getLeadsToBossMission()) {
@@ -206,6 +210,10 @@ public class MissionWrapper {
         }
         return verticalOrdinal;
     }
+
+//    public int getVerticalOrdinalV2() {
+//
+//    }
 
     public boolean getPlaced() {
         return isPlaced;

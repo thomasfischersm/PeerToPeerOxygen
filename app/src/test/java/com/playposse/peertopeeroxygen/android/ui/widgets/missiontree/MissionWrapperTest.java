@@ -40,11 +40,14 @@ public class MissionWrapperTest {
     private static final Long BOSS_CHILD_MISSION_ID = 3L;
     private static final Long BOSS_GRAND_CHILD_MISSION_ID = 4L;
     private static final Long BOSS_SIBLING_MISSION_ID = 5L;
+    private static final Long BOSS_SIBLING_CHILD_MISSION_ID = 6L;
+
     private static final String BOSS_MISSION_NAME = "Boss mission";
     private static final String NORMAL_MISSION_NAME = "Normal mission";
     private static final String BOSS_CHILD_MISSION_NAME = "Boss child mission";
     private static final String BOSS_GRAND_CHILD_MISSION_NAME = "Boss grand child mission";
-    private static final String BOSS_SIBLING_MISSION_NAME = "Boss sibbling mission";
+    private static final String BOSS_SIBLING_MISSION_NAME = "Boss sibling mission";
+    private static final String BOSS_SIBLING_CHILD_MISSION_NAME = "Boss sibbilng child mission";
 
     private DataRepository dataRepository;
     private MissionTreeBean missionTreeBean;
@@ -53,6 +56,7 @@ public class MissionWrapperTest {
     private MissionWrapper bossChildWrapper;
     private MissionWrapper bossGrandChildWrapper;
     private MissionWrapper bossSiblingWrapper;
+    private MissionWrapper bossSiblingChildWrapper;
     private MissionWrapper normalWrapper;
 
     @Before
@@ -70,10 +74,14 @@ public class MissionWrapperTest {
                 BOSS_CHILD_MISSION_ID,
                 BOSS_CHILD_MISSION_NAME,
                 bossGrandChildMission);
+        MissionBean bossSiblingChildMission = MissionTreeTestData.createTestMission(
+                BOSS_SIBLING_CHILD_MISSION_ID,
+                BOSS_SIBLING_CHILD_MISSION_NAME);
         MissionBean bossSiblingMission = MissionTreeTestData.createTestMission(
                 BOSS_SIBLING_MISSION_ID,
                 BOSS_SIBLING_MISSION_NAME,
-                bossChildMission);
+                bossChildMission,
+                bossSiblingChildMission);
         MissionBean bossMission = MissionTreeTestData.createTestMission(
                 BOSS_MISSION_ID,
                 BOSS_MISSION_NAME,
@@ -89,7 +97,8 @@ public class MissionWrapperTest {
                 normalMission,
                 bossChildMission,
                 bossGrandChildMission,
-                bossSiblingMission)));
+                bossSiblingMission,
+                bossSiblingChildMission)));
 
         // Create DataRepository.
         dataRepository = MissionTreeTestData.createDataRepository(
@@ -102,6 +111,7 @@ public class MissionWrapperTest {
         bossSiblingWrapper = createWrapper(bossSiblingMission, false);
         bossChildWrapper = createWrapper(bossChildMission, false);
         bossGrandChildWrapper = createWrapper(bossGrandChildMission, false);
+        bossSiblingChildWrapper = createWrapper(bossSiblingChildMission, false);
         normalWrapper = createWrapper(normalMission, false);
 
         // Create map.
@@ -110,14 +120,19 @@ public class MissionWrapperTest {
         missionIdToWrapperMap.put(BOSS_SIBLING_MISSION_ID, bossSiblingWrapper);
         missionIdToWrapperMap.put(BOSS_CHILD_MISSION_ID, bossChildWrapper);
         missionIdToWrapperMap.put(BOSS_GRAND_CHILD_MISSION_ID, bossGrandChildWrapper);
+        missionIdToWrapperMap.put(BOSS_SIBLING_CHILD_MISSION_ID, bossSiblingChildWrapper);
         missionIdToWrapperMap.put(NORMAL_MISSION_ID, normalWrapper);
 
         // Init wrappers.
         bossWrapper.init(missionIdToWrapperMap);
         bossSiblingWrapper.init(missionIdToWrapperMap);
+        bossSiblingChildWrapper.init(missionIdToWrapperMap);
         bossChildWrapper.init(missionIdToWrapperMap);
         bossGrandChildWrapper.init(missionIdToWrapperMap);
         normalWrapper.init(missionIdToWrapperMap);
+
+        // Fix bug in the connected recursion.
+        MissionTreeBuilder.fixIsConnectedToBossMission(bossWrapper);
     }
 
     @NonNull
@@ -210,7 +225,7 @@ public class MissionWrapperTest {
                 bossSiblingWrapper.getMissionBean().getName());
         assertFalse(bossSiblingWrapper.isBossMission());
         assertEquals(0, bossSiblingWrapper.getParents().size());
-        assertEquals(1, bossSiblingWrapper.getChildren().size());
+        assertEquals(2, bossSiblingWrapper.getChildren().size());
         assertFalse(bossSiblingWrapper.getLeadsToBossMission());
         assertTrue(bossSiblingWrapper.getConnectedToBossMission());
         assertEquals(0, bossSiblingWrapper.getVerticalOrdinal());
@@ -225,6 +240,32 @@ public class MissionWrapperTest {
 
         // Test averageParentColumn.
         assertEquals(0.0, bossSiblingWrapper.getAverageParentColumn());
+    }
+
+    @Test
+    public void testBossSiblingChild() {
+        assertEquals(BOSS_SIBLING_CHILD_MISSION_ID, bossSiblingChildWrapper.getMissionBean().getId());
+        assertEquals(
+                BOSS_SIBLING_CHILD_MISSION_NAME,
+                bossSiblingChildWrapper.getMissionBean().getName());
+        assertFalse(bossSiblingChildWrapper.isBossMission());
+        assertEquals(1, bossSiblingChildWrapper.getParents().size());
+        assertEquals(0, bossSiblingChildWrapper.getChildren().size());
+        assertFalse(bossSiblingChildWrapper.getLeadsToBossMission());
+        assertTrue(bossSiblingChildWrapper.getConnectedToBossMission());
+        assertEquals(1, bossSiblingChildWrapper.getVerticalOrdinal());
+        assertEquals(UNLOCKED, bossSiblingChildWrapper.getMissionAvailability());
+
+        // Test placing.
+        assertFalse(bossSiblingChildWrapper.getPlaced());
+        bossSiblingChildWrapper.place(1, 2);
+        assertTrue(bossSiblingChildWrapper.getPlaced());
+        assertEquals(1, (int) bossSiblingChildWrapper.getRow());
+        assertEquals(2, (int) bossSiblingChildWrapper.getColumn());
+
+        // Test averageParentColumn.
+        bossSiblingWrapper.place(0, 1);
+        assertEquals(1.0, bossSiblingChildWrapper.getAverageParentColumn());
     }
 
     @Test
