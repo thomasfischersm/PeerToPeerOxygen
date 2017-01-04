@@ -24,7 +24,7 @@ public class ArrowDrawer {
     private static final String LOG_CAT = ArrowDrawer.class.getSimpleName();
 
     private static final float DEFAULT_STROKE_WIDTH_IN_DP = 2;
-    private static final float ARROW_LENGTH_IN_DP = 7;
+    private static final float ARROW_LENGTH_IN_DP = 5;
     private static final float ARROW_ANGLE_IN_DEGREES = 70;
 
     private static float strokeWidth;
@@ -125,7 +125,7 @@ public class ArrowDrawer {
         float fromX = childView.getLeft() + childView.getWidth() / 2;
         float fromY = childView.getTop() + childView.getPaddingTop();
         float toX = parentView.getLeft() + parentView.getWidth() / 2;
-        float toY = parentView.getTop() + parentView.getHeight() - parentView.getPaddingBottom();
+        float toY = parentView.getTop() + parentView.getHeight() - (parentView.getPaddingBottom() / 2);
 
         Log.i(LOG_CAT, "Drawing straight up arrow: " + fromX + ", " + fromY + " -> " + toX + ", "
                 + toY);
@@ -141,10 +141,10 @@ public class ArrowDrawer {
 
         boolean goesLeft = parentView.getLeft() <= childView.getLeft();
 
-//        ViewGroup.MarginLayoutParams childLayoutParams =
-//                (ViewGroup.MarginLayoutParams) childView.getLayoutParams();
-//        ViewGroup.MarginLayoutParams parentLayoutParams =
-//                (ViewGroup.MarginLayoutParams) parentView.getLayoutParams();
+        ViewGroup.MarginLayoutParams childLayoutParams =
+                (ViewGroup.MarginLayoutParams) childView.getLayoutParams();
+        ViewGroup.MarginLayoutParams parentLayoutParams =
+                (ViewGroup.MarginLayoutParams) parentView.getLayoutParams();
 
         float x0 = childView.getLeft() + childView.getWidth() / 2;
         float y0 = childView.getTop() + childView.getPaddingTop();
@@ -159,7 +159,7 @@ public class ArrowDrawer {
 
         // up
         float x3 = x2;
-        float y3 = parentView.getTop() + parentView.getHeight();
+        float y3 = parentView.getTop() + parentView.getHeight() + parentLayoutParams.bottomMargin;
 
         // left/right
         float x4 = parentView.getLeft() + parentView.getWidth() / 2;
@@ -167,7 +167,7 @@ public class ArrowDrawer {
 
         // last segment
         float x5 = x4;
-        float y5 = parentView.getTop() + parentView.getHeight() - parentView.getPaddingBottom();
+        float y5 = parentView.getTop() + parentView.getHeight() - (parentView.getPaddingBottom() / 2);
 
         // Build path
         Path path = new Path();

@@ -17,17 +17,12 @@ public abstract class DataServiceParentFragment
     protected DataServiceConnection dataServiceConnection;
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
 
         Intent intent = new Intent(getActivity(), DataService.class);
         dataServiceConnection = new DataServiceConnection(this, true);
         getActivity().bindService(intent, dataServiceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
 
         if (dataServiceConnection != null) {
             MissionDataManager.checkStale(getContext(), dataServiceConnection.getLocalBinder());
@@ -35,8 +30,8 @@ public abstract class DataServiceParentFragment
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
 
         getActivity().unbindService(dataServiceConnection);
     }

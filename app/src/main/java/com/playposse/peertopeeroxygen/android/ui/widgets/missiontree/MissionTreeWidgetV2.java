@@ -106,9 +106,9 @@ public class MissionTreeWidgetV2 extends GridLayout {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
+        ArrowDrawer.drawArrows(getContext(), canvas, getChildren(), getColumnCount());
 
         super.dispatchDraw(canvas);
-        ArrowDrawer.drawArrows(getContext(), canvas, getChildren(), getColumnCount());
     }
 
     private List<View> getChildren() {

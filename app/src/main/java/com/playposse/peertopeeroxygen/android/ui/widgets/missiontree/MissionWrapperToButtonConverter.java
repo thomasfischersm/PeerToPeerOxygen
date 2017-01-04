@@ -37,6 +37,7 @@ public class MissionWrapperToButtonConverter {
     private static final String LOG_CAT = MissionWrapperToButtonConverter.class.getSimpleName();
 
     private static final String SPACE = " ";
+    private static final int BUTTON_EXTRA_MARGIN_IN_DP = 3;
 
     public static Button convert(Context context, MissionWrapper wrapper) {
         Button button = new Button(context);
@@ -50,6 +51,9 @@ public class MissionWrapperToButtonConverter {
                 new GridLayout.LayoutParams(rowSpec, columnSpec);
         layoutParams.setGravity(Gravity.FILL);
         layoutParams.height = GridLayout.LayoutParams.WRAP_CONTENT;
+        int extraBottomMargin =
+                (int) PixelDimensionUtil.toPx(context, BUTTON_EXTRA_MARGIN_IN_DP);
+        layoutParams.setMargins(0, 0, 0, extraBottomMargin);
         button.setLayoutParams(layoutParams);
 
         // Set color based on availability.
