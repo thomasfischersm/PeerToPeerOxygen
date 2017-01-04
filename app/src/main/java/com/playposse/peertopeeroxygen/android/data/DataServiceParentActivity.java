@@ -31,8 +31,8 @@ public abstract class DataServiceParentActivity
     private ProgressDialog progressDialog;
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
 
         Intent intent = new Intent(this, DataService.class);
         dataServiceConnection =
@@ -41,8 +41,8 @@ public abstract class DataServiceParentActivity
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
 
         unbindService(dataServiceConnection);
     }
