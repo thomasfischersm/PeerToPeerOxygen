@@ -16,5 +16,4 @@ public interface BinderForActions {
     Long getSessionId();
     DataRepository getDataRepository();
     void makeDataReceivedCallbacks();
-    void redirectToLoginActivity();
 }

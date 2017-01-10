@@ -123,6 +123,15 @@
     <string name="private_domain_hint">This is a private domain. To invite students and collaborators, hand them this invitation code: &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="save_private_domain_button_label">Save</string>
 
+    <!-- Student introduction deck activity -->
+    <string name="introduction_deck_activity_title">Introduction</string>
+    <string name="introduction_deck_slide_0">&lt;h2&gt;WARNING! You can\'t use this app alone at home.&lt;/h2&gt;&lt;br/&gt;&lt;br/&gt;You have to leave your house and meet people.&lt;br/&gt;&lt;br/&gt;This app facilitates the learning process in a group or with a friend/colleague. It does not teach itself.</string>
+    <string name="introduction_deck_slide_1">&lt;h2&gt;INSTRUCTIONS:&lt;/h2&gt;&lt;br/&gt;Step 1: Pick a learning mission.&lt;br/&gt;&lt;br/&gt;Step 2: Find a mentor in the real world.&lt;br/&gt;&lt;br/&gt;Step 3: Your mentor teaches you.&lt;br/&gt;&lt;br/&gt;Step 4: Link your phone with your mentors.&lt;br/&gt;&lt;br/&gt;Step 5: Your mentor graduates you in the app.&lt;br/&gt;&lt;br/&gt;Step 6: The next mission unlocks.&lt;br/&gt;&lt;br/&gt;Step 7: Rinse and repeat.</string>
+    <string name="introduction_deck_slide_2">&lt;h2&gt;EXPONENTIAL SPREAD OF 1:1 TEACHING&lt;/h2&gt;&lt;br/&gt;&lt;br/&gt;Joe teaches Anne learning mission A. Now, Anne can teach Will mission A, too.&lt;br/&gt;&lt;br/&gt;1. &lt;img src="teacher"&gt; teaches &lt;img src="student"&gt;&lt;br/&gt;2. &lt;img src="teacher"&gt;&lt;img src="arrow"&gt;&lt;img src="student"&gt;<![CDATA[&nbsp;&nbsp;&nbsp;]]>&lt;img src="teacher"&gt;&lt;img src="arrow"&gt;&lt;img src="student"&gt;&lt;br/&gt;3. &lt;img src="teacher"&gt;&lt;img src="arrow"&gt;&lt;img src="student"&gt;<![CDATA[&nbsp;&nbsp;&nbsp;]]>&lt;img src="teacher"&gt;&lt;img src="arrow"&gt;&lt;img src="student"&gt;<![CDATA[&nbsp;&nbsp;&nbsp;]]>&lt;img src="teacher"&gt;&lt;img src="arrow"&gt;&lt;img src="student"&gt;<![CDATA[&nbsp;&nbsp;&nbsp;]]>&lt;img src="teacher"&gt;&lt;img src="arrow"&gt;&lt;img src="student"&gt;&lt;br/&gt;4. ...&lt;br/&gt;&lt;br/&gt;The app tracks and coordinates learning.</string>
+    <string name="introduction_deck_slide_3">&lt;h2&gt;PRIVATE DOMAINS&lt;/h2&gt;&lt;br/&gt;&lt;br/&gt;Create your own missions, levels, and courses in your private domain. Send your friends, colleagues, or clients the invitation code.&lt;br/&gt;&lt;br/&gt;Ideas for domains:&lt;br/&gt;- Any sport or art that you feel passionate about (e.g. Judo, Salsa, Swing, cooking).&lt;br/&gt;&lt;br/&gt;- Knowledge or skill that\'s specific to your friends or family (e.g. secret handshakes, family traditions).&lt;br/&gt;&lt;br/&gt;- Product training for your sales force. Guide your sales force to spread product information.&lt;br/&gt;&lt;br/&gt;- Business procedures (e.g. for a coffee shop: opening, closing, customer complaint procedures)</string>
+    <string name="swipeLeftHint">Swipe left to continue</string>
+    <string name="closeIntroductionDeckButtonLabel">Get started!</string>
+
     <!-- Student home -->
     <string name="student_learning_mission_heading">Courses</string>
     <string name="student_functions_heading">Functions</string>
@@ -273,7 +282,4 @@
 
     <!-- Error messages -->
     <string name="network_error">Failed to retrieve data from the server.</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

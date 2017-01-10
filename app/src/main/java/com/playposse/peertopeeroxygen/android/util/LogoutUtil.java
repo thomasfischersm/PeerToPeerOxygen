@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.facebook.login.LoginManager;
 import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
+import com.playposse.peertopeeroxygen.android.globalconfiguration.RedirectRouting;
 import com.playposse.peertopeeroxygen.android.student.StudentLoginActivity;
 
 /**
@@ -16,8 +17,6 @@ public class LogoutUtil {
         OxygenSharedPreferences.setSessionId(context, null);
         LoginManager.getInstance().logOut();
 
-        Intent intent = new Intent(context, StudentLoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        RedirectRouting.onLogout(context);
     }
 }

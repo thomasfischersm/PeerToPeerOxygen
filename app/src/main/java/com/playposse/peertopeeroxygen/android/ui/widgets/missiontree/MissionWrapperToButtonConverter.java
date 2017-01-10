@@ -3,9 +3,7 @@ package com.playposse.peertopeeroxygen.android.ui.widgets.missiontree;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewCompat;
 import android.text.Html;
 import android.text.Spanned;
@@ -23,6 +21,7 @@ import com.playposse.peertopeeroxygen.android.missiondependencies.MissionAvailab
 import com.playposse.peertopeeroxygen.android.missiondependencies.MissionPlaceHolder;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.student.StudentMissionActivity;
+import com.playposse.peertopeeroxygen.android.ui.GeneralImageGetter;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionTreeBean;
 
 import java.util.ArrayList;
@@ -118,7 +117,7 @@ public class MissionWrapperToButtonConverter {
             }
         }
 
-        PointDrawableImageGetter imageGetter = new PointDrawableImageGetter(context, textSize);
+        GeneralImageGetter imageGetter = new GeneralImageGetter(context, textSize);
         return Html.fromHtml(sb.toString(), imageGetter, null);
     }
 
@@ -152,13 +151,13 @@ public class MissionWrapperToButtonConverter {
         final String imgSrc;
         switch (pointType) {
             case teach:
-                imgSrc = PointDrawableImageGetter.TEACH_POINT_IMG;
+                imgSrc = GeneralImageGetter.TEACH_POINT_IMG;
                 break;
             case practice:
-                imgSrc = PointDrawableImageGetter.PRACTICE_POINT_IMG;
+                imgSrc = GeneralImageGetter.PRACTICE_POINT_IMG;
                 break;
             case heart:
-                imgSrc = PointDrawableImageGetter.HEART_POINT_IMG;
+                imgSrc = GeneralImageGetter.HEART_POINT_IMG;
                 break;
             default:
                 throw new IllegalArgumentException("Unexpected point type: " + pointType.name());

@@ -3,6 +3,7 @@ package com.playposse.peertopeeroxygen.android.data.clientactions;
 import android.util.Log;
 
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.globalconfiguration.RedirectRouting;
 import com.playposse.peertopeeroxygen.android.util.ToastUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
@@ -40,7 +41,7 @@ public class MissionDataRetrieverClientAction extends ApiClientAction {
     protected void executeAsync() throws IOException {
         Long sessionId = getBinder().getSessionId();
         if ((sessionId == null) || (sessionId == -1)) {
-            getBinder().redirectToLoginActivity();
+            RedirectRouting.onAppError(getContext());
             return;
         }
         CompleteMissionDataBean completeMissionDataBean =

@@ -1,4 +1,4 @@
-package com.playposse.peertopeeroxygen.android.ui.widgets.missiontree;
+package com.playposse.peertopeeroxygen.android.ui;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -10,16 +10,22 @@ import com.playposse.peertopeeroxygen.android.R;
  * An {@link Html.ImageGetter} that loads the drawable images for the different point types from the
  * resources. The {@link Drawable}s are resized to be the height of text.
  */
-public class PointDrawableImageGetter implements Html.ImageGetter {
+public class GeneralImageGetter implements Html.ImageGetter {
 
+    // Constants for the mission tree.
     public static final String TEACH_POINT_IMG = "teachPointImg";
     public static final String PRACTICE_POINT_IMG = "practicePointImg";
     public static final String HEART_POINT_IMG = "heartPointImg";
 
+    // Constants for the introduction deck.
+    public static final String TEACHER_IMG = "teacher";
+    public static final String STUDENT_IMG = "student";
+    public static final String ARROW_IMG = "arrow";
+
     private final float textSize;
     private final Context context;
 
-    public PointDrawableImageGetter(Context context, float textSize) {
+    public GeneralImageGetter(Context context, float textSize) {
         this.textSize = textSize;
         this.context = context;
     }
@@ -36,6 +42,15 @@ public class PointDrawableImageGetter implements Html.ImageGetter {
                 break;
             case HEART_POINT_IMG:
                 resourceId = R.drawable.ic_favorite_black_24dp;
+                break;
+            case TEACHER_IMG:
+                resourceId = R.drawable.ic_person_black_24dp;
+                break;
+            case STUDENT_IMG:
+                resourceId = R.drawable.ic_person_outline_black_24dp;
+                break;
+            case ARROW_IMG:
+                resourceId = R.drawable.ic_arrow_forward_black_24dp;
                 break;
             default:
                 throw new IllegalArgumentException("Unexpected image ID in HTML: " + src);

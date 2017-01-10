@@ -181,17 +181,6 @@ public class DataService extends Service {
             return OxygenSharedPreferences.getSessionId(getApplicationContext());
         }
 
-        @Override
-        public void redirectToLoginActivity() {
-            // Clear the session id because it may be bad.
-            OxygenSharedPreferences.setSessionId(getApplicationContext(), (long) -1);
-
-            Context context = getApplicationContext();
-            Intent intent = new Intent(context, StudentLoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        }
-
         public void registerOrLogin(
                 final String accessToken,
                 final SignInSuccessCallback signInSuccessCallback) {

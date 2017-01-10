@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
+import com.playposse.peertopeeroxygen.android.globalconfiguration.RedirectRouting;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxygenApi;
 
 import java.io.IOException;
@@ -103,7 +104,7 @@ public abstract class ApiClientAction {
                 executeAsync();
             } catch (IOException ex) {
                 Log.e(LOG_CAT, "Failed to execute: " + this.getClass().getName(), ex);
-                binder.redirectToLoginActivity();
+                RedirectRouting.onAppError(binder.getApplicationContext());
             }
 
             if (notifyDataReceivedCallbacks) {

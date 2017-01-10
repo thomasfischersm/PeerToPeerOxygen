@@ -18,6 +18,7 @@ import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceParentActivity;
 import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.data.practicas.PracticaRepository;
+import com.playposse.peertopeeroxygen.android.globalconfiguration.RedirectRouting;
 import com.playposse.peertopeeroxygen.android.practicamgmt.PracticaManager;
 
 public class StudentLoginActivity extends DataServiceParentActivity {
@@ -73,12 +74,6 @@ public class StudentLoginActivity extends DataServiceParentActivity {
         });
         Log.i(LOG_CAT, "Facebook callback registered.");
 
-        // Check if we already have a session id.
-        Long sessionId = OxygenSharedPreferences.getSessionId(this);
-        if ((sessionId != null) && (sessionId != -1)) {
-            startActivity(new Intent(this, StudentMainActivity.class));
-        }
-
         // Apparently, the session ID is dead or something else requires trying to login again if
         // there is an access token but no valid session id.
         if (AccessToken.getCurrentAccessToken() != null) {
@@ -109,10 +104,6 @@ public class StudentLoginActivity extends DataServiceParentActivity {
                 getApplicationContext(),
                 localBinder);
 
-        if (OxygenSharedPreferences.getCurrentDomainId(getApplicationContext()) == null) {
-            startActivity(new Intent(this, StudentDomainSelectionActivity.class));
-        } else {
-            startActivity(new Intent(this, StudentMainActivity.class));
-        }
+        RedirectRouting.onSuccessfulLogin(this);
     }
 }

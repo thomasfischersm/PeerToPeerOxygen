@@ -175,6 +175,8 @@
             android:launchMode="singleTop"
             android:parentActivityName=".admin.AdminMainActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+        <activity android:name=".student.StudentIntroductionDeckActivity" />
+        <activity android:name=".student.StartupActivity"></activity>
     </application>
 
 </manifest>

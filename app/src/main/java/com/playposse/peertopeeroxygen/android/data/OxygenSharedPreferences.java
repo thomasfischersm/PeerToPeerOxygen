@@ -23,6 +23,7 @@ public final class OxygenSharedPreferences {
     private static final String SUBSCRIBED_DOMAIN_IDS_KEY = "subscribedDomainIds";
     private static final String USER_EMAIL_KEY = "userEmail";
     private static final String FIREBASE_TOKEN_KEY = "firebaseToken";
+    private static final String HAS_INTRO_DECK_BEEN_SHOWN = "hasIntroDeckBeenShown";
 
     private static final String NULL_STRING = "-1";
 
@@ -40,22 +41,11 @@ public final class OxygenSharedPreferences {
     }
 
     public static boolean getDebugFlag(Context context) {
-
-        try {
-            SharedPreferences sharedPreferences =
-                    context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-            return sharedPreferences.getBoolean(DEBUG_FLAG_KEY, false) /*|| true*/; // TODO: REMOVE LAST TRUE!
-        } catch (ClassCastException ex) {
-            setDebugFlag(context, false);
-            return true;
-        }
-//        return true;
+        return getBoolean(context, DEBUG_FLAG_KEY, false);
     }
 
     public static void setDebugFlag(Context context, boolean debugFlag) {
-        SharedPreferences sharedPreferences =
-                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        sharedPreferences.edit().putBoolean(DEBUG_FLAG_KEY, debugFlag).apply();
+        setBoolean(context, DEBUG_FLAG_KEY, debugFlag);
     }
 
     public static Long getLoanerDeviceId(Context context) {
@@ -124,6 +114,14 @@ public final class OxygenSharedPreferences {
         setString(context, FIREBASE_TOKEN_KEY, firebaseToken);
     }
 
+    public static boolean hasIntroDeckBeenShown(Context context) {
+        return getBoolean(context, HAS_INTRO_DECK_BEEN_SHOWN, false);
+    }
+
+    public static void setHasIntroDeckBeenShown(Context context, boolean hasIntroDeckBeenShown) {
+        setBoolean(context, HAS_INTRO_DECK_BEEN_SHOWN, hasIntroDeckBeenShown);
+    }
+
     private static String getString(Context context, String key) {
         SharedPreferences sharedPreferences =
                 context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -156,5 +154,25 @@ public final class OxygenSharedPreferences {
         } else {
             sharedPreferences.edit().remove(key).apply();
         }
+    }
+
+    private static boolean getBoolean(Context context, String key, boolean defaultValue) {
+        try {
+            SharedPreferences sharedPreferences =
+                    context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+            return sharedPreferences.getBoolean(key, defaultValue);
+        } catch (ClassCastException ex) {
+            setBoolean(context, key, defaultValue);
+            return false;
+        }
+    }
+
+    public static void setBoolean(Context context, String key, boolean value) {
+        SharedPreferences sharedPreferences =
+                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        sharedPreferences
+                .edit()
+                .putBoolean(key, value)
+                .apply();
     }
 }

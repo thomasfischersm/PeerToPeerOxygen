@@ -44,5 +44,6 @@ public class PeerToPeerOxygenApplication extends Application {
 
         stopService(new Intent(this, DataService.class));
         stopService(new Intent(this, OxygenFirebaseMessagingService.class));
+        stopService(new Intent(this, OxygenFirebaseInstanceIdService.class));
     }
 }
