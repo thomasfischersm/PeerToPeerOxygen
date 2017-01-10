@@ -8,7 +8,7 @@
     <string name="content_management_title">Content management</string>
     <string name="edit_domain_link">Edit domain</string>
     <string name="show_mission_ladders_link">Edit courses</string>
-    <string name="show_practicas_link">Edit practicas</string>
+    <string name="show_practicas_link">Edit events</string>
     <string name="student_management_title">Student management</string>
     <string name="student_roster_link">Student roster</string>
     <string name="stats_link">Mission stats</string>
@@ -59,13 +59,13 @@
     <string name="confirm_delete_mission_message">Do you want to delete mission: %1$s?</string>
 
     <!-- Show practicas to admin -->
-    <string name="admin_show_practicas_title">Show practicas</string>
-    <string name="create_practica_button_label">Create practica</string>
-    <string name="past_practicas_tab_title">Past practicas</string>
-    <string name="future_practicas_tab_title">Future practicas</string>
+    <string name="admin_show_practicas_title">Show events</string>
+    <string name="create_practica_button_label">Create event</string>
+    <string name="past_practicas_tab_title">Past events</string>
+    <string name="future_practicas_tab_title">Future events</string>
 
     <!-- Edit practica admin page -->
-    <string name="admin_edit_practica_title">Edit practica</string>
+    <string name="admin_edit_practica_title">Edit event</string>
     <string name="practica_name_label">Name</string>
     <string name="practica_greeting_label">Greeting</string>
     <string name="start_date_time_label">Start date/time</string>
@@ -136,7 +136,7 @@
     <string name="student_learning_mission_heading">Courses</string>
     <string name="student_functions_heading">Functions</string>
     <string name="student_profile_label">View profile</string>
-    <string name="view_practica_label">View practica</string>
+    <string name="view_practica_label">View current event</string>
     <string name="logout_button_label">Logout</string>
     <string name="domain_welcome_dialog_title">Welcome to %1$s</string>
     <string name="domain_welcome_dialog_dismiss_button_label">Done</string>
@@ -193,7 +193,7 @@
     <string name="check_into_practica_button_label">Check-in</string>
 
     <!-- View practica student activity -->
-    <string name="view_practica_student_activity_title">Practica: %1$s</string>
+    <string name="view_practica_student_activity_title">Event: %1$s</string>
     <string name="empty_practica_message">You are the first one!</string>
     <string name="learnable_missions_heading">Learn missions:</string>
     <string name="teachable_missions_heading">Teach missions:</string>
@@ -246,8 +246,8 @@
     <string name="mission_data_refreshed_toast">The mission data has been refreshed.</string>
     <string name="no_email_client_found_toast">No installed app can handle e-mail.</string>
     <string name="no_camera_detected_toast">No camera detected.</string>
-    <string name="received_practica_update">Received practica update.</string>
-    <string name="successfully_signed_into_practica">Successfully signed into practica.</string>
+    <string name="received_practica_update">Received event update.</string>
+    <string name="successfully_signed_into_practica">Successfully signed into event.</string>
     <string name="admin_promotion_toast">You were promoted to admin for \'%1$s\'.</string>
     <string name="admin_demotion_toast">You were demoted from admin for \'%1$s\'.</string>
     <string name="invitation_code_not_found_toast">The invitation code could not be found.</string>
