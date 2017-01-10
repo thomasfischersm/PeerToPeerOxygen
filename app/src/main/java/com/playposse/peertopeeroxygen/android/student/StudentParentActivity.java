@@ -38,10 +38,6 @@ public abstract class StudentParentActivity extends DataServiceParentActivity {
                     dataServiceConnection.getLocalBinder().getDataRepository().getUserBean();
             if (userBean.getAdmin()) {
                 getMenuInflater().inflate(R.menu.admin_menu, menu);
-
-                boolean debugFlag = OxygenSharedPreferences.getDebugFlag(this);
-                MenuItem debugMenuItem = menu.findItem(R.id.debugMenuItem);
-                debugMenuItem.setChecked(debugFlag);
                 return true;
             } else {
                 getMenuInflater().inflate(R.menu.student_menu, menu);

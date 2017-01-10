@@ -20,8 +20,6 @@ import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.playposse.peertopeeroxygen.android.R;
-import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
-import com.playposse.peertopeeroxygen.android.ui.debug.SelectDebugUserDialogBuilder;
 import com.playposse.peertopeeroxygen.android.util.ToastUtil;
 
 import java.io.IOException;
@@ -47,6 +45,7 @@ public class QrCodeScannerFragment extends Fragment {
     private boolean userVisibleHint;
 
     int counter = 0;
+
     public QrCodeScannerFragment() {
         Log.i(LOG_CAT, "QrCodeScannerFragment instance count: " + (++counter));
     }
@@ -94,7 +93,7 @@ public class QrCodeScannerFragment extends Fragment {
 
     /**
      * Activates the {@link Fragment}.
-     *
+     * <p>
      * <p>The {@link android.support.v4.view.ViewPager} is squirelly where it calls
      * {@link #onResume()} before the {@link Fragment} is actually visible. It tries to cache the
      * next {@link Fragment} before it shows up.
@@ -134,11 +133,7 @@ public class QrCodeScannerFragment extends Fragment {
         if (cameraSource == null) {
             // Start camera.
             Log.i(LOG_CAT, "Attempting to start camera");
-            if (!OxygenSharedPreferences.getDebugFlag(getActivity())) {
-                scanForQrCode(surfaceView);
-            } else {
-                pickDebugUser();
-            }
+            scanForQrCode(surfaceView);
         } else {
             // Continue paused camera.
             try {
@@ -306,18 +301,6 @@ public class QrCodeScannerFragment extends Fragment {
                 && (Camera.getNumberOfCameras() > 0);
     }
 
-    private void pickDebugUser() {
-        SelectDebugUserDialogBuilder.build(
-                getActivity(),
-                new SelectDebugUserDialogBuilder.DebugUserPickerDialogCallback() {
-                    @Override
-                    public void onPickedDebugUser(long userId) {
-                        Barcode barcode = new Barcode();
-                        barcode.displayValue = "" + userId;
-                        receivedBarcode(barcode);
-                    }
-                });
-    }
 
     /**
      * Callback to the activity to report that a QR code has been scanned in.

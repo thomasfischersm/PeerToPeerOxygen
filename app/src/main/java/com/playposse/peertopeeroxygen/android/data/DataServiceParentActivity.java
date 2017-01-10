@@ -68,11 +68,6 @@ public abstract class DataServiceParentActivity
                 DataService.LocalBinder localBinder = dataServiceConnection.getLocalBinder();
                 MissionDataManager.checkStale(getApplicationContext(), localBinder);
                 return true;
-            case R.id.debugMenuItem:
-                boolean debugFlag = !item.isChecked();
-                item.setChecked(debugFlag);
-                OxygenSharedPreferences.setDebugFlag(this, debugFlag);
-                return true;
             case R.id.emailLogMenuItem:
                 LogUtil.emailLog(this);
                 return true;

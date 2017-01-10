@@ -17,6 +17,11 @@ public final class OxygenSharedPreferences {
     private static final String PREFS_NAME = "OxygenPreferences";
 
     private static final String SESSION_KEY = "sessionId";
+
+    /**
+     * This flag is sunset. To avoid the name being reused and getting old preference data, this
+     * flag should stay in the code as a reminder.
+     */
     private static final String DEBUG_FLAG_KEY = "debug";
     private static final String LOANER_DEVICE_KEY = "loanerDeviceID";
     private static final String CURRENT_DOMAIN_ID_KEY = "currentDomainId";
@@ -40,14 +45,6 @@ public final class OxygenSharedPreferences {
     public static boolean hasSessionId(Context context) {
         Long sessionId = getSessionId(context);
         return (sessionId != null) && (sessionId != -1);
-    }
-
-    public static boolean getDebugFlag(Context context) {
-        return getBoolean(context, DEBUG_FLAG_KEY, false);
-    }
-
-    public static void setDebugFlag(Context context, boolean debugFlag) {
-        setBoolean(context, DEBUG_FLAG_KEY, debugFlag);
     }
 
     public static Long getLoanerDeviceId(Context context) {

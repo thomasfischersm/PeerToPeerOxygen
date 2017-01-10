@@ -33,10 +33,6 @@ public abstract class AdminParentActivity extends DataServiceParentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.admin_menu, menu);
 
-        boolean debugFlag = OxygenSharedPreferences.getDebugFlag(this);
-        MenuItem debugMenuItem = menu.findItem(R.id.debugMenuItem);
-        debugMenuItem.setChecked(debugFlag);
-
         return true;
     }
 }
