@@ -65,12 +65,12 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
         bindService(intent, dataServiceConnection, Context.BIND_AUTO_CREATE);
 
         FirebaseMessaging.getInstance().subscribeToTopic(ALL_DEVICES_TOPIC);
-        subscribeToDomainTopics();
+        subscribeToDomainTopics(getApplicationContext());
     }
 
-    private void subscribeToDomainTopics() {
+    public static void subscribeToDomainTopics(Context context) {
         Set<Long> domainIds =
-                OxygenSharedPreferences.getSubscribedDomainIds(getApplicationContext());
+                OxygenSharedPreferences.getSubscribedDomainIds(context);
         if (domainIds != null) {
             for (Long domainId : domainIds) {
                 subscribeToDomainTopic(domainId);

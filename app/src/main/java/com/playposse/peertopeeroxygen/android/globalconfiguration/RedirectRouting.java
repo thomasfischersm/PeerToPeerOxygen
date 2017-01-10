@@ -57,7 +57,8 @@ public class RedirectRouting {
      */
     public static void onAppError(Context context) {
         // Clear the session id because it may be bad.
-        OxygenSharedPreferences.setSessionId(context, (long) -1);
+        OxygenSharedPreferences.setSessionId(context, -1L);
+        OxygenSharedPreferences.setCurrentDomain(context, -1L);
 
         Intent intent = new Intent(context, StudentLoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

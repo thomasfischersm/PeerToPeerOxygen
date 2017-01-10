@@ -23,8 +23,9 @@ public final class OxygenSharedPreferences {
     private static final String SUBSCRIBED_DOMAIN_IDS_KEY = "subscribedDomainIds";
     private static final String USER_EMAIL_KEY = "userEmail";
     private static final String FIREBASE_TOKEN_KEY = "firebaseToken";
-    private static final String HAS_INTRO_DECK_BEEN_SHOWN = "hasIntroDeckBeenShown";
-    private static final String DOMAIN_IDS_WITH_DISPLAYED_INTRO = "domainIdsWithDisplayedIntro";
+    private static final String HAS_INTRO_DECK_BEEN_SHOWN_KEY = "hasIntroDeckBeenShown";
+    private static final String DOMAIN_IDS_WITH_DISPLAYED_INTRO_KEY = "domainIdsWithDisplayedIntro";
+    private static final String LAST_USER_ID_KEY = "lastUserId";
 
     private static final String NULL_STRING = "-1";
 
@@ -95,23 +96,31 @@ public final class OxygenSharedPreferences {
     }
 
     public static boolean hasIntroDeckBeenShown(Context context) {
-        return getBoolean(context, HAS_INTRO_DECK_BEEN_SHOWN, false);
+        return getBoolean(context, HAS_INTRO_DECK_BEEN_SHOWN_KEY, false);
     }
 
     public static void setHasIntroDeckBeenShown(Context context, boolean hasIntroDeckBeenShown) {
-        setBoolean(context, HAS_INTRO_DECK_BEEN_SHOWN, hasIntroDeckBeenShown);
+        setBoolean(context, HAS_INTRO_DECK_BEEN_SHOWN_KEY, hasIntroDeckBeenShown);
     }
 
     public static Set<Long> getDomainIdsWithDisplayedIntro(Context context) {
-        return getLongSet(context, DOMAIN_IDS_WITH_DISPLAYED_INTRO);
+        return getLongSet(context, DOMAIN_IDS_WITH_DISPLAYED_INTRO_KEY);
     }
 
     public static void setDomainIdsWithDisplayedIntro(Context context, Set<Long> domainIds) {
-        setLongSet(context, DOMAIN_IDS_WITH_DISPLAYED_INTRO, domainIds);
+        setLongSet(context, DOMAIN_IDS_WITH_DISPLAYED_INTRO_KEY, domainIds);
     }
 
     public static void addDomainIdWithDisplayedIntro(Context context, Long domainId) {
-        addValueToLongSet(context, DOMAIN_IDS_WITH_DISPLAYED_INTRO, domainId);
+        addValueToLongSet(context, DOMAIN_IDS_WITH_DISPLAYED_INTRO_KEY, domainId);
+    }
+
+    public static Long getLastUserId(Context context) {
+        return getLong(context, LAST_USER_ID_KEY);
+    }
+
+    public static void setLastUserId(Context context, Long lastUserId) {
+        setLong(context, LAST_USER_ID_KEY, lastUserId);
     }
 
     private static String getString(Context context, String key) {

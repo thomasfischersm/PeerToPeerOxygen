@@ -3,6 +3,8 @@ package com.playposse.peertopeeroxygen.android.data.clientactions;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
+import com.playposse.peertopeeroxygen.android.data.missions.MissionDataManager;
+import com.playposse.peertopeeroxygen.android.firebase.OxygenFirebaseMessagingService;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MasterUserBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
@@ -34,16 +36,42 @@ public class RegisterOrLoginClientAction extends ApiClientAction {
     protected void executeAsync() throws IOException {
         String firebaseToken = FirebaseInstanceId.getInstance().getToken();
         Long loanerDeviceId = OxygenSharedPreferences.getLoanerDeviceId(getContext());
+
         MasterUserBean masterUserBean =
                 getBinder().getApi()
                         .registerOrLogin(accessToken, firebaseToken)
                         .setLoanerDeviceId(loanerDeviceId)
                         .setDomainId(getDomainId())
                         .execute();
+
         OxygenSharedPreferences.setSessionId(getContext(), masterUserBean.getSessionId());
         OxygenSharedPreferences.setUserEmail(getContext(), masterUserBean.getEmail());
         OxygenSharedPreferences.setFirebaseToken(getContext(), masterUserBean.getFirebaseToken());
 
+        detectUserChange(masterUserBean);
+
         signInSuccessCallback.onSuccess();
+    }
+
+    private void detectUserChange(MasterUserBean masterUserBean) {
+        Long lastUserId = OxygenSharedPreferences.getLastUserId(getContext());
+        OxygenSharedPreferences.setLastUserId(getContext(), masterUserBean.getId());
+        if ((lastUserId == null) || (lastUserId == -1)) {
+            // No previous user
+            return;
+        }
+
+        if (lastUserId.equals(masterUserBean.getId())) {
+            // No user change.
+            return;
+        }
+
+        // The user has changed. Clear the cache.
+        MissionDataManager.invalidateAllDomains(getContext());
+        OxygenSharedPreferences.setCurrentDomain(getContext(), -1L);
+        OxygenFirebaseMessagingService.subscribeToDomainTopics(getContext());
+
+        // TODO: Should subscribe to domains. It currently doesn't know which domains are subscribed.
+        // TODO: Should deal with practica Firebase topic subscriptions.
     }
 }

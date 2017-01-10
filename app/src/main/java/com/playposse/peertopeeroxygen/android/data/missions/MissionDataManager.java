@@ -16,8 +16,10 @@ import com.playposse.peertopeeroxygen.android.util.StreamUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CompleteMissionDataBean;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.regex.Pattern;
 
 /**
  * Manager that loads and saves mission data. The {@link DataRepository} keeps the mission data
@@ -34,6 +36,8 @@ public class MissionDataManager {
      * Pattern for saving mission data by domain into a JSON file on the local device.
      */
     private static final String FILE_PATTERN = "mission-data-%1$s.json";
+
+    private static final String FILE_REGEX = "mission-data-\\d+.json";
 
     public static void switchToDomainAsync(
             final Long domainId,
@@ -85,6 +89,20 @@ public class MissionDataManager {
             isStale = true;
         }
         getFile(context, domainId).delete();
+    }
+
+    @WorkerThread
+    public static void invalidateAllDomains(Context context) {
+        File[] files = context.getCacheDir().listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.matches(FILE_REGEX);
+            }
+        });
+
+        for (File file : files) {
+            file.delete();
+        }
     }
 
     private static void loadRemotelyAsync(
