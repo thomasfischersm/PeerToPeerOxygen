@@ -212,4 +212,10 @@ public class DataRepository {
         }
         return null;
     }
+
+    public boolean hasUserCompletedAtLeastOneMission() {
+        List<MissionCompletionBean> missionCompletionBeans =
+                getUserBean().getMissionCompletionBeans();
+        return (missionCompletionBeans != null) && (missionCompletionBeans.size() > 0);
+    }
 }

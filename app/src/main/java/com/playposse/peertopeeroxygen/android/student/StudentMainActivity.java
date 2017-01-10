@@ -187,9 +187,14 @@ public class StudentMainActivity extends StudentParentActivity {
             return;
         }
 
-        if ((domainBean == null)
-                || StringUtil.getCleanString(domainBean.getDescription()).length() == 0) {
+        String cleanDomainDescription = StringUtil.getCleanString(domainBean.getDescription());
+        if ((cleanDomainDescription == null) || cleanDomainDescription.length() == 0) {
             // The admin hasn't created a welcoem message.
+            return;
+        }
+
+        if (dataRepository.hasUserCompletedAtLeastOneMission()) {
+            // The user may have completed missions on another device. So skip the dialog.
             return;
         }
 
