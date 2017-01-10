@@ -184,7 +184,7 @@
     <string name="student_about_heading">About</string>
     <string name="student_about_text">Today, limitless amounts of incredible content is freely available in the form of books, videos and MOOCs. But real learning, deep learning, and the motivation to keep learning, often has a social component that\'s not yet well-facilitated. There\'s this huge untapped potential for peer-to-peer learning: practitioners helping each other learn. And while there\'s a lot of willingness to be helpful, there is hesitation that comes from a lack of knowledge about HOW exactly to help, a lack of confidence in whether what you have to offer is \"right,\" and social norms that doesn\'t facilitate this kind of learning. We can improve this and unlock the peer-to-peer learning potential with this social learning app !</string>
     <string name="student_about_copyright_heading">Copyright</string>
-    <string name="student_about_copyright_text">(C) Copyright 2016 Mitra Martin, Stefan Fabry, and Thomas Fischer. All rights reserved.\n</string>
+    <string name="student_about_copyright_text">(C) Copyright 2016 Mitra Martin and Thomas Fischer. All rights reserved.\n</string>
     <string name="student_about_play_services_attribution_heading">Google Play Services Attribution</string>
 
     <!-- Practica checkin activity -->
