@@ -52,6 +52,8 @@ public class StudentLoginActivity extends DataServiceParentActivity {
                 Log.i(LOG_CAT, "app id " + loginResult.getAccessToken().getApplicationId());
                 Log.i(LOG_CAT, "token " + loginResult.getAccessToken().getToken().length());
 
+                showLoadingProgress();
+
                 dataServiceConnection.getLocalBinder().registerOrLogin(
                         loginResult.getAccessToken().getToken(),
                         new DataService.SignInSuccessCallback() {

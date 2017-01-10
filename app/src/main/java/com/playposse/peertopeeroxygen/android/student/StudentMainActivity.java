@@ -189,7 +189,7 @@ public class StudentMainActivity extends StudentParentActivity {
 
         String cleanDomainDescription = StringUtil.getCleanString(domainBean.getDescription());
         if ((cleanDomainDescription == null) || cleanDomainDescription.length() == 0) {
-            // The admin hasn't created a welcoem message.
+            // The admin hasn't created a welcome message.
             return;
         }
 
