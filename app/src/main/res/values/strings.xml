@@ -138,6 +138,8 @@
     <string name="student_profile_label">View profile</string>
     <string name="view_practica_label">View practica</string>
     <string name="logout_button_label">Logout</string>
+    <string name="domain_welcome_dialog_title">Welcome to %1$s</string>
+    <string name="domain_welcome_dialog_dismiss_button_label">Done</string>
 
     <!-- Domain selection activity -->
     <string name="select_users_domain_heading">Subscribed domains</string>

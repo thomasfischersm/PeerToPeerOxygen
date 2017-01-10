@@ -1,5 +1,7 @@
 package com.playposse.peertopeeroxygen.android.student;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -14,13 +16,17 @@ import android.widget.TextView;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
+import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.missiondependencies.MissionLadderSorter;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.util.LogoutUtil;
+import com.playposse.peertopeeroxygen.android.util.StringUtil;
+import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.DomainBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionLadderBean;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Activity that is the home page for students. It has links to the mission ladders/trees and
@@ -94,6 +100,8 @@ public class StudentMainActivity extends StudentParentActivity {
         }
 
         setTitle(dataRepository.getCompleteMissionDataBean().getDomainBean().getName());
+
+        showDomainWelcomeDialogOnFirstVisit(dataRepository);
     }
 
     /**
@@ -158,5 +166,54 @@ public class StudentMainActivity extends StudentParentActivity {
         byte[] sha = outputStream.toByteArray();
         String base64 = Base64.encodeToString(sha, 0);
         Log.i(LOG_TAG, shaStr + " -> " + base64);
+    }
+
+    /**
+     * Shows an alert dialog with the domain welcome message when the user visits the domain for the
+     * first time.
+     */
+    private void showDomainWelcomeDialogOnFirstVisit(DataRepository dataRepository) {
+        DomainBean domainBean = dataRepository.getCompleteMissionDataBean().getDomainBean();
+        final Long domainId = domainBean.getId();
+        if (domainId == null) {
+            // The user hasn't selected a domain.
+            return;
+        }
+
+        Set<Long> domainIdsWithDisplayedIntro =
+                OxygenSharedPreferences.getDomainIdsWithDisplayedIntro(this);
+        if (domainIdsWithDisplayedIntro.contains(domainId)) {
+            // Already displayed the intro for this domain.
+            return;
+        }
+
+        if ((domainBean == null)
+                || StringUtil.getCleanString(domainBean.getDescription()).length() == 0) {
+            // The admin hasn't created a welcoem message.
+            return;
+        }
+
+        String dialogTitle = getString(R.string.domain_welcome_dialog_title, domainBean.getName());
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(dialogTitle)
+                .setMessage(domainBean.getDescription())
+                .setPositiveButton(
+                        R.string.domain_welcome_dialog_dismiss_button_label,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                onDismissWelcomeDialog(dialog, domainId);
+                            }
+                        })
+                .create();
+
+        dialog.show();
+    }
+
+    private void onDismissWelcomeDialog(DialogInterface dialog, Long domainId) {
+        OxygenSharedPreferences.addDomainIdWithDisplayedIntro(
+                getApplicationContext(),
+                domainId);
+        dialog.dismiss();
     }
 }

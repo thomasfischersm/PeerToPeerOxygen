@@ -24,6 +24,7 @@ public final class OxygenSharedPreferences {
     private static final String USER_EMAIL_KEY = "userEmail";
     private static final String FIREBASE_TOKEN_KEY = "firebaseToken";
     private static final String HAS_INTRO_DECK_BEEN_SHOWN = "hasIntroDeckBeenShown";
+    private static final String DOMAIN_IDS_WITH_DISPLAYED_INTRO = "domainIdsWithDisplayedIntro";
 
     private static final String NULL_STRING = "-1";
 
@@ -66,36 +67,15 @@ public final class OxygenSharedPreferences {
     }
 
     public static Set<Long> getSubscribedDomainIds(Context context) {
-        SharedPreferences sharedPreferences =
-                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        Set<String> domainIds = sharedPreferences.getStringSet(SUBSCRIBED_DOMAIN_IDS_KEY, null);
-
-        if ((domainIds == null) || (domainIds.size() == 0)) {
-            return new HashSet<>();
-        }
-
-        Set<Long> result = new HashSet<>(domainIds.size());
-        for (String domainId : domainIds) {
-            result.add(Long.valueOf(domainId));
-        }
-        return result;
+        return getLongSet(context, SUBSCRIBED_DOMAIN_IDS_KEY);
     }
 
     public static void setSubscribedDomainIds(Context context, Set<Long> domainIds) {
-        Set<String> stringSet = new HashSet<>(domainIds.size());
-        for (Long domainId : domainIds) {
-            stringSet.add(domainId.toString());
-        }
-
-        SharedPreferences sharedPreferences =
-                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        sharedPreferences.edit().putStringSet(SUBSCRIBED_DOMAIN_IDS_KEY, stringSet).apply();
+        setLongSet(context, SUBSCRIBED_DOMAIN_IDS_KEY, domainIds);
     }
 
     public static void addSubscribedDomainId(Context context, Long domainId) {
-        Set<Long> subscribedDomainIds = getSubscribedDomainIds(context);
-        subscribedDomainIds.add(domainId);
-        setSubscribedDomainIds(context, subscribedDomainIds);
+        addValueToLongSet(context, SUBSCRIBED_DOMAIN_IDS_KEY, domainId);
     }
 
     public static String getUserEmail(Context context) {
@@ -120,6 +100,18 @@ public final class OxygenSharedPreferences {
 
     public static void setHasIntroDeckBeenShown(Context context, boolean hasIntroDeckBeenShown) {
         setBoolean(context, HAS_INTRO_DECK_BEEN_SHOWN, hasIntroDeckBeenShown);
+    }
+
+    public static Set<Long> getDomainIdsWithDisplayedIntro(Context context) {
+        return getLongSet(context, DOMAIN_IDS_WITH_DISPLAYED_INTRO);
+    }
+
+    public static void setDomainIdsWithDisplayedIntro(Context context, Set<Long> domainIds) {
+        setLongSet(context, DOMAIN_IDS_WITH_DISPLAYED_INTRO, domainIds);
+    }
+
+    public static void addDomainIdWithDisplayedIntro(Context context, Long domainId) {
+        addValueToLongSet(context, DOMAIN_IDS_WITH_DISPLAYED_INTRO, domainId);
     }
 
     private static String getString(Context context, String key) {
@@ -167,12 +159,45 @@ public final class OxygenSharedPreferences {
         }
     }
 
-    public static void setBoolean(Context context, String key, boolean value) {
+    private static void setBoolean(Context context, String key, boolean value) {
         SharedPreferences sharedPreferences =
                 context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         sharedPreferences
                 .edit()
                 .putBoolean(key, value)
                 .apply();
+    }
+
+    private static Set<Long> getLongSet(Context context, String key) {
+        SharedPreferences sharedPreferences =
+                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        Set<String> set = sharedPreferences.getStringSet(key, null);
+
+        if ((set == null) || (set.size() == 0)) {
+            return new HashSet<>();
+        }
+
+        Set<Long> result = new HashSet<>(set.size());
+        for (String value : set) {
+            result.add(Long.valueOf(value));
+        }
+        return result;
+    }
+
+    private static void setLongSet(Context context, String key, Set<Long> set) {
+        Set<String> stringSet = new HashSet<>(set.size());
+        for (Long value : set) {
+            stringSet.add(value.toString());
+        }
+
+        SharedPreferences sharedPreferences =
+                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putStringSet(key, stringSet).apply();
+    }
+
+    private static void addValueToLongSet(Context context, String key, Long value) {
+        Set<Long> set = getLongSet(context, key);
+        set.add(value);
+        setLongSet(context, key, set);
     }
 }
