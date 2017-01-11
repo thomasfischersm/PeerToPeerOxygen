@@ -174,7 +174,7 @@ public class StudentMainActivity extends StudentParentActivity {
      */
     private void showDomainWelcomeDialogOnFirstVisit(DataRepository dataRepository) {
         DomainBean domainBean = dataRepository.getCompleteMissionDataBean().getDomainBean();
-        final Long domainId = domainBean.getId();
+        Long domainId = domainBean.getId();
         if (domainId == null) {
             // The user hasn't selected a domain.
             return;
@@ -207,18 +207,16 @@ public class StudentMainActivity extends StudentParentActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                onDismissWelcomeDialog(dialog, domainId);
+                                dialog.dismiss();
                             }
                         })
                 .create();
 
         dialog.show();
-    }
 
-    private void onDismissWelcomeDialog(DialogInterface dialog, Long domainId) {
+        // Mark dialog as shown to prevent showing it a second time.
         OxygenSharedPreferences.addDomainIdWithDisplayedIntro(
                 getApplicationContext(),
                 domainId);
-        dialog.dismiss();
     }
 }
