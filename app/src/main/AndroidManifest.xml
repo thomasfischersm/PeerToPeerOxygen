@@ -78,13 +78,7 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
-        <activity android:name=".student.StudentLoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".student.StudentLoginActivity" />
         <activity
             android:name=".student.StudentProfileActivity"
             android:launchMode="singleTop"
@@ -176,7 +170,13 @@
             android:parentActivityName=".admin.AdminMainActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity android:name=".student.StudentIntroductionDeckActivity" />
-        <activity android:name=".student.StartupActivity"></activity>
+        <activity android:name=".student.StartupActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
