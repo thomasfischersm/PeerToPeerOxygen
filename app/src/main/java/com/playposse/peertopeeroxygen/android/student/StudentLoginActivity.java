@@ -106,6 +106,8 @@ public class StudentLoginActivity extends DataServiceParentActivity {
                 getApplicationContext(),
                 localBinder);
 
+        dismissLoadingProgress();
+
         RedirectRouting.onSuccessfulLogin(this);
     }
 }
