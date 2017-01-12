@@ -9,6 +9,9 @@
         android:id="@+id/switchDomainMenuItem"
         android:title="@string/switch_domain_menu_title" />
 
+    <item
+        android:id="@+id/helpMenuItem"
+        android:title="@string/help_menu_title" />
 
     <item
         android:id="@+id/aboutMenuItem"

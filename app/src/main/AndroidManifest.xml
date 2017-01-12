@@ -177,6 +177,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".student.StudentHelpActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".admin.AdminMainActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

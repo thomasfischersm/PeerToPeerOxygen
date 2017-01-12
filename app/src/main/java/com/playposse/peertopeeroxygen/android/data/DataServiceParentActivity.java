@@ -14,6 +14,7 @@ import com.playposse.peertopeeroxygen.android.data.practicas.PracticaRepository;
 import com.playposse.peertopeeroxygen.android.practicamgmt.PracticaManager;
 import com.playposse.peertopeeroxygen.android.student.StudentAboutActivity;
 import com.playposse.peertopeeroxygen.android.student.StudentDomainSelectionActivity;
+import com.playposse.peertopeeroxygen.android.student.StudentHelpActivity;
 import com.playposse.peertopeeroxygen.android.student.StudentMainActivity;
 import com.playposse.peertopeeroxygen.android.student.StudentProfileActivity;
 import com.playposse.peertopeeroxygen.android.util.LogUtil;
@@ -70,6 +71,9 @@ public abstract class DataServiceParentActivity
                 return true;
             case R.id.emailLogMenuItem:
                 LogUtil.emailLog(this);
+                return true;
+            case R.id.helpMenuItem:
+                startActivity(new Intent(this, StudentHelpActivity.class));
                 return true;
             case R.id.aboutMenuItem:
                 startActivity(new Intent(this, StudentAboutActivity.class));

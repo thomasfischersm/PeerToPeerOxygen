@@ -26,6 +26,10 @@
         android:title="@string/send_log_menu_title" />
 
     <item
+        android:id="@+id/helpMenuItem"
+        android:title="@string/help_menu_title" />
+
+    <item
         android:id="@+id/aboutMenuItem"
         android:title="@string/about_menu_title" />
 </menu>
