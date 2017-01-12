@@ -69,8 +69,13 @@ public class RenderQrCodeAsyncTask extends AsyncTask<Void, Void, Bitmap> {
     }
 
     @Override
-    protected void onPostExecute(Bitmap bitmap) {
-        imageView.setImageBitmap(bitmap);
+    protected void onPostExecute(final Bitmap bitmap) {
+        imageView.post(new Runnable() {
+            @Override
+            public void run() {
+                imageView.setImageBitmap(bitmap);
+            }
+        });
     }
 
     private Bitmap generateQrCode(String str, int width, int height) throws WriterException {
