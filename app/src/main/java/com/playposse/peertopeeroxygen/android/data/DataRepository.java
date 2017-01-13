@@ -91,9 +91,13 @@ public class DataRepository {
             Long missionTreeId,
             Long missionId) {
 
-        for (MissionBean missionBean : getMissionTreeBean(missionLadderId, missionTreeId).getMissionBeans()) {
-            if (missionBean.getId().equals(missionId)) {
-                return missionBean;
+        List<MissionBean> missionBeans =
+                getMissionTreeBean(missionLadderId, missionTreeId).getMissionBeans();
+        if (missionBeans != null) {
+            for (MissionBean missionBean : missionBeans) {
+                if (missionBean.getId().equals(missionId)) {
+                    return missionBean;
+                }
             }
         }
         return null;
