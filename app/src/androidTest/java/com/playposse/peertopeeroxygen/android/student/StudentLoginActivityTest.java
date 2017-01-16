@@ -55,5 +55,6 @@ public class StudentLoginActivityTest {
     @Test
     public void login() throws UiObjectNotFoundException {
         CommonNavigationActions.login();
+        Log.i(LOG_CAT, "StudentLoginActivityTest.login has finished");
     }
 }

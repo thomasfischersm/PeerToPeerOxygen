@@ -1,5 +1,7 @@
 package com.playposse.peertopeeroxygen.android.student;
 
+import android.util.Log;
+
 import com.playposse.peertopeeroxygen.backend.serveractions.util.ApiTestUtil;
 import com.restfb.types.TestUser;
 
@@ -16,8 +18,11 @@ import java.io.IOException;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         StudentLoginActivityTest.class,
+        StudentCreatePrivateDomainActivityTest.class,
 })
 public class UiTestSuite {
+
+    private static final String LOG_CAT = UiTestSuite.class.getSimpleName();
 
     private static TestUser fbTestUser;
 
@@ -29,7 +34,9 @@ public class UiTestSuite {
 
     @AfterClass
     public static void cleanUpTestData() throws IOException {
+        Log.i(LOG_CAT, "UiTestSuite.cleanUpTestData started");
         ApiTestUtil.cleanTestData(ApiTestUtil.instantiateApi());
+        Log.i(LOG_CAT, "UiTestSuite.cleanUpTestData finished");
     }
 
     public static TestUser getFbTestUser() {
