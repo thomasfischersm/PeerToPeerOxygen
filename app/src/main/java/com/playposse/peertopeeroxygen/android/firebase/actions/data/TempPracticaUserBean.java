@@ -9,6 +9,7 @@ public class TempPracticaUserBean {
 
     private Long id;
     private boolean isAdmin;
+    private String fbProfileId;
     private String firstName;
     private String lastName;
     private String name;
@@ -30,6 +31,14 @@ public class TempPracticaUserBean {
 
     public void setAdmin(boolean admin) {
         isAdmin = admin;
+    }
+
+    public String getFbProfileId() {
+        return fbProfileId;
+    }
+
+    public void setFbProfileId(String fbProfileId) {
+        this.fbProfileId = fbProfileId;
     }
 
     public String getFirstName() {

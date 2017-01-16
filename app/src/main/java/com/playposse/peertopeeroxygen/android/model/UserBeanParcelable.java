@@ -21,10 +21,10 @@ public class UserBeanParcelable implements Parcelable {
     private Long id;
     private boolean isAdmin;
     private String firebaseToken;
+    private String fbProfileId;
     private String firstName;
     private String lastName;
     private String name;
-    private String profilePictureUrl;
     private Long created;
     private Map<String, Integer> pointsMap = new HashMap<>();
 
@@ -36,10 +36,10 @@ public class UserBeanParcelable implements Parcelable {
         out.writeLong(id);
         out.writeValue(isAdmin);
         out.writeString(firebaseToken);
+        out.writeString(fbProfileId);
         out.writeString(firstName);
         out.writeString(lastName);
         out.writeString(name);
-        out.writeString(profilePictureUrl);
         out.writeLong((created != null) ? created : 0);
 
         if (pointsMap == null) {
@@ -68,10 +68,10 @@ public class UserBeanParcelable implements Parcelable {
         id = in.readLong();
         isAdmin = (Boolean) in.readValue(null);
         firebaseToken = in.readString();
+        fbProfileId = in.readString();
         firstName = in.readString();
         lastName = in.readString();
         name = in.readString();
-        profilePictureUrl = in.readString();
         created = in.readLong();
 
         int pointMapSize = in.readInt();
@@ -87,10 +87,10 @@ public class UserBeanParcelable implements Parcelable {
         id = userBean.getId();
         isAdmin = userBean.getAdmin();
         firebaseToken = userBean.getFirebaseToken();
+        fbProfileId = userBean.getFbProfileId();
         firstName = userBean.getFirstName();
         lastName = userBean.getLastName();
         name = userBean.getName();
-        profilePictureUrl = userBean.getProfilePictureUrl();
         created = userBean.getCreated();
 
         if (userBean.getPointsMap() != null) {
@@ -120,6 +120,14 @@ public class UserBeanParcelable implements Parcelable {
 
     public void setFirebaseToken(String firebaseToken) {
         this.firebaseToken = firebaseToken;
+    }
+
+    public String getFbProfileId() {
+        return fbProfileId;
+    }
+
+    public void setFbProfileId(String fbProfileId) {
+        this.fbProfileId = fbProfileId;
     }
 
     public String getFirstName() {
@@ -162,19 +170,11 @@ public class UserBeanParcelable implements Parcelable {
         this.name = name;
     }
 
-    public String getProfilePictureUrl() {
-        return profilePictureUrl;
-    }
-
     public Long getCreated() {
         return created;
     }
 
     public Map<String, Integer> getPointsMap() {
         return pointsMap;
-    }
-
-    public void setProfilePictureUrl(String profilePictureUrl) {
-        this.profilePictureUrl = profilePictureUrl;
     }
 }

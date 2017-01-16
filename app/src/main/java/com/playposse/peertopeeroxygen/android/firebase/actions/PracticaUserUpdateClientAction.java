@@ -57,6 +57,7 @@ public class PracticaUserUpdateClientAction extends FirebaseClientAction {
             PracticaUserBean practicaUserBean = new PracticaUserBean();
 
             practicaUserBean.setId(tempPracticaUserBean.getId());
+            practicaUserBean.setFbProfileId(tempPracticaUserBean.getFbProfileId());
             practicaUserBean.setAdmin(tempPracticaUserBean.isAdmin());
             practicaUserBean.setFirstName(tempPracticaUserBean.getFirstName());
             practicaUserBean.setLastName(tempPracticaUserBean.getLastName());

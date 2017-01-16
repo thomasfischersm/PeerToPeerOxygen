@@ -19,6 +19,7 @@ public class PracticaUserBean {
 
     @JsonString private Long id;
     private boolean isAdmin;
+    private String fbProfileId;
     private String firstName;
     private String lastName;
     private String name;
@@ -34,6 +35,7 @@ public class PracticaUserBean {
 
         id = user.getId();
         isAdmin = user.isAdmin();
+        fbProfileId = masterUser.getFbProfileId();
         firstName = masterUser.getFirstName();
         lastName = masterUser.getLastName();
         name = masterUser.getName();
@@ -76,6 +78,14 @@ public class PracticaUserBean {
 
     public boolean isAdmin() {
         return isAdmin;
+    }
+
+    public String getFbProfileId() {
+        return fbProfileId;
+    }
+
+    public void setFbProfileId(String fbProfileId) {
+        this.fbProfileId = fbProfileId;
     }
 
     public String getFirstName() {

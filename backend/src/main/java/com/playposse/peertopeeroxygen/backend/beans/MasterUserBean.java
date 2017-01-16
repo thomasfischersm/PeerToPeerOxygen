@@ -11,6 +11,7 @@ public class MasterUserBean {
 
     private Long id;
     private Long sessionId;
+    private String fbProfileId;
     private String firebaseToken;
     private String firstName;
     private String lastName;
@@ -24,6 +25,7 @@ public class MasterUserBean {
     public MasterUserBean(MasterUser masterUser) {
         id = masterUser.getId();
         sessionId = masterUser.getSessionId();
+        fbProfileId = masterUser.getFbProfileId();
         firebaseToken = masterUser.getFirebaseToken();
         firstName = masterUser.getFirstName();
         lastName = masterUser.getLastName();
@@ -46,6 +48,14 @@ public class MasterUserBean {
 
     public void setSessionId(Long sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public String getFbProfileId() {
+        return fbProfileId;
+    }
+
+    public void setFbProfileId(String fbProfileId) {
+        this.fbProfileId = fbProfileId;
     }
 
     public String getFirebaseToken() {

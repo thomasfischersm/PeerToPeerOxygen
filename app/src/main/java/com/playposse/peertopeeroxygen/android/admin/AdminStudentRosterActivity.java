@@ -18,6 +18,7 @@ import com.playposse.peertopeeroxygen.android.data.clientactions.GetStudentRoste
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
+import com.playposse.peertopeeroxygen.android.util.FacebookUtil;
 import com.playposse.peertopeeroxygen.android.util.VolleySingleton;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
@@ -88,7 +89,7 @@ public class AdminStudentRosterActivity
 
             ImageLoader imageLoader = VolleySingleton.getInstance(getContext()).getImageLoader();
             viewHolder.profilePhotoImageView.setImageUrl(
-                    student.getProfilePictureUrl(),
+                    FacebookUtil.getProfilePicture(student),
                     imageLoader);
             viewHolder.firstNameTextView.setText(student.getFirstName());
             viewHolder.lastNameTextView.setText(student.getLastName());

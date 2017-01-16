@@ -19,6 +19,7 @@ import com.playposse.peertopeeroxygen.android.data.DataServiceParentFragment;
 import com.playposse.peertopeeroxygen.android.data.types.UserMissionRoleType;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
+import com.playposse.peertopeeroxygen.android.util.FacebookUtil;
 import com.playposse.peertopeeroxygen.android.util.VolleySingleton;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
@@ -119,7 +120,7 @@ public class StudentBuddyMissionInvitationFragment extends DataServiceParentFrag
     @Override
     public void receiveData(DataRepository dataRepository) {
         ImageLoader imageLoader = VolleySingleton.getInstance(getContext()).getImageLoader();
-        studentPhotoImageView.setImageUrl(studentBean.getProfilePictureUrl(), imageLoader);
+        studentPhotoImageView.setImageUrl(FacebookUtil.getProfilePicture(studentBean), imageLoader);
 
         missionBean = dataRepository
                 .getMissionBean(missionLadderId, missionTreeId, missionId);

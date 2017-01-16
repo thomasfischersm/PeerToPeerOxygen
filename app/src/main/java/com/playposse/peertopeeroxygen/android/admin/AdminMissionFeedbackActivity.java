@@ -20,6 +20,7 @@ import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetAllMissionFeedbackClientAction;
 import com.playposse.peertopeeroxygen.android.ui.widgets.StarRatingView;
 import com.playposse.peertopeeroxygen.android.util.EmailUtil;
+import com.playposse.peertopeeroxygen.android.util.FacebookUtil;
 import com.playposse.peertopeeroxygen.android.util.StringUtil;
 import com.playposse.peertopeeroxygen.android.util.VolleySingleton;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionFeedbackBean;
@@ -163,7 +164,7 @@ public class AdminMissionFeedbackActivity
 
             ImageLoader imageLoader = VolleySingleton.getInstance(getContext()).getImageLoader();
             viewHolder.profilePhotoImageView.setImageUrl(
-                    userBean.getProfilePictureUrl(),
+                    FacebookUtil.getProfilePicture(userBean),
                     imageLoader);
             viewHolder.starRatingView.setRating(missionFeedbackBean.getRating());
             viewHolder.studentNameTextView.setText(studentName);

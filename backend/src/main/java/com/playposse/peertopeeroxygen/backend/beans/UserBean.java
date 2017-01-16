@@ -21,10 +21,10 @@ public class UserBean {
     private Long id;
     private boolean isAdmin;
     private String firebaseToken;
+    private String fbProfileId;
     private String firstName;
     private String lastName;
     private String name;
-    private String profilePictureUrl;
     private Long created;
     private Long domainId;
     private List<MissionCompletionBean> missionCompletionBeans = new ArrayList<>();
@@ -42,10 +42,10 @@ public class UserBean {
         id = oxygenUser.getId();
         isAdmin = oxygenUser.isAdmin();
         firebaseToken = masteruser.getFirebaseToken();
+        fbProfileId = masteruser.getFbProfileId();
         firstName = masteruser.getFirstName();
         lastName = masteruser.getLastName();
         name = masteruser.getName();
-        profilePictureUrl = masteruser.getProfilePictureUrl();
         created = masteruser.getCreated();
         domainId = RefUtil.getDomainId(oxygenUser);
 
@@ -74,16 +74,16 @@ public class UserBean {
         return isAdmin;
     }
 
+    public String getFbProfileId() {
+        return fbProfileId;
+    }
+
     public String getLastName() {
         return lastName;
     }
 
     public String getName() {
         return name;
-    }
-
-    public String getProfilePictureUrl() {
-        return profilePictureUrl;
     }
 
     public String getFirebaseToken() {

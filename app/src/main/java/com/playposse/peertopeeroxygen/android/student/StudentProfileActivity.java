@@ -10,6 +10,7 @@ import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.android.ui.RenderQrCodeAsyncTask;
+import com.playposse.peertopeeroxygen.android.util.FacebookUtil;
 import com.playposse.peertopeeroxygen.android.util.VolleySingleton;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean;
 
@@ -55,7 +56,7 @@ public class StudentProfileActivity extends StudentParentActivity {
 
         // Show profile photo.
         ImageLoader imageLoader = VolleySingleton.getInstance(this).getImageLoader();
-        profilePhotoImageView.setImageUrl(userBean.getProfilePictureUrl(), imageLoader);
+        profilePhotoImageView.setImageUrl(FacebookUtil.getProfilePicture(userBean), imageLoader);
 
         // Show QR code.
         new RenderQrCodeAsyncTask(userBean.getId(), qrCodeImageView).execute();

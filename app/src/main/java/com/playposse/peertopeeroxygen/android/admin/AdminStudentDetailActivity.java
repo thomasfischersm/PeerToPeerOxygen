@@ -17,6 +17,7 @@ import com.playposse.peertopeeroxygen.android.data.types.PointType;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
 import com.playposse.peertopeeroxygen.android.ui.dialogs.NumberPickerDialogBuilder;
+import com.playposse.peertopeeroxygen.android.util.FacebookUtil;
 import com.playposse.peertopeeroxygen.android.util.VolleySingleton;
 
 import java.text.DateFormat;
@@ -71,7 +72,7 @@ public class AdminStudentDetailActivity extends AdminParentActivity {
 
         // Show profile photo.
         ImageLoader imageLoader = VolleySingleton.getInstance(this).getImageLoader();
-        profilePhotoImageView.setImageUrl(studentBean.getProfilePictureUrl(), imageLoader);
+        profilePhotoImageView.setImageUrl(FacebookUtil.getProfilePicture(studentBean), imageLoader);
 
         // Attach actions
         promoteAdminButton.setOnClickListener(new View.OnClickListener() {
