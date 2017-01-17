@@ -14,7 +14,7 @@ public final class OxygenSharedPreferences {
 
     private static final String LOG_CAT = OxygenSharedPreferences.class.getSimpleName();
 
-    private static final String PREFS_NAME = "OxygenPreferences";
+    public static final String PREFS_NAME = "OxygenPreferences";
 
     private static final String SESSION_KEY = "sessionId";
 
@@ -40,6 +40,7 @@ public final class OxygenSharedPreferences {
 
     public static void setSessionId(Context context, Long sessionId) {
         setLong(context, SESSION_KEY, sessionId);
+        Log.i(LOG_CAT, "Session ID has been saved as " + sessionId);
     }
 
     public static boolean hasSessionId(Context context) {
@@ -131,9 +132,9 @@ public final class OxygenSharedPreferences {
         SharedPreferences sharedPreferences =
                 context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         if (value != null) {
-            sharedPreferences.edit().putString(key, value).apply();
+            sharedPreferences.edit().putString(key, value).commit();
         } else {
-            sharedPreferences.edit().remove(key).apply();
+            sharedPreferences.edit().remove(key).commit();
         }
     }
 
@@ -148,9 +149,9 @@ public final class OxygenSharedPreferences {
         SharedPreferences sharedPreferences =
                 context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         if (value != null) {
-            sharedPreferences.edit().putLong(key, value).apply();
+            sharedPreferences.edit().putLong(key, value).commit();
         } else {
-            sharedPreferences.edit().remove(key).apply();
+            sharedPreferences.edit().remove(key).commit();
         }
     }
 
@@ -171,7 +172,7 @@ public final class OxygenSharedPreferences {
         sharedPreferences
                 .edit()
                 .putBoolean(key, value)
-                .apply();
+                .commit();
     }
 
     private static Set<Long> getLongSet(Context context, String key) {
@@ -198,7 +199,7 @@ public final class OxygenSharedPreferences {
 
         SharedPreferences sharedPreferences =
                 context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        sharedPreferences.edit().putStringSet(key, stringSet).apply();
+        sharedPreferences.edit().putStringSet(key, stringSet).commit();
     }
 
     private static void addValueToLongSet(Context context, String key, Long value) {

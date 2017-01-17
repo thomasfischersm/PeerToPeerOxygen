@@ -16,10 +16,8 @@ import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.data.DataRepository;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.DataServiceParentActivity;
-import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.data.practicas.PracticaRepository;
 import com.playposse.peertopeeroxygen.android.globalconfiguration.RedirectRouting;
-import com.playposse.peertopeeroxygen.android.practicamgmt.PracticaManager;
 
 public class StudentLoginActivity extends DataServiceParentActivity {
 

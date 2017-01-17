@@ -36,10 +36,18 @@ public class RegisterOrLoginServerAction extends ServerAction {
             String accessToken,
             String firebaseToken,
             @Nullable Long loanerDeviceId,
-            @Nullable Long domainId) {
+            @Nullable Long domainId) throws BadRequestException {
 
         Long sessionId = new Random().nextLong();
         Ref<Domain> domainRef = (domainId != null) ? RefUtil.createDomainRef(domainId) : null;
+
+        // Check if the domain exists to prevent bad data.
+        if (domainId != null) {
+            Domain domain = ofy().load().type(Domain.class).id(domainId).now();
+            if (domain == null) {
+                throw new BadRequestException("The domain " + domainId + " doesn't exist.");
+            }
+        }
 
         // Retrieve user data.
         User fbUser = fetchUserFromFaceBook(accessToken);

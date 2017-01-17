@@ -1,5 +1,7 @@
 package com.playposse.peertopeeroxygen.android.data.clientactions;
 
+import android.util.Log;
+
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.playposse.peertopeeroxygen.android.data.DataService;
 import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
@@ -37,6 +39,7 @@ public class RegisterOrLoginClientAction extends ApiClientAction {
         String firebaseToken = FirebaseInstanceId.getInstance().getToken();
         Long loanerDeviceId = OxygenSharedPreferences.getLoanerDeviceId(getContext());
 
+        Log.i(LOG_CAT, "Calling registerOrLogin with domain id: " + getDomainId());
         MasterUserBean masterUserBean =
                 getBinder().getApi()
                         .registerOrLogin(accessToken, firebaseToken)

@@ -210,7 +210,7 @@ public class PeerToPeerOxygenEndPoint {
             @Named("accessToken") String accessToken,
             @Named("firebaseToken") String firebaseToken,
             @Named("loanerDeviceId") @Nullable Long loanerDeviceId,
-            @Named("domainId") @Nullable Long domainId) {
+            @Named("domainId") @Nullable Long domainId) throws BadRequestException {
 
         return RegisterOrLoginServerAction
                 .registerOrLogin(accessToken, firebaseToken, loanerDeviceId, domainId);

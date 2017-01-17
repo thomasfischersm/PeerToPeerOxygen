@@ -1,5 +1,6 @@
 package com.playposse.peertopeeroxygen.android.student.util;
 
+import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.UiDevice;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.student.UiTestSuite;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -30,10 +32,15 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
  */
 public class CommonNavigationActions {
 
+    private static final String LOG_CAT = CommonNavigationActions.class.getSimpleName();
+
     /**
      * Logs the user in. This method assumes that the user is already on the app's login page.
      */
     public static void login() throws UiObjectNotFoundException {
+        Context context = InstrumentationRegistry.getContext();
+        Log.i(LOG_CAT, "0. Session id: " + OxygenSharedPreferences.getSessionId(context));
+
         // Go from the app's login page to the FB login page.
         onView(withId(R.id.login_button))
                 .perform(click());
@@ -45,6 +52,7 @@ public class CommonNavigationActions {
         mDevice.wait(Until.findObject(By.clazz(WebView.class)), timeOut);
 
         // Enter user name.
+        Log.i(LOG_CAT, "1. Session id: " + OxygenSharedPreferences.getSessionId(context));
         UiObject emailInput = mDevice.findObject(new UiSelector()
                 .instance(0)
                 .className(EditText.class));
@@ -64,6 +72,7 @@ public class CommonNavigationActions {
                 .className(Button.class));
 
         // Wait for the second FB page to show up.
+        Log.i(LOG_CAT, "2. Session id: " + OxygenSharedPreferences.getSessionId(context));
         buttonLogin.waitForExists(timeOut);
         buttonLogin.clickAndWaitForNewWindow();
 
@@ -75,6 +84,7 @@ public class CommonNavigationActions {
         buttonOk.click();
 
         // Verify that the first real page in the app shows up.
+        Log.i(LOG_CAT, "3. Session id: " + OxygenSharedPreferences.getSessionId(context));
         onView(withId(R.id.createPrivateDomainButton))
                 .check(matches(isDisplayed()));
     }

@@ -37,7 +37,7 @@ public class MissionDataManager {
      */
     private static final String FILE_PATTERN = "mission-data-%1$s.json";
 
-    private static final String FILE_REGEX = "mission-data-\\d+.json";
+    public static final String FILE_REGEX = "mission-data-\\d+.json";
 
     public static void switchToDomainAsync(
             final Long domainId,
