@@ -36,6 +36,8 @@ import static android.support.test.espresso.web.sugar.Web.onWebView;
 import static android.support.test.espresso.web.webdriver.DriverAtoms.findElement;
 import static android.support.test.espresso.web.webdriver.DriverAtoms.webClick;
 import static android.support.test.espresso.web.webdriver.DriverAtoms.webKeys;
+import static com.playposse.peertopeeroxygen.android.student.util.CommonNavigationActions.ActivityType.studentDomainSelectionActivity;
+import static com.playposse.peertopeeroxygen.android.student.util.CommonNavigationActions.ActivityType.studentIntroductionDeckActivity;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -54,7 +56,7 @@ public class StudentLoginActivityTest {
 
     @Test
     public void login() throws UiObjectNotFoundException {
-        CommonNavigationActions.login();
+        CommonNavigationActions.login(studentIntroductionDeckActivity);
         Log.i(LOG_CAT, "StudentLoginActivityTest.login has finished");
     }
 }

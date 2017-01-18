@@ -21,11 +21,13 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
 
 /**
  * A collection of utility methods that do common navigations within the app.
@@ -34,14 +36,21 @@ public class CommonNavigationActions {
 
     private static final String LOG_CAT = CommonNavigationActions.class.getSimpleName();
 
+    public enum ActivityType {
+        studentIntroductionDeckActivity,
+        studentDomainSelectionActivity,
+        studentMainActivity,
+    }
+
     /**
      * Logs the user in. This method assumes that the user is already on the app's login page.
      */
-    public static void login() throws UiObjectNotFoundException {
+    public static void login(ActivityType destinationActivity) throws UiObjectNotFoundException {
         Context context = InstrumentationRegistry.getContext();
         Log.i(LOG_CAT, "0. Session id: " + OxygenSharedPreferences.getSessionId(context));
 
         // Go from the app's login page to the FB login page.
+        CurrentActivityCheck.checkStudentLoginActivity();
         onView(withId(R.id.login_button))
                 .perform(click());
 
@@ -85,8 +94,50 @@ public class CommonNavigationActions {
 
         // Verify that the first real page in the app shows up.
         Log.i(LOG_CAT, "3. Session id: " + OxygenSharedPreferences.getSessionId(context));
-        onView(withId(R.id.createPrivateDomainButton))
-                .check(matches(isDisplayed()));
+        switch (destinationActivity) {
+            case studentIntroductionDeckActivity:
+                CurrentActivityCheck.checkStudentIntroductionDeckActivity();
+                break;
+            case studentDomainSelectionActivity:
+                CurrentActivityCheck.checkStudentDomainSelectionActivity();
+                break;
+            case studentMainActivity:
+                CurrentActivityCheck.checkStudentMainActivity();
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "Unexpected destination activity: " + destinationActivity);
+        }
+    }
+
+    /**
+     * Expects to be on the introduction deck, swipes to the last fragment, and closes it.
+     */
+    public static void moveThroughIntroductionDeck(ActivityType destinationActivity) {
+        CurrentActivityCheck.checkStudentIntroductionDeckActivity();
+
+        // Swipe left until we are on the last fragment in the ViewPager.
+        for (int i = 0; i < 3; i++) {
+            onView(withId(R.id.introductionSlidePager))
+                    .perform(swipeLeft());
+        }
+        CurrentActivityCheck.checkStudentDomainSelectionActivityOnLastFragment();
+
+        // Close the intro deck.
+        onView(allOf(withId(R.id.closeIntroductionDeckButton), isDisplayed()))
+                .perform(click());
+
+        switch (destinationActivity) {
+            case studentDomainSelectionActivity:
+                CurrentActivityCheck.checkStudentDomainSelectionActivity();
+                break;
+            case studentMainActivity:
+                CurrentActivityCheck.checkStudentMainActivity();
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "Unexpected destination activity: " + destinationActivity);
+        }
     }
 
     /**

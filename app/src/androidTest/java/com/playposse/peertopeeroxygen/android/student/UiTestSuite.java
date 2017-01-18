@@ -46,6 +46,7 @@ public class UiTestSuite {
     public static void cleanUpTestData() throws IOException {
         Log.i(LOG_CAT, "UiTestSuite.cleanUpTestData started");
         ApiTestUtil.cleanTestData(ApiTestUtil.instantiateApi());
+        wipeLocalData();
         Log.i(LOG_CAT, "UiTestSuite.cleanUpTestData finished");
     }
 
@@ -59,16 +60,18 @@ public class UiTestSuite {
     }
 
     private static void wipeSharedPreferences() {
-        Context context = InstrumentationRegistry.getContext();
+        Context context = InstrumentationRegistry.getTargetContext();
         SharedPreferences sharedPreferences =
                 context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         sharedPreferences.edit().clear().commit();
         Log.i(LOG_CAT, "Session ID after clearing preferences: "
                 + OxygenSharedPreferences.getSessionId(context));
+        Log.i(LOG_CAT, "Session deck shown flag after clearing preferences: "
+                + OxygenSharedPreferences.hasIntroDeckBeenShown(context));
     }
 
     private static void wipeLocalFiles() {
-        Context context = InstrumentationRegistry.getContext();
+        Context context = InstrumentationRegistry.getTargetContext();
         File cacheDir = context.getCacheDir();
         File[] files = context.getCacheDir().listFiles(new FilenameFilter() {
             @Override

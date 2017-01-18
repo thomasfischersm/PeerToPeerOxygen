@@ -167,6 +167,7 @@ public final class OxygenSharedPreferences {
     }
 
     private static void setBoolean(Context context, String key, boolean value) {
+        Log.i(LOG_CAT, "Setting preference boolean for key " + key + " to " + value);
         SharedPreferences sharedPreferences =
                 context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         sharedPreferences

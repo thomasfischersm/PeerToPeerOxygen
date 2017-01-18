@@ -12,6 +12,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static com.playposse.peertopeeroxygen.android.student.util.CommonNavigationActions.ActivityType.studentDomainSelectionActivity;
+import static com.playposse.peertopeeroxygen.android.student.util.CommonNavigationActions.ActivityType.studentIntroductionDeckActivity;
+
 /**
  * A UI test that creates a private domain.
  */
@@ -28,7 +31,8 @@ public class StudentCreatePrivateDomainActivityTest {
 
     @Before
     public void setUp() throws UiObjectNotFoundException {
-        CommonNavigationActions.login();
+        CommonNavigationActions.login(studentIntroductionDeckActivity);
+        CommonNavigationActions.moveThroughIntroductionDeck(studentDomainSelectionActivity);
     }
 
     @Test
