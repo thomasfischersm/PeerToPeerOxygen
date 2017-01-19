@@ -31,10 +31,13 @@ public abstract class DataServiceParentActivity
     protected boolean shouldRegisterCallback = true;
     protected boolean shouldCheckPractica = true;
     private ProgressDialog progressDialog;
+    private boolean isInForeground = false;
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        isInForeground = true;
 
         Intent intent = new Intent(this, DataService.class);
         dataServiceConnection =
@@ -45,6 +48,8 @@ public abstract class DataServiceParentActivity
     @Override
     protected void onPause() {
         super.onPause();
+
+        isInForeground = false;
 
         unbindService(dataServiceConnection);
     }
@@ -129,5 +134,9 @@ public abstract class DataServiceParentActivity
                 }
             });
         }
+    }
+
+    protected boolean isInForeground() {
+        return isInForeground;
     }
 }

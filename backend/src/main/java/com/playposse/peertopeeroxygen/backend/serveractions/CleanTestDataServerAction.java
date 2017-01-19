@@ -49,6 +49,11 @@ public class CleanTestDataServerAction extends ServerAction {
             }
         }
 
+        if (testMasterUsers.size() == 0) {
+            // Nothing to clean.
+            return;
+        }
+
         // Find domains owned by test users.
         List<Domain> domains =
                 ofy().load().type(Domain.class).filter("ownerRef IN", testMasterUserRefs).list();

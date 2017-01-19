@@ -96,6 +96,7 @@ public class StudentCreatePrivateDomainActivity
 
         if (isDomainCreated) {
             // Wait for the new domain to be loaded and go to the admin home activity.
+            isDomainCreated = false; // Sometimes, this activity exists way past when it is shown.
             startActivity(new Intent(this, AdminMainActivity.class));
         }
     }

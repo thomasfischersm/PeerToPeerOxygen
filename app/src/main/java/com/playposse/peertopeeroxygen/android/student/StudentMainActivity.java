@@ -173,6 +173,11 @@ public class StudentMainActivity extends StudentParentActivity {
      * first time.
      */
     private void showDomainWelcomeDialogOnFirstVisit(DataRepository dataRepository) {
+        if (!isInForeground()) {
+            // Some Android devices keep activities around forever. Ignore if this isn't visible.
+            return;
+        }
+
         DomainBean domainBean = dataRepository.getCompleteMissionDataBean().getDomainBean();
         Long domainId = domainBean.getId();
         if (domainId == null) {

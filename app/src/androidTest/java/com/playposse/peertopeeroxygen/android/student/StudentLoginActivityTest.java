@@ -20,6 +20,7 @@ import android.widget.EditText;
 
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.student.util.CommonNavigationActions;
+import com.playposse.peertopeeroxygen.android.student.util.WipeLocalDataTestRule;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,6 +39,7 @@ import static android.support.test.espresso.web.webdriver.DriverAtoms.webClick;
 import static android.support.test.espresso.web.webdriver.DriverAtoms.webKeys;
 import static com.playposse.peertopeeroxygen.android.student.util.CommonNavigationActions.ActivityType.studentDomainSelectionActivity;
 import static com.playposse.peertopeeroxygen.android.student.util.CommonNavigationActions.ActivityType.studentIntroductionDeckActivity;
+import static com.playposse.peertopeeroxygen.android.student.util.CommonNavigationActions.ActivityType.studentMainActivity;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -50,6 +52,12 @@ public class StudentLoginActivityTest {
 
     private static final String LOG_CAT = StudentLoginActivityTest.class.getSimpleName();
 
+    private static final String DUMMY_DOMAIN_NAME = "Dummy domain for testing";
+    private static final String DUMMY_DOMAIN_DESCRIPTION = "Abcd bla bla";
+
+    @Rule
+    public WipeLocalDataTestRule wipeLocalDataTestRule = new WipeLocalDataTestRule();
+
     @Rule
     public ActivityTestRule<StudentLoginActivity> mActivityRule =
             new ActivityTestRule<>(StudentLoginActivity.class);
@@ -58,5 +66,22 @@ public class StudentLoginActivityTest {
     public void login() throws UiObjectNotFoundException {
         CommonNavigationActions.login(studentIntroductionDeckActivity);
         Log.i(LOG_CAT, "StudentLoginActivityTest.login has finished");
+    }
+
+    @Test
+    public void loginSecondTime() throws UiObjectNotFoundException {
+        // Startup.
+        CommonNavigationActions.login(studentIntroductionDeckActivity);
+        CommonNavigationActions.moveThroughIntroductionDeck(studentDomainSelectionActivity);
+
+        // Create dummy domain.
+        CommonNavigationActions.createPrivateDomain(DUMMY_DOMAIN_NAME, DUMMY_DOMAIN_DESCRIPTION);
+        CommonNavigationActions.selectDomain(DUMMY_DOMAIN_NAME, DUMMY_DOMAIN_DESCRIPTION);
+
+        // Logout.
+        CommonNavigationActions.logout();
+
+        // Log back in.
+        CommonNavigationActions.login(studentMainActivity);
     }
 }

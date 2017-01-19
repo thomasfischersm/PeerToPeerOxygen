@@ -21,6 +21,7 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.pressBack;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -121,7 +122,7 @@ public class CommonNavigationActions {
             onView(withId(R.id.introductionSlidePager))
                     .perform(swipeLeft());
         }
-        CurrentActivityCheck.checkStudentDomainSelectionActivityOnLastFragment();
+        CurrentActivityCheck.checkStudentIntroductionDeckActivityOnLastFragment();
 
         // Close the intro deck.
         onView(allOf(withId(R.id.closeIntroductionDeckButton), isDisplayed()))
@@ -163,8 +164,7 @@ public class CommonNavigationActions {
                 .perform(click());
 
         // Verify that the admin home shows up.
-        onView(withId(R.id.editDomainLink))
-                .check(matches(isDisplayed()));
+        CurrentActivityCheck.checkAdminMainActivity();
 
         // Go to the domain selection page and check that the new domain exists.
         goToDomainSelectionActivity();
@@ -177,7 +177,35 @@ public class CommonNavigationActions {
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText(R.string.switch_domain_menu_title))
                 .perform(click());
-        onView(withId(R.id.createPrivateDomainButton))
-                .check(matches(isDisplayed()));
+        CurrentActivityCheck.checkStudentDomainSelectionActivity();
+    }
+
+    /**
+     * Select domain.
+     */
+    public static void selectDomain(String domainName, String domainDescription) {
+        CurrentActivityCheck.checkStudentDomainSelectionActivity();
+
+        onView(withText(domainName))
+                .perform(click());
+
+        // Dismiss the alert dialog for seeing the domain for the first time.
+        EspressoUtil.waitForViewToBeVisible(withText(domainDescription), 5_000);
+        onView(withText(domainDescription))
+                .perform(pressBack());
+
+        CurrentActivityCheck.checkStudentMainActivity();
+    }
+
+    /**
+     * Logout the user.
+     */
+    public static void logout() {
+        CurrentActivityCheck.checkStudentMainActivity();
+
+        onView(withId(R.id.logoutButton))
+                .perform(click());
+
+        CurrentActivityCheck.checkStudentLoginActivity();
     }
 }

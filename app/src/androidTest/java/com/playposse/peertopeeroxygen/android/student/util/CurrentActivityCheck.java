@@ -32,13 +32,13 @@ public final class CurrentActivityCheck {
                 .check(matches(isDisplayed()));
     }
 
-    public static void checkStudentDomainSelectionActivity() {
-        onView(withId(R.id.invitationCodeEditText))
+    public static void checkStudentIntroductionDeckActivityOnLastFragment() {
+        onView(allOf(withId(R.id.closeIntroductionDeckButton), isDisplayed()))
                 .check(matches(isDisplayed()));
     }
 
-    public static void checkStudentDomainSelectionActivityOnLastFragment() {
-        onView(allOf(withId(R.id.closeIntroductionDeckButton), isDisplayed()))
+    public static void checkStudentDomainSelectionActivity() {
+        onView(withId(R.id.invitationCodeEditText))
                 .check(matches(isDisplayed()));
     }
 
