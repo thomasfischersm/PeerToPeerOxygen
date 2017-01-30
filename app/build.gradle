@@ -8,8 +8,8 @@ android {
         applicationId "com.playposse.peertopeeroxygen.android"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 21
-        versionName "21.0"
+        versionCode 22
+        versionName "22.0"
     }
     buildTypes {
         release {
