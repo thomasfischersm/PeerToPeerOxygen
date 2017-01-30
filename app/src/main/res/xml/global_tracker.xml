@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="ga_sessionTimeout">300</integer>
+    <string name="ga_trackingId">UA-91124244-1</string>
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+    <bool name="enableAutoActivityTracking">true</bool>
+
+    <!-- Activity name mapping -->
+    <screenName name="com.playposse.peertopeeroxygen.android.student.StartupActivity">StartupActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.student.StudentAboutActivity">StudentAboutActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.student.StudentBuddyMissionActivity">StudentBuddyMissionActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.student.StudentBuddyMissionInvitationFragment">StudentBuddyMissionInvitationFragment</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.student.StudentCreatePrivateDomainActivity">StudentCreatePrivateDomainActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.student.StudentDomainSelectionActivity">StudentDomainSelectionActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.student.StudentHelpActivity">StudentHelpActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.student.StudentIntroductionDeckActivity">StudentIntroductionDeckActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.student.StudentLoginActivity">StudentLoginActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.student.StudentMainActivity">StudentMainActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.student.StudentMissionActivity">StudentMissionActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.student.StudentMissionRatingActivity">StudentMissionRatingActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.student.StudentMissionTreeActivity">StudentMissionTreeActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.student.StudentPracticaCheckinActivity">StudentPracticaCheckinActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.student.StudentProfileActivity">StudentProfileActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.student.StudentSeniorBuddyMissionActivity">StudentSeniorBuddyMissionActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.student.StudentCreatePrivateDomainActivity">StudentCreatePrivateDomainActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.student.StudentViewPracticaActivity">StudentViewPracticaActivity</screenName>
+
+    <screenName name="com.playposse.peertopeeroxygen.android.admin.AdminBackupActivity">StartupActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.admin.AdminEditDomainActivity">StartupActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.admin.AdminEditMissionActivity">StartupActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.admin.AdminEditMissionLadderActivity">StartupActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.admin.AdminEditMissionTreeActivity">StartupActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.admin.AdminEditPracticaActivity">StartupActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.admin.AdminLoanerDeviceActivity">StartupActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.admin.AdminMainActivity">StartupActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.admin.AdminMissionFeedbackActivity">StartupActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.admin.AdminMissionStatsActivity">StartupActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.admin.AdminShowMissionLaddersActivity">StartupActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.admin.AdminShowPracticasActivity">StartupActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.admin.AdminStudentDetailActivity">StartupActivity</screenName>
+    <screenName name="com.playposse.peertopeeroxygen.android.admin.AdminStudentRosterActivity">StartupActivity</screenName>
+</resources>

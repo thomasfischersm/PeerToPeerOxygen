@@ -15,6 +15,38 @@
       },
       "oauth_client": [
         {
+          "client_id": "895183582340-n5ihbc3bd6q1o0daiclda2s39ofnr3qm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.playposse.peertopeeroxygen.android",
+            "certificate_hash": "6DABB71323BA51F8013A768F0298086FB32D06CD"
+          }
+        },
+        {
+          "client_id": "895183582340-q8mpha13en8hv5ao5bhn0ib1u7ud2i6m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.playposse.peertopeeroxygen.android",
+            "certificate_hash": "AED65211CEE2FBAC3EA9EDAFC34BDA04478C8474"
+          }
+        },
+        {
+          "client_id": "895183582340-prj49veborjkeqtbgem9b0cktgioi83n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.playposse.peertopeeroxygen.android",
+            "certificate_hash": "4E3FB09E8B2D9ED951F2573A3A9B2B63C8991000"
+          }
+        },
+        {
+          "client_id": "895183582340-91eurcjnalkd6v3a5oemqi573d1oras9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.playposse.peertopeeroxygen.android",
+            "certificate_hash": "689ADB72EDEF9406665315611725313785691306"
+          }
+        },
+        {
           "client_id": "895183582340-b733jb1ug556ptmis7cdlge37om38mud.apps.googleusercontent.com",
           "client_type": 3
         }

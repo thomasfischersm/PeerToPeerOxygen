@@ -1,11 +1,16 @@
 package com.playposse.peertopeeroxygen.android.data.clientactions;
 
+import android.app.Application;
+
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.playposse.peertopeeroxygen.android.R;
+import com.playposse.peertopeeroxygen.android.util.AnalyticsUtil;
 import com.playposse.peertopeeroxygen.android.util.ToastUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.DomainBean;
 
 import java.io.IOException;
+
+import static com.playposse.peertopeeroxygen.android.util.AnalyticsUtil.AnalyticsCategory.privateDomainCreation;
 
 /**
  * An {@link ApiClientAction} that calls the cloud end point to create a private domain.
@@ -37,6 +42,8 @@ public class CreatePrivateDomainClientAction extends ApiClientAction {
             domainBean = getApi()
                     .createPrivateDomain(getSessionId(), domainName, domainDescription)
                     .execute();
+
+            reportToAnlytics();
         } catch (GoogleJsonResponseException ex) {
             if (ex.getStatusCode() == 403) {
                 // A server check determined that the name is already used.
@@ -56,6 +63,11 @@ public class CreatePrivateDomainClientAction extends ApiClientAction {
         if ((callback != null) && (domainBean != null)) {
             callback.onResult(domainBean);
         }
+    }
+
+    private void reportToAnlytics() {
+        Application app = (Application) getContext().getApplicationContext();
+        AnalyticsUtil.reportEvent(app, privateDomainCreation, domainName);
     }
 
     /**

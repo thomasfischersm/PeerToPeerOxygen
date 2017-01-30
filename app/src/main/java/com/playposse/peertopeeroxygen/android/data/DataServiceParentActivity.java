@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.playposse.peertopeeroxygen.android.R;
 import com.playposse.peertopeeroxygen.android.admin.AdminMainActivity;
 import com.playposse.peertopeeroxygen.android.data.missions.MissionDataManager;
@@ -17,6 +18,7 @@ import com.playposse.peertopeeroxygen.android.student.StudentDomainSelectionActi
 import com.playposse.peertopeeroxygen.android.student.StudentHelpActivity;
 import com.playposse.peertopeeroxygen.android.student.StudentMainActivity;
 import com.playposse.peertopeeroxygen.android.student.StudentProfileActivity;
+import com.playposse.peertopeeroxygen.android.util.AnalyticsUtil;
 import com.playposse.peertopeeroxygen.android.util.LogUtil;
 
 /**
@@ -34,6 +36,12 @@ public abstract class DataServiceParentActivity
     private boolean isInForeground = false;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -43,6 +51,8 @@ public abstract class DataServiceParentActivity
         dataServiceConnection =
                 new DataServiceConnection(this, shouldAutoInit, true, shouldRegisterCallback);
         bindService(intent, dataServiceConnection, Context.BIND_AUTO_CREATE);
+
+        AnalyticsUtil.reportScreenName(getApplication(), getClass().getSimpleName());
     }
 
     @Override
@@ -52,6 +62,12 @@ public abstract class DataServiceParentActivity
         isInForeground = false;
 
         unbindService(dataServiceConnection);
+    }
+
+    @Override
+    protected void onStop() {
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
+        super.onStop();
     }
 
     @Override

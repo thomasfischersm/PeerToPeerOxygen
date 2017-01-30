@@ -1,5 +1,6 @@
 package com.playposse.peertopeeroxygen.android.student;
 
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,10 +20,13 @@ import com.playposse.peertopeeroxygen.android.data.DataServiceParentFragment;
 import com.playposse.peertopeeroxygen.android.data.types.UserMissionRoleType;
 import com.playposse.peertopeeroxygen.android.model.ExtraConstants;
 import com.playposse.peertopeeroxygen.android.model.UserBeanParcelable;
+import com.playposse.peertopeeroxygen.android.util.AnalyticsUtil;
 import com.playposse.peertopeeroxygen.android.util.FacebookUtil;
 import com.playposse.peertopeeroxygen.android.util.VolleySingleton;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionCompletionBean;
+
+import static com.playposse.peertopeeroxygen.android.util.AnalyticsUtil.AnalyticsCategory.studentGraduation;
 
 /**
  * The first {@link Fragment} in the {@link StudentBuddyMissionActivity} that tells the buddy that
@@ -146,5 +150,8 @@ public class StudentBuddyMissionInvitationFragment extends DataServiceParentFrag
         intent.putExtra(ExtraConstants.EXTRA_MISSION_ID, missionId);
         intent.putExtra(ExtraConstants.EXTRA_USER_MISSION_ROLE, UserMissionRoleType.buddy.name());
         startActivity(intent);
+
+        Application app = getActivity().getApplication();
+        AnalyticsUtil.reportEvent(app, studentGraduation, "" + missionId);
     }
 }

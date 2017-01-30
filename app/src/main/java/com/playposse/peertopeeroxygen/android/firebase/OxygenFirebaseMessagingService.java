@@ -22,11 +22,14 @@ import com.playposse.peertopeeroxygen.android.firebase.actions.MissionSeniorInvi
 import com.playposse.peertopeeroxygen.android.firebase.actions.PracticaUpdateClientAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.PracticaUserUpdateClientAction;
 import com.playposse.peertopeeroxygen.android.firebase.actions.UpdatePointsClientAction;
+import com.playposse.peertopeeroxygen.android.util.AnalyticsUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static com.playposse.peertopeeroxygen.android.util.AnalyticsUtil.AnalyticsCategory.firebaseEvent;
 
 /**
  * An implementation of {@link FirebaseMessagingService} that receives messages from AppEngine. The
@@ -150,6 +153,12 @@ public class OxygenFirebaseMessagingService extends FirebaseMessagingService {
             pendingActions.remove(action);
             action.execute(this, dataServiceConnection);
             Log.i(LOG_CAT, "Executed Firebase action " + action.getClass().getSimpleName());
+
+            // Report action to Analytics
+            AnalyticsUtil.reportEvent(
+                    getApplication(),
+                    firebaseEvent,
+                    action.getClass().getSimpleName());
         }
     }
 

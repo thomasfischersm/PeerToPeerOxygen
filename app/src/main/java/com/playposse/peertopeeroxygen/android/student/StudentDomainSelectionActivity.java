@@ -23,6 +23,7 @@ import com.playposse.peertopeeroxygen.android.data.OxygenSharedPreferences;
 import com.playposse.peertopeeroxygen.android.data.clientactions.GetPublicDomainsClientAction;
 import com.playposse.peertopeeroxygen.android.data.clientactions.SubscribeToPrivateDomainClientAction;
 import com.playposse.peertopeeroxygen.android.data.missions.MissionDataManager;
+import com.playposse.peertopeeroxygen.android.util.AnalyticsUtil;
 import com.playposse.peertopeeroxygen.android.util.StringUtil;
 import com.playposse.peertopeeroxygen.android.util.ToastUtil;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.CombinedDomainBeans;
@@ -32,6 +33,8 @@ import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.UserBean
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import static com.playposse.peertopeeroxygen.android.util.AnalyticsUtil.AnalyticsCategory.domainSelection;
 
 /**
  * An {@link android.app.Activity} that asks the user to select a domain.
@@ -215,6 +218,8 @@ public class StudentDomainSelectionActivity
                 dataServiceConnection.getLocalBinder());
 
         startActivity(new Intent(getApplicationContext(), StudentMainActivity.class));
+
+        AnalyticsUtil.reportEvent(getApplication(), domainSelection, "" + domainId);
     }
 
     @Override
