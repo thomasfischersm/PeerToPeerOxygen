@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  * of the current  domain. This manager switches the right data into the {@link DataRepository} as
  * the user switches domains.
  */
-public class MissionDataManager {
+public class    MissionDataManager {
 
     private static final String LOG_CAT = MissionDataManager.class.getSimpleName();
 

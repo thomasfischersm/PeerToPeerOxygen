@@ -27,7 +27,7 @@ dependencies {
     compile 'com.google.appengine:appengine-endpoints:1.9.28'
     compile 'com.google.appengine:appengine-endpoints-deps:1.9.28'
     compile 'javax.servlet:servlet-api:2.5'
-    compile 'com.google.guava:guava:19.0'
+    compile 'com.google.guava:guava:20.0'
     compile 'com.googlecode.objectify:objectify:5.1.12'
     compile group: 'com.restfb', name: 'restfb', version: '1.34.0'
     compile group: 'org.json', name: 'json', version: '20160810'
