@@ -33,7 +33,7 @@ public class NumberPickerDialogBuilder {
                     public void onClick(DialogInterface dialog, int i) {
                         dialog.dismiss();
                         if (numberPicker.getValue() != 0) {
-                            callback.onPickedNumer(numberPicker.getValue());
+                            callback.onPickedNumber(numberPicker.getValue());
                         }
                     }
                 });
@@ -51,6 +51,6 @@ public class NumberPickerDialogBuilder {
     }
 
     public interface NumberPickerDialogCallback {
-        void onPickedNumer(int number);
+        void onPickedNumber(int number);
     }
 }

@@ -112,7 +112,7 @@ public class AdminStudentDetailActivity extends AdminParentActivity {
                         dialogTitle,
                         new NumberPickerDialogBuilder.NumberPickerDialogCallback() {
                             @Override
-                            public void onPickedNumer(int addedPoints) {
+                            public void onPickedNumber(int addedPoints) {
                                 addPoints(pointType, addedPoints);
                             }
                         });
