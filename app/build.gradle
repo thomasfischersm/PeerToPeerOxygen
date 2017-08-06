@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '25.0.3'
 
     defaultConfig {
         applicationId "com.playposse.peertopeeroxygen.android"
@@ -24,6 +24,10 @@ android {
 
 repositories {
     mavenCentral()
+    jcenter()
+    maven {
+        url "https://maven.google.com"
+    }
 }
 
 dependencies {
@@ -34,25 +38,25 @@ dependencies {
     // Set this dependency to use JUnit 4 rules
     // Set this dependency to build and run Espresso tests
     // Set this dependency to build and run UI Automator tests
-    androidTestCompile group: 'com.restfb', name: 'restfb', version: '1.34.0'
+    androidTestCompile group: 'com.restfb', name: 'restfb', version: '1.43.0'
 
     // Needed to resolve  conflict
-    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.android.support:appcompat-v7:25.4.0'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
-    compile 'com.android.support:support-v4:25.2.0'
-    compile 'com.android.support:design:25.2.0'
-    compile 'com.android.support:percent:25.2.0'
-    compile 'com.google.zxing:core:3.2.1'
-    compile 'com.google.zxing:android-core:3.2.1'
-    compile 'com.google.android.gms:play-services-analytics:10.2.0'
-    compile 'com.google.android.gms:play-services-location:10.2.0'
-    compile 'com.google.android.gms:play-services-vision:10.2.0'
-    compile 'com.google.android.gms:play-services-drive:10.2.0'
-    compile 'com.google.firebase:firebase-core:10.0.1'
-    compile 'com.google.firebase:firebase-messaging:10.0.1'
+    compile 'com.android.support:support-v4:25.4.0'
+    compile 'com.android.support:design:25.4.0'
+    compile 'com.android.support:percent:25.4.0'
+    compile 'com.google.zxing:core:3.3.0'
+    compile 'com.google.zxing:android-core:3.3.0'
+    compile 'com.google.android.gms:play-services-analytics:11.0.4'
+    compile 'com.google.android.gms:play-services-location:11.0.4'
+    compile 'com.google.android.gms:play-services-vision:11.0.4'
+    compile 'com.google.android.gms:play-services-drive:11.0.4'
+    compile 'com.google.firebase:firebase-core:11.0.4'
+    compile 'com.google.firebase:firebase-messaging:11.0.4'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.android.volley:volley:1.0.0'
-    compile 'com.android.support:support-annotations:25.2.0'
+    compile 'com.android.support:support-annotations:25.4.0'
     compile 'com.google.code.findbugs:jsr305:2.0.1'
     testCompile 'junit:junit:4.12'
     testCompile 'org.powermock:powermock-api-mockito:1.6.4'
@@ -64,7 +68,7 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.2'
     androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
-    androidTestCompile 'com.android.support:support-annotations:25.2.0'
+    androidTestCompile 'com.android.support:support-annotations:25.4.0'
     androidTestCompile 'com.google.code.findbugs:jsr305:2.0.1'
 }
 
