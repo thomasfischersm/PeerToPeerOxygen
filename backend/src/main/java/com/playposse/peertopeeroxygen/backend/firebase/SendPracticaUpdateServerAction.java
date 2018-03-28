@@ -1,18 +1,12 @@
 package com.playposse.peertopeeroxygen.backend.firebase;
 
-import com.google.api.server.spi.ConfiguredObjectMapper;
-import com.google.appengine.repackaged.com.google.api.client.json.JsonGenerator;
-import com.google.appengine.repackaged.com.google.api.client.json.jackson.JacksonFactory;
 import com.google.appengine.repackaged.com.google.gson.Gson;
-import com.google.appengine.repackaged.org.codehaus.jackson.map.ObjectMapper;
-import com.google.appengine.repackaged.org.codehaus.jackson.map.ObjectWriter;
 import com.playposse.peertopeeroxygen.backend.beans.PracticaBean;
 import com.playposse.peertopeeroxygen.backend.schema.Practica;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.StringWriter;
 
 import static com.playposse.peertopeeroxygen.backend.schema.util.RefUtil.getDomainId;
 

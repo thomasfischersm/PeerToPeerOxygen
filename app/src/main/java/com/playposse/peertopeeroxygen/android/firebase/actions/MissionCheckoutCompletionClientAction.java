@@ -2,7 +2,6 @@ package com.playposse.peertopeeroxygen.android.firebase.actions;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.IntentCompat;
 
 import com.google.firebase.messaging.RemoteMessage;
 import com.playposse.peertopeeroxygen.android.R;
@@ -60,7 +59,7 @@ public class MissionCheckoutCompletionClientAction extends FirebaseClientAction 
                 ids[1],
                 message.getMissionId());
         intent.putExtra(ExtraConstants.EXTRA_STUDENT_BEAN, message.getStudentBean());
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 

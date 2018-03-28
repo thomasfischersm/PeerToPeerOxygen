@@ -1,13 +1,9 @@
 package com.playposse.peertopeeroxygen.android.data.clientactions;
 
-import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.PeerToPeerOxygenApi;
-import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.MissionStatsBean;
 import com.playposse.peertopeeroxygen.backend.peerToPeerOxygenApi.model.PracticaBean;
 
 import java.io.IOException;
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 /**
  * A client action to get a list of practicas.
@@ -45,7 +41,7 @@ public class GetPracticaClientAction extends ApiClientAction {
     @Override
     protected void executeAsync() throws IOException {
         practicaBeans = getApi()
-                .getPractica(domainIds, practicaDates.name(), getSessionId())
+                .getPractica(getSessionId(), domainIds, practicaDates.name())
                 .execute()
                 .getItems();
     }

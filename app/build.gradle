@@ -1,4 +1,14 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.cloud.tools.endpoints-framework-client'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.google.cloud.tools:endpoints-framework-gradle-plugin:1.0.2'
+    }
+}
 
 android {
     compileSdkVersion 27
@@ -32,8 +42,8 @@ repositories {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation project(path: ':backend', configuration: 'android-endpoints')
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
+    endpointsServer project(path: ':backend', configuration: 'endpoints')
 
     // Set this dependency to use JUnit 4 rules
     // Set this dependency to build and run Espresso tests
@@ -60,6 +70,8 @@ dependencies {
     implementation 'com.android.volley:volley:1.1.0'
     implementation 'com.android.support:support-annotations:27.1.0'
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'com.google.api-client:google-api-client:+'
+    implementation 'com.google.http-client:google-http-client-android:1.23.0'
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.powermock:powermock-api-mockito:1.6.4'
     testImplementation 'org.powermock:powermock-module-junit4-rule-agent:1.6.4'
