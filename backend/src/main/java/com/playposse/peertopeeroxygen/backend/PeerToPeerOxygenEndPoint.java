@@ -12,7 +12,6 @@ import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.config.Named;
 import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.UnauthorizedException;
-import com.googlecode.objectify.ObjectifyService;
 import com.playposse.peertopeeroxygen.backend.beans.CombinedDomainBeans;
 import com.playposse.peertopeeroxygen.backend.beans.CompleteMissionDataBean;
 import com.playposse.peertopeeroxygen.backend.beans.DomainBean;
@@ -27,28 +26,13 @@ import com.playposse.peertopeeroxygen.backend.beans.PracticaBean;
 import com.playposse.peertopeeroxygen.backend.beans.UserBean;
 import com.playposse.peertopeeroxygen.backend.exceptions.BuddyLacksMissionExperienceException;
 import com.playposse.peertopeeroxygen.backend.exceptions.DuplicateDomainNameException;
-import com.playposse.peertopeeroxygen.backend.schema.Domain;
-import com.playposse.peertopeeroxygen.backend.schema.LevelCompletion;
-import com.playposse.peertopeeroxygen.backend.schema.LoanerDevice;
-import com.playposse.peertopeeroxygen.backend.schema.MasterUser;
-import com.playposse.peertopeeroxygen.backend.schema.MentoringAuditLog;
-import com.playposse.peertopeeroxygen.backend.schema.Mission;
-import com.playposse.peertopeeroxygen.backend.schema.MissionCompletion;
-import com.playposse.peertopeeroxygen.backend.schema.MissionFeedback;
-import com.playposse.peertopeeroxygen.backend.schema.MissionLadder;
-import com.playposse.peertopeeroxygen.backend.schema.MissionStats;
-import com.playposse.peertopeeroxygen.backend.schema.MissionTree;
-import com.playposse.peertopeeroxygen.backend.schema.OxygenUser;
-import com.playposse.peertopeeroxygen.backend.schema.PointsTransferAuditLog;
-import com.playposse.peertopeeroxygen.backend.schema.Practica;
-import com.playposse.peertopeeroxygen.backend.schema.UserPoints;
 import com.playposse.peertopeeroxygen.backend.serveractions.AddPointsByAdminServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.CheckIntoPracticaServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.CheckOutOfPracticaServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.CleanTestDataServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.CreatePrivateDomainServerAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionLadderServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.DeleteMissionTreeServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetAllLoanerDevicesServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.GetAllMissionFeedbackServerAction;
@@ -66,16 +50,14 @@ import com.playposse.peertopeeroxygen.backend.serveractions.RegisterOrLoginServe
 import com.playposse.peertopeeroxygen.backend.serveractions.ReportMissionCheckoutCompleteServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.ReportMissionCompleteServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.SaveDomainServerAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionLadderServerAction;
+import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.SaveMissionTreeServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.SavePracticaServerAction;
-import com.playposse.peertopeeroxygen.backend.serveractions.ServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.SubmitMissionFeedbackServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.SubscribeToDomainServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.UnmarkLoanerDeviceServerAction;
 import com.playposse.peertopeeroxygen.backend.serveractions.UpdateFirebaseTokenServerAction;
-import com.playposse.peertopeeroxygen.backend.util.ObjectifyRegistrationServletContextListener;
 
 import java.io.IOException;
 import java.util.List;
@@ -83,8 +65,6 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.annotation.Nullable;
-
-import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * An endpoint class we are exposing
@@ -102,6 +82,11 @@ public class PeerToPeerOxygenEndPoint {
 
     private static final Logger log = Logger.getLogger(PeerToPeerOxygenEndPoint.class.getName());
 
+    @ApiMethod(name="getTest")
+    public void getTest() {
+        log.info("happy call");
+    }
+
     /**
      * Retrieves all the mission related data from the server.
      */
@@ -110,23 +95,7 @@ public class PeerToPeerOxygenEndPoint {
             @Named("sessionId") Long sessionId,
             @Named("domainId") Long domainId)
             throws UnauthorizedException, BadRequestException {
-//ObjectifyRegistrationServletContextListener.bootStrapFirstDomain(); // DELETE
-//ofy().load().type(MissionLadder.class).list().size(); // DELETE
-//        ofy().load().type(Domain.class).list().size(); // DELETE
-//        ofy().load().type(LevelCompletion.class).list().size(); // DELETE
-//        ofy().load().type(LoanerDevice.class).list().size(); // DELETE
-//        ofy().load().type(MasterUser.class).list().size(); // DELETE
-//        ofy().load().type(MentoringAuditLog.class).list().size(); // DELETE
-//        ofy().load().type(Mission.class).list().size(); // DELETE
-//        ofy().load().type(MissionCompletion.class).list().size(); // DELETE
-//        ofy().load().type(MissionFeedback.class).list().size(); // DELETE
-//        ofy().load().type(MissionLadder.class).list().size(); // DELETE
-//        ofy().load().type(MissionStats.class).list().size(); // DELETE
-//        ofy().load().type(MissionTree.class).list().size(); // DELETE
-//        ofy().load().type(OxygenUser.class).list().size(); // DELETE
-//        ofy().load().type(PointsTransferAuditLog.class).list().size(); // DELETE
-//        ofy().load().type(Practica.class).list().size(); // DELETE
-//        ofy().load().type(UserPoints.class).list().size(); // DELETE
+
         return GetMissionDataServerAction.getMissionData(sessionId, domainId);
     }
 
